@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Raul Valle | Signal Processing & Neurotech</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Raul Valle – Computer Engineer & PhD student focused on signal processing, machine learning, and assistive neurotechnology." />
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-alt: #0b1020;
+      --accent: #7dd3fc;
+      --accent-soft: rgba(125, 211, 252, 0.12);
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+      --border: #1f2937;
+      --card-radius: 18px;
+      --max-width: 960px;
+      --shadow-soft: 0 18px 45px rgba(0,0,0,0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
+      color: var(--text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .shell {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+    }
+
+    /* HERO */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.5fr);
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .hero-text h1 {
+      font-size: clamp(2.6rem, 4vw, 3.4rem);
+      margin: 0 0 8px;
+    }
+
+    .hero-text h1 span {
+      background: linear-gradient(120deg, #38bdf8, #a855f7, #f97316);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 34rem;
+      line-height: 1.6;
+      margin-bottom: 18px;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 20px;
+    }
+
+    .tag {
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      padding: 9px 18px;
+      font-size: 0.9rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: transform 0.1s ease, box-shadow 0.15s ease,
+        background 0.15s ease, border-color 0.15s ease;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      color: white;
+      box-shadow: 0 12px 30px rgba(56, 189, 248, 0.35);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 40px rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text);
+      border-color: rgba(148, 163, 184, 0.5);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(15, 23, 42, 0.98);
+      transform: translateY(-1px);
+    }
+
+    .hero-links {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .hero-links a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+    .hero-links a:hover {
+      color: var(--accent);
+      text-decoration: underline;
+    }
+
+    .hero-media {
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at top left, #0f172a, #020617);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      padding: 14px;
+    }
+
+    .hero-media img {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      object-fit: cover;
+      max-height: 260px;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 16px;
+      left: 22px;
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--muted);
+    }
+
+    .hero-badge span {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+    }
+
+    /* SECTION */
+    section {
+      margin-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.3rem;
+      margin: 0;
+    }
+
+    .section-header span {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    /* GRID CARDS */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+
+    .card {
+      border-radius: var(--card-radius);
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top left, #020617, #020617 30%, #020617 100%);
+      padding: 14px 14px 16px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.65);
+    }
+
+    .card h3 {
+      margin: 0 0 4px;
+      font-size: 1rem;
+    }
+
+    .card p {
+      margin: 0 0 8px;
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .card-meta {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .pill {
+      font-size: 0.75rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.4);
+    }
+
+    .stack-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    .stack-item {
+      font-size: 0.8rem;
+      color: var(--muted);
+      padding: 3px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(15, 23, 42, 0.8);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 800px) {
+      .two-col {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <!-- HERO -->
+    <header class="hero">
+      <div class="hero-text">
+        <h1>Hi, I'm <span>Raul Valle</span> 👋</h1>
+        <p class="hero-subtitle">
+          Computer Engineer &amp; PhD student building <strong>real-time, interpretable learning systems</strong> for
+          neural &amp; physiological data. I focus on <strong>state-space models</strong>, <strong>online learning</strong>, and
+          <strong>assistive neurotechnology</strong>.
+        </p>
+
+        <div class="hero-tags">
+          <span class="tag">IEEE SPS @ UF – President &amp; Co-founder</span>
+          <span class="tag">UF Computational NeuroEngineering Lab (CNEL)</span>
+          <span class="tag">Signal Processing · ML · Neurotech</span>
+        </div>
+
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:rvalle1@ufl.edu">📩 Email me</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/raul-valle1/" target="_blank">🔗 LinkedIn</a>
+          <a class="btn btn-ghost" href="https://github.com/Jibby2k1" target="_blank">🐙 GitHub</a>
+        </div>
+
+        <div class="hero-links">
+          <span>Interested in: assistive neurotech, robust DSP/ML, and open education. </span>
+        </div>
+      </div>
+
+      <div class="hero-media">
+        <img
+          src="https://i.pinimg.com/originals/b7/cb/e4/b7cbe4a18a844e7c786e92f67e6015c1.jpg"
+          alt="Neural art banner"
+        />
+        <div class="hero-badge">
+          <span></span>
+          Real-time signal processing &amp; ML in the loop with humans
+        </div>
+      </div>
+    </header>
+
+    <!-- ABOUT / CURRENT WORK -->
+    <section>
+      <div class="section-header">
+        <h2>What I'm focused on</h2>
+        <span>Research · community · systems</span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3>IEEE Signal Processing Society @ UF</h3>
+          <p>
+            Designing a standardized, hands-on curriculum so students can go from “what is a Fourier transform?”
+            to GPU-accelerated ML pipelines with real signals.
+          </p>
+          <div class="card-meta">
+            <span>2024–2025 · President &amp; co-founder</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Zebrafish Voltage-Imaging &amp; Neuromechanics</h3>
+          <p>
+            Building open analysis tools for 2D voltage imaging and behavior alignment, with an emphasis on
+            robust statistics and interpretable models.
+          </p>
+          <div class="card-meta">
+            <span>Neuro + behavior alignment</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Plato’s Cave &amp; DinoDetect</h3>
+          <p>
+            Exploring agentic systems for research validation and Discord analytics with simple NLP/LLM-assisted workflows
+            to support communities and scientists.
+          </p>
+          <div class="card-meta">
+            <span>LLMs · tooling · UX for researchers</span>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- PROJECTS -->
+    <section>
+      <div class="section-header">
+        <h2>Selected projects</h2>
+        <span>More on my <a href="https://github.com/Jibby2k1" target="_blank">GitHub profile →</a></span>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <h3>SPS_Curriculum</h3>
+          <p>Jupyter-based workshops for signal processing &amp; ML at UF, designed for both beginners and power-users.</p>
+          <div class="pill-row">
+            <span class="pill">Education</span>
+            <span class="pill">Signal Processing</span>
+          </div>
+          <div class="card-meta">
+            <span>Jupyter · Python</span>
+            <a href="https://github.com/Jibby2k1/SPS_Curriculum" target="_blank">View repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>Zebrafish-VoltageImaging-Neuromechanics-Analysis</h3>
+          <p>Python utilities for optical voltage imaging and behavior alignment in zebrafish experiments.</p>
+          <div class="pill-row">
+            <span class="pill">Neuro</span>
+            <span class="pill">Time-series</span>
+          </div>
+          <div class="card-meta">
+            <span>NumPy · SciPy · ML</span>
+            <a href="https://github.com/Jibby2k1/Zebrafish-VoltageImaging-Neuromechanics-Analysis" target="_blank">View repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>DinoDetect</h3>
+          <p>Discord analytics with LLM-assisted trend discovery and simple moderation workflows.</p>
+          <div class="pill-row">
+            <span class="pill">LLMs</span>
+            <span class="pill">Discord API</span>
+          </div>
+          <div class="card-meta">
+            <span>TypeScript · Next.js</span>
+            <a href="https://github.com/Jibby2k1/DinoDetect" target="_blank">View repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>copit</h3>
+          <p>Mobile-first recommendation-style shopping prototype focused on simplifying decision making.</p>
+          <div class="pill-row">
+            <span class="pill">Product UX</span>
+            <span class="pill">Prototype</span>
+          </div>
+          <div class="card-meta">
+            <span>TypeScript</span>
+            <a href="https://github.com/Jibby2k1/copit" target="_blank">View repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>PythonDJ</h3>
+          <p>Experiments at the intersection of DSP &amp; music tooling — a playground for ideas.</p>
+          <div class="pill-row">
+            <span class="pill">Audio</span>
+            <span class="pill">DSP</span>
+          </div>
+          <div class="card-meta">
+            <span>Python · NumPy</span>
+            <a href="https://github.com/Jibby2k1/PythonDJ" target="_blank">View repo →</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <h3>WorkshopArchive (fork)</h3>
+          <p>Archived workshop materials and experiments that shaped the SPS curriculum.</p>
+          <div class="pill-row">
+            <span class="pill">Teaching</span>
+          </div>
+          <div class="card-meta">
+            <span>Mixed</span>
+            <a href="https://github.com/Jibby2k1/WorkshopArchive" target="_blank">View repo →</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- STACK & LEARNING -->
+    <section class="two-col">
+      <div>
+        <div class="section-header">
+          <h2>Tools &amp; tech I use</h2>
+          <span>End-to-end pipelines</span>
+        </div>
+        <div class="card">
+          <p><strong>Languages</strong></p>
+          <div class="stack-list">
+            <span class="stack-item">Python</span>
+            <span class="stack-item">C/C++</span>
+            <span class="stack-item">Assembly (some)</span>
+            <span class="stack-item">TypeScript</span>
+          </div>
+
+          <p style="margin-top: 10px;"><strong>Compute</strong></p>
+          <div class="stack-list">
+            <span class="stack-item">CUDA</span>
+            <span class="stack-item">CuPy</span>
+            <span class="stack-item">PyTorch</span>
+            <span class="stack-item">RAPIDS</span>
+            <span class="stack-item">Numba</span>
+          </div>
+
+          <p style="margin-top: 10px;"><strong>DSP &amp; ML</strong></p>
+          <div class="stack-list">
+            <span class="stack-item">Signal processing pipelines</span>
+            <span class="stack-item">State-space models</span>
+            <span class="stack-item">Kalman filters</span>
+            <span class="stack-item">Online learning</span>
+          </div>
+
+          <p style="margin-top: 10px;"><strong>Apps &amp; workflow</strong></p>
+          <div class="stack-list">
+            <span class="stack-item">Jupyter</span>
+            <span class="stack-item">FastAPI</span>
+            <span class="stack-item">Next.js/React</span>
+            <span class="stack-item">Discord API</span>
+            <span class="stack-item">OpenAI API</span>
+            <span class="stack-item">Git &amp; GitHub Actions</span>
+            <span class="stack-item">Conda</span>
+            <span class="stack-item">VS Code</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="section-header">
+          <h2>Currently learning</h2>
+          <span>Deepening the theory</span>
+        </div>
+        <div class="card">
+          <ul style="padding-left: 18px; margin: 0; color: var(--muted); font-size: 0.92rem;">
+            <li>Numerical linear algebra &amp; modern analysis for rigorous ML theory.</li>
+            <li>Online &amp; adaptive filtering for <strong>real-time</strong> inference.</li>
+            <li>OS / systems for reproducible, low-latency pipelines.</li>
+          </ul>
+        </div>
+
+        <div class="section-header" style="margin-top: 18px;">
+          <h2>Outside of code</h2>
+          <span>Balance matters</span>
+        </div>
+        <div class="card">
+          <p class="hero-subtitle" style="font-size: 0.92rem; margin: 0;">
+            I DJ and produce electronic music (dance, trance, techno) and run hands-on workshops for the UF community.
+            I like methods that are <strong>fast</strong>, <strong>reliable</strong>, and <strong>usable</strong> in the loop with humans.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section>
+      <div class="section-header">
+        <h2>Let’s collaborate</h2>
+        <span>Always open to good people &amp; ideas</span>
+      </div>
+      <div class="card">
+        <p style="margin-top: 0; color: var(--muted);">
+          If you’re building <strong>assistive neurotech</strong>, <strong>robust DSP/ML systems</strong>, or
+          <strong>open education</strong> resources, I’d love to talk.
+        </p>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="mailto:rvalle1@ufl.edu">📩 Email</a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/raul-valle1/" target="_blank">Connect on LinkedIn</a>
+          <a class="btn btn-ghost" href="https://github.com/Jibby2k1" target="_blank">Explore GitHub</a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Built with 💻, 🎧, and a lot of signals.<br/>
+      © <span id="year"></span> Raul Valle
+    </footer>
+  </div>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
