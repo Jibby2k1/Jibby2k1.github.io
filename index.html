@@ -4,84 +4,247 @@
   <meta charset="UTF-8" />
   <title>Raul Valle | Signals, ML & Neurotech</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Raul Valle – Signals & ML researcher focused on time-series, neurotech, and GPU-accelerated pipelines." />
+  <meta name="description" content="Raul Valle – Signals & ML researcher focused on time-series, neurotechnology, and GPU-accelerated pipelines." />
   <style>
     :root {
       --bg: #020617;
-      --bg-soft: #020617;
-      --bg-elevated: rgba(15, 23, 42, 0.96);
+      --bg-card: rgba(15, 23, 42, 0.95);
+      --bg-card-soft: rgba(15, 23, 42, 0.88);
       --accent: #38bdf8;
       --accent-alt: #a855f7;
+      --accent-warm: #f97316;
       --accent-soft: rgba(56, 189, 248, 0.18);
       --text: #e5e7eb;
       --muted: #9ca3af;
-      --border: rgba(51, 65, 85, 0.95);
+      --border: rgba(51, 65, 85, 0.92);
       --radius-lg: 18px;
-      --radius-xl: 22px;
-      --shadow-soft: 0 24px 60px rgba(0, 0, 0, 0.7);
-      --max-width: 1060px;
+      --radius-xl: 24px;
+      --shadow-soft: 0 26px 70px rgba(0, 0, 0, 0.85);
+      --max-width: 1120px;
+      --nav-height: 64px;
+      --transition-fast: 0.18s ease-out;
     }
 
     * {
       box-sizing: border-box;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
         "Segoe UI", sans-serif;
-      background:
-        radial-gradient(circle at top, #020617 0, #000 50%, #000 100%);
+      background: radial-gradient(circle at top, #020617 0, #000 55%, #000 100%);
       color: var(--text);
       -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
     }
 
     a {
       color: var(--accent);
       text-decoration: none;
+      transition: color var(--transition-fast);
     }
 
     a:hover {
-      text-decoration: underline;
+      color: #7dd3fc;
+    }
+
+    /* Background orbs */
+    .orb {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 999px;
+      filter: blur(40px);
+      opacity: 0.33;
+      z-index: -2;
+      mix-blend-mode: screen;
+      animation: float 26s ease-in-out infinite alternate;
+    }
+
+    .orb.orb-1 {
+      width: 420px;
+      height: 420px;
+      background: radial-gradient(circle, var(--accent), transparent 60%);
+      top: -80px;
+      left: -120px;
+    }
+
+    .orb.orb-2 {
+      width: 520px;
+      height: 520px;
+      background: radial-gradient(circle, var(--accent-alt), transparent 65%);
+      bottom: -160px;
+      right: -140px;
+      animation-duration: 32s;
+    }
+
+    .orb.orb-3 {
+      width: 380px;
+      height: 380px;
+      background: radial-gradient(circle, var(--accent-warm), transparent 60%);
+      top: 40%;
+      right: 25%;
+      animation-duration: 30s;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate3d(0, 0, 0) scale(1);
+      }
+      100% {
+        transform: translate3d(40px, -40px, 0) scale(1.08);
+      }
+    }
+
+    /* Grid overlay */
+    .grid-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: linear-gradient(
+          rgba(15, 23, 42, 0.8) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          90deg,
+          rgba(15, 23, 42, 0.8) 1px,
+          transparent 1px
+        );
+      background-size: 80px 80px;
+      opacity: 0.18;
+      z-index: -1;
+      mask-image: radial-gradient(circle at top, black 0, transparent 70%);
     }
 
     .page {
       max-width: var(--max-width);
       margin: 0 auto;
-      padding: 32px 20px 64px;
+      padding: 0 20px 56px;
+      position: relative;
     }
 
-    header {
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2.4fr);
-      gap: 28px;
+    /* NAV */
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.94), rgba(15, 23, 42, 0.86));
+      border-bottom: 1px solid rgba(30, 64, 175, 0.45);
+    }
+
+    .nav-inner {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: flex;
       align-items: center;
-      margin-bottom: 40px;
+      justify-content: space-between;
+      gap: 14px;
+      height: var(--nav-height);
     }
 
-    @media (max-width: 880px) {
-      header {
-        grid-template-columns: 1fr;
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle, #0ea5e9, #0f172a 65%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e0f2fe;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.9);
+    }
+
+    .nav-name {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-name-main {
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .nav-name-sub {
+      font-size: 0.76rem;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.82rem;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      position: relative;
+      padding-bottom: 2px;
+      cursor: pointer;
+    }
+
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 0%;
+      height: 1px;
+      background: linear-gradient(90deg, var(--accent), var(--accent-alt));
+      transition: width var(--transition-fast);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .nav-link.active {
+      color: var(--text);
+    }
+
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    @media (max-width: 720px) {
+      .nav-links {
+        gap: 10px;
+      }
+      .nav-links span.hide-mobile {
+        display: none;
       }
     }
 
-    .hero-title {
-      font-size: clamp(2.4rem, 4vw, 3.2rem);
-      margin: 0 0 10px;
+    /* HERO */
+    header.hero {
+      display: grid;
+      grid-template-columns: minmax(0, 3.3fr) minmax(0, 2.2fr);
+      gap: 26px;
+      align-items: center;
+      padding: 26px 0 22px;
     }
 
-    .hero-title span {
-      background: linear-gradient(120deg, #38bdf8, #a855f7, #f97316);
-      -webkit-background-clip: text;
-      color: transparent;
-    }
-
-    .hero-subtitle {
-      margin: 0 0 14px;
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 34rem;
-      line-height: 1.6;
+    @media (max-width: 880px) {
+      header.hero {
+        grid-template-columns: 1fr;
+        padding-top: 30px;
+      }
     }
 
     .hero-label {
@@ -91,10 +254,11 @@
       padding: 6px 12px;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.95);
-      font-size: 0.82rem;
+      background: rgba(15, 23, 42, 0.96);
+      font-size: 0.8rem;
       color: var(--muted);
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.9);
     }
 
     .dot {
@@ -102,60 +266,86 @@
       height: 7px;
       border-radius: 999px;
       background: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.7);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
     }
 
-    .hero-chips {
+    .hero-title {
+      font-size: clamp(2.5rem, 4vw, 3.1rem);
+      margin: 0 0 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, var(--accent), var(--accent-alt), var(--accent-warm));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    .hero-role {
+      font-size: 1.02rem;
+      margin: 0 0 10px;
+      color: var(--muted);
+    }
+
+    .hero-bio {
+      font-size: 0.98rem;
+      color: var(--muted);
+      max-width: 34rem;
+      line-height: 1.65;
+      margin-bottom: 14px;
+    }
+
+    .hero-tags {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 18px;
+      gap: 6px;
+      margin-bottom: 16px;
     }
 
-    .chip {
-      border-radius: 999px;
+    .hero-tag {
       padding: 4px 10px;
+      border-radius: 999px;
       font-size: 0.8rem;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.45);
+      background: rgba(15, 23, 42, 0.9);
     }
 
     .hero-actions {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
 
     .btn {
       border-radius: 999px;
       padding: 9px 18px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       border: 1px solid transparent;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       cursor: pointer;
       text-decoration: none;
-      transition: transform 0.08s ease, box-shadow 0.15s ease,
-        background 0.15s ease, border-color 0.15s ease;
+      transition: transform 0.08s ease, box-shadow 0.16s ease,
+        background 0.16s ease, border-color 0.16s ease, color 0.16s ease;
     }
 
     .btn-primary {
-      background: linear-gradient(135deg, #38bdf8, #a855f7);
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
       color: #f9fafb;
-      box-shadow: 0 16px 40px rgba(56, 189, 248, 0.45);
+      box-shadow: 0 18px 40px rgba(56, 189, 248, 0.5);
     }
 
     .btn-primary:hover {
       transform: translateY(-1px);
-      box-shadow: 0 22px 48px rgba(56, 189, 248, 0.55);
+      box-shadow: 0 24px 52px rgba(56, 189, 248, 0.6);
     }
 
     .btn-ghost {
       background: rgba(15, 23, 42, 0.96);
       color: var(--text);
-      border-color: rgba(148, 163, 184, 0.6);
+      border-color: rgba(148, 163, 184, 0.7);
     }
 
     .btn-ghost:hover {
@@ -164,7 +354,7 @@
     }
 
     .hero-meta {
-      font-size: 0.84rem;
+      font-size: 0.8rem;
       color: var(--muted);
     }
 
@@ -173,70 +363,99 @@
     }
 
     .hero-media {
-      border-radius: var(--radius-xl);
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: var(--shadow-soft);
-      background: radial-gradient(circle at top left, #0b1120, #020617);
-      padding: 14px;
       position: relative;
+      border-radius: var(--radius-xl);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      background: radial-gradient(circle at top left, #020617, #020617 40%, #020617 100%);
+      padding: 14px;
+      box-shadow: var(--shadow-soft);
+      overflow: hidden;
     }
 
     .hero-media img {
       width: 100%;
       display: block;
-      border-radius: 16px;
+      border-radius: 18px;
       object-fit: cover;
-      max-height: 260px;
+      max-height: 280px;
+    }
+
+    .hero-media-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top, transparent 0, rgba(15, 23, 42, 0.58) 60%);
+      pointer-events: none;
     }
 
     .hero-statbar {
       position: absolute;
-      bottom: 16px;
-      left: 22px;
-      right: 22px;
+      bottom: 18px;
+      left: 24px;
+      right: 24px;
       display: flex;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       font-size: 0.78rem;
       color: var(--muted);
       background: linear-gradient(
         120deg,
-        rgba(15, 23, 42, 0.95),
+        rgba(15, 23, 42, 0.96),
         rgba(15, 23, 42, 0.98)
       );
       border-radius: 999px;
-      padding: 6px 12px;
-      border: 1px solid rgba(148, 163, 184, 0.45);
+      padding: 6px 11px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      backdrop-filter: blur(14px);
+    }
+
+    .scroll-indicator {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      opacity: 0.7;
+    }
+
+    .scroll-indicator span {
+      display: inline-block;
+      animation: bounce 1.4s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); opacity: 0.6; }
+      50% { transform: translateY(3px); opacity: 1; }
     }
 
     /* Sections */
     section {
-      margin-bottom: 38px;
+      margin-bottom: 40px;
+      padding-top: 24px;
     }
 
     .section-heading {
-      margin-bottom: 10px;
       display: flex;
-      justify-content: space-between;
       align-items: baseline;
-      gap: 12px;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
     }
 
     .section-heading h2 {
       margin: 0;
-      font-size: 1.25rem;
+      font-size: 1.2rem;
     }
 
     .section-heading span {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       color: var(--muted);
     }
 
     .two-col {
       display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
       gap: 20px;
     }
 
@@ -249,8 +468,8 @@
     .card {
       border-radius: var(--radius-lg);
       border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.65);
+      background: var(--bg-card);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
       padding: 14px 14px 16px;
     }
 
@@ -263,13 +482,7 @@
       margin: 0;
       font-size: 0.9rem;
       color: var(--muted);
-      line-height: 1.55;
-    }
-
-    .tagline {
-      font-size: 0.88rem;
-      color: var(--muted);
-      margin: 0 0 8px;
+      line-height: 1.6;
     }
 
     .grid {
@@ -278,18 +491,6 @@
       gap: 16px;
     }
 
-    .list-compact {
-      padding-left: 18px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    .list-compact li {
-      margin-bottom: 4px;
-    }
-
-    /* Timeline */
     .timeline {
       border-left: 1px solid rgba(55, 65, 81, 0.9);
       padding-left: 14px;
@@ -300,7 +501,7 @@
 
     .timeline-item {
       position: relative;
-      padding-left: 10px;
+      padding-left: 8px;
     }
 
     .timeline-item::before {
@@ -312,7 +513,7 @@
       height: 9px;
       border-radius: 999px;
       background: var(--accent);
-      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.22);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.24);
     }
 
     .timeline-title {
@@ -326,6 +527,17 @@
       margin-bottom: 4px;
     }
 
+    .list-compact {
+      padding-left: 18px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .list-compact li {
+      margin-bottom: 4px;
+    }
+
     .pill-row {
       display: flex;
       flex-wrap: wrap;
@@ -334,12 +546,12 @@
     }
 
     .pill {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       padding: 3px 8px;
       border-radius: 999px;
       background: var(--accent-soft);
       color: #bae6fd;
-      border: 1px solid rgba(56, 189, 248, 0.5);
+      border: 1px solid rgba(56, 189, 248, 0.55);
     }
 
     /* Skills */
@@ -350,7 +562,7 @@
     }
 
     .stack-label {
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 600;
       margin-bottom: 4px;
     }
@@ -366,15 +578,72 @@
       padding: 3px 7px;
       border-radius: 999px;
       border: 1px solid rgba(55, 65, 81, 0.95);
-      background: rgba(15, 23, 42, 0.9);
+      background: var(--bg-card-soft);
       color: var(--muted);
     }
 
-    /* Awards & leadership */
+    /* Project filters */
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 0.8rem;
+    }
+
+    .filter-pill {
+      border-radius: 999px;
+      padding: 5px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.92);
+      color: var(--muted);
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform 0.08s ease-out;
+    }
+
+    .filter-pill:hover {
+      transform: translateY(-1px);
+    }
+
+    .filter-pill.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
+      border-color: transparent;
+      color: #f9fafb;
+    }
+
+    .project-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 55%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
+    }
+
+    .project-card:hover::after {
+      opacity: 1;
+    }
+
+    .project-card h3 {
+      margin-bottom: 4px;
+    }
+
+    .project-meta {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
     .columns-2 {
       columns: 2;
       column-gap: 16px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--muted);
       padding-left: 18px;
       margin: 0;
@@ -387,68 +656,127 @@
     }
 
     footer {
-      margin-top: 40px;
+      margin-top: 32px;
       padding-top: 18px;
       border-top: 1px solid rgba(31, 41, 55, 0.9);
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
     }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px) scale(0.99);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .delay-1 { transition-delay: 0.05s; }
+    .delay-2 { transition-delay: 0.12s; }
+    .delay-3 { transition-delay: 0.18s; }
+
+    /* Hide on filter */
+    .hidden-by-filter {
+      display: none !important;
+    }
   </style>
 </head>
 <body>
+  <!-- Background layers -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-overlay"></div>
+
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-left">
+        <div class="nav-avatar">RV</div>
+        <div class="nav-name">
+          <span class="nav-name-main">Raul Valle</span>
+          <span class="nav-name-sub">Signals · ML · Neurotech</span>
+        </div>
+      </div>
+      <div class="nav-links">
+        <span class="nav-link" data-scroll="#hero">About</span>
+        <span class="nav-link" data-scroll="#experience">Experience</span>
+        <span class="nav-link hide-mobile" data-scroll="#projects">Projects</span>
+        <span class="nav-link hide-mobile" data-scroll="#leadership">Leadership</span>
+        <span class="nav-link hide-mobile" data-scroll="#contact">Contact</span>
+      </div>
+    </div>
+  </nav>
+
   <div class="page">
     <!-- HERO -->
-    <header>
-      <div>
+    <header id="hero" class="hero">
+      <div class="reveal delay-1">
         <div class="hero-label">
           <span class="dot"></span>
-          Gainesville, FL · Signals & ML Research
+          Gainesville, FL · University of Florida
         </div>
-
         <h1 class="hero-title">Hi, I'm <span>Raul Valle</span> 👋</h1>
-
-        <p class="hero-subtitle">
-          Electrical &amp; Computer Engineer and Ph.D. student at the University of Florida,
-          focused on <strong>analysis, signal processing, and machine learning</strong> for
-          scientific time-series: neural, physiological, and communication signals.
+        <p class="hero-role">
+          Ph.D. student in Electrical &amp; Computer Engineering · Signals, Analysis &amp; ML
+        </p>
+        <p class="hero-bio">
+          I build <strong>GPU-accelerated, interpretable learning systems</strong> for
+          scientific time-series data — especially EEG, voltage imaging, and communications.
+          I like algorithms that are <strong>fast</strong>, <strong>robust</strong>, and
+          <strong>usable</strong> in the loop with humans.
         </p>
 
-        <div class="hero-chips">
-          <span class="chip">Ph.D. ECE @ UF (in progress)</span>
-          <span class="chip">CNEL – Computational NeuroEngineering Lab</span>
-          <span class="chip">IEEE SPS @ UF – President &amp; Founder</span>
+        <div class="hero-tags">
+          <span class="hero-tag">CNEL · Computational NeuroEngineering Lab</span>
+          <span class="hero-tag">IEEE Signal Processing Society @ UF · Founder &amp; President</span>
+          <span class="hero-tag">Time-series ML · State-space models · Neurotech</span>
         </div>
 
         <div class="hero-actions">
-          <a class="btn btn-primary" href="mailto:valleraul0@gmail.com">📩 Email me</a>
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/raul-valle1/" target="_blank">💼 LinkedIn</a>
-          <a class="btn btn-ghost" href="https://github.com/Jibby2k1" target="_blank">🐙 GitHub</a>
+          <button class="btn btn-primary" id="copy-email">
+            📩 Copy email
+          </button>
+          <a class="btn btn-ghost" href="mailto:rvalle1@ufl.edu">
+            🎓 UF Email
+          </a>
+          <a class="btn btn-ghost" href="https://www.linkedin.com/in/raul-valle1/" target="_blank">
+            💼 LinkedIn
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/Jibby2k1" target="_blank">
+            🐙 GitHub
+          </a>
         </div>
 
         <p class="hero-meta">
-          <span>
-            I like methods that are <strong>fast</strong>, <strong>robust</strong>, and
-            <strong>interpretable</strong> enough to be used in the loop with humans.
-          </span>
+          <span>Currently: constructing HLDS &amp; QGD-based pipelines for EEG and zebrafish voltage imaging; organizing UF-wide workshops on analysis, probability, and ML tooling.</span>
         </p>
+
+        <div class="scroll-indicator">
+          <span>↓</span> Scroll to see what I'm working on
+        </div>
       </div>
 
-      <div class="hero-media">
+      <div class="hero-media reveal delay-2">
         <img
           src="https://i.pinimg.com/originals/b7/cb/e4/b7cbe4a18a844e7c786e92f67e6015c1.jpg"
           alt="Neural art banner"
         />
+        <div class="hero-media-overlay"></div>
         <div class="hero-statbar">
-          <span>GPU-accelerated pipelines · HLDS · QGD · Gamma-CFAR</span>
-          <span>Real-time latent-state monitoring &amp; separability analysis</span>
+          <span>Real-time HLDS · QGD · Gamma-CFAR</span>
+          <span>Neuroimaging · EEG · RF / SDR</span>
         </div>
       </div>
     </header>
 
-    <!-- EDUCATION & SKILLS -->
-    <section class="two-col">
-      <div>
+    <!-- EDUCATION + SKILLS -->
+    <section id="about" class="two-col">
+      <div class="reveal delay-1">
         <div class="section-heading">
           <h2>Education</h2>
           <span>University of Florida · ECE</span>
@@ -457,36 +785,28 @@
           <div class="timeline">
             <div class="timeline-item">
               <h3 class="timeline-title">Ph.D., Electrical &amp; Computer Engineering</h3>
-              <div class="timeline-meta">
-                University of Florida · Expected May 2030
-              </div>
-              <p class="tagline">
-                Focus: <strong>Analysis, Signal Processing, Machine Learning</strong>.
-              </p>
+              <div class="timeline-meta">University of Florida · Expected 2030</div>
               <ul class="list-compact">
-                <li>Coursework: Real Analysis, Probability &amp; Potential Theory.</li>
+                <li>Concentration in <strong>Analysis, Signal Processing &amp; Machine Learning</strong>.</li>
+                <li>Graduate coursework in Real Analysis, Probability, and Time-Series ML.</li>
               </ul>
             </div>
-
             <div class="timeline-item">
               <h3 class="timeline-title">B.S., Electrical &amp; Computer Engineering</h3>
-              <div class="timeline-meta">
-                University of Florida · Graduated May 2025
-              </div>
+              <div class="timeline-meta">University of Florida · 2020–2025</div>
               <ul class="list-compact">
                 <li>Machine Learning for Time Series, Deep Learning, Applied ML Systems.</li>
-                <li>Digital &amp; Real-Time Digital Signal Processing.</li>
-                <li>Operating Systems and embedded / systems courses.</li>
+                <li>Digital &amp; Real-Time DSP, Operating Systems, embedded systems.</li>
               </ul>
             </div>
           </div>
         </div>
       </div>
 
-      <div>
+      <div class="reveal delay-2">
         <div class="section-heading">
-          <h2>Skills</h2>
-          <span>What I work with day-to-day</span>
+          <h2>Stack</h2>
+          <span>Daily tools &amp; languages</span>
         </div>
         <div class="card">
           <div class="stack-groups">
@@ -503,8 +823,8 @@
               <div class="stack-label">ML / AI</div>
               <div class="stack-items">
                 <span class="stack-chip">PyTorch</span>
-                <span class="stack-chip">RAPIDS</span>
                 <span class="stack-chip">Time-series ML</span>
+                <span class="stack-chip">RAPIDS</span>
               </div>
             </div>
             <div>
@@ -516,17 +836,10 @@
               </div>
             </div>
             <div>
-              <div class="stack-label">HW &amp; EDA</div>
-              <div class="stack-items">
-                <span class="stack-chip">Xilinx Vivado / Vitis</span>
-                <span class="stack-chip">RFSoC &amp; FPGA prototyping</span>
-              </div>
-            </div>
-            <div>
-              <div class="stack-label">Platforms &amp; Tools</div>
+              <div class="stack-label">Systems &amp; Tools</div>
               <div class="stack-items">
                 <span class="stack-chip">Linux</span>
-                <span class="stack-chip">Git</span>
+                <span class="stack-chip">Git/GitHub</span>
                 <span class="stack-chip">Anaconda</span>
                 <span class="stack-chip">Jupyter</span>
               </div>
@@ -548,35 +861,34 @@
     </section>
 
     <!-- EXPERIENCE -->
-    <section>
-      <div class="section-heading">
+    <section id="experience">
+      <div class="section-heading reveal">
         <h2>Experience</h2>
-        <span>Signals · ML · systems</span>
+        <span>Signals · ML · neurotech · systems</span>
       </div>
-
-      <div class="card">
+      <div class="card reveal delay-2">
         <div class="timeline">
           <div class="timeline-item">
-            <h3 class="timeline-title">Computational NeuroEngineering Lab (CNEL) — Signals &amp; ML Research</h3>
+            <h3 class="timeline-title">Signals &amp; ML Researcher – Computational NeuroEngineering Lab (CNEL)</h3>
             <div class="timeline-meta">Feb 2024 – Present · Gainesville, FL</div>
             <ul class="list-compact">
-              <li>Built GPU-accelerated pipelines for larval-zebrafish voltage imaging and EEG sentiment analysis, integrating Kalman MCC, Gamma-CFAR, QGD, and HLDS.</li>
-              <li>Automated evaluation / reporting for multi-model sweeps; achieved up to <strong>16× throughput</strong> on internal time-series experiments (PyTorch + RAPIDS / CuPy).</li>
-              <li>Developed real-time latent-state monitoring and separability analyses (Kernel Mahalanobis Distance, Hausdorff-based metrics).</li>
+              <li>Built GPU-accelerated pipelines for larval-zebrafish voltage imaging and EEG sentiment analysis using Kalman MCC, Gamma-CFAR, QGD, and Hierarchical Linear Dynamical Systems (HLDS).</li>
+              <li>Automated multi-model experiment sweeps, achieving up to <strong>16× throughput</strong> via PyTorch + RAPIDS/CuPy and streamlined reporting tools.</li>
+              <li>Developed real-time latent-state tracking and separability metrics (Kernel Mahalanobis Distance, Hausdorff-based analyses) for streaming neural data.</li>
             </ul>
             <div class="pill-row">
-              <span class="pill">Neuro-imaging</span>
+              <span class="pill">Neuroimaging</span>
               <span class="pill">EEG</span>
               <span class="pill">Time-series ML</span>
             </div>
           </div>
 
           <div class="timeline-item">
-            <h3 class="timeline-title">Software-Defined Communications Lab (SDC) — Signals &amp; Communications Research</h3>
+            <h3 class="timeline-title">Signals &amp; Communications Research – Software-Defined Communications Lab (SDC)</h3>
             <div class="timeline-meta">May 2024 – Dec 2024 · Gainesville, FL</div>
             <ul class="list-compact">
-              <li>Prototyped a 2.4 GHz Wi-Fi spectrum analyzer on Xilinx RFSoC with Python tooling for drone-link analysis and visualization.</li>
-              <li>Evaluated FPGA-based signal-processing blocks under real-time constraints.</li>
+              <li>Prototyped a 2.4 GHz Wi-Fi spectrum analyzer on Xilinx RFSoC platforms for drone-link analysis, integrating data capture and Python-based visualization tools.</li>
+              <li>Evaluated FPGA-based real-time signal-processing blocks for time/frequency-domain monitoring.</li>
             </ul>
             <div class="pill-row">
               <span class="pill">RFSoC</span>
@@ -586,11 +898,11 @@
           </div>
 
           <div class="timeline-item">
-            <h3 class="timeline-title">UF ECE Department — Undergraduate Peer Instructor</h3>
+            <h3 class="timeline-title">Undergraduate Peer Instructor – UF ECE Department</h3>
             <div class="timeline-meta">Aug 2023 – Dec 2024 · Gainesville, FL</div>
             <ul class="list-compact">
-              <li>Mentored <strong>500+ students</strong> in ML / DSP with Python and MATLAB.</li>
-              <li>Authored hands-on labs and code templates for core ECE courses.</li>
+              <li>Mentored <strong>500+ students</strong> in ML, DSP, and ECE coursework across Python and MATLAB-based labs.</li>
+              <li>Authored reproducible lab material and starter code for machine learning, signal processing, and systems fundamentals.</li>
             </ul>
             <div class="pill-row">
               <span class="pill">Teaching</span>
@@ -602,162 +914,177 @@
     </section>
 
     <!-- PROJECTS -->
-    <section>
-      <div class="section-heading">
+    <section id="projects">
+      <div class="section-heading reveal">
         <h2>Selected Projects</h2>
-        <span>More on <a href="https://github.com/Jibby2k1" target="_blank">GitHub →</a></span>
+        <span>Filter by track · more on <a href="https://github.com/Jibby2k1" target="_blank">GitHub →</a></span>
+      </div>
+
+      <div class="filter-row reveal delay-1">
+        <div class="filter-pill active" data-filter="all">All</div>
+        <div class="filter-pill" data-filter="research">Research</div>
+        <div class="filter-pill" data-filter="tools">Tools</div>
+        <div class="filter-pill" data-filter="teaching">Teaching</div>
       </div>
 
       <div class="grid">
-        <article class="card">
-          <h3>EEG Signal Sentiment Analysis (CNEL × Sony AI)</h3>
+        <article class="card project-card reveal delay-1" data-tags="research">
+          <h3>EEG Signal Sentiment Analysis (CNEL × Sony)</h3>
           <p>
-            Real-time HLDS for latent-state tracking on EEG data; experiments with Kernel Mahalanobis Distance and Hausdorff distances for prediction and separability.
+            HLDS-based latent-state tracking for EEG during media viewing, with Kernel Mahalanobis and Hausdorff metrics for prediction, separability, and affective labeling.
           </p>
           <div class="pill-row">
             <span class="pill">EEG</span>
             <span class="pill">HLDS</span>
             <span class="pill">Sony AI</span>
           </div>
+          <div class="project-meta">Research · neurotech · time-series ML</div>
         </article>
 
-        <article class="card">
-          <h3>Neuromechanics Analysis (CNEL)</h3>
+        <article class="card project-card reveal delay-2" data-tags="research">
+          <h3>Neuromechanics Analysis – Zebrafish Voltage Imaging</h3>
           <p>
-            Signal-processing and ML pipelines for zebrafish neuro-imaging; Kalman-MCC, Gamma-CFAR, and QGD for voltage-event detection and behavior alignment.
+            Signal-processing and ML pipelines for 2D voltage imaging and behavior alignment, using Kalman MCC, Gamma-CFAR, and QGD for event detection and interpretation.
           </p>
           <div class="pill-row">
-            <span class="pill">Neuro-imaging</span>
+            <span class="pill">Neuroimaging</span>
             <span class="pill">Event detection</span>
           </div>
+          <div class="project-meta">Research · imaging · dynamics</div>
         </article>
 
-        <article class="card">
-          <h3>EEG/EMG Helmet (Senior Design, IEEE SPS)</h3>
+        <article class="card project-card reveal delay-3" data-tags="research tools">
+          <h3>Time-Series ML Library</h3>
           <p>
-            Modular biosignal acquisition device with real-time ML inference; designed firmware, data path, and latency-aware processing pipeline.
-          </p>
-          <div class="pill-row">
-            <span class="pill">EEG / EMG</span>
-            <span class="pill">Embedded</span>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>Shazam Analysis (IEEE SPS)</h3>
-          <p>
-            Recreating and extending the Shazam algorithm to explore similarity-based music recommendation using robust audio fingerprints.
-          </p>
-          <div class="pill-row">
-            <span class="pill">Audio</span>
-            <span class="pill">Information retrieval</span>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>Plato’s Cave (IEEE SPS)</h3>
-          <p>
-            Agentic system that extracts features from research papers to analyze integrity and potential similarity to other literature.
-          </p>
-          <div class="pill-row">
-            <span class="pill">LLMs</span>
-            <span class="pill">Research tooling</span>
-          </div>
-        </article>
-
-        <article class="card">
-          <h3>Time-Series ML Library (CNEL)</h3>
-          <p>
-            Automated architecture testing for time-series models; realized <strong>16× efficiency</strong> via GPU acceleration (PyTorch + RAPIDS / CuPy).
+            Automated architecture sweeps for time-series models with experiment tracking and reporting; realized up to <strong>16× efficiency</strong> via GPU acceleration.
           </p>
           <div class="pill-row">
             <span class="pill">Time-series</span>
-            <span class="pill">GPU</span>
+            <span class="pill">PyTorch</span>
+            <span class="pill">RAPIDS/CuPy</span>
           </div>
+          <div class="project-meta">Research tools · GPU · infra</div>
         </article>
 
-        <article class="card">
+        <article class="card project-card reveal delay-1" data-tags="tools">
           <h3>Noise-Reduction Toolkit</h3>
           <p>
-            C-accelerated Python toolkit for evaluating real-time denoising models with reproducible metrics and benchmarking harness.
+            C-accelerated Python toolkit for evaluating real-time denoising models with a consistent benchmarking harness across different noise and signal regimes.
           </p>
           <div class="pill-row">
             <span class="pill">Denoising</span>
             <span class="pill">Real-time</span>
           </div>
+          <div class="project-meta">Tools · DSP · performance</div>
+        </article>
+
+        <article class="card project-card reveal delay-2" data-tags="research tools">
+          <h3>EEG/EMG Helmet – Senior Design</h3>
+          <p>
+            Modular biosignal acquisition system with real-time ML inference; designed firmware, data path, and latency-aware pipelines for EEG/EMG signals.
+          </p>
+          <div class="pill-row">
+            <span class="pill">EEG/EMG</span>
+            <span class="pill">Embedded</span>
+          </div>
+          <div class="project-meta">Hardware · DSP · ML</div>
+        </article>
+
+        <article class="card project-card reveal delay-3" data-tags="tools teaching">
+          <h3>SPS Curriculum &amp; Shazam Analysis</h3>
+          <p>
+            Jupyter-based workshops for signal processing &amp; ML; includes a Shazam-style audio fingerprinting analysis and related similarity metrics for music.
+          </p>
+          <div class="pill-row">
+            <span class="pill">Education</span>
+            <span class="pill">Audio</span>
+          </div>
+          <div class="project-meta">Teaching · audio · information retrieval</div>
+        </article>
+
+        <article class="card project-card reveal delay-1" data-tags="tools research">
+          <h3>Plato’s Cave</h3>
+          <p>
+            Agentic system that extracts features from research papers to analyze integrity, potential similarity, and structure, supporting reviewers and researchers.
+          </p>
+          <div class="pill-row">
+            <span class="pill">LLMs</span>
+            <span class="pill">Research tooling</span>
+          </div>
+          <div class="project-meta">Tools · NLP · reproducibility</div>
         </article>
       </div>
     </section>
 
     <!-- LEADERSHIP & AWARDS -->
-    <section class="two-col">
-      <div>
+    <section id="leadership" class="two-col">
+      <div class="reveal delay-1">
         <div class="section-heading">
           <h2>Leadership &amp; Outreach</h2>
           <span>Building communities around signals &amp; AI</span>
         </div>
         <div class="card">
-          <h3>President &amp; Founder, IEEE Signal Processing Society @ UF</h3>
-          <p class="tagline">May 2024 – Present</p>
+          <h3>Founder &amp; President – IEEE Signal Processing Society @ UF</h3>
+          <p class="timeline-meta">May 2024 – Present</p>
           <ul class="list-compact">
-            <li>Founded the chapter and built R&amp;D teams tackling audio, biosignal, and media problems.</li>
-            <li>Organized a Jupyter-based curriculum covering Analysis, Probability, ML, and ML tooling.</li>
-            <li>Hosted journal-club style speaker events encouraging research discussion and peer critique.</li>
+            <li>Founded the SPS chapter at UF and built R&amp;D teams around audio, biosignals, and media analysis.</li>
+            <li>Designed a Jupyter-based curriculum spanning Analysis, Probability, ML, and ML tooling.</li>
+            <li>Ran journal club and speaker events to connect undergrads with research and advanced topics.</li>
           </ul>
 
-          <h3 style="margin-top: 10px;">Director of Research, UF AI Club</h3>
-          <p class="tagline">Aug 2025 – Present</p>
+          <h3 style="margin-top: 10px;">Director of Research – UF AI Club</h3>
+          <p class="timeline-meta">Aug 2025 – Present</p>
           <ul class="list-compact">
-            <li>Leading research initiatives and projects within the UF AI Club.</li>
+            <li>Leading research-focused initiatives, projects, and collaborations in the UF AI Club ecosystem.</li>
           </ul>
 
-          <h3 style="margin-top: 10px;">Software &amp; Hardware Lead, Audio Engineering Society @ UF</h3>
-          <p class="tagline">May 2023 – Present</p>
+          <h3 style="margin-top: 10px;">Software &amp; Hardware Lead – Audio Engineering Society @ UF</h3>
+          <p class="timeline-meta">May 2023 – Present</p>
           <ul class="list-compact">
-            <li>Led audio research projects spanning music classification and generation.</li>
+            <li>Led audio research projects for music classification, generation, and audio tooling.</li>
           </ul>
         </div>
       </div>
 
-      <div>
+      <div class="reveal delay-2">
         <div class="section-heading">
           <h2>Honors &amp; Awards</h2>
-          <span>Selected recognition</span>
+          <span>Recent highlights</span>
         </div>
         <div class="card">
           <ul class="columns-2">
             <li>UF HiPerGator Early Career Award – 2025</li>
-            <li>UF GatorHack (1st) — 2025</li>
-            <li>UF GatorHack (Most Popular) — 2024</li>
-            <li>ShellHacks (Most Popular) — 2024</li>
-            <li>FGLSAMP Scholar — 2024</li>
-            <li>ASA DataFest (1st) — 2024</li>
-            <li>OSC Hackathon (2nd &amp; AI Hack) — 2024</li>
-            <li>UF AI Days Hackathon (Most Popular) — 2024</li>
-            <li>Bright Futures Scholar — 2020–2025</li>
+            <li>UF GatorHack – 1st Place · 2025</li>
+            <li>UF GatorHack – Most Popular · 2024</li>
+            <li>ShellHacks – Most Popular · 2024</li>
+            <li>FGLSAMP Scholar · 2024</li>
+            <li>ASA DataFest – 1st Place · 2024</li>
+            <li>OSC Hackathon – 2nd &amp; AI Hack Winner · 2024</li>
+            <li>UF AI Days Hackathon – Most Popular · 2024</li>
+            <li>Bright Futures Scholar · 2020–2025</li>
           </ul>
         </div>
       </div>
     </section>
 
     <!-- CONTACT -->
-    <section>
-      <div class="section-heading">
+    <section id="contact">
+      <div class="section-heading reveal">
         <h2>Let’s collaborate</h2>
-        <span>Open to research, tooling, and neurotech work</span>
+        <span>Open to research, tooling and neurotech roles</span>
       </div>
-      <div class="card">
-        <p class="tagline" style="margin-bottom: 10px;">
+      <div class="card reveal delay-1">
+        <p class="hero-bio" style="margin: 0 0 10px; font-size: 0.92rem;">
           If you’re working on <strong>assistive neurotechnology</strong>, <strong>robust DSP/ML systems</strong>, or
-          <strong>open education</strong> around signals and AI, I’d be happy to chat.
+          <strong>open education</strong> for signals and AI, I’d love to talk.
         </p>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="mailto:valleraul0@gmail.com">📩 Email</a>
+          <button class="btn btn-primary" id="copy-email-bottom">📩 Copy primary email</button>
           <a class="btn btn-ghost" href="mailto:rvalle1@ufl.edu">🎓 UF Email</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/raul-valle1/" target="_blank">Connect on LinkedIn</a>
         </div>
-        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 8px;">
-          Phone: (786) 580-9505
+        <p style="font-size: 0.8rem; color: var(--muted); margin-top: 6px;">
+          Email: <code style="font-size: 0.78rem;">valleraul0@gmail.com</code> · Phone: <code style="font-size: 0.78rem;">(786) 580-9505</code>
         </p>
       </div>
     </section>
@@ -769,7 +1096,88 @@
   </div>
 
   <script>
-    document.getElementById("year").textContent = new Date().getFullYear();
+    // Smooth scroll for nav
+    document.querySelectorAll('.nav-link[data-scroll]').forEach(link => {
+      link.addEventListener('click', (e) => {
+        const target = link.getAttribute('data-scroll');
+        const el = document.querySelector(target);
+        if (el) {
+          e.preventDefault();
+          const offset = el.getBoundingClientRect().top + window.scrollY - 70;
+          window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // Active nav link on scroll
+    const sections = ['#hero', '#experience', '#projects', '#leadership', '#contact'].map(sel => document.querySelector(sel));
+    const navLinks = document.querySelectorAll('.nav-link[data-scroll]');
+    window.addEventListener('scroll', () => {
+      const scrollPos = window.scrollY + 90;
+      let activeId = '#hero';
+      sections.forEach(sec => {
+        if (sec && scrollPos >= sec.offsetTop) {
+          activeId = '#' + sec.id;
+        }
+      });
+      navLinks.forEach(link => {
+        link.classList.toggle('active', link.getAttribute('data-scroll') === activeId);
+      });
+    });
+
+    // Scroll reveal using IntersectionObserver
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15 }
+    );
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Project filters
+    const filterPills = document.querySelectorAll('.filter-pill');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    filterPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const filter = pill.getAttribute('data-filter');
+        filterPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+
+        projectCards.forEach(card => {
+          const tags = card.getAttribute('data-tags') || '';
+          if (filter === 'all' || tags.includes(filter)) {
+            card.classList.remove('hidden-by-filter');
+          } else {
+            card.classList.add('hidden-by-filter');
+          }
+        });
+      });
+    });
+
+    // Copy email buttons
+    function copyEmail() {
+      const email = 'valleraul0@gmail.com';
+      navigator.clipboard.writeText(email).then(() => {
+        alert('Copied email: ' + email);
+      }).catch(() => {
+        alert('Email: ' + email);
+      });
+    }
+
+    const copyTop = document.getElementById('copy-email');
+    const copyBottom = document.getElementById('copy-email-bottom');
+    if (copyTop) copyTop.addEventListener('click', copyEmail);
+    if (copyBottom) copyBottom.addEventListener('click', copyEmail);
+
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
