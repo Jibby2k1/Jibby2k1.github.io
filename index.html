@@ -362,6 +362,11 @@
       opacity: 0.9;
     }
 
+    #hero-dynamic-line {
+      min-height: 1.1em;
+      transition: opacity 0.25s ease-out;
+    }
+
     .hero-media {
       position: relative;
       border-radius: var(--radius-xl);
@@ -655,6 +660,102 @@
       }
     }
 
+    /* Gallery */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .gallery-item {
+      position: relative;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: var(--bg-card-soft);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.8);
+      cursor: pointer;
+    }
+
+    .gallery-thumb {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+    }
+
+    .gallery-item:hover .gallery-thumb {
+      transform: scale(1.05);
+      opacity: 0.95;
+    }
+
+    .gallery-caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      background: linear-gradient(to top, rgba(15, 23, 42, 0.96), rgba(15, 23, 42, 0.3));
+      color: var(--muted);
+    }
+
+    /* Blog */
+    .blog-list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .blog-card h3 {
+      margin-top: 4px;
+      margin-bottom: 4px;
+    }
+
+    .blog-meta {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+
+    .blog-date {
+      opacity: 0.9;
+    }
+
+    .blog-tag {
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .blog-summary {
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+
+    .blog-content {
+      display: none;
+      font-size: 0.88rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .blog-content.expanded {
+      display: block;
+    }
+
+    .blog-toggle {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      padding: 5px 10px;
+    }
+
     footer {
       margin-top: 32px;
       padding-top: 18px;
@@ -662,6 +763,57 @@
       font-size: 0.8rem;
       color: var(--muted);
       text-align: center;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.92);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 40;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      max-width: 900px;
+      width: 90%;
+      padding: 12px;
+      border-radius: var(--radius-xl);
+      background: var(--bg-card);
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.9);
+      position: relative;
+    }
+
+    .lightbox-inner img {
+      width: 100%;
+      max-height: 70vh;
+      object-fit: contain;
+      border-radius: 14px;
+      display: block;
+    }
+
+    .lightbox-caption {
+      margin-top: 8px;
+      font-size: 0.86rem;
+      color: var(--muted);
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      font-size: 1.4rem;
+      cursor: pointer;
     }
 
     /* Scroll reveal */
@@ -706,6 +858,8 @@
         <span class="nav-link" data-scroll="#hero">About</span>
         <span class="nav-link" data-scroll="#experience">Experience</span>
         <span class="nav-link hide-mobile" data-scroll="#projects">Projects</span>
+        <span class="nav-link hide-mobile" data-scroll="#gallery">Gallery</span>
+        <span class="nav-link hide-mobile" data-scroll="#blog">Blog</span>
         <span class="nav-link hide-mobile" data-scroll="#leadership">Leadership</span>
         <span class="nav-link hide-mobile" data-scroll="#contact">Contact</span>
       </div>
@@ -755,6 +909,7 @@
         <p class="hero-meta">
           <span>Currently: constructing HLDS &amp; QGD-based pipelines for EEG and zebrafish voltage imaging; organizing UF-wide workshops on analysis, probability, and ML tooling.</span>
         </p>
+        <p class="hero-meta" id="hero-dynamic-line"></p>
 
         <div class="scroll-indicator">
           <span>↓</span> Scroll to see what I'm working on
@@ -1016,6 +1171,76 @@
       </div>
     </section>
 
+    <!-- GALLERY -->
+    <!-- Replace img/... paths with your own images -->
+    <section id="gallery">
+      <div class="section-heading reveal">
+        <h2>Gallery</h2>
+        <span>Snapshots from lab work, hardware, and events</span>
+      </div>
+      <div class="gallery-grid">
+        <figure class="gallery-item reveal delay-1">
+          <img
+            src="img/zebrafish-voltage.png"
+            alt="Voltage imaging visualization from CNEL zebrafish experiments"
+            class="gallery-thumb"
+            data-caption="Zebrafish voltage imaging · CNEL – voltage maps overlaid with behavior."
+          />
+          <figcaption class="gallery-caption">Zebrafish voltage imaging · CNEL</figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal delay-2">
+          <img
+            src="img/eeg-helmet.jpg"
+            alt="Prototype EEG/EMG helmet on lab bench"
+            class="gallery-thumb"
+            data-caption="EEG/EMG helmet senior design prototype · modular biosignal acquisition."
+          />
+          <figcaption class="gallery-caption">EEG/EMG helmet · senior design</figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal delay-3">
+          <img
+            src="img/ieee-sps-workshop.jpg"
+            alt="IEEE SPS @ UF workshop with students working on laptops"
+            class="gallery-thumb"
+            data-caption="IEEE Signal Processing Society @ UF · hands-on Jupyter workshop."
+          />
+          <figcaption class="gallery-caption">IEEE SPS @ UF workshop</figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal delay-1">
+          <img
+            src="img/hackathon-gatorhack.jpg"
+            alt="Hackathon team photo at UF GatorHack"
+            class="gallery-thumb"
+            data-caption="UF GatorHack · 1st place + most popular project awards."
+          />
+          <figcaption class="gallery-caption">UF GatorHack – 1st place</figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal delay-2">
+          <img
+            src="img/aes-audio-rig.jpg"
+            alt="Audio Engineering Society hardware rig"
+            class="gallery-thumb"
+            data-caption="Audio Engineering Society @ UF · hardware & software rig for music projects."
+          />
+          <figcaption class="gallery-caption">AES @ UF · audio rig</figcaption>
+        </figure>
+
+        <figure class="gallery-item reveal delay-3">
+          <img
+            src="img/platos-cave-dashboard.jpg"
+            alt="Plato's Cave dashboard showing paper analysis"
+            class="gallery-thumb"
+            data-caption="Plato's Cave dashboard · validating research papers with agentic workflows."
+          />
+          <figcaption class="gallery-caption">Plato’s Cave dashboard</figcaption>
+        </figure>
+      </div>
+    </section>
+
     <!-- LEADERSHIP & AWARDS -->
     <section id="leadership" class="two-col">
       <div class="reveal delay-1">
@@ -1067,6 +1292,17 @@
       </div>
     </section>
 
+    <!-- BLOG -->
+    <section id="blog">
+      <div class="section-heading reveal">
+        <h2>Notes &amp; Blog</h2>
+        <span>Short logs of what I’m building and learning</span>
+      </div>
+      <div id="blog-list" class="blog-list">
+        <!-- Filled by JS -->
+      </div>
+    </section>
+
     <!-- CONTACT -->
     <section id="contact">
       <div class="section-heading reveal">
@@ -1095,6 +1331,15 @@
     </footer>
   </div>
 
+  <!-- Lightbox overlay for gallery -->
+  <div id="lightbox" class="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" type="button">&times;</button>
+      <img id="lightbox-img" src="" alt="" />
+      <div id="lightbox-caption" class="lightbox-caption"></div>
+    </div>
+  </div>
+
   <script>
     // Smooth scroll for nav
     document.querySelectorAll('.nav-link[data-scroll]').forEach(link => {
@@ -1110,7 +1355,8 @@
     });
 
     // Active nav link on scroll
-    const sections = ['#hero', '#experience', '#projects', '#leadership', '#contact'].map(sel => document.querySelector(sel));
+    const sections = ['#hero', '#experience', '#projects', '#gallery', '#leadership', '#blog', '#contact']
+      .map(sel => document.querySelector(sel));
     const navLinks = document.querySelectorAll('.nav-link[data-scroll]');
     window.addEventListener('scroll', () => {
       const scrollPos = window.scrollY + 90;
@@ -1161,6 +1407,106 @@
       });
     });
 
+    // Gallery lightbox
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose = document.querySelector('.lightbox-close');
+
+    document.querySelectorAll('.gallery-thumb').forEach(img => {
+      const open = () => {
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || '';
+        lightboxCaption.textContent = img.dataset.caption || img.alt || '';
+        lightbox.classList.add('open');
+      };
+      img.addEventListener('click', open);
+      if (img.parentElement) {
+        img.parentElement.addEventListener('click', open);
+      }
+    });
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener('click', () => lightbox.classList.remove('open'));
+    }
+    if (lightbox) {
+      lightbox.addEventListener('click', (e) => {
+        if (e.target === lightbox) {
+          lightbox.classList.remove('open');
+        }
+      });
+    }
+
+    // Blog posts data
+    const blogPosts = [
+      {
+        title: 'Why I care about state-space models for EEG',
+        date: 'Nov 2025',
+        tag: 'Research log',
+        summary: 'A quick note on using HLDS and related models to capture slow and fast structure in EEG, instead of treating everything as i.i.d. features.',
+        content:
+          'EEG isn’t just a bag of features – it is genuinely dynamical. HLDS lets me separate faster “event-like” structure from slower latent trends, and then I can probe those latents directly with things like Kernel Mahalanobis Distance or Hausdorff metrics. The point isn’t just accuracy, but having a state space I can reason about when I’m doing model debugging or explaining results to collaborators.'
+      },
+      {
+        title: 'Building an EEG/EMG helmet from scratch',
+        date: 'Oct 2025',
+        tag: 'Hardware',
+        summary: 'Some lessons from turning a nice idea (modular EEG/EMG capture) into a real device that has to deal with cables, noise, and human heads.',
+        content:
+          'Most of the effort was not the ML at the end – it was dealing with grounding, motion artifacts, connector choices, and ergonomics. We iterated on the mechanical design and routing several times before the latent-state models even saw data. The interesting part for me was treating the hardware as part of the “model”: latency, SNR, and comfort all shape what is realistically learnable.'
+      },
+      {
+        title: 'Teaching analysis and ML with Jupyter at UF',
+        date: 'Sep 2025',
+        tag: 'Teaching',
+        summary: 'How IEEE SPS @ UF and UF AI Club pushed me to design a curriculum that connects analysis, probability, and ML in a concrete way.',
+        content:
+          'A lot of undergrads see Real Analysis and Probability as isolated requirements. In the SPS curriculum, I try to connect epsilon-delta and measure-theoretic thinking directly to stability, convergence, and robustness of the ML models they actually run. Having everything in Jupyter notebooks – with sliders, plots, and tiny experiments – lowers the barrier and makes the “why this theorem matters” feel less abstract.'
+      }
+    ];
+
+    function renderBlog() {
+      const list = document.getElementById('blog-list');
+      if (!list) return;
+      list.innerHTML = '';
+
+      blogPosts.forEach((post, index) => {
+        const card = document.createElement('article');
+        card.className = 'card blog-card reveal';
+
+        card.innerHTML = `
+          <div class="blog-meta">
+            <span class="blog-date">${post.date}</span>
+            <span class="blog-tag">${post.tag}</span>
+          </div>
+          <h3>${post.title}</h3>
+          <p class="blog-summary">${post.summary}</p>
+          <p class="blog-content" data-index="${index}">${post.content}</p>
+          <button type="button" class="btn btn-ghost blog-toggle" data-index="${index}">Read more</button>
+        `;
+
+        list.appendChild(card);
+      });
+
+      // Observe newly added elements for scroll reveal
+      document.querySelectorAll('.reveal').forEach(el => {
+        if (!el.classList.contains('visible')) observer.observe(el);
+      });
+
+      // Attach "Read more" toggles
+      list.querySelectorAll('.blog-toggle').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const card = btn.closest('.blog-card');
+          const content = card.querySelector('.blog-content');
+          const expanded = content.classList.contains('expanded');
+          content.classList.toggle('expanded', !expanded);
+          btn.textContent = expanded ? 'Read more' : 'Show less';
+        });
+      });
+    }
+
+    renderBlog();
+
     // Copy email buttons
     function copyEmail() {
       const email = 'valleraul0@gmail.com';
@@ -1175,6 +1521,26 @@
     const copyBottom = document.getElementById('copy-email-bottom');
     if (copyTop) copyTop.addEventListener('click', copyEmail);
     if (copyBottom) copyBottom.addEventListener('click', copyEmail);
+
+    // Hero dynamic line rotation
+    const heroDynamicLine = document.getElementById('hero-dynamic-line');
+    if (heroDynamicLine) {
+      const lines = [
+        'Research threads: HLDS for EEG, QGD for voltage imaging, and GPU-first tooling.',
+        'Lately: building curriculum for IEEE SPS @ UF and UF AI Club.',
+        'Side quests: DJing, audio tooling, and reproducible ML for time-series.'
+      ];
+      let idx = 0;
+      heroDynamicLine.textContent = lines[0];
+      setInterval(() => {
+        idx = (idx + 1) % lines.length;
+        heroDynamicLine.style.opacity = 0;
+        setTimeout(() => {
+          heroDynamicLine.textContent = lines[idx];
+          heroDynamicLine.style.opacity = 1;
+        }, 200);
+      }, 5000);
+    }
 
     // Footer year
     document.getElementById('year').textContent = new Date().getFullYear();
