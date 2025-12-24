@@ -1,0 +1,9 @@
+{
+  "items": [
+    {
+      "title": "Add your awards here",
+      "desc": "This page is data-driven. Edit data/awards.json to add awards, scholarships, fellowships, or competitive recognitions.",
+      "meta": "Tip: keep one award per item; include year and organization in meta."
+    }
+  ]
+}

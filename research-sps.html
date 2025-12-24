@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IEEE SPS Projects · Raul Valle</title>
+  <meta name="description" content="IEEE SPS projects." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div id="site-nav"></div>
+
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal">
+  <div class="kicker">Research · IEEE SPS @ UF</div>
+  <h1 class="h1">IEEE SPS projects</h1>
+  <p class="lead">This page renders from <code>data/sps_projects.json</code>. Add new items there and they will appear automatically.</p>
+</section>
+
+<section id="sps-projects" class="reveal">
+  <div class="filters" data-project-filters></div>
+  <div class="project-grid" data-project-grid></div>
+  <noscript>
+    <div class="notice">Enable JavaScript to load the project list.</div>
+  </noscript>
+</section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/background.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/render.js"></script>
+<script>
+  SiteRender.renderProjects({ mountId: 'sps-projects', dataUrl: 'data/sps_projects.json', defaultFilter: 'all' });
+</script>
+</body>
+</html>

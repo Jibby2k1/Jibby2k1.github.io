@@ -1,0 +1,52 @@
+{
+  "items": [
+    {
+      "title": "IEEE SPS @ UF \u2014 SPS Curriculum & Workshops",
+      "tags": [
+        "teaching",
+        "community",
+        "tools"
+      ],
+      "pills": [
+        "Education",
+        "Signal Processing"
+      ],
+      "meta": "IEEE SPS @ UF \u00b7 curriculum \u00b7 workshops",
+      "desc": "Jupyter-based workshops connecting analysis, probability, and ML with applied signal processing case studies.",
+      "featured": true,
+      "links": []
+    },
+    {
+      "title": "Audio Fingerprinting (Shazam-style) Analysis",
+      "tags": [
+        "audio",
+        "teaching",
+        "research"
+      ],
+      "pills": [
+        "Audio",
+        "Information Retrieval"
+      ],
+      "meta": "Workshops \u00b7 audio IR \u00b7 metrics",
+      "desc": "Educational tooling and experiments around audio fingerprints, similarity scoring, and robustness to noise and tempo changes.",
+      "featured": false,
+      "links": []
+    },
+    {
+      "title": "Plato\u2019s Cave",
+      "tags": [
+        "tools",
+        "research",
+        "nlp"
+      ],
+      "pills": [
+        "LLMs",
+        "Research tooling"
+      ],
+      "meta": "Tools \u00b7 NLP \u00b7 reproducibility",
+      "desc": "Agentic system that extracts features from research papers and scores nodes by relevance, similarity, and structure to support reviewers.",
+      "featured": true,
+      "links": []
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "items": [
+    {
+      "title": "EEG Signal Sentiment Analysis (CNEL \u00d7 Sony)",
+      "tags": [
+        "research",
+        "eeg",
+        "state-space"
+      ],
+      "pills": [
+        "EEG",
+        "HLDS",
+        "Sony AI"
+      ],
+      "meta": "Research \u00b7 neurotech \u00b7 time-series ML",
+      "desc": "HLDS-based latent-state tracking for EEG during media viewing, with metrics for prediction, separability, and affective labeling.",
+      "featured": true,
+      "links": []
+    },
+    {
+      "title": "Neuromechanics Analysis \u2013 Zebrafish Voltage Imaging",
+      "tags": [
+        "research",
+        "imaging",
+        "detection"
+      ],
+      "pills": [
+        "Neuroimaging",
+        "Event detection"
+      ],
+      "meta": "Research \u00b7 imaging \u00b7 dynamics",
+      "desc": "Signal-processing and ML pipelines for 2D voltage imaging, with CFAR-style detectors (Gamma-CFAR) and QGD for event detection and interpretation.",
+      "featured": true,
+      "links": []
+    },
+    {
+      "title": "Time-Series ML Library",
+      "tags": [
+        "tools",
+        "research",
+        "gpu"
+      ],
+      "pills": [
+        "Time-series",
+        "PyTorch",
+        "RAPIDS/CuPy"
+      ],
+      "meta": "Research tools \u00b7 GPU \u00b7 infra",
+      "desc": "Automated architecture sweeps for time-series models and streamlined reporting; realized up to 16\u00d7 efficiency via GPU acceleration.",
+      "featured": true,
+      "links": []
+    },
+    {
+      "title": "Noise-Reduction Toolkit",
+      "tags": [
+        "tools",
+        "dsp",
+        "performance"
+      ],
+      "pills": [
+        "DSP",
+        "C-accelerated"
+      ],
+      "meta": "Tools \u00b7 DSP \u00b7 performance",
+      "desc": "C-accelerated Python toolkit for evaluating real-time denoising and benchmarking across different noise and signal regimes.",
+      "featured": false,
+      "links": []
+    },
+    {
+      "title": "EEG/EMG Helmet \u2013 Senior Design",
+      "tags": [
+        "hardware",
+        "tools",
+        "research"
+      ],
+      "pills": [
+        "EEG/EMG",
+        "Embedded"
+      ],
+      "meta": "Hardware \u00b7 DSP \u00b7 ML",
+      "desc": "Modular biosignal acquisition system with real-time ML constraints; emphasis on data path design and latency-aware pipelines.",
+      "featured": false,
+      "links": []
+    }
+  ]
+}

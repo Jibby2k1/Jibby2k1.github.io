@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CNEL Projects · Raul Valle</title>
+  <meta name="description" content="CNEL projects." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div id="site-nav"></div>
+
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal">
+  <div class="kicker">Research · CNEL</div>
+  <h1 class="h1">CNEL projects</h1>
+  <p class="lead">This page renders from <code>data/cnel_projects.json</code>. Add new items there and they will appear automatically.</p>
+</section>
+
+<section id="cnel-projects" class="reveal">
+  <div class="filters" data-project-filters></div>
+  <div class="project-grid" data-project-grid></div>
+  <noscript>
+    <div class="notice">Enable JavaScript to load the project list.</div>
+  </noscript>
+</section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/background.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/render.js"></script>
+<script>
+  SiteRender.renderProjects({ mountId: 'cnel-projects', dataUrl: 'data/cnel_projects.json', defaultFilter: 'all' });
+</script>
+</body>
+</html>
