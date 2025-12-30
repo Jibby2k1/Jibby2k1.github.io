@@ -1,8 +1,8 @@
 {
   "items": [
     {
-      "title": "EEG Signal Sentiment Analysis (CNEL × Sony)",
-      "img": "assets/img/placeholder.svg",
+      "title": "EEG Signal Sentiment Analysis (CNEL × Sony x LB3)",
+      "img": "assets/img/projects/HLDS_Inf.png",
       "imgAlt": "EEG research project placeholder image",
       "tags": ["research", "eeg", "state-space"],
       "pills": ["EEG", "HLDS", "Sony AI"],
@@ -13,7 +13,7 @@
     },
     {
       "title": "Neuromechanics Analysis – Zebrafish Voltage Imaging",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/projects/Zebra_snip.png",
       "imgAlt": "Zebrafish voltage imaging project placeholder image",
       "tags": ["research", "imaging", "detection"],
       "pills": ["Neuroimaging", "Event detection"],
@@ -24,7 +24,7 @@
     },
     {
       "title": "Time-Series ML Library",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/projects/Adap_Filt.png",
       "imgAlt": "Time-series ML library placeholder image",
       "tags": ["tools", "research", "gpu"],
       "pills": ["Time-series", "PyTorch", "RAPIDS/CuPy"],
