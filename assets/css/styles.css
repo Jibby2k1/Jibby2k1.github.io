@@ -232,7 +232,7 @@ main{
   border: 1px solid var(--border);
   background: var(--panel);
   box-shadow: 0 12px 30px rgba(0,0,0,0.20);
-  min-width: 0; /* allow cards to shrink inside grids without overflowing */
+  min-width: 0;
 }
 .card h3{ margin:0 0 8px; font-size: 1.05rem; }
 .card p{ margin: 8px 0 0; color: var(--muted); }
@@ -248,7 +248,7 @@ main{
   color: var(--muted);
 }
 
-.pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.pill-row{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; min-width:0; max-width:100%; }
 .pill{
   padding: 6px 10px;
   border-radius: 999px;
@@ -288,13 +288,9 @@ main{
 
 .project-grid{
   display:grid;
-  /* Responsive by construction: cards wrap as space allows (no brittle breakpoints). */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 14px;
 }
-/* Breakpoints no longer needed because auto-fit handles it. */
-
-/* Prevent grid items from forcing overflow on narrow viewports (CSS grid min-width:auto behavior). */
 .project-grid > *{ min-width: 0; }
 
 details.post{
@@ -399,11 +395,12 @@ details.post summary::-webkit-details-marker{ display:none; }
 
 .flip-card{
   cursor: pointer;
-  padding: 0; /* handled by faces */
+  padding: 0;
   text-align:left;
   background: transparent;
   border: 0;
   box-shadow: none;
+  width: 100%;
 }
 
 .flip-card:focus{
@@ -417,18 +414,16 @@ details.post summary::-webkit-details-marker{ display:none; }
   min-height: 280px;
   transform-style: preserve-3d;
   transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
-  /* Use a single-cell grid to overlap faces while allowing the container to size to content.
-     This fixes text spilling when content is taller than a fixed height. */
   display: grid;
   align-items: stretch;
   min-width: 0;
+  overflow: hidden;
+  border-radius: var(--radius);
 }
 
 .flip-card.is-flipped .flip-inner{ transform: rotateY(180deg); }
 
 .flip-face{
-  /* IMPORTANT: do NOT absolutely position faces. Grid-overlap keeps them stacked while allowing
-     natural height calculation (max of both faces), preventing overflow on resize. */
   position: relative;
   inset: auto;
   grid-area: 1 / 1;
@@ -441,9 +436,12 @@ details.post summary::-webkit-details-marker{ display:none; }
   display:flex;
   flex-direction:column;
   min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
 }
 
-/* Robust wrapping for long titles/metadata/links so they never overflow the card. */
+.flip-face > *{ min-width: 0; max-width: 100%; }
+
 .flip-face h3,
 .flip-face p,
 .flip-face .meta,
@@ -463,6 +461,8 @@ details.post summary::-webkit-details-marker{ display:none; }
   margin-top: auto;
   color: var(--faint);
   font-size: 0.86rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
 /* ----------------------------- */
