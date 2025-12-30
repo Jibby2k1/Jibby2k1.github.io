@@ -347,3 +347,126 @@ details.post summary::-webkit-details-marker{ display:none; }
   background: rgba(255,255,255,0.05);
   color: var(--muted);
 }
+
+/* ----------------------------- */
+/* Images (cards, posts, about)  */
+/* ----------------------------- */
+
+.card-img{
+  width: 100%;
+  display:block;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  margin: 0 0 12px;
+}
+
+.card-img.compact{
+  aspect-ratio: 21 / 9;
+  margin-bottom: 10px;
+}
+
+.page-hero.hero-split{
+  display:grid;
+  grid-template-columns: 1fr auto;
+  gap: 18px;
+  align-items:center;
+}
+
+@media (max-width: 860px){
+  .page-hero.hero-split{ grid-template-columns: 1fr; }
+}
+
+.portrait{
+  width: 172px;
+  height: 172px;
+  border-radius: 999px;
+  object-fit: cover;
+  border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.04);
+  box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+}
+
+/* ----------------------------- */
+/* Project flip cards            */
+/* ----------------------------- */
+
+.flip-card{
+  cursor: pointer;
+  padding: 0; /* handled by faces */
+  text-align:left;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+}
+
+.flip-card:focus{
+  outline: 2px solid rgba(120,150,255,0.45);
+  outline-offset: 2px;
+}
+
+.flip-inner{
+  position: relative;
+  width: 100%;
+  min-height: 280px;
+  transform-style: preserve-3d;
+  transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.flip-card.is-flipped .flip-inner{ transform: rotateY(180deg); }
+
+.flip-face{
+  position:absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+  padding: 16px 16px;
+  display:flex;
+  flex-direction:column;
+}
+
+.flip-front h3,
+.flip-back h3{ margin: 0 0 8px; font-size: 1.05rem; }
+
+.flip-front p,
+.flip-back p{ margin: 8px 0 0; color: var(--muted); }
+
+.flip-back{ transform: rotateY(180deg); }
+
+.flip-hint{
+  margin-top: auto;
+  color: var(--faint);
+  font-size: 0.86rem;
+}
+
+/* ----------------------------- */
+/* Blog post thumbnails          */
+/* ----------------------------- */
+
+.post-header{
+  display:flex;
+  gap: 12px;
+  align-items:flex-start;
+}
+
+.post-img{
+  width: 110px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.04);
+  flex: 0 0 auto;
+}
+
+.post-text{ min-width: 0; }
+
+@media (max-width: 560px){
+  .post-header{ flex-direction:column; }
+  .post-img{ width: 100%; height: auto; aspect-ratio: 16 / 9; }
+}

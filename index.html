@@ -75,10 +75,31 @@
       mount.innerHTML = '';
       const d = document.createElement('details');
       d.className = 'post reveal';
+
       const s = document.createElement('summary');
-      s.innerHTML = `<div class="post-title">${it.title || 'Untitled'}</div>
+      const header = document.createElement('div');
+      header.className = 'post-header';
+
+      if (it.img) {
+        const img = document.createElement('img');
+        img.className = 'post-img';
+        img.src = it.img;
+        img.alt = it.imgAlt || it.title || '';
+        img.loading = 'lazy';
+        img.decoding = 'async';
+        img.addEventListener('error', () => {
+          if (img.src && !img.src.includes('assets/img/placeholder.svg')) img.src = 'assets/img/placeholder.svg';
+        });
+        header.appendChild(img);
+      }
+
+      const t = document.createElement('div');
+      t.className = 'post-text';
+      t.innerHTML = `<div class="post-title">${it.title || 'Untitled'}</div>
                      <div class="post-meta">${(it.date||'')}${it.tag ? ' · ' + it.tag : ''}</div>
                      <div class="post-summary">${it.summary || ''}</div>`;
+      header.appendChild(t);
+      s.appendChild(header);
       d.appendChild(s);
       const c = document.createElement('div');
       c.className = 'post-content';

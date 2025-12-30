@@ -4,6 +4,8 @@
       "title": "Why I care about state-space models for EEG",
       "date": "Nov 2025",
       "tag": "Research log",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "State-space models blog post placeholder image",
       "summary": "A quick note on using HLDS and related models to capture structure in EEG, instead of treating everything as i.i.d. features.",
       "content": "EEG is genuinely dynamical. Modeling temporal structure explicitly helps with debugging, interpretability, and downstream decisions about what is learnable versus what is artifact."
     },
@@ -11,6 +13,8 @@
       "title": "Building an EEG/EMG helmet from scratch",
       "date": "Oct 2025",
       "tag": "Hardware",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "EEG/EMG helmet blog post placeholder image",
       "summary": "Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.",
       "content": "Most of the work is not the final classifier. The hard parts are the physical system: electrode contact, EMI, grounding, synchronization, and usability. Those constraints dictate what modeling is feasible."
     },
@@ -18,8 +22,10 @@
       "title": "Teaching analysis and ML with Jupyter at UF",
       "date": "Sep 2025",
       "tag": "Teaching",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Teaching with Jupyter blog post placeholder image",
       "summary": "How IEEE SPS @ UF and UF AI Club pushed me to build a curriculum that connects analysis, probability, and ML in concrete ways.",
-      "content": "Students often treat Real Analysis and Probability as disconnected from ML. A workshop-first format makes the motivation and the \u2018why this theorem matters\u2019 feel operational rather than abstract."
+      "content": "Students often treat Real Analysis and Probability as disconnected from ML. A workshop-first format makes the motivation and the ‘why this theorem matters’ feel operational rather than abstract."
     }
   ]
 }

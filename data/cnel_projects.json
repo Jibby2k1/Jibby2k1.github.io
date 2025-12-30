@@ -1,83 +1,56 @@
 {
   "items": [
     {
-      "title": "EEG Signal Sentiment Analysis (CNEL \u00d7 Sony)",
-      "tags": [
-        "research",
-        "eeg",
-        "state-space"
-      ],
-      "pills": [
-        "EEG",
-        "HLDS",
-        "Sony AI"
-      ],
-      "meta": "Research \u00b7 neurotech \u00b7 time-series ML",
+      "title": "EEG Signal Sentiment Analysis (CNEL × Sony)",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "EEG research project placeholder image",
+      "tags": ["research", "eeg", "state-space"],
+      "pills": ["EEG", "HLDS", "Sony AI"],
+      "meta": "Research · neurotech · time-series ML",
       "desc": "HLDS-based latent-state tracking for EEG during media viewing, with metrics for prediction, separability, and affective labeling.",
       "featured": true,
       "links": []
     },
     {
-      "title": "Neuromechanics Analysis \u2013 Zebrafish Voltage Imaging",
-      "tags": [
-        "research",
-        "imaging",
-        "detection"
-      ],
-      "pills": [
-        "Neuroimaging",
-        "Event detection"
-      ],
-      "meta": "Research \u00b7 imaging \u00b7 dynamics",
+      "title": "Neuromechanics Analysis – Zebrafish Voltage Imaging",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Zebrafish voltage imaging project placeholder image",
+      "tags": ["research", "imaging", "detection"],
+      "pills": ["Neuroimaging", "Event detection"],
+      "meta": "Research · imaging · dynamics",
       "desc": "Signal-processing and ML pipelines for 2D voltage imaging, with CFAR-style detectors (Gamma-CFAR) and QGD for event detection and interpretation.",
       "featured": true,
       "links": []
     },
     {
       "title": "Time-Series ML Library",
-      "tags": [
-        "tools",
-        "research",
-        "gpu"
-      ],
-      "pills": [
-        "Time-series",
-        "PyTorch",
-        "RAPIDS/CuPy"
-      ],
-      "meta": "Research tools \u00b7 GPU \u00b7 infra",
-      "desc": "Automated architecture sweeps for time-series models and streamlined reporting; realized up to 16\u00d7 efficiency via GPU acceleration.",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Time-series ML library placeholder image",
+      "tags": ["tools", "research", "gpu"],
+      "pills": ["Time-series", "PyTorch", "RAPIDS/CuPy"],
+      "meta": "Research tools · GPU · infra",
+      "desc": "Automated architecture sweeps for time-series models and streamlined reporting; realized up to 16× efficiency via GPU acceleration.",
       "featured": true,
       "links": []
     },
     {
       "title": "Noise-Reduction Toolkit",
-      "tags": [
-        "tools",
-        "dsp",
-        "performance"
-      ],
-      "pills": [
-        "DSP",
-        "C-accelerated"
-      ],
-      "meta": "Tools \u00b7 DSP \u00b7 performance",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Noise reduction toolkit placeholder image",
+      "tags": ["tools", "dsp", "performance"],
+      "pills": ["DSP", "C-accelerated"],
+      "meta": "Tools · DSP · performance",
       "desc": "C-accelerated Python toolkit for evaluating real-time denoising and benchmarking across different noise and signal regimes.",
       "featured": false,
       "links": []
     },
     {
-      "title": "EEG/EMG Helmet \u2013 Senior Design",
-      "tags": [
-        "hardware",
-        "tools",
-        "research"
-      ],
-      "pills": [
-        "EEG/EMG",
-        "Embedded"
-      ],
-      "meta": "Hardware \u00b7 DSP \u00b7 ML",
+      "title": "EEG/EMG Helmet – Senior Design",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "EEG/EMG helmet senior design placeholder image",
+      "tags": ["hardware", "tools", "research"],
+      "pills": ["EEG/EMG", "Embedded"],
+      "meta": "Hardware · DSP · ML",
       "desc": "Modular biosignal acquisition system with real-time ML constraints; emphasis on data path design and latency-aware pipelines.",
       "featured": false,
       "links": []

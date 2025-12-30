@@ -2,6 +2,8 @@
   "items": [
     {
       "title": "Add your awards here",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Award placeholder image",
       "desc": "This page is data-driven. Edit data/awards.json to add awards, scholarships, fellowships, or competitive recognitions.",
       "meta": "Tip: keep one award per item; include year and organization in meta."
     }

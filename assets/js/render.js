@@ -1,5 +1,6 @@
 (() => {
   const cache = new Map();
+  const PLACEHOLDER_IMG = 'assets/img/placeholder.svg';
 
   async function loadJSON(url) {
     if (cache.has(url)) return cache.get(url);
@@ -25,6 +26,31 @@
     return node;
   }
 
+  function safeImgSrc(src) {
+    return src ? src : PLACEHOLDER_IMG;
+  }
+
+  function imgNode({ src, alt = '', className = 'card-img' } = {}) {
+    const img = el('img', {
+      class: className,
+      src: safeImgSrc(src),
+      alt,
+      loading: 'lazy',
+      decoding: 'async',
+    });
+    img.addEventListener('error', () => {
+      // avoid infinite loops
+      if (img.getAttribute('src') !== PLACEHOLDER_IMG) img.setAttribute('src', PLACEHOLDER_IMG);
+    });
+    return img;
+  }
+
+  function toggleFlip(node) {
+    const next = !node.classList.contains('is-flipped');
+    node.classList.toggle('is-flipped', next);
+    node.setAttribute('aria-pressed', next ? 'true' : 'false');
+  }
+
   function renderProjects({ mountId, dataUrl, defaultFilter = 'all' }) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
@@ -38,14 +64,13 @@
       const tags = new Set();
       items.forEach(it => (it.tags || []).forEach(t => tags.add(t)));
 
-      const allTags = ['all', ...Array.from(tags).sort((a,b)=>a.localeCompare(b))];
-
+      const allTags = ['all', ...Array.from(tags).sort((a, b) => a.localeCompare(b))];
       let active = defaultFilter;
 
       function drawFilters() {
         filtersEl.innerHTML = '';
         allTags.forEach(t => {
-          const btn = el('button', { class: `filter-btn${t===active?' active':''}`, type: 'button' }, [t.toUpperCase()]);
+          const btn = el('button', { class: `filter-btn${t === active ? ' active' : ''}`, type: 'button' }, [t.toUpperCase()]);
           btn.addEventListener('click', () => {
             active = t;
             drawFilters();
@@ -56,24 +81,55 @@
       }
 
       function card(it) {
-        const pills = el('div', { class: 'pill-row' }, (it.pills || []).map(p => el('span', { class: 'pill' }, [p])));
-        const meta = it.meta ? el('div', { class: 'meta' }, [it.meta]) : null;
+        // Flip card: front shows image + title; back shows description + metadata.
+        const root = el('article', {
+          class: 'card flip-card reveal',
+          tabindex: '0',
+          role: 'button',
+          'aria-pressed': 'false',
+        }, []);
+
+        const front = el('div', { class: 'flip-face flip-front' }, [
+          imgNode({ src: it.img, alt: it.imgAlt || it.title || '' }),
+          el('h3', {}, [it.title || 'Untitled']),
+          it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
+          el('div', { class: 'flip-hint' }, ['Click to flip'])
+        ]);
 
         const children = [
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
         ];
-        if (it.pills && it.pills.length) children.push(pills);
-        if (meta) children.push(meta);
+
+        if (it.pills && it.pills.length) {
+          children.push(el('div', { class: 'pill-row' }, (it.pills || []).map(p => el('span', { class: 'pill' }, [p]))));
+        }
+        if (it.meta) children.push(el('div', { class: 'meta' }, [it.meta]));
 
         if (it.links && it.links.length) {
-          const row = el('div', { class: 'pill-row' }, it.links.map(l =>
+          children.push(el('div', { class: 'pill-row' }, it.links.map(l =>
             el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
-          ));
-          children.push(row);
+          )));
         }
 
-        return el('article', { class: 'card reveal' }, children);
+        const back = el('div', { class: 'flip-face flip-back' }, children);
+        const inner = el('div', { class: 'flip-inner' }, [front, back]);
+        root.appendChild(inner);
+
+        root.addEventListener('click', (e) => {
+          // Don't flip when user clicks a link.
+          if (e.target && e.target.closest && e.target.closest('a')) return;
+          toggleFlip(root);
+        });
+
+        root.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleFlip(root);
+          }
+        });
+
+        return root;
       }
 
       function drawGrid() {
@@ -109,11 +165,17 @@
 
       items.forEach(it => {
         const details = el('details', { class: 'post reveal' }, []);
-        const summary = el('summary', {}, [
-          el('div', { class: 'post-title' }, [it.title || 'Untitled']),
-          el('div', { class: 'post-meta' }, [`${it.date || ''}${it.tag ? ' · ' + it.tag : ''}`]),
-          it.summary ? el('div', { class: 'post-summary' }, [it.summary]) : null,
+
+        const title = el('div', { class: 'post-title' }, [it.title || 'Untitled']);
+        const meta = el('div', { class: 'post-meta' }, [`${it.date || ''}${it.tag ? ' · ' + it.tag : ''}`]);
+        const summaryText = it.summary ? el('div', { class: 'post-summary' }, [it.summary]) : null;
+
+        const header = el('div', { class: 'post-header' }, [
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'post-img' }) : null,
+          el('div', { class: 'post-text' }, [title, meta, summaryText])
         ]);
+
+        const summary = el('summary', {}, [header]);
         const content = it.content ? el('div', { class: 'post-content' }, [it.content]) : null;
 
         details.appendChild(summary);
@@ -139,8 +201,10 @@
         mount.appendChild(el('div', { class: 'notice' }, ['No awards listed yet.']));
         return;
       }
+
       items.forEach(it => {
         mount.appendChild(el('article', { class: 'card reveal' }, [
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'card-img' }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
@@ -169,6 +233,7 @@
 
       picked.forEach(it => {
         mount.appendChild(el('article', { class: 'card reveal' }, [
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'card-img compact' }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
