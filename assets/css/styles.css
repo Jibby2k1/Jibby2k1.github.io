@@ -232,7 +232,7 @@ main{
   border: 1px solid var(--border);
   background: var(--panel);
   box-shadow: 0 12px 30px rgba(0,0,0,0.20);
-  min-width: 0;
+  min-width: 0; /* allow cards to shrink inside grids without overflowing */
 }
 .card h3{ margin:0 0 8px; font-size: 1.05rem; }
 .card p{ margin: 8px 0 0; color: var(--muted); }
@@ -288,9 +288,13 @@ main{
 
 .project-grid{
   display:grid;
+  /* Responsive by construction: cards wrap as space allows (no brittle breakpoints). */
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 14px;
 }
+/* Breakpoints no longer needed because auto-fit handles it. */
+
+/* Prevent grid items from forcing overflow on narrow viewports (CSS grid min-width:auto behavior). */
 .project-grid > *{ min-width: 0; }
 
 details.post{
@@ -390,7 +394,8 @@ details.post summary::-webkit-details-marker{ display:none; }
 }
 
 /* ----------------------------- */
-/* Project flip cards            */
+/* Project "front/back" cards    */
+/* (toggle content; no 3D flip)  */
 /* ----------------------------- */
 
 .flip-card{
@@ -408,12 +413,13 @@ details.post summary::-webkit-details-marker{ display:none; }
   outline-offset: 2px;
 }
 
+/* Overlap the two faces in a single grid cell.
+   NOTE: we intentionally keep both faces in normal flow so the container height
+   becomes the max(front, back). This prevents content from spilling outside. */
 .flip-inner{
   position: relative;
   width: 100%;
   min-height: 280px;
-  transform-style: preserve-3d;
-  transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
   display: grid;
   align-items: stretch;
   min-width: 0;
@@ -421,13 +427,11 @@ details.post summary::-webkit-details-marker{ display:none; }
   border-radius: var(--radius);
 }
 
-.flip-card.is-flipped .flip-inner{ transform: rotateY(180deg); }
-
+/* Faces */
 .flip-face{
   position: relative;
   inset: auto;
   grid-area: 1 / 1;
-  backface-visibility: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: var(--panel);
@@ -438,6 +442,9 @@ details.post summary::-webkit-details-marker{ display:none; }
   min-width: 0;
   max-width: 100%;
   overflow: hidden;
+
+  /* crossfade + subtle slide */
+  transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .flip-face > *{ min-width: 0; max-width: 100%; }
@@ -449,13 +456,35 @@ details.post summary::-webkit-details-marker{ display:none; }
 
 .flip-face .pill{ white-space: normal; }
 
+/* Default state: show front, hide back */
+.flip-front{
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+.flip-back{
+  opacity: 0;
+  transform: translateX(8px);
+  pointer-events: none;
+}
+
+/* Toggled state: hide front, show back */
+.flip-card.is-flipped .flip-front{
+  opacity: 0;
+  transform: translateX(-8px);
+  pointer-events: none;
+}
+.flip-card.is-flipped .flip-back{
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
 .flip-front h3,
 .flip-back h3{ margin: 0 0 8px; font-size: 1.05rem; }
 
 .flip-front p,
 .flip-back p{ margin: 8px 0 0; color: var(--muted); }
-
-.flip-back{ transform: rotateY(180deg); }
 
 .flip-hint{
   margin-top: auto;
@@ -465,6 +494,9 @@ details.post summary::-webkit-details-marker{ display:none; }
   overflow-wrap: anywhere;
 }
 
+@media (prefers-reduced-motion: reduce){
+  .flip-face{ transition: none; transform: none; }
+}
 /* ----------------------------- */
 /* Blog post thumbnails          */
 /* ----------------------------- */
