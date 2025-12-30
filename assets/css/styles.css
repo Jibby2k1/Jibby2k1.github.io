@@ -232,6 +232,7 @@ main{
   border: 1px solid var(--border);
   background: var(--panel);
   box-shadow: 0 12px 30px rgba(0,0,0,0.20);
+  min-width: 0; /* allow cards to shrink inside grids without overflowing */
 }
 .card h3{ margin:0 0 8px; font-size: 1.05rem; }
 .card p{ margin: 8px 0 0; color: var(--muted); }
@@ -287,11 +288,14 @@ main{
 
 .project-grid{
   display:grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* Responsive by construction: cards wrap as space allows (no brittle breakpoints). */
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 14px;
 }
-@media (max-width: 1000px){ .project-grid{ grid-template-columns: 1fr 1fr; } }
-@media (max-width: 680px){ .project-grid{ grid-template-columns: 1fr; } }
+/* Breakpoints no longer needed because auto-fit handles it. */
+
+/* Prevent grid items from forcing overflow on narrow viewports (CSS grid min-width:auto behavior). */
+.project-grid > *{ min-width: 0; }
 
 details.post{
   border: 1px solid var(--border);
@@ -413,13 +417,21 @@ details.post summary::-webkit-details-marker{ display:none; }
   min-height: 280px;
   transform-style: preserve-3d;
   transition: transform 650ms cubic-bezier(0.2, 0.7, 0.2, 1);
+  /* Use a single-cell grid to overlap faces while allowing the container to size to content.
+     This fixes text spilling when content is taller than a fixed height. */
+  display: grid;
+  align-items: stretch;
+  min-width: 0;
 }
 
 .flip-card.is-flipped .flip-inner{ transform: rotateY(180deg); }
 
 .flip-face{
-  position:absolute;
-  inset: 0;
+  /* IMPORTANT: do NOT absolutely position faces. Grid-overlap keeps them stacked while allowing
+     natural height calculation (max of both faces), preventing overflow on resize. */
+  position: relative;
+  inset: auto;
+  grid-area: 1 / 1;
   backface-visibility: hidden;
   border-radius: var(--radius);
   border: 1px solid var(--border);
@@ -428,7 +440,16 @@ details.post summary::-webkit-details-marker{ display:none; }
   padding: 16px 16px;
   display:flex;
   flex-direction:column;
+  min-width: 0;
 }
+
+/* Robust wrapping for long titles/metadata/links so they never overflow the card. */
+.flip-face h3,
+.flip-face p,
+.flip-face .meta,
+.flip-face .pill{ overflow-wrap: anywhere; word-break: break-word; }
+
+.flip-face .pill{ white-space: normal; }
 
 .flip-front h3,
 .flip-back h3{ margin: 0 0 8px; font-size: 1.05rem; }
