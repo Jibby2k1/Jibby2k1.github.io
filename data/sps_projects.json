@@ -2,7 +2,7 @@
   "items": [
     {
       "title": "IEEE SPS @ UF — SPS Curriculum & Workshops",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/projects/SPS_Logo.png",
       "imgAlt": "SPS curriculum project placeholder image",
       "tags": ["teaching", "community", "tools"],
       "pills": ["Education", "Signal Processing"],
@@ -13,7 +13,7 @@
     },
     {
       "title": "Audio Fingerprinting (Shazam-style) Analysis",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/projects/Guru.png",
       "imgAlt": "Audio fingerprinting project placeholder image",
       "tags": ["audio", "teaching", "research"],
       "pills": ["Audio", "Information Retrieval"],
@@ -24,7 +24,7 @@
     },
     {
       "title": "Plato’s Cave",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/projects/PlatoCave.png",
       "imgAlt": "Plato’s Cave project placeholder image",
       "tags": ["tools", "research", "nlp"],
       "pills": ["LLMs", "Research tooling"],
