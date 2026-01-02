@@ -30,14 +30,23 @@
     return src ? src : PLACEHOLDER_IMG;
   }
 
-  function imgNode({ src, alt = '', className = 'card-img' } = {}) {
-    const img = el('img', {
-      class: className,
+  function imgNode({ src, alt = '', className = 'card-img', fit = null, aspect = null } = {}) {
+    let cls = className || 'card-img';
+
+    // Prefer explicit fit control (useful for diagrams/logos vs photos).
+    if (fit === 'cover' && !cls.includes('fit-cover')) cls += ' fit-cover';
+    if (fit === 'contain' && !cls.includes('fit-contain')) cls += ' fit-contain';
+
+    const attrs = {
+      class: cls.trim(),
       src: safeImgSrc(src),
       alt,
       loading: 'lazy',
       decoding: 'async',
-    });
+    };
+    if (aspect) attrs.style = `aspect-ratio: ${aspect};`;
+
+    const img = el('img', attrs);
     img.addEventListener('error', () => {
       // avoid infinite loops
       if (img.getAttribute('src') !== PLACEHOLDER_IMG) img.setAttribute('src', PLACEHOLDER_IMG);
@@ -90,7 +99,7 @@
         }, []);
 
         const front = el('div', { class: 'flip-face flip-front' }, [
-          imgNode({ src: it.img, alt: it.imgAlt || it.title || '' }),
+          imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }),
           el('h3', {}, [it.title || 'Untitled']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
           el('div', { class: 'flip-hint' }, ['Click to flip'])
@@ -171,7 +180,7 @@
         const summaryText = it.summary ? el('div', { class: 'post-summary' }, [it.summary]) : null;
 
         const header = el('div', { class: 'post-header' }, [
-          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'post-img' }) : null,
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'post-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
           el('div', { class: 'post-text' }, [title, meta, summaryText])
         ]);
 
@@ -204,7 +213,7 @@
 
       items.forEach(it => {
         mount.appendChild(el('article', { class: 'card reveal' }, [
-          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'card-img' }) : null,
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
@@ -233,7 +242,7 @@
 
       picked.forEach(it => {
         mount.appendChild(el('article', { class: 'card reveal' }, [
-          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: 'card-img compact' }) : null,
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img compact'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
