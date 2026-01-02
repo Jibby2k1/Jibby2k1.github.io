@@ -31,6 +31,11 @@ a{ color:inherit; text-decoration:none; }
 a:hover{ text-decoration:underline; }
 small{ color:var(--muted); }
 
+/* Global media defaults: prevent images from overflowing and preserve aspect ratios */
+img{ max-width:100%; height:auto; display:block; }
+svg{ max-width:100%; height:auto; }
+
+
 #bg-canvas{
   position:fixed;
   inset:0;
@@ -360,7 +365,8 @@ details.post summary::-webkit-details-marker{ display:none; }
   width: 100%;
   display:block;
   aspect-ratio: 16 / 9;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
@@ -371,6 +377,11 @@ details.post summary::-webkit-details-marker{ display:none; }
   aspect-ratio: 21 / 9;
   margin-bottom: 10px;
 }
+
+/* Fit variants for card media */
+.card-img.fit-cover{ object-fit: cover; }
+.card-img.fit-contain{ object-fit: contain; }
+
 
 .page-hero.hero-split{
   display:grid;
@@ -392,6 +403,7 @@ details.post summary::-webkit-details-marker{ display:none; }
   background: rgba(255,255,255,0.04);
   box-shadow: 0 18px 60px rgba(0,0,0,0.35);
 }
+
 
 /* ----------------------------- */
 /* Project "front/back" cards    */
@@ -510,12 +522,17 @@ details.post summary::-webkit-details-marker{ display:none; }
 .post-img{
   width: 110px;
   height: 72px;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   border-radius: 14px;
   border: 1px solid rgba(255,255,255,0.12);
   background: rgba(255,255,255,0.04);
   flex: 0 0 auto;
 }
+
+.post-img.fit-cover{ object-fit: cover; }
+.post-img.fit-contain{ object-fit: contain; }
+
 
 .post-text{ min-width: 0; }
 
