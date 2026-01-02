@@ -1,11 +1,67 @@
 {
   "items": [
     {
-      "title": "Add your awards here",
+      "title": "UF HiPerGator Early Career Award",
       "img": "assets/img/placeholder.svg",
-      "imgAlt": "Award placeholder image",
-      "desc": "This page is data-driven. Edit data/awards.json to add awards, scholarships, fellowships, or competitive recognitions.",
-      "meta": "Tip: keep one award per item; include year and organization in meta."
+      "imgAlt": "UF HiPerGator Early Career Award",
+      "desc": "Recipient of the UF HiPerGator Early Career Award.",
+      "meta": "2025 · University of Florida"
+    },
+    {
+      "title": "UF GatorHack — 1st Place",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "UF GatorHack 1st Place",
+      "desc": "Awarded 1st Place at UF GatorHack.",
+      "meta": "2025 · University of Florida (GatorHack)"
+    },
+    {
+      "title": "UF GatorHack — Most Popular",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "UF GatorHack Most Popular Award",
+      "desc": "Received the Most Popular award at UF GatorHack.",
+      "meta": "2024 · University of Florida (GatorHack)"
+    },
+    {
+      "title": "UF AI Days Hackathon — Most Popular",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "UF AI Days Hackathon Most Popular Award",
+      "desc": "Received the Most Popular award at the UF AI Days Hackathon.",
+      "meta": "2024 · University of Florida (AI Days Hackathon)"
+    },
+    {
+      "title": "ShellHacks — Most Popular",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "ShellHacks Most Popular Award",
+      "desc": "Received the Most Popular award at ShellHacks.",
+      "meta": "2024 · ShellHacks"
+    },
+    {
+      "title": "ASA DataFest — 1st Place",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "ASA DataFest 1st Place",
+      "desc": "Awarded 1st Place at ASA DataFest.",
+      "meta": "2024 · American Statistical Association (DataFest)"
+    },
+    {
+      "title": "OSC Hackathon — 2nd Place & AI Hack",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "OSC Hackathon 2nd Place and AI Hack Award",
+      "desc": "Earned 2nd Place and an AI Hack recognition at the OSC Hackathon.",
+      "meta": "2024 · OSC Hackathon"
+    },
+    {
+      "title": "FGLSAMP Scholar",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "FGLSAMP Scholar",
+      "desc": "Selected as an FGLSAMP Scholar.",
+      "meta": "2024–2025 · FGLSAMP"
+    },
+    {
+      "title": "Bright Futures Scholar",
+      "img": "assets/img/placeholder.svg",
+      "imgAlt": "Bright Futures Scholar",
+      "desc": "Bright Futures Scholar (scholarship recognition).",
+      "meta": "2020–2025 · Bright Futures"
     }
   ]
 }
