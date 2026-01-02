@@ -2,14 +2,14 @@
   "items": [
     {
       "title": "UF HiPerGator Early Career Award",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/awards/EarlyCareerAward.png",
       "imgAlt": "UF HiPerGator Early Career Award",
       "desc": "Recipient of the UF HiPerGator Early Career Award.",
       "meta": "2025 · University of Florida"
     },
     {
       "title": "UF GatorHack — 1st Place",
-      "img": "assets/img/placeholder.svg",
+      "img": "assets/img/awards/PlatoCaveAward.png",
       "imgAlt": "UF GatorHack 1st Place",
       "desc": "Awarded 1st Place at UF GatorHack.",
       "meta": "2025 · University of Florida (GatorHack)"
