@@ -34,7 +34,7 @@
       "links": []
     },
     {
-      "title": "gh05t — EEG Hardware-to-Software Pipeline",
+      "title": "GH05T — EEG Hardware-to-Software Pipeline",
       "img": "assets/img/projects/gh05t.svg",
       "imgAlt": "gh05t project image",
       "tags": ["hardware", "eeg", "tools"],
@@ -45,8 +45,8 @@
       "links": []
     },
     {
-      "title": "nano — Robotics Stack (gh05t Interface)",
-      "img": "assets/img/projects/nano.svg",
+      "title": "Nano — Robotics Stack (gh05t Interface)",
+      "img": "assets/img/projects/Nano.png",
       "imgAlt": "nano robotics project image",
       "tags": ["robotics", "embedded", "tools"],
       "pills": ["Robotics", "Embedded", "Systems"],
@@ -56,8 +56,8 @@
       "links": []
     },
     {
-      "title": "ares — Minimal Fitness Tracker (Speech + Recommendations)",
-      "img": "assets/img/projects/ares.svg",
+      "title": "Ares — Minimal Fitness Tracker (Speech + Recommendations)",
+      "img": "assets/img/projects/Ares.png",
       "imgAlt": "ares fitness tracker project image",
       "tags": ["apps", "ml", "speech"],
       "pills": ["UX", "Speech", "Recommendations"],
@@ -67,8 +67,8 @@
       "links": []
     },
     {
-      "title": "sinbad — Wearable Capture & Automation Prototyping",
-      "img": "assets/img/projects/sinbad.svg",
+      "title": "Sinbad — Wearable Capture & Automation Prototyping",
+      "img": "assets/img/projects/Sinbad.png",
       "imgAlt": "sinbad wearable project image",
       "tags": ["wearables", "tools", "automation"],
       "pills": ["Wearables", "On-device", "Prototyping"],
