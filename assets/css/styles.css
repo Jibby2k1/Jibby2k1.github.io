@@ -235,7 +235,9 @@ main{
   padding: 16px 16px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--panel);
+  background: rgba(6, 9, 22, 0.72);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
   box-shadow: 0 12px 30px rgba(0,0,0,0.20);
   min-width: 0; /* allow cards to shrink inside grids without overflowing */
 }
@@ -297,6 +299,60 @@ main{
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 14px;
 }
+
+/* Project directory layout: sidebar filters on desktop */
+.project-layout{
+  display:grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  align-items:start;
+}
+
+.project-layout .filters{
+  margin: 12px 0 0;
+  padding: 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  background: rgba(6, 9, 22, 0.72);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
+  position: sticky;
+  top: calc(var(--navh) + 14px);
+  max-height: calc(100vh - var(--navh) - 28px);
+  overflow:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.project-layout .filter-btn{
+  width:100%;
+  text-align:left;
+  border-radius: 12px;
+}
+
+.project-layout .project-grid{
+  margin-top: 12px;
+}
+
+@media (max-width: 920px){
+  .project-layout{ grid-template-columns: 1fr; }
+  .project-layout .filters{
+    position: static;
+    max-height: none;
+    overflow: visible;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap:10px;
+    margin: 12px 0 12px;
+  }
+  .project-layout .filter-btn{
+    width: auto;
+    text-align:center;
+    border-radius: 999px;
+  }
+  .project-layout .project-grid{ margin-top: 0; }
+}
 /* Breakpoints no longer needed because auto-fit handles it. */
 
 /* Prevent grid items from forcing overflow on narrow viewports (CSS grid min-width:auto behavior). */
@@ -305,7 +361,9 @@ main{
 details.post{
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--panel);
+  background: rgba(6, 9, 22, 0.72);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
   padding: 12px 14px;
 }
 details.post summary{
@@ -446,7 +504,9 @@ details.post summary::-webkit-details-marker{ display:none; }
   grid-area: 1 / 1;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  background: var(--panel);
+  background: rgba(6, 9, 22, 0.72);
+  backdrop-filter: blur(12px) saturate(130%);
+  -webkit-backdrop-filter: blur(12px) saturate(130%);
   box-shadow: 0 12px 30px rgba(0,0,0,0.20);
   padding: 16px 16px;
   display:flex;
