@@ -8,7 +8,7 @@
       "pills": ["Education", "Signal Processing"],
       "meta": "IEEE SPS @ UF · curriculum · workshops",
       "desc": "Jupyter-based workshops connecting analysis, probability, and ML with applied signal processing case studies.",
-      "featured": true,
+      "featured": false,
       "links": []
     },
     {
@@ -31,6 +31,50 @@
       "meta": "Tools · NLP · reproducibility",
       "desc": "Agentic system that extracts features from research papers and scores nodes by relevance, similarity, and structure to support reviewers.",
       "featured": true,
+      "links": []
+    },
+    {
+      "title": "gh05t — EEG Hardware-to-Software Pipeline",
+      "img": "assets/img/projects/gh05t.svg",
+      "imgAlt": "gh05t project image",
+      "tags": ["hardware", "eeg", "tools"],
+      "pills": ["EEG", "Embedded", "Pipeline"],
+      "meta": "IEEE SPS @ UF · hardware · EEG",
+      "desc": "End-to-end EEG stack (acquisition → streaming → preprocessing → modeling) designed for research iteration and a future product-grade pathway.",
+      "featured": true,
+      "links": []
+    },
+    {
+      "title": "nano — Robotics Stack (gh05t Interface)",
+      "img": "assets/img/projects/nano.svg",
+      "imgAlt": "nano robotics project image",
+      "tags": ["robotics", "embedded", "tools"],
+      "pills": ["Robotics", "Embedded", "Systems"],
+      "meta": "IEEE SPS @ UF · robotics · systems",
+      "desc": "Robotics project focused on building a reliable hardware-to-software interface layer for gh05t (instrumentation, control, and real-time data paths).",
+      "featured": false,
+      "links": []
+    },
+    {
+      "title": "ares — Minimal Fitness Tracker (Speech + Recommendations)",
+      "img": "assets/img/projects/ares.svg",
+      "imgAlt": "ares fitness tracker project image",
+      "tags": ["apps", "ml", "speech"],
+      "pills": ["UX", "Speech", "Recommendations"],
+      "meta": "IEEE SPS @ UF · app · personalization",
+      "desc": "Over-simplified fitness UI with speech-driven intent capture and lightweight coaching recommendations for consistency and adherence.",
+      "featured": false,
+      "links": []
+    },
+    {
+      "title": "sinbad — Wearable Capture & Automation Prototyping",
+      "img": "assets/img/projects/sinbad.svg",
+      "imgAlt": "sinbad wearable project image",
+      "tags": ["wearables", "tools", "automation"],
+      "pills": ["Wearables", "On-device", "Prototyping"],
+      "meta": "IEEE SPS @ UF · wearables · tooling",
+      "desc": "Personal R&D prototype exploring wearable capture workflows and automation for content creation, with an emphasis on responsible use and compliance with device policies.",
+      "featured": false,
       "links": []
     }
   ]
