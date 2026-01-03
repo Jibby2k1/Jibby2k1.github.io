@@ -75,9 +75,31 @@
 
       const allTags = ['all', ...Array.from(tags).sort((a, b) => a.localeCompare(b))];
       let active = defaultFilter;
+      let query = '';
+      let countEl = null;
 
       function drawFilters() {
         filtersEl.innerHTML = '';
+
+        // Header + lightweight search so the sidebar feels like an actual directory.
+        filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Filters']));
+
+        const input = el('input', {
+          class: 'filter-input',
+          type: 'search',
+          placeholder: 'Search projects…',
+          'aria-label': 'Search projects',
+        });
+        input.value = query;
+        input.addEventListener('input', () => {
+          query = (input.value || '').trim().toLowerCase();
+          drawGrid();
+        });
+        filtersEl.appendChild(el('div', { class: 'filter-search' }, [input]));
+
+        countEl = el('div', { class: 'filter-count' }, ['']);
+        filtersEl.appendChild(countEl);
+
         allTags.forEach(t => {
           const btn = el('button', { class: `filter-btn${t === active ? ' active' : ''}`, type: 'button' }, [t.toUpperCase()]);
           btn.addEventListener('click', () => {
@@ -143,7 +165,25 @@
 
       function drawGrid() {
         gridEl.innerHTML = '';
-        const filtered = items.filter(it => active === 'all' ? true : (it.tags || []).includes(active));
+        const filtered = items.filter(it => {
+          const tagOk = (active === 'all') ? true : (it.tags || []).includes(active);
+          if (!tagOk) return false;
+
+          if (!query) return true;
+          const hay = [
+            it.title || '',
+            it.desc || '',
+            it.meta || '',
+            (it.pills || []).join(' '),
+            (it.tags || []).join(' '),
+          ].join(' ').toLowerCase();
+          return hay.includes(query);
+        });
+
+        if (countEl) {
+          const n = filtered.length;
+          countEl.textContent = `${n} project${n === 1 ? '' : 's'}`;
+        }
         if (!filtered.length) {
           gridEl.appendChild(el('div', { class: 'notice' }, ['No projects match this filter.']));
           return;
