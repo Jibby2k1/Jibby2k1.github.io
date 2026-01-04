@@ -30,6 +30,18 @@
     return src ? src : PLACEHOLDER_IMG;
   }
 
+  function inferSrcFromDataUrl(dataUrl) {
+    const u = String(dataUrl || '').toLowerCase();
+    if (u.includes('cnel')) return 'cnel';
+    if (u.includes('sps')) return 'sps';
+    return '';
+  }
+
+  function projectHref(src, slug) {
+    if (!src || !slug) return '';
+    return `project.html?src=${encodeURIComponent(src)}&slug=${encodeURIComponent(slug)}`;
+  }
+
   function imgNode({ src, alt = '', className = 'card-img', fit = null, aspect = null } = {}) {
     let cls = className || 'card-img';
 
@@ -70,6 +82,7 @@
 
     loadJSON(dataUrl).then((data) => {
       const items = data.items || [];
+      const src = inferSrcFromDataUrl(dataUrl);
       const tags = new Set();
       items.forEach(it => (it.tags || []).forEach(t => tags.add(t)));
 
@@ -112,6 +125,8 @@
       }
 
       function card(it) {
+        const detailsUrl = (it.slug && src) ? projectHref(src, it.slug) : '';
+
         // Flip card: front shows image + title; back shows description + metadata.
         const root = el('article', {
           class: 'card flip-card reveal',
@@ -120,12 +135,17 @@
           'aria-pressed': 'false',
         }, []);
 
-        const front = el('div', { class: 'flip-face flip-front' }, [
+        const frontChildren = [
           imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }),
           el('h3', {}, [it.title || 'Untitled']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
+          detailsUrl ? el('div', { class: 'cta-row' }, [
+            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
+          ]) : null,
           el('div', { class: 'flip-hint' }, ['Click to flip'])
-        ]);
+        ];
+
+        const front = el('div', { class: 'flip-face flip-front' }, frontChildren);
 
         const children = [
           el('h3', {}, [it.title || 'Untitled']),
@@ -141,6 +161,12 @@
           children.push(el('div', { class: 'pill-row' }, it.links.map(l =>
             el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
           )));
+        }
+
+        if (detailsUrl) {
+          children.push(el('div', { class: 'cta-row' }, [
+            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
+          ]));
         }
 
         const back = el('div', { class: 'flip-face flip-back' }, children);
@@ -173,7 +199,9 @@
           const hay = [
             it.title || '',
             it.desc || '',
+            it.subtitle || '',
             it.meta || '',
+            (it.details && it.details.overview) ? it.details.overview : '',
             (it.pills || []).join(' '),
             (it.tags || []).join(' '),
           ].join(' ').toLowerCase();
@@ -272,6 +300,7 @@
 
     loadJSON(dataUrl).then((data) => {
       const items = (data.items || []).filter(it => it.featured);
+      const src = inferSrcFromDataUrl(dataUrl);
       const picked = items.slice(0, limit);
 
       mount.innerHTML = '';
@@ -281,11 +310,15 @@
       }
 
       picked.forEach(it => {
+        const detailsUrl = (it.slug && src) ? projectHref(src, it.slug) : '';
         mount.appendChild(el('article', { class: 'card reveal' }, [
           it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img compact'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
+          detailsUrl ? el('div', { class: 'cta-row' }, [
+            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
+          ]) : null,
         ]));
       });
     }).catch((e) => {
