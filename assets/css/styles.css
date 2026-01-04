@@ -214,6 +214,7 @@ main{
   font-weight:700;
   border: 1px solid rgba(255,255,255,0.14);
   background: rgba(255,255,255,0.06);
+  color: var(--text);
 }
 .btn.primary{
   background: linear-gradient(180deg, rgba(120,150,255,0.24), rgba(255,255,255,0.06));
