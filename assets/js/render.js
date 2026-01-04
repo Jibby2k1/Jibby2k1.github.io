@@ -72,6 +72,134 @@
     node.setAttribute('aria-pressed', next ? 'true' : 'false');
   }
 
+  // ---- Modal (used for "Read More" on project cards) ----
+  let _modal = null;
+
+  function ensureModal() {
+    if (_modal) return _modal;
+
+    const overlay = el('div', {
+      class: 'modal-overlay',
+      role: 'dialog',
+      'aria-modal': 'true',
+      'aria-hidden': 'true',
+    }, []);
+
+    const dialog = el('div', { class: 'modal' }, []);
+    const header = el('div', { class: 'modal-header' }, []);
+    const title = el('h3', { class: 'modal-title' }, ['']);
+    const closeBtn = el('button', { class: 'modal-close', type: 'button', 'aria-label': 'Close' }, ['×']);
+    const body = el('div', { class: 'modal-body' }, []);
+
+    header.appendChild(title);
+    header.appendChild(closeBtn);
+    dialog.appendChild(header);
+    dialog.appendChild(body);
+    overlay.appendChild(dialog);
+    document.body.appendChild(overlay);
+
+    let lastFocus = null;
+
+    function close() {
+      overlay.classList.remove('open');
+      overlay.setAttribute('aria-hidden', 'true');
+      document.body.classList.remove('modal-open');
+      body.innerHTML = '';
+      if (lastFocus && typeof lastFocus.focus === 'function') lastFocus.focus();
+      lastFocus = null;
+    }
+
+    function open({ titleText = '', contentNodes = [] } = {}) {
+      lastFocus = document.activeElement;
+      title.textContent = titleText;
+      body.innerHTML = '';
+      (contentNodes || []).forEach(n => n && body.appendChild(n));
+      overlay.classList.add('open');
+      overlay.setAttribute('aria-hidden', 'false');
+      document.body.classList.add('modal-open');
+      closeBtn.focus();
+    }
+
+    overlay.addEventListener('click', (e) => {
+      // Close when clicking outside the dialog container.
+      if (e.target === overlay) close();
+    });
+
+    closeBtn.addEventListener('click', close);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && overlay.classList.contains('open')) close();
+    });
+
+    _modal = { open, close };
+    return _modal;
+  }
+
+  function projectModalContent(it, detailsUrl) {
+    const nodes = [];
+    if (!it) return nodes;
+
+    if (it.subtitle) nodes.push(el('p', { class: 'modal-subtitle' }, [it.subtitle]));
+    if (it.desc) nodes.push(el('p', {}, [it.desc]));
+
+    const d = it.details || {};
+    if (d.overview) {
+      nodes.push(el('h4', {}, ['Overview']));
+      nodes.push(el('p', {}, [d.overview]));
+    }
+
+    if (Array.isArray(d.what_i_built) && d.what_i_built.length) {
+      nodes.push(el('h4', {}, ['What I built']));
+      nodes.push(el('ul', { class: 'modal-list' }, d.what_i_built.map(x => el('li', {}, [String(x)]))));
+    }
+
+    if (Array.isArray(d.stack) && d.stack.length) {
+      nodes.push(el('h4', {}, ['Stack']));
+      nodes.push(el('ul', { class: 'modal-list' }, d.stack.map(x => el('li', {}, [String(x)]))));
+    }
+
+    if (Array.isArray(d.collaborators) && d.collaborators.length) {
+      nodes.push(el('h4', {}, ['Collaborators']));
+      nodes.push(el('ul', { class: 'modal-list' }, d.collaborators.map(x => el('li', {}, [String(x)]))));
+    }
+
+    if (d.status) {
+      nodes.push(el('h4', {}, ['Status']));
+      nodes.push(el('p', {}, [String(d.status)]));
+    }
+
+    if (Array.isArray(d.glossary) && d.glossary.length) {
+      nodes.push(el('h4', {}, ['Glossary']));
+      const dlKids = [];
+      d.glossary.forEach(g => {
+        if (!g) return;
+        const term = g.term ? String(g.term) : '';
+        const def = g.definition ? String(g.definition) : '';
+        if (!term && !def) return;
+        dlKids.push(el('dt', {}, [term]));
+        dlKids.push(el('dd', {}, [def]));
+      });
+      nodes.push(el('dl', { class: 'modal-dl' }, dlKids));
+    }
+
+    // Convenience: include links and a "details page" CTA in the modal as well.
+    if (it.links && it.links.length) {
+      nodes.push(el('h4', {}, ['Links']));
+      nodes.push(el('div', { class: 'pill-row' }, it.links.map(l =>
+        el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
+      )));
+    }
+
+    if (detailsUrl) {
+      nodes.push(el('div', { class: 'cta-row' }, [
+        el('a', { class: 'btn small primary', href: detailsUrl }, ['Open full page'])
+      ]));
+    }
+
+    return nodes;
+  }
+
+
   function renderProjects({ mountId, dataUrl, defaultFilter = 'all' }) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
@@ -163,10 +291,29 @@
           )));
         }
 
+        const ctas = [];
+        const hasMore = Boolean(it.details && Object.keys(it.details).length) || Boolean(it.subtitle);
+
+        if (hasMore) {
+          const readMoreBtn = el('button', { class: 'btn small', type: 'button', 'data-no-flip': 'true' }, ['Read More']);
+          readMoreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const modal = ensureModal();
+            modal.open({
+              titleText: it.title || 'Project details',
+              contentNodes: projectModalContent(it, detailsUrl),
+            });
+          });
+          ctas.push(readMoreBtn);
+        }
+
         if (detailsUrl) {
-          children.push(el('div', { class: 'cta-row' }, [
-            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
-          ]));
+          ctas.push(el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details']));
+        }
+
+        if (ctas.length) {
+          children.push(el('div', { class: 'cta-row' }, ctas));
         }
 
         const back = el('div', { class: 'flip-face flip-back' }, children);
@@ -175,11 +322,12 @@
 
         root.addEventListener('click', (e) => {
           // Don't flip when user clicks a link.
-          if (e.target && e.target.closest && e.target.closest('a')) return;
+          if (e.target && e.target.closest && e.target.closest('a, button, [data-no-flip]')) return;
           toggleFlip(root);
         });
 
         root.addEventListener('keydown', (e) => {
+          if (e.target && e.target.closest && e.target.closest('a, button, input, textarea, select')) return;
           if (e.key === 'Enter' || e.key === ' ') {
             e.preventDefault();
             toggleFlip(root);
