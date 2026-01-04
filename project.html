@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Project · Raul Valle</title>
+  <meta name="description" content="Project details." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div id="site-nav"></div>
+
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal hero-split" id="project-hero">
+        <div>
+          <div class="kicker" id="project-kicker">Research</div>
+          <h1 class="h1" id="project-title">Loading…</h1>
+          <p class="lead" id="project-subtitle"></p>
+          <div class="breadcrumbs" id="project-breadcrumbs"></div>
+          <div class="cta-row" id="project-cta"></div>
+        </div>
+        <img class="card-img compact project-hero-img" id="project-hero-img" src="assets/img/placeholder.svg" alt="" loading="lazy" decoding="async" />
+      </section>
+
+      <div id="project-notice" class="notice" style="display:none;"></div>
+
+      <section id="project-detail" class="project-detail reveal"></section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/background.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/project.js"></script>
+</body>
+</html>
