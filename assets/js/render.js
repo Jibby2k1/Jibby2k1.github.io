@@ -85,11 +85,53 @@
       'aria-hidden': 'true',
     }, []);
 
+    // Inline style fallbacks (in case CSS is missing or stale-cached).
+    overlay.style.position = 'fixed';
+    overlay.style.inset = '0';
+    overlay.style.display = 'none';
+    overlay.style.alignItems = 'center';
+    overlay.style.justifyContent = 'center';
+    overlay.style.padding = '24px';
+    overlay.style.background = 'rgba(0,0,0,0.55)';
+    overlay.style.backdropFilter = 'blur(6px)';
+    overlay.style.zIndex = '9999';
+
     const dialog = el('div', { class: 'modal' }, []);
+    dialog.style.width = 'min(920px, 100%)';
+    dialog.style.maxHeight = 'min(82vh, 760px)';
+    dialog.style.overflow = 'hidden';
+    dialog.style.borderRadius = '22px';
+    dialog.style.border = '1px solid rgba(255,255,255,0.12)';
+    dialog.style.background = 'rgba(15,15,18,0.92)';
+    dialog.style.boxShadow = '0 20px 60px rgba(0,0,0,0.55)';
+
     const header = el('div', { class: 'modal-header' }, []);
+    header.style.display = 'flex';
+    header.style.alignItems = 'center';
+    header.style.justifyContent = 'space-between';
+    header.style.gap = '16px';
+    header.style.padding = '18px 18px 10px 18px';
+    header.style.borderBottom = '1px solid rgba(255,255,255,0.10)';
+
     const title = el('h3', { class: 'modal-title' }, ['']);
     const closeBtn = el('button', { class: 'modal-close', type: 'button', 'aria-label': 'Close' }, ['×']);
+    closeBtn.style.width = '38px';
+    closeBtn.style.height = '38px';
+    closeBtn.style.borderRadius = '12px';
+    closeBtn.style.border = '1px solid rgba(255,255,255,0.14)';
+    closeBtn.style.background = 'rgba(255,255,255,0.06)';
+    closeBtn.style.color = '#fff';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.style.fontSize = '22px';
+    closeBtn.style.lineHeight = '1';
+    closeBtn.style.display = 'flex';
+    closeBtn.style.alignItems = 'center';
+    closeBtn.style.justifyContent = 'center';
+
     const body = el('div', { class: 'modal-body' }, []);
+    body.style.padding = '18px';
+    body.style.overflow = 'auto';
+    body.style.maxHeight = 'calc(min(82vh, 760px) - 64px)';
 
     header.appendChild(title);
     header.appendChild(closeBtn);
@@ -102,6 +144,7 @@
 
     function close() {
       overlay.classList.remove('open');
+      overlay.style.display = 'none';
       overlay.setAttribute('aria-hidden', 'true');
       document.body.classList.remove('modal-open');
       body.innerHTML = '';
@@ -114,6 +157,7 @@
       title.textContent = titleText;
       body.innerHTML = '';
       (contentNodes || []).forEach(n => n && body.appendChild(n));
+      overlay.style.display = 'flex';
       overlay.classList.add('open');
       overlay.setAttribute('aria-hidden', 'false');
       document.body.classList.add('modal-open');
@@ -135,7 +179,7 @@
     return _modal;
   }
 
-  function projectModalContent(it, detailsUrl) {
+  function projectModalContent(it) {
     const nodes = [];
     if (!it) return nodes;
 
@@ -182,7 +226,6 @@
       nodes.push(el('dl', { class: 'modal-dl' }, dlKids));
     }
 
-    // Convenience: include links and a "details page" CTA in the modal as well.
     if (it.links && it.links.length) {
       nodes.push(el('h4', {}, ['Links']));
       nodes.push(el('div', { class: 'pill-row' }, it.links.map(l =>
@@ -190,14 +233,17 @@
       )));
     }
 
-    if (detailsUrl) {
-      nodes.push(el('div', { class: 'cta-row' }, [
-        el('a', { class: 'btn small primary', href: detailsUrl }, ['Open full page'])
-      ]));
-    }
-
     return nodes;
   }
+
+  function openProjectModal(it) {
+    const modal = ensureModal();
+    modal.open({
+      titleText: (it && it.title) ? it.title : 'Project details',
+      contentNodes: projectModalContent(it),
+    });
+  }
+
 
 
   function renderProjects({ mountId, dataUrl, defaultFilter = 'all' }) {
@@ -210,7 +256,6 @@
 
     loadJSON(dataUrl).then((data) => {
       const items = data.items || [];
-      const src = inferSrcFromDataUrl(dataUrl);
       const tags = new Set();
       items.forEach(it => (it.tags || []).forEach(t => tags.add(t)));
 
@@ -253,8 +298,6 @@
       }
 
       function card(it) {
-        const detailsUrl = (it.slug && src) ? projectHref(src, it.slug) : '';
-
         // Flip card: front shows image + title; back shows description + metadata.
         const root = el('article', {
           class: 'card flip-card reveal',
@@ -267,9 +310,6 @@
           imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }),
           el('h3', {}, [it.title || 'Untitled']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
-          detailsUrl ? el('div', { class: 'cta-row' }, [
-            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
-          ]) : null,
           el('div', { class: 'flip-hint' }, ['Click to flip'])
         ];
 
@@ -295,21 +335,13 @@
         const hasMore = Boolean(it.details && Object.keys(it.details).length) || Boolean(it.subtitle);
 
         if (hasMore) {
-          const readMoreBtn = el('button', { class: 'btn small', type: 'button', 'data-no-flip': 'true' }, ['Read More']);
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button', 'data-no-flip': 'true' }, ['Read More']);
           readMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const modal = ensureModal();
-            modal.open({
-              titleText: it.title || 'Project details',
-              contentNodes: projectModalContent(it, detailsUrl),
-            });
+            openProjectModal(it);
           });
           ctas.push(readMoreBtn);
-        }
-
-        if (detailsUrl) {
-          ctas.push(el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details']));
         }
 
         if (ctas.length) {
@@ -448,7 +480,6 @@
 
     loadJSON(dataUrl).then((data) => {
       const items = (data.items || []).filter(it => it.featured);
-      const src = inferSrcFromDataUrl(dataUrl);
       const picked = items.slice(0, limit);
 
       mount.innerHTML = '';
@@ -458,16 +489,26 @@
       }
 
       picked.forEach(it => {
-        const detailsUrl = (it.slug && src) ? projectHref(src, it.slug) : '';
-        mount.appendChild(el('article', { class: 'card reveal' }, [
-          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img compact'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
+        const kids = [
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
           el('h3', {}, [it.title || 'Untitled']),
           el('p', {}, [it.desc || '']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
-          detailsUrl ? el('div', { class: 'cta-row' }, [
-            el('a', { class: 'btn small primary', href: detailsUrl }, ['Open details'])
-          ]) : null,
-        ]));
+        ];
+
+        const hasMore = Boolean(it.details && Object.keys(it.details).length) || Boolean(it.subtitle) || Boolean(it.desc);
+
+        if (hasMore) {
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['Read More']);
+          readMoreBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openProjectModal(it);
+          });
+          kids.push(el('div', { class: 'cta-row' }, [readMoreBtn]));
+        }
+
+        mount.appendChild(el('article', { class: 'card reveal' }, kids));
       });
     }).catch((e) => {
       mount.innerHTML = '';
