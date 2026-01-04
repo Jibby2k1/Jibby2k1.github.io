@@ -1,81 +1,314 @@
 {
   "items": [
     {
-      "title": "IEEE SPS @ UF — SPS Curriculum & Workshops",
+      "slug": "sps-curriculum-workshops",
+      "title": "IEEE SPS @ UF — curriculum & workshops",
+      "subtitle": "Hands-on workshops that bridge math fundamentals to real applications (audio, images, sensors) using clear notebooks and demos.",
       "img": "assets/img/projects/SPS_Logo.png",
-      "imgAlt": "SPS curriculum project placeholder image",
-      "tags": ["teaching", "community", "tools"],
-      "pills": ["Education", "Signal Processing"],
+      "imgAlt": "IEEE Signal Processing Society logo.",
+      "tags": [
+        "teaching",
+        "community",
+        "tools"
+      ],
+      "pills": [
+        "Education",
+        "Signal processing",
+        "Jupyter notebooks"
+      ],
       "meta": "IEEE SPS @ UF · curriculum · workshops",
-      "desc": "Jupyter-based workshops connecting analysis, probability, and ML with applied signal processing case studies.",
+      "desc": "Workshop series that connects analysis, probability, and machine learning to applied signal-processing case studies, with materials designed to be approachable for newcomers.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "The goal is to make rigorous material learnable in a student setting: clear explanations, minimal prerequisites, and practical demos. Each workshop is designed so participants can run experiments, modify parameters, and understand what changes and why.",
+        "what_i_built": [
+          "Workshop notebook templates with consistent structure (concept → intuition → demo → exercises).",
+          "Example datasets and evaluation scripts so results are reproducible.",
+          "A curriculum roadmap that connects fundamentals (linear algebra, probability) to real signal-processing tasks."
+        ],
+        "deliverables": [
+          "Notebook-based workshops and supporting code.",
+          "Reusable exercises for journal clubs and study groups."
+        ],
+        "stack": [
+          "Python",
+          "Jupyter",
+          "NumPy",
+          "Matplotlib"
+        ],
+        "status": "Ongoing; continuously expanded.",
+        "glossary": [
+          {
+            "term": "Signal processing",
+            "definition": "Methods for analyzing and transforming signals like audio, images, and sensor streams."
+          }
+        ]
+      }
     },
     {
-      "title": "Audio Fingerprinting (Shazam-style) Analysis",
+      "slug": "audio-fingerprinting",
+      "title": "Audio fingerprinting (Shazam-style) analysis",
+      "subtitle": "Educational tooling for matching short audio clips by building compact signatures that remain stable under noise and tempo changes.",
       "img": "assets/img/projects/Guru.png",
-      "imgAlt": "Audio fingerprinting project placeholder image",
-      "tags": ["audio", "teaching", "research"],
-      "pills": ["Audio", "Information Retrieval"],
-      "meta": "Workshops · audio IR · metrics",
-      "desc": "Educational tooling and experiments around audio fingerprints, similarity scoring, and robustness to noise and tempo changes.",
+      "imgAlt": "Audio fingerprinting project image.",
+      "tags": [
+        "audio",
+        "teaching",
+        "research"
+      ],
+      "pills": [
+        "Audio",
+        "Information retrieval",
+        "Robust matching"
+      ],
+      "meta": "Workshops · audio search · metrics",
+      "desc": "Experiments and teaching demos around audio fingerprints, similarity scoring, and robustness to real-world distortions (noise, compression, tempo shifts).",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Audio fingerprinting turns a sound into a compact ‘signature’ so you can match a short recording against a database. The focus here is education: show how fingerprints are built, what breaks them, and how to evaluate robustness.",
+        "what_i_built": [
+          "A teaching-focused pipeline that computes fingerprints and compares similarity scores.",
+          "Stress tests that simulate real-world distortions (noise, compression artifacts, small speed changes).",
+          "Evaluation utilities to compare parameter choices and understand tradeoffs."
+        ],
+        "stack": [
+          "Python",
+          "Audio DSP",
+          "Visualization"
+        ],
+        "status": "Active as a workshop/demo project.",
+        "glossary": [
+          {
+            "term": "Fingerprint",
+            "definition": "A compact representation of a signal designed for fast matching."
+          },
+          {
+            "term": "Information retrieval",
+            "definition": "Finding relevant items (e.g., audio tracks) from a large collection using a query."
+          }
+        ]
+      }
     },
     {
+      "slug": "platos-cave",
       "title": "Plato’s Cave",
+      "subtitle": "Tooling that helps reviewers read faster by turning papers into structured ‘claims and evidence’ graphs with audit-friendly outputs.",
       "img": "assets/img/projects/PlatoCave.png",
-      "imgAlt": "Plato’s Cave project placeholder image",
-      "tags": ["tools", "research", "nlp"],
-      "pills": ["LLMs", "Research tooling"],
-      "meta": "Tools · NLP · reproducibility",
-      "desc": "Agentic system that extracts features from research papers and scores nodes by relevance, similarity, and structure to support reviewers.",
+      "imgAlt": "Plato’s Cave project logo.",
+      "tags": [
+        "tools",
+        "research",
+        "nlp"
+      ],
+      "pills": [
+        "Large language models (LLMs)",
+        "Research tooling",
+        "Reproducibility"
+      ],
+      "meta": "Tools · language + structure · reproducibility",
+      "desc": "System that extracts structured nodes (claims, evidence, limitations, etc.) from papers and scores them to support literature review and comparison across a collection.",
       "featured": true,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Reading dozens of papers is slow partly because the structure is inconsistent. Plato’s Cave uses modern language models to extract a consistent structure (e.g., claims, evidence, limitations) and then runs a scoring pipeline so papers can be compared more systematically.",
+        "what_i_built": [
+          "A batch pipeline that processes PDFs, extracts structured ‘nodes’ (e.g., claims/evidence), and stores results in machine-readable formats.",
+          "Scoring and normalization routines so outputs are comparable across papers.",
+          "Run outputs designed for auditing (logs, summaries, and artifacts)."
+        ],
+        "how_it_works": [
+          "Convert a paper to text.",
+          "Use a language model to label and structure key statements.",
+          "Score the resulting graph for quality and consistency.",
+          "Export summaries so humans can review quickly."
+        ],
+        "stack": [
+          "Python",
+          "Large language model APIs",
+          "Experiment logging"
+        ],
+        "status": "Active; evolving with new evaluation experiments.",
+        "glossary": [
+          {
+            "term": "LLM",
+            "definition": "Large language model: a model trained to generate and analyze text."
+          },
+          {
+            "term": "NLP",
+            "definition": "Natural language processing: methods for working with text."
+          }
+        ]
+      }
     },
     {
-      "title": "GH05T — EEG Hardware-to-Software Pipeline",
+      "slug": "gh05t",
+      "title": "GH05T — EEG hardware-to-software pipeline",
+      "subtitle": "A modular EEG stack (hardware + software) designed for rapid research iteration and a path toward product-grade reliability.",
       "img": "assets/img/projects/GH05T.png",
-      "imgAlt": "gh05t project image",
-      "tags": ["hardware", "eeg", "tools"],
-      "pills": ["EEG", "Embedded", "Pipeline"],
-      "meta": "IEEE SPS @ UF · hardware · EEG",
-      "desc": "End-to-end EEG stack (acquisition → streaming → preprocessing → modeling) designed for research iteration and a future product-grade pathway.",
+      "imgAlt": "GH05T project logo.",
+      "tags": [
+        "hardware",
+        "eeg",
+        "tools"
+      ],
+      "pills": [
+        "EEG (brain signals)",
+        "Embedded systems",
+        "End-to-end pipeline"
+      ],
+      "meta": "IEEE SPS @ UF · hardware · neurotech",
+      "desc": "End-to-end EEG stack (acquisition → streaming → preprocessing → modeling) designed so experiments can be run quickly, repeated reliably, and extended over time.",
       "featured": true,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "GH05T is a practical research platform: the goal is to reduce friction between an idea (‘can we measure X?’) and an experiment (‘here’s the data and a baseline model’). The project spans hardware, firmware, and software so the full system can be iterated.",
+        "what_i_built": [
+          "System design for an EEG acquisition-to-analysis workflow.",
+          "Software-side ingestion and preprocessing concepts that support multiple experimental protocols.",
+          "A roadmap for separating concerns (hardware, firmware, data, modeling) so the project can scale."
+        ],
+        "deliverables": [
+          "Design docs and reference pipelines.",
+          "Prototype-level end-to-end demos that validate the data path."
+        ],
+        "stack": [
+          "Embedded electronics",
+          "Streaming/data pipelines",
+          "Python ML tooling"
+        ],
+        "status": "Active; early-to-mid stage buildout.",
+        "glossary": [
+          {
+            "term": "Pipeline",
+            "definition": "A connected sequence of steps from data collection to analysis."
+          }
+        ]
+      }
     },
     {
-      "title": "Nano — Robotics Stack (gh05t Interface)",
+      "slug": "nano-robotics",
+      "title": "Nano — robotics stack (GH05T interface)",
+      "subtitle": "Robotics and systems engineering focused on reliable real-time interfaces: sensing, control, and data paths that can connect to GH05T.",
       "img": "assets/img/projects/Nano.png",
-      "imgAlt": "nano robotics project image",
-      "tags": ["robotics", "embedded", "tools"],
-      "pills": ["Robotics", "Embedded", "Systems"],
+      "imgAlt": "Nano robotics project logo.",
+      "tags": [
+        "robotics",
+        "embedded",
+        "tools"
+      ],
+      "pills": [
+        "Robotics",
+        "Real-time systems",
+        "Hardware/software interface"
+      ],
       "meta": "IEEE SPS @ UF · robotics · systems",
-      "desc": "Robotics project focused on building a reliable hardware-to-software interface layer for gh05t (instrumentation, control, and real-time data paths).",
+      "desc": "Robotics project focused on building a reliable hardware-to-software interface layer (instrumentation, control, and real-time data paths), with planned integration points for GH05T.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Nano is a systems project: the emphasis is on the ‘boring’ parts that make robotics usable in practice—reliable interfaces, timing, and data integrity. It is intentionally designed to connect with biosignal research workflows when appropriate.",
+        "what_i_built": [
+          "Interface and timing design principles for sensor and actuator loops.",
+          "Instrumented data paths so experiments can be logged and analyzed.",
+          "Integration planning so robotics components can share infrastructure with other projects."
+        ],
+        "stack": [
+          "Embedded systems",
+          "Control + sensing",
+          "Data logging"
+        ],
+        "status": "In development.",
+        "glossary": [
+          {
+            "term": "Real-time",
+            "definition": "A system where timing constraints matter (late outputs can be as bad as wrong outputs)."
+          }
+        ]
+      }
     },
     {
-      "title": "Ares — Minimal Fitness Tracker (Speech + Recommendations)",
+      "slug": "ares-fitness",
+      "title": "Ares — minimal fitness tracker (speech + recommendations)",
+      "subtitle": "An intentionally simple workout + nutrition tracker that captures intent via speech and provides lightweight coaching recommendations.",
       "img": "assets/img/projects/Ares.png",
-      "imgAlt": "ares fitness tracker project image",
-      "tags": ["apps", "ml", "speech"],
-      "pills": ["UX", "Speech", "Recommendations"],
+      "imgAlt": "Ares project logo.",
+      "tags": [
+        "apps",
+        "ml",
+        "speech"
+      ],
+      "pills": [
+        "User experience (UX)",
+        "Speech interfaces",
+        "Recommendations"
+      ],
       "meta": "IEEE SPS @ UF · app · personalization",
-      "desc": "Over-simplified fitness UI with speech-driven intent capture and lightweight coaching recommendations for consistency and adherence.",
+      "desc": "A minimal UI that reduces friction: capture what a user did (often via speech), keep logging consistent, and generate small recommendations that improve adherence over time.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Most fitness apps fail for simple reasons: too much friction and too much complexity. Ares is an experiment in the opposite direction—capture intent quickly, store the essentials, and provide recommendations that are easy to follow.",
+        "what_i_built": [
+          "Product concept and interaction model for speech-first logging.",
+          "A recommendation framing focused on simple, actionable next steps.",
+          "A roadmap that prioritizes consistency over feature breadth."
+        ],
+        "stack": [
+          "App prototyping",
+          "Speech-to-text (planned)",
+          "Lightweight recommendation logic"
+        ],
+        "status": "Concept + early prototyping.",
+        "glossary": [
+          {
+            "term": "Recommendation",
+            "definition": "A suggestion generated from past behavior to guide next actions."
+          }
+        ]
+      }
     },
     {
-      "title": "Sinbad — Wearable Capture & Automation Prototyping",
+      "slug": "sinbad-wearables",
+      "title": "Sinbad — wearable capture & automation prototyping",
+      "subtitle": "Personal R&D on wearable capture workflows and automation, designed with privacy, consent, and device-policy compliance in mind.",
       "img": "assets/img/projects/Sinbad.png",
-      "imgAlt": "sinbad wearable project image",
-      "tags": ["wearables", "tools", "automation"],
-      "pills": ["Wearables", "On-device", "Prototyping"],
+      "imgAlt": "Sinbad project logo.",
+      "tags": [
+        "wearables",
+        "tools",
+        "automation"
+      ],
+      "pills": [
+        "Wearables",
+        "On-device workflows",
+        "Rapid prototyping"
+      ],
       "meta": "IEEE SPS @ UF · wearables · tooling",
-      "desc": "Personal R&D prototype exploring wearable capture workflows and automation for content creation, with an emphasis on responsible use and compliance with device policies.",
+      "desc": "Prototype exploring wearable capture workflows and automation for personal content creation, explicitly emphasizing responsible use and compliance with device policies.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Sinbad is a sandbox for exploring what is possible with wearable devices: how capture, indexing, and lightweight automation could work end-to-end. The project is designed to be privacy-conscious and policy-compliant.",
+        "what_i_built": [
+          "Workflow design for capture → selection → export.",
+          "Automation concepts for organizing and surfacing clips.",
+          "Guardrails: privacy, consent, and compliance as first-class design constraints."
+        ],
+        "stack": [
+          "Wearable workflow prototyping",
+          "Automation scripting (concepts)",
+          "Human-in-the-loop review"
+        ],
+        "status": "Personal R&D / prototyping.",
+        "glossary": [
+          {
+            "term": "On-device",
+            "definition": "Processing that happens locally on a device rather than in the cloud."
+          }
+        ]
+      }
     }
   ]
 }

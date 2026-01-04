@@ -1,59 +1,270 @@
 {
   "items": [
     {
-      "title": "EEG Signal Sentiment Analysis (CNEL × Sony x LB3)",
+      "slug": "eeg-sentiment-state-space",
+      "title": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
+      "subtitle": "End-to-end pipeline that cleans raw EEG and learns a compact, time-evolving ‘hidden state’ summary that can be evaluated against labels and behavioral outcomes.",
       "img": "assets/img/projects/HLDS_Inf.png",
-      "imgAlt": "EEG research project placeholder image",
-      "tags": ["research", "eeg", "state-space"],
-      "pills": ["EEG", "HLDS", "Sony AI"],
-      "meta": "Research · neurotech · time-series ML",
-      "desc": "HLDS-based latent-state tracking for EEG during media viewing, with metrics for prediction, separability, and affective labeling.",
+      "imgAlt": "Diagram showing an EEG modeling pipeline.",
+      "tags": [
+        "research",
+        "eeg",
+        "time-series"
+      ],
+      "pills": [
+        "Electroencephalography (EEG)",
+        "State-space modeling (HLDS)",
+        "Sony–UF ‘LB3’ dataset (internal codename)"
+      ],
+      "meta": "Research · neurotechnology · time-series modeling",
+      "desc": "Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.",
       "featured": true,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "In this work, I focused on making brain-signal modeling practical: take raw EEG recordings collected while participants view media, clean and standardize them, fit a time-series model that tracks a few hidden variables over time, and produce clear metrics and reports so results are comparable across sessions and subjects.",
+        "what_i_built": [
+          "A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns raw EEG into model-ready inputs.",
+          "Training and evaluation scripts for a state-space model called a Hierarchical Linear Dynamical System (HLDS), used to track hidden ‘brain state’ trajectories.",
+          "Diagnostics and scoring outputs (e.g., stability checks, prediction metrics, and class/condition separability summaries).",
+          "Automated summaries and artifacts so runs can be audited and compared (configuration capture, standardized outputs, and plots)."
+        ],
+        "how_it_works": [
+          "EEG is cleaned and aligned into consistent time windows.",
+          "The HLDS model learns hidden variables that evolve over time and explain the observed EEG signals.",
+          "Those hidden variables (and model outputs) are evaluated against labels/conditions to test whether the model captures meaningful structure."
+        ],
+        "deliverables": [
+          "Run folders with configs, logs, metrics, and plots.",
+          "A standardized summary table used for comparison across papers/conditions."
+        ],
+        "stack": [
+          "Python",
+          "NumPy",
+          "PyTorch/CuPy (GPU acceleration where appropriate)",
+          "Reproducible experiment scripting"
+        ],
+        "collaborators": [
+          "Computational NeuroEngineering Lab (CNEL), University of Florida",
+          "Sony Research collaboration (dataset and research context)"
+        ],
+        "status": "Active research / ongoing iteration.",
+        "glossary": [
+          {
+            "term": "EEG",
+            "definition": "Electroencephalography: non-invasive measurement of brain electrical activity from the scalp."
+          },
+          {
+            "term": "HLDS",
+            "definition": "Hierarchical Linear Dynamical System: a state-space model that represents a signal using a small set of hidden variables that change over time."
+          },
+          {
+            "term": "State-space model",
+            "definition": "A model that explains observations using hidden variables (‘state’) plus rules for how those variables evolve over time."
+          },
+          {
+            "term": "LB3",
+            "definition": "Internal codename for a Sony–UF research dataset used in this project."
+          }
+        ]
+      }
     },
     {
-      "title": "Neuromechanics Analysis – Zebrafish Voltage Imaging",
+      "slug": "zebrafish-voltage-imaging-detection",
+      "title": "Zebrafish voltage imaging: event detection & interpretation",
+      "subtitle": "Signal-processing pipeline for 2D voltage imaging videos that detects brief neural events and produces interpretable visual summaries.",
       "img": "assets/img/projects/Zebra_snip.png",
-      "imgAlt": "Zebrafish voltage imaging project placeholder image",
-      "tags": ["research", "imaging", "detection"],
-      "pills": ["Neuroimaging", "Event detection"],
-      "meta": "Research · imaging · dynamics",
-      "desc": "Signal-processing and ML pipelines for 2D voltage imaging, with CFAR-style detectors (Gamma-CFAR) and QGD for event detection and interpretation.",
+      "imgAlt": "Frame from a zebrafish voltage imaging video.",
+      "tags": [
+        "research",
+        "imaging",
+        "detection"
+      ],
+      "pills": [
+        "Voltage imaging (video)",
+        "Event detection",
+        "Statistical detectors (CFAR-style)",
+        "Quadratic Gamma Discriminator (QGD)"
+      ],
+      "meta": "Research · imaging · time-series detection",
+      "desc": "Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.",
       "featured": true,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Voltage imaging produces high-frame-rate videos where brightness changes correspond (imperfectly) to changes in neural electrical activity. The practical challenge is separating true events from noise, motion, and background drift. I built and tested detectors that highlight candidate events and produce interpretable outputs for scientists to review.",
+        "what_i_built": [
+          "Preprocessing routines for voltage imaging videos (normalization, background handling, and region-wise aggregation).",
+          "Event detectors that score pixels/regions over time and surface candidate events for review.",
+          "Evaluation utilities to compare detector behavior across recordings and parameter settings.",
+          "Exportable visual summaries (event maps and time-series traces) to support interpretation."
+        ],
+        "how_it_works": [
+          "Treat each pixel/region as a time-series.",
+          "Estimate a baseline/noise profile from nearby frames.",
+          "Apply statistical tests to flag frames/regions whose changes are unlikely under the noise model.",
+          "Aggregate detections into event maps and interpretable summaries."
+        ],
+        "stack": [
+          "Python",
+          "Scientific computing",
+          "GPU acceleration where helpful"
+        ],
+        "status": "Active research / iterative refinement.",
+        "glossary": [
+          {
+            "term": "Voltage imaging",
+            "definition": "A microscopy method that records fast changes related to electrical activity as video."
+          },
+          {
+            "term": "CFAR",
+            "definition": "Constant False Alarm Rate: a family of adaptive thresholding methods that aim to keep false detections stable across changing noise."
+          },
+          {
+            "term": "QGD",
+            "definition": "Quadratic Gamma Discriminator: a statistical detector designed to highlight deviations from a learned background/noise model."
+          }
+        ]
+      }
     },
     {
-      "title": "Time-Series ML Library",
+      "slug": "time-series-ml-experiment-infra",
+      "title": "Time-series ML experiment library",
+      "subtitle": "Reusable infrastructure for running, tracking, and comparing time-series machine learning experiments with consistent reporting.",
       "img": "assets/img/projects/Adap_Filt.png",
-      "imgAlt": "Time-series ML library placeholder image",
-      "tags": ["tools", "research", "gpu"],
-      "pills": ["Time-series", "PyTorch", "RAPIDS/CuPy"],
-      "meta": "Research tools · GPU · infra",
-      "desc": "Automated architecture sweeps for time-series models and streamlined reporting; realized up to 16× efficiency via GPU acceleration.",
+      "imgAlt": "Plot representing adaptive filtering / time-series modeling.",
+      "tags": [
+        "tools",
+        "research",
+        "gpu"
+      ],
+      "pills": [
+        "Time-series modeling",
+        "Experiment tracking",
+        "GPU acceleration"
+      ],
+      "meta": "Research tools · ML infra · reproducibility",
+      "desc": "Reusable experiment scaffolding for time-series ML: standardized configs, runs, metrics, and plots so model comparisons are fair and repeatable.",
       "featured": true,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Across projects, the same problem kept repeating: experiments become hard to reproduce once there are many datasets, models, and hyperparameters. This library is a practical solution: a consistent way to launch experiments, capture configuration, compute metrics, and export results.",
+        "what_i_built": [
+          "A consistent ‘run’ layout (configs, outputs, plots) so results are auditable.",
+          "Utilities for sweeping model variants and hyperparameters in a controlled way.",
+          "Standardized metrics and plotting helpers for time-series tasks.",
+          "Performance-focused utilities (including GPU acceleration where appropriate) to keep iteration cycles short."
+        ],
+        "deliverables": [
+          "One-command experiment runs that produce comparable outputs.",
+          "Reusable plotting and reporting utilities for papers and internal reviews."
+        ],
+        "stack": [
+          "Python",
+          "PyTorch",
+          "CuPy/RAPIDS (when GPU acceleration is appropriate)",
+          "Matplotlib"
+        ],
+        "status": "Ongoing; shared across multiple research threads.",
+        "glossary": [
+          {
+            "term": "Time-series",
+            "definition": "Data collected over time (signals, sensor streams, physiological measurements)."
+          },
+          {
+            "term": "Hyperparameters",
+            "definition": "User-chosen settings that affect how a model trains (e.g., learning rate, window size)."
+          }
+        ]
+      }
     },
     {
-      "title": "Noise-Reduction Toolkit",
+      "slug": "noise-reduction-toolkit",
+      "title": "Noise-reduction toolkit",
+      "subtitle": "C-accelerated evaluation tools for denoising methods, focused on real-time constraints and fair benchmarking.",
       "img": "assets/img/placeholder.svg",
-      "imgAlt": "Noise reduction toolkit placeholder image",
-      "tags": ["tools", "dsp", "performance"],
-      "pills": ["DSP", "C-accelerated"],
+      "imgAlt": "Noise reduction toolkit placeholder image.",
+      "tags": [
+        "tools",
+        "dsp",
+        "performance"
+      ],
+      "pills": [
+        "Digital signal processing (DSP)",
+        "Real-time benchmarking",
+        "C acceleration"
+      ],
       "meta": "Tools · DSP · performance",
-      "desc": "C-accelerated Python toolkit for evaluating real-time denoising and benchmarking across different noise and signal regimes.",
+      "desc": "Toolkit for testing denoising algorithms under realistic conditions (different noise regimes, latency budgets, and signal types), with performance in mind.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "Noise reduction is easy to demo and surprisingly hard to benchmark fairly. This toolkit focuses on practical evaluation: consistent datasets, repeatable noise injection, and metrics that matter when you care about latency and throughput.",
+        "what_i_built": [
+          "Benchmark harness for running denoising methods across multiple datasets/noise settings.",
+          "Latency- and throughput-aware evaluation (important for real-time pipelines).",
+          "Selective C acceleration for tight loops where Python overhead becomes material."
+        ],
+        "stack": [
+          "Python",
+          "C extensions",
+          "NumPy"
+        ],
+        "status": "Internal utility; evolves as projects demand.",
+        "glossary": [
+          {
+            "term": "Denoising",
+            "definition": "Removing unwanted noise while preserving useful signal content."
+          },
+          {
+            "term": "Latency",
+            "definition": "How long it takes to process an input and produce an output."
+          }
+        ]
+      }
     },
     {
-      "title": "EEG/EMG Helmet – Senior Design",
+      "slug": "eeg-emg-helmet-senior-design",
+      "title": "EEG/EMG helmet (senior design)",
+      "subtitle": "Modular biosignal acquisition prototype designed around real-time data paths and practical constraints.",
       "img": "assets/img/placeholder.svg",
-      "imgAlt": "EEG/EMG helmet senior design placeholder image",
-      "tags": ["hardware", "tools", "research"],
-      "pills": ["EEG/EMG", "Embedded"],
-      "meta": "Hardware · DSP · ML",
-      "desc": "Modular biosignal acquisition system with real-time ML constraints; emphasis on data path design and latency-aware pipelines.",
+      "imgAlt": "EEG/EMG helmet senior design placeholder image.",
+      "tags": [
+        "hardware",
+        "tools",
+        "research"
+      ],
+      "pills": [
+        "EEG (brain signals)",
+        "EMG (muscle signals)",
+        "Embedded streaming"
+      ],
+      "meta": "Hardware · signal processing · ML pipeline design",
+      "desc": "Modular biosignal capture system with an emphasis on end-to-end reliability: acquisition, streaming, storage, and the constraints that come with real-time machine learning.",
       "featured": false,
-      "links": []
+      "links": [],
+      "details": {
+        "overview": "This project was a hardware-to-software exercise: designing a biosignal capture system that can support downstream machine-learning experiments. The priority was not a flashy demo, but a clear data path and an architecture that can be iterated.",
+        "what_i_built": [
+          "System architecture and data path planning (sensor → ADC → streaming → storage).",
+          "Firmware/software interface considerations to keep data synchronized.",
+          "Early-stage analysis hooks so collected data can be validated quickly."
+        ],
+        "stack": [
+          "Embedded systems",
+          "Data acquisition",
+          "Python tooling"
+        ],
+        "status": "Completed as senior design; concepts carried forward into newer work.",
+        "glossary": [
+          {
+            "term": "EMG",
+            "definition": "Electromyography: measurement of muscle electrical activity."
+          },
+          {
+            "term": "ADC",
+            "definition": "Analog-to-digital converter: converts a voltage signal into digital numbers."
+          }
+        ]
+      }
     }
   ]
 }
