@@ -4,6 +4,16 @@
   --accent: rgba(130, 180, 255, 0.55);
   --accent-2: rgba(120, 255, 220, 0.40);
   --accent-glow: rgba(150, 200, 255, 0.35);
+  --accent-fill-1: rgba(110,165,255,0.32);
+  --accent-fill-2: rgba(255,255,255,0.08);
+  --accent-fill-1-hover: rgba(130,180,255,0.38);
+  --accent-fill-2-hover: rgba(255,255,255,0.12);
+  --bg-spot-1: rgba(110,160,255,0.22);
+  --bg-spot-2: rgba(120,240,220,0.12);
+  --bg-spot-3: rgba(255,170,120,0.08);
+  --bloom-1: rgba(255,255,255,0.10);
+  --bloom-2: rgba(100,160,255,0.12);
+  --bloom-3: rgba(140,255,220,0.10);
   --panel: rgba(255,255,255,0.10);
   --panel-2: rgba(255,255,255,0.16);
   --text: rgba(255,255,255,0.92);
@@ -26,9 +36,9 @@ html{ scroll-behavior:smooth; }
 body{
   margin:0;
   color:var(--text);
-  background: radial-gradient(1100px 720px at 18% 10%, rgba(110,160,255,0.22), transparent 62%),
-              radial-gradient(980px 660px at 78% 22%, rgba(120,240,220,0.12), transparent 62%),
-              radial-gradient(860px 640px at 38% 86%, rgba(255,170,120,0.08), transparent 64%),
+  background: radial-gradient(1100px 720px at 18% 10%, var(--bg-spot-1), transparent 62%),
+              radial-gradient(980px 660px at 78% 22%, var(--bg-spot-2), transparent 62%),
+              radial-gradient(860px 640px at 38% 86%, var(--bg-spot-3), transparent 64%),
               linear-gradient(180deg, var(--bg0), var(--bg1));
   font-family: "SF Pro Display", "SF Pro Text", "SF Pro", "Helvetica Neue", Helvetica, Arial, sans-serif;
   line-height:1.55;
@@ -42,11 +52,55 @@ body::before{
   z-index: -3;
   pointer-events: none;
   background:
-    radial-gradient(520px 360px at 12% 18%, rgba(255,255,255,0.10), transparent 62%),
-    radial-gradient(640px 420px at 88% 12%, rgba(100,160,255,0.12), transparent 66%),
-    radial-gradient(520px 420px at 60% 88%, rgba(140,255,220,0.10), transparent 62%);
+    radial-gradient(520px 360px at 12% 18%, var(--bloom-1), transparent 62%),
+    radial-gradient(640px 420px at 88% 12%, var(--bloom-2), transparent 66%),
+    radial-gradient(520px 420px at 60% 88%, var(--bloom-3), transparent 62%);
   filter: blur(30px);
   opacity: 0.65;
+}
+
+body.theme-dawn{
+  --bg0: #060a16;
+  --bg1: #0b1022;
+  --bg-spot-1: rgba(120,175,255,0.20);
+  --bg-spot-2: rgba(120,230,220,0.10);
+  --bg-spot-3: rgba(255,170,120,0.07);
+  --bloom-1: rgba(255,255,255,0.08);
+  --bloom-2: rgba(110,170,255,0.10);
+  --bloom-3: rgba(140,255,220,0.08);
+}
+
+body.theme-day{
+  --bg0: #070b16;
+  --bg1: #0b1022;
+  --bg-spot-1: rgba(110,160,255,0.22);
+  --bg-spot-2: rgba(120,240,220,0.12);
+  --bg-spot-3: rgba(255,170,120,0.08);
+  --bloom-1: rgba(255,255,255,0.10);
+  --bloom-2: rgba(100,160,255,0.12);
+  --bloom-3: rgba(140,255,220,0.10);
+}
+
+body.theme-dusk{
+  --bg0: #060913;
+  --bg1: #0a0f1f;
+  --bg-spot-1: rgba(100,145,235,0.18);
+  --bg-spot-2: rgba(110,210,200,0.09);
+  --bg-spot-3: rgba(255,160,110,0.06);
+  --bloom-1: rgba(255,255,255,0.07);
+  --bloom-2: rgba(90,150,235,0.09);
+  --bloom-3: rgba(120,230,210,0.07);
+}
+
+body.theme-night{
+  --bg0: #04070f;
+  --bg1: #080c1a;
+  --bg-spot-1: rgba(90,130,210,0.14);
+  --bg-spot-2: rgba(90,190,175,0.07);
+  --bg-spot-3: rgba(200,135,90,0.04);
+  --bloom-1: rgba(255,255,255,0.05);
+  --bloom-2: rgba(80,120,200,0.06);
+  --bloom-3: rgba(110,200,185,0.05);
 }
 
 a{ color:inherit; text-decoration:none; }
@@ -248,12 +302,49 @@ main{
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.25);
 }
 .btn.primary{
-  background: linear-gradient(180deg, rgba(110,165,255,0.32), rgba(255,255,255,0.08));
+  background: linear-gradient(180deg, var(--accent-fill-1), var(--accent-fill-2));
   border-color: var(--accent);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), 0 10px 30px rgba(90,130,255,0.16);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), 0 10px 30px var(--accent-glow);
 }
 .btn:hover{ text-decoration:none; background: rgba(255,255,255,0.12); }
-.btn.primary:hover{ background: linear-gradient(180deg, rgba(130,180,255,0.38), rgba(255,255,255,0.12)); }
+.btn.primary:hover{ background: linear-gradient(180deg, var(--accent-fill-1-hover), var(--accent-fill-2-hover)); }
+
+.accent-cool{
+  --accent: rgba(130, 180, 255, 0.55);
+  --accent-2: rgba(120, 255, 220, 0.35);
+  --accent-glow: rgba(150, 200, 255, 0.35);
+  --accent-fill-1: rgba(110,165,255,0.32);
+  --accent-fill-2: rgba(255,255,255,0.08);
+  --accent-fill-1-hover: rgba(130,180,255,0.38);
+  --accent-fill-2-hover: rgba(255,255,255,0.12);
+}
+
+.accent-mint{
+  --accent: rgba(120, 235, 210, 0.50);
+  --accent-2: rgba(140, 200, 255, 0.30);
+  --accent-glow: rgba(140, 245, 220, 0.32);
+  --accent-fill-1: rgba(120,220,200,0.30);
+  --accent-fill-2: rgba(255,255,255,0.07);
+  --accent-fill-1-hover: rgba(140,235,210,0.36);
+  --accent-fill-2-hover: rgba(255,255,255,0.11);
+}
+
+.accent-amber{
+  --accent: rgba(255, 185, 120, 0.55);
+  --accent-2: rgba(255, 140, 190, 0.25);
+  --accent-glow: rgba(255, 200, 140, 0.32);
+  --accent-fill-1: rgba(235,170,120,0.30);
+  --accent-fill-2: rgba(255,255,255,0.06);
+  --accent-fill-1-hover: rgba(245,185,130,0.36);
+  --accent-fill-2-hover: rgba(255,255,255,0.10);
+}
+
+.accent-cool .kicker,
+.accent-mint .kicker,
+.accent-amber .kicker{
+  border-color: var(--accent);
+  box-shadow: inset 0 1px 0 var(--accent-glow);
+}
 
 .btn.small{
   padding: 8px 10px;
@@ -289,6 +380,17 @@ main{
   font-size: 1.1rem;
   color: var(--text);
   letter-spacing: 0.2px;
+  position: relative;
+}
+.section-title::after{
+  content:"";
+  display:block;
+  width: 46px;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0.7;
 }
 .section-subtitle{
   margin: -4px 0 16px;
