@@ -19,22 +19,29 @@
   <p class="lead">My work sits in two umbrellas: (1) research in the University of Florida’s Computational NeuroEngineering Lab (CNEL) — a group that studies how to measure and model brain and biological signals — and (2) community projects through the IEEE Signal Processing Society (SPS) student chapter at UF. I’m advised by Prof. José C. Principe and also collaborate with Prof. Joel Harley’s SmartDATA Lab.</p>
 </section>
 
-<div class="grid two accent-mint" style="margin-top:18px;">
-  <article class="card reveal">
-    <h3>CNEL (Projects)</h3>
-    <p>Research pipelines and applied modeling work in neuroengineering and biological time-series.</p>
-    <div class="cta-row">
-      <a class="btn primary" href="research-cnel.html">Open CNEL projects</a>
-    </div>
-  </article>
+<div class="accent-mint">
+  <h2 class="section-title reveal">Featured work by track</h2>
+  <p class="section-subtitle reveal">One highlighted project from each research umbrella.</p>
 
-  <article class="card reveal">
-    <h3>IEEE Signal Processing Society @ UF (Projects)</h3>
-    <p>Curriculum, workshops, and community projects designed to make rigorous material accessible and practical.</p>
-    <div class="cta-row">
-      <a class="btn primary" href="research-sps.html">Open IEEE SPS projects</a>
+  <div class="grid two" style="margin-top:12px;">
+    <div class="card reveal">
+      <h3>Featured CNEL work</h3>
+      <p>Research pipelines and applied modeling work in neuroengineering and biological time-series.</p>
+      <div id="research-featured-cnel" class="grid" style="margin-top:12px;"></div>
+      <div class="cta-row" style="margin-top:12px;">
+        <a class="btn primary" href="research-cnel.html">All CNEL projects</a>
+      </div>
     </div>
-  </article>
+
+    <div class="card reveal">
+      <h3>Featured IEEE SPS work</h3>
+      <p>Curriculum, workshops, and community projects designed to make rigorous material accessible and practical.</p>
+      <div id="research-featured-sps" class="grid" style="margin-top:12px;"></div>
+      <div class="cta-row" style="margin-top:12px;">
+        <a class="btn primary" href="research-sps.html">All IEEE SPS projects</a>
+      </div>
+    </div>
+  </div>
 </div>
     </div>
   </main>
@@ -43,6 +50,10 @@
 
   <script src="assets/js/background.js"></script>
   <script src="assets/js/site.js"></script>
-  
+  <script src="assets/js/render.js"></script>
+<script>
+  SiteRender.renderHomeFeatured({ mountId: 'research-featured-cnel', dataUrl: 'data/cnel_projects.json', limit: 1 });
+  SiteRender.renderHomeFeatured({ mountId: 'research-featured-sps', dataUrl: 'data/sps_projects.json', limit: 1 });
+</script>
 </body>
 </html>
