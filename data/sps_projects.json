@@ -19,7 +19,12 @@
       "meta": "IEEE SPS @ UF · curriculum · workshops",
       "desc": "Workshop series that connects analysis, probability, and machine learning to applied signal-processing case studies, with materials designed to be approachable for newcomers.",
       "featured": false,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/SPS_Curriculum"
+        }
+      ],
       "details": {
         "overview": "The goal is to make rigorous material learnable in a student setting: clear explanations, minimal prerequisites, and practical demos. Each workshop is designed so participants can run experiments, modify parameters, and understand what changes and why.",
         "what_i_built": [
@@ -65,7 +70,12 @@
       "meta": "IEEE SPS @ UF · audio ML · ICASSP track",
       "desc": "Aude develops an end-to-end audio research workflow: collect synchronized microphone-array data, benchmark state-of-the-art baselines, and train models for robust source separation and localization.",
       "featured": false,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/Aude"
+        }
+      ],
       "details": {
         "overview": "Aude is focused on machine listening in realistic environments where multiple sound sources overlap. The project combines hardware-informed data capture and model design to improve both source separation quality and spatial localization accuracy.",
         "what_i_built": [
@@ -110,7 +120,12 @@
       "meta": "Tools · language + structure · reproducibility",
       "desc": "System that extracts structured nodes (claims, evidence, limitations, etc.) from papers and scores them to support literature review and comparison across a collection.",
       "featured": true,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/matheusmaldaner/PlatosCave"
+        }
+      ],
       "details": {
         "overview": "Reading dozens of papers is slow partly because the structure is inconsistent. Plato’s Cave uses modern language models to extract a consistent structure (e.g., claims, evidence, limitations) and then runs a scoring pipeline so papers can be compared more systematically.",
         "what_i_built": [
@@ -161,7 +176,12 @@
       "meta": "IEEE SPS @ UF · neurotech · human-machine systems",
       "desc": "Ergo integrates biosignal hardware, feature extraction, and simulation to test how control systems move between stable and unstable regimes under cooperating vs. competing subjects and fatigue.",
       "featured": true,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/Ergo"
+        }
+      ],
       "details": {
         "overview": "Ergo studies how dynamical systems behave when driven by human biosignals. The core hypothesis is that competition and cooperation produce different stability trajectories, and that fatigue-linked EMG features help explain those transitions.",
         "what_i_built": [
@@ -206,7 +226,12 @@
       "meta": "IEEE SPS @ UF · robotics · systems",
       "desc": "Robotics project focused on building a reliable hardware-to-software interface layer (instrumentation, control, and real-time data paths), with planned integration points for Ergo.",
       "featured": false,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/Ergo"
+        }
+      ],
       "details": {
         "overview": "Nano is a systems project: the emphasis is on the ‘boring’ parts that make robotics usable in practice—reliable interfaces, timing, and data integrity. It is intentionally designed to connect with biosignal research workflows when appropriate.",
         "what_i_built": [
@@ -247,7 +272,12 @@
       "meta": "IEEE SPS @ UF · app systems · health analytics",
       "desc": "Ora is built to reduce workout logging friction while generating high-quality structured data for ML-assisted progression analysis and coaching workflows.",
       "featured": false,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/Ora"
+        }
+      ],
       "details": {
         "overview": "Ora prioritizes daily usability: local-first storage for privacy and reliability, voice-first capture for speed, and clear summaries that make progression trends easy to interpret over time.",
         "what_i_built": [
@@ -288,7 +318,12 @@
       "meta": "IEEE SPS @ UF · computer vision · CVPR track",
       "desc": "Vie investigates real-time machine perception systems that jointly model moving and static objects, with reproducible data engineering and demo-first iteration.",
       "featured": false,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/Vie"
+        }
+      ],
       "details": {
         "overview": "Vie is centered on biologically inspired scene analysis: learning dynamic interactions in complex environments while maintaining real-time system behavior suitable for downstream deployment contexts.",
         "what_i_built": [

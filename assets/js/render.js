@@ -231,6 +231,18 @@
       nodes.push(el('div', { class: 'pill-row' }, it.links.map(l =>
         el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
       )));
+      const primary = it.links.find(l => l && l.href);
+      if (primary) {
+        nodes.push(
+          el('div', { class: 'cta-row' }, [
+            el(
+              'a',
+              { class: 'btn small primary', href: primary.href, target: '_blank', rel: 'noreferrer' },
+              ['Take me there']
+            )
+          ])
+        );
+      }
     }
 
     return nodes;
