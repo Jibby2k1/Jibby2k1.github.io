@@ -47,46 +47,46 @@
       }
     },
     {
-      "slug": "audio-fingerprinting",
-      "title": "Aude — audio fingerprinting (Shazam-style) analysis",
-      "subtitle": "Educational tooling for matching short audio clips by building compact signatures that remain stable under noise and tempo changes.",
+      "slug": "aude",
+      "title": "Aude — biologically plausible audio scene analysis",
+      "subtitle": "Research on source separation and sound localization in real-world environments using informed models and a multi-microphone capture pipeline.",
       "img": "assets/img/projects/Aude.png",
       "imgAlt": "Aude project logo.",
       "tags": [
         "audio",
-        "teaching",
+        "ml",
         "research"
       ],
       "pills": [
-        "Audio",
-        "Information retrieval",
-        "Robust matching"
+        "Source separation",
+        "Localization",
+        "Multi-mic data capture"
       ],
-      "meta": "Workshops · audio search · metrics",
-      "desc": "Experiments and teaching demos around audio fingerprints, similarity scoring, and robustness to real-world distortions (noise, compression, tempo shifts).",
+      "meta": "IEEE SPS @ UF · audio ML · ICASSP track",
+      "desc": "Aude develops an end-to-end audio research workflow: collect synchronized microphone-array data, benchmark state-of-the-art baselines, and train models for robust source separation and localization.",
       "featured": false,
       "links": [],
       "details": {
-        "overview": "Audio fingerprinting turns a sound into a compact ‘signature’ so you can match a short recording against a database. The focus here is education: show how fingerprints are built, what breaks them, and how to evaluate robustness.",
+        "overview": "Aude is focused on machine listening in realistic environments where multiple sound sources overlap. The project combines hardware-informed data capture and model design to improve both source separation quality and spatial localization accuracy.",
         "what_i_built": [
-          "A teaching-focused pipeline that computes fingerprints and compares similarity scores.",
-          "Stress tests that simulate real-world distortions (noise, compression artifacts, small speed changes).",
-          "Evaluation utilities to compare parameter choices and understand tradeoffs."
+          "A project plan for reproducible baseline evaluation on source separation and localization tasks.",
+          "An initial hardware/data strategy using a 3-microphone capture setup with embedded collection components.",
+          "A milestone-driven workflow for moving from literature review to demoable, publishable results."
         ],
         "stack": [
           "Python",
-          "Audio DSP",
-          "Visualization"
+          "Audio DSP + machine learning",
+          "Microphone array + ESP32 capture hardware"
         ],
-        "status": "Active as a workshop/demo project.",
+        "status": "Active; baseline and data-capture phase in progress.",
         "glossary": [
           {
-            "term": "Fingerprint",
-            "definition": "A compact representation of a signal designed for fast matching."
+            "term": "Source separation",
+            "definition": "Separating mixed audio into individual underlying sources (for example, different speakers or instruments)."
           },
           {
-            "term": "Information retrieval",
-            "definition": "Finding relevant items (e.g., audio tracks) from a large collection using a query."
+            "term": "Localization",
+            "definition": "Estimating where a sound source is located relative to the microphones."
           }
         ]
       }
@@ -143,46 +143,46 @@
       }
     },
     {
-      "slug": "gh05t",
-      "title": "Ergo — EEG hardware-to-software pipeline",
-      "subtitle": "A modular EEG stack (hardware + software) designed for rapid research iteration and a path toward product-grade reliability.",
+      "slug": "ergo",
+      "title": "Ergo — EMG/EEG biosignal acquisition + dynamical systems",
+      "subtitle": "A neuroengineering platform for studying stability in cooperative and competitive human-in-the-loop control using multi-subject EMG features and EEG/EMG acquisition.",
       "img": "assets/img/projects/Ergo.png",
       "imgAlt": "Ergo project logo.",
       "tags": [
         "hardware",
-        "eeg",
-        "tools"
+        "neuroengineering",
+        "research"
       ],
       "pills": [
-        "EEG (brain signals)",
-        "Embedded systems",
-        "End-to-end pipeline"
+        "EMG + EEG",
+        "Embedded acquisition",
+        "Dynamical stability analysis"
       ],
-      "meta": "IEEE SPS @ UF · hardware · neurotech",
-      "desc": "End-to-end EEG stack (acquisition → streaming → preprocessing → modeling) designed so experiments can be run quickly, repeated reliably, and extended over time.",
+      "meta": "IEEE SPS @ UF · neurotech · human-machine systems",
+      "desc": "Ergo integrates biosignal hardware, feature extraction, and simulation to test how control systems move between stable and unstable regimes under cooperating vs. competing subjects and fatigue.",
       "featured": true,
       "links": [],
       "details": {
-        "overview": "Ergo is a practical research platform: the goal is to reduce friction between an idea (‘can we measure X?’) and an experiment (‘here’s the data and a baseline model’). The project spans hardware, firmware, and software so the full system can be iterated.",
+        "overview": "Ergo studies how dynamical systems behave when driven by human biosignals. The core hypothesis is that competition and cooperation produce different stability trajectories, and that fatigue-linked EMG features help explain those transitions.",
         "what_i_built": [
-          "System design for an EEG acquisition-to-analysis workflow.",
-          "Software-side ingestion and preprocessing concepts that support multiple experimental protocols.",
-          "A roadmap for separating concerns (hardware, firmware, data, modeling) so the project can scale."
+          "An acquisition plan around ADS1299 + STM32 for repeatable EMG/EEG collection and reporting.",
+          "A modeling workflow that links extracted biosignal features to control-system stability metrics.",
+          "An experiment structure for comparing cooperative and competitive multi-subject scenarios."
         ],
         "deliverables": [
-          "Design docs and reference pipelines.",
-          "Prototype-level end-to-end demos that validate the data path."
+          "Embedded C/MCU acquisition components and reproducible data pipelines.",
+          "Simulation executables and analysis outputs for publication-oriented evaluation."
         ],
         "stack": [
-          "Embedded electronics",
-          "Streaming/data pipelines",
-          "Python ML tooling"
+          "STM32 + ADS1299 embedded stack",
+          "Signal processing + feature extraction",
+          "Control/dynamical systems simulation"
         ],
-        "status": "Active; early-to-mid stage buildout.",
+        "status": "Active; hardware integration and simulation phases underway.",
         "glossary": [
           {
-            "term": "Pipeline",
-            "definition": "A connected sequence of steps from data collection to analysis."
+            "term": "EMG",
+            "definition": "Electromyography, a measurement of muscle electrical activity."
           }
         ]
       }
@@ -229,9 +229,9 @@
       }
     },
     {
-      "slug": "ares-fitness",
-      "title": "Ora — minimal fitness tracker (speech + recommendations)",
-      "subtitle": "An intentionally simple workout + nutrition tracker that captures intent via speech and provides lightweight coaching recommendations.",
+      "slug": "ora",
+      "title": "Ora — local-first workout tracker with voice logging",
+      "subtitle": "A deployable app for fast workout logging, structured training data capture, and longitudinal analysis of hypertrophy, strength, and endurance trends.",
       "img": "assets/img/projects/Ora.png",
       "imgAlt": "Ora project logo.",
       "tags": [
@@ -240,72 +240,72 @@
         "speech"
       ],
       "pills": [
-        "User experience (UX)",
-        "Speech interfaces",
-        "Recommendations"
+        "Local-first data",
+        "Voice logging",
+        "Training trend analysis"
       ],
-      "meta": "IEEE SPS @ UF · app · personalization",
-      "desc": "A minimal UI that reduces friction: capture what a user did (often via speech), keep logging consistent, and generate small recommendations that improve adherence over time.",
+      "meta": "IEEE SPS @ UF · app systems · health analytics",
+      "desc": "Ora is built to reduce workout logging friction while generating high-quality structured data for ML-assisted progression analysis and coaching workflows.",
       "featured": false,
       "links": [],
       "details": {
-        "overview": "Most fitness apps fail for simple reasons: too much friction and too much complexity. Ora is an experiment in the opposite direction—capture intent quickly, store the essentials, and provide recommendations that are easy to follow.",
+        "overview": "Ora prioritizes daily usability: local-first storage for privacy and reliability, voice-first capture for speed, and clear summaries that make progression trends easy to interpret over time.",
         "what_i_built": [
-          "Product concept and interaction model for speech-first logging.",
-          "A recommendation framing focused on simple, actionable next steps.",
-          "A roadmap that prioritizes consistency over feature breadth."
+          "A product architecture centered on local-first persistence and offline-friendly usage.",
+          "Voice-to-structured-log workflows that reduce interaction cost during training sessions.",
+          "A roadmap from MVP logging to richer trend analysis and ML-assisted coaching features."
         ],
         "stack": [
-          "App prototyping",
-          "Speech-to-text (planned)",
-          "Lightweight recommendation logic"
+          "Flutter + Riverpod",
+          "SQLite",
+          "Speech pipeline (Vosk/Gemini-ready)"
         ],
-        "status": "Concept + early prototyping.",
+        "status": "Active MVP development with expanding analysis features.",
         "glossary": [
           {
-            "term": "Recommendation",
-            "definition": "A suggestion generated from past behavior to guide next actions."
+            "term": "Local-first",
+            "definition": "An architecture where core app functionality and data storage work on-device by default."
           }
         ]
       }
     },
     {
-      "slug": "sinbad-wearables",
-      "title": "Vie — wearable capture & automation prototyping",
-      "subtitle": "Personal R&D on wearable capture workflows and automation, designed with privacy, consent, and device-policy compliance in mind.",
+      "slug": "vie",
+      "title": "Vie — biologically plausible real-time video scene analysis",
+      "subtitle": "A computer-vision research project targeting real-time perception of dynamic and static scene entities with a path toward wearable integration.",
       "img": "assets/img/projects/Vie.png",
       "imgAlt": "Vie project logo.",
       "tags": [
-        "wearables",
-        "tools",
-        "automation"
+        "vision",
+        "ml",
+        "research"
       ],
       "pills": [
-        "Wearables",
-        "On-device workflows",
-        "Rapid prototyping"
+        "Scene understanding",
+        "Real-time perception",
+        "Dataset + annotation pipeline"
       ],
-      "meta": "IEEE SPS @ UF · wearables · tooling",
-      "desc": "Prototype exploring wearable capture workflows and automation for personal content creation, explicitly emphasizing responsible use and compliance with device policies.",
+      "meta": "IEEE SPS @ UF · computer vision · CVPR track",
+      "desc": "Vie investigates real-time machine perception systems that jointly model moving and static objects, with reproducible data engineering and demo-first iteration.",
       "featured": false,
       "links": [],
       "details": {
-        "overview": "Vie is a sandbox for exploring what is possible with wearable devices: how capture, indexing, and lightweight automation could work end-to-end. The project is designed to be privacy-conscious and policy-compliant.",
+        "overview": "Vie is centered on biologically inspired scene analysis: learning dynamic interactions in complex environments while maintaining real-time system behavior suitable for downstream deployment contexts.",
         "what_i_built": [
-          "Workflow design for capture → selection → export.",
-          "Automation concepts for organizing and surfacing clips.",
-          "Guardrails: privacy, consent, and compliance as first-class design constraints."
+          "A research plan for benchmarking scene-perception baselines and defining evaluation criteria.",
+          "A data pipeline direction that includes segmentation/annotation workflow and reproducibility standards.",
+          "A milestone path from prototype perception models to a conference-grade demo and paper artifacts."
         ],
         "stack": [
-          "Wearable workflow prototyping",
-          "Automation scripting (concepts)",
-          "Human-in-the-loop review"
+          "Python vision tooling",
+          "Dataset engineering + annotation",
+          "Real-time inference prototyping"
         ],
-        "status": "Personal R&D / prototyping.",
+        "status": "Active; dataset and initial model pipeline in progress.",
         "glossary": [
           {
-            "term": "On-device",
-            "definition": "Processing that happens locally on a device rather than in the cloud."
+            "term": "Dynamic entities",
+            "definition": "Objects in a scene whose state changes over time (for example, people or vehicles in motion)."
           }
         ]
       }
