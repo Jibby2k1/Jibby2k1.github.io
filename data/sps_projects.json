@@ -48,10 +48,10 @@
     },
     {
       "slug": "audio-fingerprinting",
-      "title": "Audio fingerprinting (Shazam-style) analysis",
+      "title": "Aude — audio fingerprinting (Shazam-style) analysis",
       "subtitle": "Educational tooling for matching short audio clips by building compact signatures that remain stable under noise and tempo changes.",
-      "img": "assets/img/projects/Guru.png",
-      "imgAlt": "Audio fingerprinting project image.",
+      "img": "assets/img/projects/Aude.png",
+      "imgAlt": "Aude project logo.",
       "tags": [
         "audio",
         "teaching",
@@ -144,10 +144,10 @@
     },
     {
       "slug": "gh05t",
-      "title": "GH05T — EEG hardware-to-software pipeline",
+      "title": "Ergo — EEG hardware-to-software pipeline",
       "subtitle": "A modular EEG stack (hardware + software) designed for rapid research iteration and a path toward product-grade reliability.",
-      "img": "assets/img/projects/GH05T.png",
-      "imgAlt": "GH05T project logo.",
+      "img": "assets/img/projects/Ergo.png",
+      "imgAlt": "Ergo project logo.",
       "tags": [
         "hardware",
         "eeg",
@@ -163,7 +163,7 @@
       "featured": true,
       "links": [],
       "details": {
-        "overview": "GH05T is a practical research platform: the goal is to reduce friction between an idea (‘can we measure X?’) and an experiment (‘here’s the data and a baseline model’). The project spans hardware, firmware, and software so the full system can be iterated.",
+        "overview": "Ergo is a practical research platform: the goal is to reduce friction between an idea (‘can we measure X?’) and an experiment (‘here’s the data and a baseline model’). The project spans hardware, firmware, and software so the full system can be iterated.",
         "what_i_built": [
           "System design for an EEG acquisition-to-analysis workflow.",
           "Software-side ingestion and preprocessing concepts that support multiple experimental protocols.",
@@ -189,8 +189,8 @@
     },
     {
       "slug": "nano-robotics",
-      "title": "Nano — robotics stack (GH05T interface)",
-      "subtitle": "Robotics and systems engineering focused on reliable real-time interfaces: sensing, control, and data paths that can connect to GH05T.",
+      "title": "Nano — robotics stack (Ergo interface)",
+      "subtitle": "Robotics and systems engineering focused on reliable real-time interfaces: sensing, control, and data paths that can connect to Ergo.",
       "img": "assets/img/projects/Nano.png",
       "imgAlt": "Nano robotics project logo.",
       "tags": [
@@ -204,7 +204,7 @@
         "Hardware/software interface"
       ],
       "meta": "IEEE SPS @ UF · robotics · systems",
-      "desc": "Robotics project focused on building a reliable hardware-to-software interface layer (instrumentation, control, and real-time data paths), with planned integration points for GH05T.",
+      "desc": "Robotics project focused on building a reliable hardware-to-software interface layer (instrumentation, control, and real-time data paths), with planned integration points for Ergo.",
       "featured": false,
       "links": [],
       "details": {
@@ -230,10 +230,10 @@
     },
     {
       "slug": "ares-fitness",
-      "title": "Ares — minimal fitness tracker (speech + recommendations)",
+      "title": "Ora — minimal fitness tracker (speech + recommendations)",
       "subtitle": "An intentionally simple workout + nutrition tracker that captures intent via speech and provides lightweight coaching recommendations.",
-      "img": "assets/img/projects/Ares.png",
-      "imgAlt": "Ares project logo.",
+      "img": "assets/img/projects/Ora.png",
+      "imgAlt": "Ora project logo.",
       "tags": [
         "apps",
         "ml",
@@ -249,7 +249,7 @@
       "featured": false,
       "links": [],
       "details": {
-        "overview": "Most fitness apps fail for simple reasons: too much friction and too much complexity. Ares is an experiment in the opposite direction—capture intent quickly, store the essentials, and provide recommendations that are easy to follow.",
+        "overview": "Most fitness apps fail for simple reasons: too much friction and too much complexity. Ora is an experiment in the opposite direction—capture intent quickly, store the essentials, and provide recommendations that are easy to follow.",
         "what_i_built": [
           "Product concept and interaction model for speech-first logging.",
           "A recommendation framing focused on simple, actionable next steps.",
@@ -271,10 +271,10 @@
     },
     {
       "slug": "sinbad-wearables",
-      "title": "Sinbad — wearable capture & automation prototyping",
+      "title": "Vie — wearable capture & automation prototyping",
       "subtitle": "Personal R&D on wearable capture workflows and automation, designed with privacy, consent, and device-policy compliance in mind.",
-      "img": "assets/img/projects/Sinbad.png",
-      "imgAlt": "Sinbad project logo.",
+      "img": "assets/img/projects/Vie.png",
+      "imgAlt": "Vie project logo.",
       "tags": [
         "wearables",
         "tools",
@@ -290,7 +290,7 @@
       "featured": false,
       "links": [],
       "details": {
-        "overview": "Sinbad is a sandbox for exploring what is possible with wearable devices: how capture, indexing, and lightweight automation could work end-to-end. The project is designed to be privacy-conscious and policy-compliant.",
+        "overview": "Vie is a sandbox for exploring what is possible with wearable devices: how capture, indexing, and lightweight automation could work end-to-end. The project is designed to be privacy-conscious and policy-compliant.",
         "what_i_built": [
           "Workflow design for capture → selection → export.",
           "Automation concepts for organizing and surfacing clips.",
