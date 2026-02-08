@@ -55,7 +55,7 @@
       "slug": "aude",
       "title": "Aude — biologically plausible audio scene analysis",
       "subtitle": "Research on source separation and sound localization in real-world environments using informed models and a multi-microphone capture pipeline.",
-      "img": "assets/img/projects/Aude.png",
+      "img": "assets/img/projects/Aude_Icon_nobg.png",
       "imgAlt": "Aude project logo.",
       "tags": [
         "audio",
@@ -161,7 +161,7 @@
       "slug": "ergo",
       "title": "Ergo — EMG/EEG biosignal acquisition + dynamical systems",
       "subtitle": "A neuroengineering platform for studying stability in cooperative and competitive human-in-the-loop control using multi-subject EMG features and EEG/EMG acquisition.",
-      "img": "assets/img/projects/Ergo.png",
+      "img": "assets/img/projects/Ergo_Icon_nobg.png",
       "imgAlt": "Ergo project logo.",
       "tags": [
         "hardware",
@@ -257,7 +257,7 @@
       "slug": "ora",
       "title": "Ora — local-first workout tracker with voice logging",
       "subtitle": "A deployable app for fast workout logging, structured training data capture, and longitudinal analysis of hypertrophy, strength, and endurance trends.",
-      "img": "assets/img/projects/Ora.png",
+      "img": "assets/img/projects/Ora_Icon_nobg.png",
       "imgAlt": "Ora project logo.",
       "tags": [
         "apps",
@@ -303,7 +303,7 @@
       "slug": "vie",
       "title": "Vie — biologically plausible real-time video scene analysis",
       "subtitle": "A computer-vision research project targeting real-time perception of dynamic and static scene entities with a path toward wearable integration.",
-      "img": "assets/img/projects/Vie.png",
+      "img": "assets/img/projects/Vie_Icon_nobg.png",
       "imgAlt": "Vie project logo.",
       "tags": [
         "vision",
