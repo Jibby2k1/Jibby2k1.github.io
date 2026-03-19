@@ -2,7 +2,7 @@
   "assetFolder": "assets/img/photography/",
   "template": {
     "title": "Untitled Photo",
-    "collection": "Collection Name",
+    "collection": "Selected Work",
     "location": "City, State",
     "year": "2026",
     "img": "assets/img/photography/example.jpg",
@@ -10,6 +10,12 @@
     "caption": "One or two sentences about the shot.",
     "imgAspect": "4 / 5"
   },
+  "workflow": [
+    "Add 6 to 8 strong images under assets/img/photography/ for the first public batch.",
+    "Duplicate the template entry for each image and keep collection set to Selected Work.",
+    "Write plain-language alt text and a one- to two-sentence caption for every image.",
+    "Use year and optional location so each card has enough context without becoming technical."
+  ],
   "emptyTitle": "No photographs published yet",
   "emptyText": "The portfolio page is wired up and ready. Add image files under assets/img/photography/, duplicate the template entry, and list them in this file to publish work here.",
   "items": []

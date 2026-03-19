@@ -1,1 +1,2 @@
-Drop blog images in this directory and reference them from data/blog.json.
+Drop blog card images in this directory and reference them from data/blog.json.
+Use one image per post and keep filenames slugged, for example: eeg-state-space-note.jpg.

@@ -1,1 +1,3 @@
-Drop portfolio images in this directory and reference them from data/photography.json.
+Drop photography files in this directory and reference them from data/photography.json.
+Recommended first batch: 6 to 8 images in one collection called "Selected Work".
+Use clean filenames like 2026-city-scene-01.jpg or 2026-portrait-study-01.jpg.

@@ -603,11 +603,19 @@
       mount.innerHTML = '';
 
       if (!items.length) {
-        mount.appendChild(el('article', { class: 'card photo-empty reveal' }, [
+        const emptyChildren = [
           el('h3', {}, [data.emptyTitle || 'No photographs published yet']),
           el('p', {}, [data.emptyText || 'This gallery is ready for published images.']),
           el('div', { class: 'meta' }, ['Once you add entries to data/photography.json, they will appear here automatically.']),
-        ]));
+        ];
+
+        if (Array.isArray(data.workflow) && data.workflow.length) {
+          emptyChildren.push(el('ul', { class: 'photo-workflow' }, data.workflow.map((step) =>
+            el('li', {}, [String(step)])
+          )));
+        }
+
+        mount.appendChild(el('article', { class: 'card photo-empty reveal' }, emptyChildren));
         notifyContentRendered(mount);
         return;
       }

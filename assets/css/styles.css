@@ -688,6 +688,15 @@ main{
   max-width:720px;
 }
 
+.photo-workflow{
+  margin:14px 0 0 18px;
+  color:var(--muted);
+}
+
+.photo-workflow li{
+  margin:8px 0;
+}
+
 .footer{
   border-top: 1px solid var(--glass-border);
   background: linear-gradient(135deg, rgba(255,255,255,0.14), rgba(255,255,255,0.05));
