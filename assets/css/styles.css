@@ -190,9 +190,6 @@ svg{ max-width:100%; height:auto; }
   color:var(--muted);
   font-weight:600;
 }
-.nav-mobile-meta{
-  display:none;
-}
 .navlinks a.active{
   color:var(--text);
   background: linear-gradient(180deg, rgba(255,255,255,0.20), rgba(255,255,255,0.08));
@@ -253,30 +250,6 @@ svg{ max-width:100%; height:auto; }
   }
   .navlinks.open{ display:flex; }
   .navlinks a{ width:100%; }
-  .nav-mobile-meta{
-    display:block;
-    width:100%;
-    margin-top:4px;
-    padding-top:12px;
-    border-top:1px solid var(--glass-border);
-  }
-  .nav-mobile-label{
-    margin-bottom:8px;
-    color:var(--faint);
-    font-size:0.78rem;
-    font-weight:800;
-    letter-spacing:0.08em;
-    text-transform:uppercase;
-  }
-  .nav-mobile-actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-  }
-  .nav-mobile-actions .icon-link{
-    flex:1 1 calc(50% - 8px);
-    justify-content:center;
-  }
 }
 
 main{
