@@ -11,12 +11,153 @@
     "imgAspect": "4 / 5"
   },
   "workflow": [
-    "Add 6 to 8 strong images under assets/img/photography/ for the first public batch.",
-    "Duplicate the template entry for each image and keep collection set to Selected Work.",
-    "Write plain-language alt text and a one- to two-sentence caption for every image.",
-    "Use year and optional location so each card has enough context without becoming technical."
+    "The current batch is live with placeholder metadata so every uploaded image renders.",
+    "Keep collection set to Selected Work unless you intentionally split the gallery into groups later.",
+    "Replace each placeholder title, alt text, and caption with plain-language editorial copy.",
+    "Fill in year and optional location once you want the gallery cards to carry real context."
   ],
   "emptyTitle": "No photographs published yet",
   "emptyText": "The portfolio page is wired up and ready. Add image files under assets/img/photography/, duplicate the template entry, and list them in this file to publish work here.",
-  "items": []
+  "items": [
+    {
+      "title": "Untitled Photo 01",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC02466.JPG",
+      "imgAlt": "Placeholder alt text for DSC02466.",
+      "caption": "Placeholder caption for DSC02466. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 02",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC02570.JPG",
+      "imgAlt": "Placeholder alt text for DSC02570.",
+      "caption": "Placeholder caption for DSC02570. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 03",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC02589.JPG",
+      "imgAlt": "Placeholder alt text for DSC02589.",
+      "caption": "Placeholder caption for DSC02589. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 04",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC02820.JPG",
+      "imgAlt": "Placeholder alt text for DSC02820.",
+      "caption": "Placeholder caption for DSC02820. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 05",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03034.JPG",
+      "imgAlt": "Placeholder alt text for DSC03034.",
+      "caption": "Placeholder caption for DSC03034. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 06",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03057.JPG",
+      "imgAlt": "Placeholder alt text for DSC03057.",
+      "caption": "Placeholder caption for DSC03057. Replace this with a short editorial description of the image.",
+      "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Untitled Photo 07",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03175.JPG",
+      "imgAlt": "Placeholder alt text for DSC03175.",
+      "caption": "Placeholder caption for DSC03175. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 08",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03391.JPG",
+      "imgAlt": "Placeholder alt text for DSC03391.",
+      "caption": "Placeholder caption for DSC03391. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 09",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03940.JPG",
+      "imgAlt": "Placeholder alt text for DSC03940.",
+      "caption": "Placeholder caption for DSC03940. Replace this with a short editorial description of the image.",
+      "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Untitled Photo 10",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03958.JPG",
+      "imgAlt": "Placeholder alt text for DSC03958.",
+      "caption": "Placeholder caption for DSC03958. Replace this with a short editorial description of the image.",
+      "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Untitled Photo 11",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04004.JPG",
+      "imgAlt": "Placeholder alt text for DSC04004.",
+      "caption": "Placeholder caption for DSC04004. Replace this with a short editorial description of the image.",
+      "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Untitled Photo 12",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04025.JPG",
+      "imgAlt": "Placeholder alt text for DSC04025.",
+      "caption": "Placeholder caption for DSC04025. Replace this with a short editorial description of the image.",
+      "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Untitled Photo 13",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04130.JPG",
+      "imgAlt": "Placeholder alt text for DSC04130.",
+      "caption": "Placeholder caption for DSC04130. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Untitled Photo 14",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04270.JPG",
+      "imgAlt": "Placeholder alt text for DSC04270.",
+      "caption": "Placeholder caption for DSC04270. Replace this with a short editorial description of the image.",
+      "imgAspect": "3 / 2"
+    }
+  ]
 }
