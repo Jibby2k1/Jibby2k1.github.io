@@ -1,6 +1,15 @@
 (() => {
   const cache = new Map();
   const PLACEHOLDER_IMG = 'assets/img/placeholder.svg';
+  const LABEL_MAP = {
+    all: 'All Projects',
+    eeg: 'EEG',
+    ml: 'ML',
+    nlp: 'NLP',
+    gpu: 'GPU',
+    sps: 'SPS',
+    cnel: 'CNEL',
+  };
 
   async function loadJSON(url) {
     if (cache.has(url)) return cache.get(url);
@@ -40,6 +49,23 @@
   function projectHref(src, slug) {
     if (!src || !slug) return '';
     return `project.html?src=${encodeURIComponent(src)}&slug=${encodeURIComponent(slug)}`;
+  }
+
+  function prettyLabel(value) {
+    const raw = String(value || '').trim();
+    const lower = raw.toLowerCase();
+    if (LABEL_MAP[lower]) return LABEL_MAP[lower];
+    return lower
+      .split(/[-_\s]+/)
+      .filter(Boolean)
+      .map((part) => LABEL_MAP[part] || `${part.charAt(0).toUpperCase()}${part.slice(1)}`)
+      .join(' ');
+  }
+
+  function notifyContentRendered(root) {
+    if (window.SiteUI && typeof window.SiteUI.refreshReveal === 'function') {
+      window.SiteUI.refreshReveal(root || document);
+    }
   }
 
   function imgNode({ src, alt = '', className = 'card-img', fit = null, aspect = null } = {}) {
@@ -182,6 +208,7 @@
   function projectModalContent(it) {
     const nodes = [];
     if (!it) return nodes;
+    const detailHref = projectHref(it._srcKey, it.slug);
 
     if (it.subtitle) nodes.push(el('p', { class: 'modal-subtitle' }, [it.subtitle]));
     if (it.desc) nodes.push(el('p', {}, [it.desc]));
@@ -231,18 +258,27 @@
       nodes.push(el('div', { class: 'pill-row' }, it.links.map(l =>
         el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
       )));
-      const primary = it.links.find(l => l && l.href);
-      if (primary) {
-        nodes.push(
-          el('div', { class: 'cta-row' }, [
-            el(
-              'a',
-              { class: 'btn small primary', href: primary.href, target: '_blank', rel: 'noreferrer' },
-              ['Take me there']
-            )
-          ])
-        );
-      }
+    }
+
+    const primary = (it.links || []).find(l => l && l.href);
+    const modalCtas = [];
+
+    if (detailHref) {
+      modalCtas.push(el('a', { class: 'btn small', href: detailHref }, ['Open detail page']));
+    }
+
+    if (primary) {
+      modalCtas.push(
+        el(
+          'a',
+          { class: 'btn small primary', href: primary.href, target: '_blank', rel: 'noreferrer' },
+          ['Take me there']
+        )
+      );
+    }
+
+    if (modalCtas.length) {
+      nodes.push(el('div', { class: 'cta-row' }, modalCtas));
     }
 
     return nodes;
@@ -267,7 +303,8 @@
     if (!filtersEl || !gridEl) return;
 
     loadJSON(dataUrl).then((data) => {
-      const items = data.items || [];
+      const sourceKey = inferSrcFromDataUrl(dataUrl);
+      const items = (data.items || []).map(it => ({ ...it, _srcKey: sourceKey }));
       const tags = new Set();
       items.forEach(it => (it.tags || []).forEach(t => tags.add(t)));
 
@@ -279,8 +316,8 @@
       function drawFilters() {
         filtersEl.innerHTML = '';
 
-        // Header + lightweight search so the sidebar feels like an actual directory.
         filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Filters']));
+        filtersEl.appendChild(el('p', { class: 'filter-hint' }, ['Search titles, summaries, and tags.']));
 
         const input = el('input', {
           class: 'filter-input',
@@ -295,11 +332,11 @@
         });
         filtersEl.appendChild(el('div', { class: 'filter-search' }, [input]));
 
-        countEl = el('div', { class: 'filter-count' }, ['']);
+        countEl = el('div', { class: 'filter-count', 'aria-live': 'polite' }, ['']);
         filtersEl.appendChild(countEl);
 
         allTags.forEach(t => {
-          const btn = el('button', { class: `filter-btn${t === active ? ' active' : ''}`, type: 'button' }, [t.toUpperCase()]);
+          const btn = el('button', { class: `filter-btn${t === active ? ' active' : ''}`, type: 'button' }, [prettyLabel(t)]);
           btn.addEventListener('click', () => {
             active = t;
             drawFilters();
@@ -345,6 +382,7 @@
 
         const ctas = [];
         const hasMore = Boolean(it.details && Object.keys(it.details).length) || Boolean(it.subtitle);
+        const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
           const readMoreBtn = el('button', { class: 'btn small primary', type: 'button', 'data-no-flip': 'true' }, ['Read More']);
@@ -354,6 +392,10 @@
             openProjectModal(it);
           });
           ctas.push(readMoreBtn);
+        }
+
+        if (detailHref) {
+          ctas.push(el('a', { class: 'btn small', href: detailHref, 'data-no-flip': 'true' }, ['Open Page']));
         }
 
         if (ctas.length) {
@@ -405,10 +447,12 @@
           countEl.textContent = `${n} project${n === 1 ? '' : 's'}`;
         }
         if (!filtered.length) {
-          gridEl.appendChild(el('div', { class: 'notice' }, ['No projects match this filter.']));
+          gridEl.appendChild(el('div', { class: 'notice' }, ['No projects match this filter yet. Try clearing the search or choosing a different tag.']));
+          notifyContentRendered(gridEl);
           return;
         }
         filtered.forEach(it => gridEl.appendChild(card(it)));
+        notifyContentRendered(gridEl);
       }
 
       drawFilters();
@@ -416,6 +460,7 @@
     }).catch((e) => {
       gridEl.innerHTML = '';
       gridEl.appendChild(el('div', { class: 'notice' }, [`Failed to load project data (${dataUrl}).`]));
+      notifyContentRendered(gridEl);
       console.warn(e);
     });
   }
@@ -429,6 +474,7 @@
       mount.innerHTML = '';
       if (!items.length) {
         mount.appendChild(el('div', { class: 'notice' }, ['No blog posts yet.']));
+        notifyContentRendered(mount);
         return;
       }
 
@@ -452,9 +498,11 @@
 
         mount.appendChild(details);
       });
+      notifyContentRendered(mount);
     }).catch((e) => {
       mount.innerHTML = '';
       mount.appendChild(el('div', { class: 'notice' }, [`Failed to load blog data (${dataUrl}).`]));
+      notifyContentRendered(mount);
       console.warn(e);
     });
   }
@@ -468,6 +516,7 @@
       mount.innerHTML = '';
       if (!items.length) {
         mount.appendChild(el('div', { class: 'notice' }, ['No awards listed yet.']));
+        notifyContentRendered(mount);
         return;
       }
 
@@ -479,9 +528,11 @@
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
         ]));
       });
+      notifyContentRendered(mount);
     }).catch((e) => {
       mount.innerHTML = '';
       mount.appendChild(el('div', { class: 'notice' }, [`Failed to load awards data (${dataUrl}).`]));
+      notifyContentRendered(mount);
       console.warn(e);
     });
   }
@@ -491,12 +542,16 @@
     if (!mount) return;
 
     loadJSON(dataUrl).then((data) => {
-      const items = (data.items || []).filter(it => it.featured);
+      const sourceKey = inferSrcFromDataUrl(dataUrl);
+      const items = (data.items || [])
+        .map(it => ({ ...it, _srcKey: sourceKey }))
+        .filter(it => it.featured);
       const picked = items.slice(0, limit);
 
       mount.innerHTML = '';
       if (!picked.length) {
         mount.appendChild(el('div', { class: 'notice' }, ['No featured items yet.']));
+        notifyContentRendered(mount);
         return;
       }
 
@@ -509,6 +564,7 @@
         ];
 
         const hasMore = Boolean(it.details && Object.keys(it.details).length) || Boolean(it.subtitle) || Boolean(it.desc);
+        const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
           const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['Read More']);
@@ -520,14 +576,76 @@
           kids.push(el('div', { class: 'cta-row' }, [readMoreBtn]));
         }
 
+        if (detailHref) {
+          const ctaRow = kids.find(node => node && node.className === 'cta-row');
+          const link = el('a', { class: 'btn small', href: detailHref }, ['Open Page']);
+          if (ctaRow) ctaRow.appendChild(link);
+          else kids.push(el('div', { class: 'cta-row' }, [link]));
+        }
+
         mount.appendChild(el('article', { class: 'card reveal' }, kids));
       });
+      notifyContentRendered(mount);
     }).catch((e) => {
       mount.innerHTML = '';
       mount.appendChild(el('div', { class: 'notice' }, [`Failed to load featured data (${dataUrl}).`]));
+      notifyContentRendered(mount);
       console.warn(e);
     });
   }
 
-  window.SiteRender = { renderProjects, renderBlog, renderAwards, renderHomeFeatured };
+  function renderPhotography({ mountId, dataUrl }) {
+    const mount = document.getElementById(mountId);
+    if (!mount) return;
+
+    loadJSON(dataUrl).then((data) => {
+      const items = data.items || [];
+      mount.innerHTML = '';
+
+      if (!items.length) {
+        mount.appendChild(el('article', { class: 'card photo-empty reveal' }, [
+          el('h3', {}, [data.emptyTitle || 'No photographs published yet']),
+          el('p', {}, [data.emptyText || 'This gallery is ready for published images.']),
+          el('div', { class: 'meta' }, ['Once you add entries to data/photography.json, they will appear here automatically.']),
+        ]));
+        notifyContentRendered(mount);
+        return;
+      }
+
+      items.forEach((it) => {
+        const media = imgNode({
+          src: it.img,
+          alt: it.imgAlt || it.title || 'Photograph',
+          className: 'photo-media',
+          fit: it.imgFit || 'cover',
+          aspect: it.imgAspect || it.aspect || null,
+        });
+
+        const mediaNode = it.link
+          ? el('a', { class: 'photo-media-link', href: it.link, target: '_blank', rel: 'noreferrer' }, [media])
+          : media;
+
+        const metaParts = [it.location, it.year].filter(Boolean).join(' · ');
+
+        mount.appendChild(el('figure', { class: 'photo-card reveal' }, [
+          mediaNode,
+          el('figcaption', { class: 'photo-copy' }, [
+            el('div', { class: 'photo-category' }, [it.collection || 'Photography']),
+            el('h3', {}, [it.title || 'Untitled']),
+            it.caption ? el('p', { class: 'photo-caption' }, [it.caption]) : null,
+            metaParts ? el('div', { class: 'photo-meta' }, [metaParts]) : null,
+          ]),
+        ]));
+      });
+
+      notifyContentRendered(mount);
+    }).catch((e) => {
+      mount.innerHTML = '';
+      mount.appendChild(el('div', { class: 'notice' }, [`Failed to load photography data (${dataUrl}).`]));
+      notifyContentRendered(mount);
+      console.warn(e);
+    });
+  }
+
+  window.SiteRender = { renderProjects, renderBlog, renderAwards, renderHomeFeatured, renderPhotography };
 })();

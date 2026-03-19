@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Photography · Raul Valle</title>
+  <meta name="description" content="Photography portfolio and gallery space for Raul Valle." />
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div id="site-nav"></div>
+
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal accent-amber">
+        <div class="kicker">Portfolio / Photography</div>
+        <h1 class="h1">Selected photography</h1>
+        <p class="lead">A dedicated home for visual work outside research. The gallery is built to support image, caption, location, and date without changing the layout every time you want to publish a new shot.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="contact.html">Get in touch</a>
+          <a class="btn" href="https://www.instagram.com/raul.research/" target="_blank" rel="noreferrer">Instagram</a>
+        </div>
+      </section>
+
+      <div class="grid two accent-cool" style="margin-top:18px;">
+        <article class="card reveal">
+          <h3>How it is organized</h3>
+          <p>The gallery is set up for clean browsing: image first, then a short caption and context. That keeps the page readable on both desktop and mobile.</p>
+          <div class="pill-row">
+            <span class="pill">Image</span>
+            <span class="pill">Caption</span>
+            <span class="pill">Location</span>
+            <span class="pill">Date</span>
+          </div>
+        </article>
+
+        <article class="card reveal">
+          <h3>Easy to maintain</h3>
+          <p>Photography entries live in <code>data/photography.json</code>, and image files can live in <code>assets/img/photography/</code>. That means you can add work without touching the page structure.</p>
+          <div class="meta">Use this page as the site-facing portfolio and keep social platforms as secondary distribution.</div>
+        </article>
+      </div>
+
+      <section class="accent-mint">
+        <h2 class="section-title reveal">Gallery</h2>
+        <p class="section-subtitle reveal">Ready for published images and captions.</p>
+        <div id="photography-mount" class="photo-grid"></div>
+        <noscript>
+          <div class="notice">Enable JavaScript to load the photography gallery.</div>
+        </noscript>
+      </section>
+    </div>
+  </main>
+
+  <div id="site-footer"></div>
+
+  <script src="assets/js/background.js"></script>
+  <script src="assets/js/site.js"></script>
+  <script src="assets/js/render.js"></script>
+  <script>
+    SiteRender.renderPhotography({ mountId: 'photography-mount', dataUrl: 'data/photography.json' });
+  </script>
+</body>
+</html>
