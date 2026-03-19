@@ -1,4 +1,14 @@
 {
+  "assetFolder": "assets/img/blog/",
+  "template": {
+    "title": "Post title",
+    "date": "Mar 2026",
+    "tag": "Research log",
+    "img": "assets/img/blog/example.jpg",
+    "imgAlt": "Short description of the image",
+    "summary": "A short one-paragraph preview for the card.",
+    "content": "Full post content shown when the card is expanded."
+  },
   "items": [
     {
       "title": "Why I care about state-space models for EEG",

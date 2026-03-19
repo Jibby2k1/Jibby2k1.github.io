@@ -16,11 +16,22 @@
       <section class="page-hero reveal accent-cool">
   <div class="kicker">Blog</div>
   <h1 class="h1">Notes, write-ups, and logs</h1>
-  <p class="lead">Short notes, project logs, and technical reflections. Posts expand inline so browsing stays fast.</p>
+  <p class="lead">Short notes, project logs, and technical reflections. Posts are laid out as cards so the page stays easier to browse.</p>
 </section>
 
 <section class="accent-mint">
-  <div id="blog-mount" class="grid" style="gap:14px;"></div>
+  <div class="grid two" style="margin-bottom:18px;">
+    <article class="card reveal">
+      <h3>Easy to update</h3>
+      <p>Drop blog images into <code>assets/img/blog/</code>, then add or duplicate a post entry in <code>data/blog.json</code>. The page now renders each post as a card automatically.</p>
+    </article>
+    <article class="card reveal">
+      <h3>Suggested post fields</h3>
+      <p>Use <code>title</code>, <code>date</code>, <code>tag</code>, <code>img</code>, <code>summary</code>, and <code>content</code>. If you want, I can also add links, reading time, or categories next.</p>
+    </article>
+  </div>
+
+  <div id="blog-mount" class="blog-grid"></div>
   <noscript>
     <div class="notice">Enable JavaScript to load the blog posts.</div>
   </noscript>

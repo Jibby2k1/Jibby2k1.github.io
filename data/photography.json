@@ -1,5 +1,16 @@
 {
+  "assetFolder": "assets/img/photography/",
+  "template": {
+    "title": "Untitled Photo",
+    "collection": "Collection Name",
+    "location": "City, State",
+    "year": "2026",
+    "img": "assets/img/photography/example.jpg",
+    "imgAlt": "Short description of the image",
+    "caption": "One or two sentences about the shot.",
+    "imgAspect": "4 / 5"
+  },
   "emptyTitle": "No photographs published yet",
-  "emptyText": "The portfolio page is wired up and ready. Add image files under assets/img/photography/ and list them in this file to publish work here.",
+  "emptyText": "The portfolio page is wired up and ready. Add image files under assets/img/photography/, duplicate the template entry, and list them in this file to publish work here.",
   "items": []
 }

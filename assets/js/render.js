@@ -465,12 +465,12 @@
     });
   }
 
-  function renderBlog({ mountId, dataUrl }) {
+  function renderBlog({ mountId, dataUrl, limit = null }) {
     const mount = document.getElementById(mountId);
     if (!mount) return;
 
     loadJSON(dataUrl).then((data) => {
-      const items = data.items || [];
+      const items = (data.items || []).slice(0, limit || undefined);
       mount.innerHTML = '';
       if (!items.length) {
         mount.appendChild(el('div', { class: 'notice' }, ['No blog posts yet.']));
@@ -479,24 +479,24 @@
       }
 
       items.forEach(it => {
-        const details = el('details', { class: 'post reveal' }, []);
+        const cardChildren = [
+          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'blog-media'), fit: (it.imgFit || 'cover'), aspect: (it.imgAspect || null) }) : null,
+          el('div', { class: 'blog-copy' }, [
+            el('div', { class: 'blog-meta' }, [`${it.date || ''}${it.tag ? ' · ' + it.tag : ''}`]),
+            el('h3', { class: 'blog-title' }, [it.title || 'Untitled']),
+            it.summary ? el('p', { class: 'blog-summary' }, [it.summary]) : null,
+          ]),
+        ];
 
-        const title = el('div', { class: 'post-title' }, [it.title || 'Untitled']);
-        const meta = el('div', { class: 'post-meta' }, [`${it.date || ''}${it.tag ? ' · ' + it.tag : ''}`]);
-        const summaryText = it.summary ? el('div', { class: 'post-summary' }, [it.summary]) : null;
+        if (it.content) {
+          const details = el('details', { class: 'blog-details' }, [
+            el('summary', {}, ['Read note']),
+            el('div', { class: 'blog-content' }, [it.content]),
+          ]);
+          cardChildren.push(details);
+        }
 
-        const header = el('div', { class: 'post-header' }, [
-          it.img ? imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'post-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }) : null,
-          el('div', { class: 'post-text' }, [title, meta, summaryText])
-        ]);
-
-        const summary = el('summary', {}, [header]);
-        const content = it.content ? el('div', { class: 'post-content' }, [it.content]) : null;
-
-        details.appendChild(summary);
-        if (content) details.appendChild(content);
-
-        mount.appendChild(details);
+        mount.appendChild(el('article', { class: 'card blog-card reveal' }, cardChildren.filter(Boolean)));
       });
       notifyContentRendered(mount);
     }).catch((e) => {

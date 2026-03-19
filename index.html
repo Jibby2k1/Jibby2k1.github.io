@@ -25,42 +25,6 @@
   </div>
 </section>
 
-<div class="grid two accent-mint" style="margin-top:18px;">
-  <article class="card reveal">
-    <h3>Start here</h3>
-    <div class="quick-links">
-      <a class="quick-link" href="research.html">
-        <strong>Research & projects</strong>
-        <span>Browse CNEL and IEEE SPS work with filters, summaries, and shareable detail pages.</span>
-      </a>
-      <a class="quick-link" href="about.html">
-        <strong>Background</strong>
-        <span>See my education, research focus, and the tools I use most often.</span>
-      </a>
-      <a class="quick-link" href="photography.html">
-        <strong>Photography</strong>
-        <span>Use the new portfolio page as a dedicated home for visual work outside the lab.</span>
-      </a>
-      <a class="quick-link" href="contact.html">
-        <strong>Contact & links</strong>
-        <span>Jump straight to the best places to reach me or follow my work.</span>
-      </a>
-    </div>
-  </article>
-
-  <article class="card reveal">
-    <h3>What this site covers</h3>
-    <p>Signals and systems research, machine-learning tooling, student-facing technical work, awards, short writing, and visual projects.</p>
-    <div class="pill-row">
-      <span class="pill">Research</span>
-      <span class="pill">Engineering</span>
-      <span class="pill">Writing</span>
-      <span class="pill">Photography</span>
-    </div>
-    <div class="meta">The goal is simple: make it easier to understand what I work on and where to go next.</div>
-  </article>
-</div>
-
 <div class="accent-mint">
   <h2 class="section-title reveal">Featured Work</h2>
 
@@ -104,7 +68,7 @@
   </article>
 
   <h2 class="section-title reveal">Latest writing</h2>
-  <p class="section-subtitle reveal">Short notes and project logs that expand inline.</p>
+  <p class="section-subtitle reveal">Short notes and project logs, laid out as cards.</p>
   <div id="home-latest-post" class="grid" style="gap:14px;"></div>
 </div>
     </div>
@@ -116,57 +80,9 @@
   <script src="assets/js/site.js"></script>
   <script src="assets/js/render.js"></script>
 <script>
-  // Home: show featured cards (top 3 featured items per list) + latest blog post
-  (async () => {
-    try {
-      SiteRender.renderHomeFeatured({ mountId: 'home-featured-cnel', dataUrl: 'data/cnel_projects.json', limit: 2 });
-      SiteRender.renderHomeFeatured({ mountId: 'home-featured-sps', dataUrl: 'data/sps_projects.json', limit: 2 });
-
-      // Render latest blog post only
-      const mount = document.getElementById('home-latest-post');
-      const res = await fetch('data/blog.json', { cache: 'no-cache' });
-      const data = await res.json();
-      const items = (data.items || []);
-      if (!items.length) return;
-      const it = items[0];
-      mount.innerHTML = '';
-      const d = document.createElement('details');
-      d.className = 'post reveal';
-
-      const s = document.createElement('summary');
-      const header = document.createElement('div');
-      header.className = 'post-header';
-
-      if (it.img) {
-        const img = document.createElement('img');
-        img.className = 'post-img';
-        img.src = it.img;
-        img.alt = it.imgAlt || it.title || '';
-        img.loading = 'lazy';
-        img.decoding = 'async';
-        img.addEventListener('error', () => {
-          if (img.src && !img.src.includes('assets/img/placeholder.svg')) img.src = 'assets/img/placeholder.svg';
-        });
-        header.appendChild(img);
-      }
-
-      const t = document.createElement('div');
-      t.className = 'post-text';
-      t.innerHTML = `<div class="post-title">${it.title || 'Untitled'}</div>
-                     <div class="post-meta">${(it.date||'')}${it.tag ? ' · ' + it.tag : ''}</div>
-                     <div class="post-summary">${it.summary || ''}</div>`;
-      header.appendChild(t);
-      s.appendChild(header);
-      d.appendChild(s);
-      const c = document.createElement('div');
-      c.className = 'post-content';
-      c.textContent = it.content || '';
-      d.appendChild(c);
-      mount.appendChild(d);
-    } catch (e) {
-      console.warn(e);
-    }
-  })();
+  SiteRender.renderHomeFeatured({ mountId: 'home-featured-cnel', dataUrl: 'data/cnel_projects.json', limit: 2 });
+  SiteRender.renderHomeFeatured({ mountId: 'home-featured-sps', dataUrl: 'data/sps_projects.json', limit: 2 });
+  SiteRender.renderBlog({ mountId: 'home-latest-post', dataUrl: 'data/blog.json', limit: 1 });
 </script>
 </body>
 </html>

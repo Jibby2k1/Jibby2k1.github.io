@@ -1,0 +1,1 @@
+Drop blog images in this directory and reference them from data/blog.json.
