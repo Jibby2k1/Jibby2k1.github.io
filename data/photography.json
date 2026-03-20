@@ -100,6 +100,16 @@
       "imgAspect": "3 / 2"
     },
     {
+      "title": "American Woman",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC03396.JPG",
+      "imgAlt": "American Woman",
+      "caption": "Pool => PowaH",
+      "imgAspect": "3 / 2"
+    },
+    {
       "title": "Nana",
       "collection": "Selected Work",
       "location": "Location TBD",
@@ -137,6 +147,16 @@
       "img": "assets/img/photography/DSC04130.JPG",
       "imgAlt": "2016",
       "caption": "The Gentle Men. IG: andre.reveles3 .",
+      "imgAspect": "3 / 2"
+    },
+    {
+      "title": "Might Guy",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04233.JPG",
+      "imgAlt": "Might Guy",
+      "caption": "Rock Lee",
       "imgAspect": "3 / 2"
     }
   ]
