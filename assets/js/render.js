@@ -316,13 +316,13 @@
       function drawFilters() {
         filtersEl.innerHTML = '';
 
-        filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Archive Index']));
+        filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Filters']));
         filtersEl.appendChild(el('p', { class: 'filter-hint' }, ['Search titles, summaries, and tags.']));
 
         const input = el('input', {
           class: 'filter-input',
           type: 'search',
-          placeholder: 'Search records…',
+          placeholder: 'Search projects…',
           'aria-label': 'Search projects',
         });
         input.value = query;
@@ -347,35 +347,29 @@
       }
 
       function card(it) {
-        // Flip card: front shows image + title; back shows description + metadata.
-        const root = el('article', {
-          class: 'card flip-card reveal',
-          tabindex: '0',
-          role: 'button',
-          'aria-pressed': 'false',
-        }, []);
+        const children = [];
 
-        const frontChildren = [
-          imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }),
-          el('h3', {}, [it.title || 'Untitled']),
-          it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
-          el('div', { class: 'flip-hint' }, ['Open abstract'])
-        ];
-
-        const front = el('div', { class: 'flip-face flip-front' }, frontChildren);
-
-        const children = [
-          el('h3', {}, [it.title || 'Untitled']),
-          el('p', {}, [it.desc || '']),
-        ];
+        if (it.meta) children.push(el('div', { class: 'meta' }, [it.meta]));
+        if (it.img) {
+          children.push(
+            imgNode({
+              src: it.img,
+              alt: it.imgAlt || it.title || '',
+              className: (it.imgClass || 'card-img'),
+              fit: (it.imgFit || null),
+              aspect: (it.imgAspect || null),
+            })
+          );
+        }
+        children.push(el('h3', {}, [it.title || 'Untitled']));
+        if (it.subtitle) children.push(el('p', { class: 'record-subtitle' }, [it.subtitle]));
+        if (it.desc) children.push(el('p', {}, [it.desc]));
 
         if (it.pills && it.pills.length) {
-          children.push(el('div', { class: 'pill-row' }, (it.pills || []).map(p => el('span', { class: 'pill' }, [p]))));
+          children.push(el('div', { class: 'pill-row' }, (it.pills || []).map((p) => el('span', { class: 'pill' }, [p]))));
         }
-        if (it.meta) children.push(el('div', { class: 'meta' }, [it.meta]));
-
         if (it.links && it.links.length) {
-          children.push(el('div', { class: 'pill-row' }, it.links.map(l =>
+          children.push(el('div', { class: 'pill-row' }, it.links.map((l) =>
             el('a', { class: 'pill', href: l.href, target: '_blank', rel: 'noreferrer' }, [l.label])
           )));
         }
@@ -385,7 +379,7 @@
         const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
-          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button', 'data-no-flip': 'true' }, ['View abstract']);
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['Read More']);
           readMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -395,32 +389,14 @@
         }
 
         if (detailHref) {
-          ctas.push(el('a', { class: 'btn small', href: detailHref, 'data-no-flip': 'true' }, ['Open record']));
+          ctas.push(el('a', { class: 'btn small', href: detailHref }, ['Open Page']));
         }
 
         if (ctas.length) {
           children.push(el('div', { class: 'cta-row' }, ctas));
         }
 
-        const back = el('div', { class: 'flip-face flip-back' }, children);
-        const inner = el('div', { class: 'flip-inner' }, [front, back]);
-        root.appendChild(inner);
-
-        root.addEventListener('click', (e) => {
-          // Don't flip when user clicks a link.
-          if (e.target && e.target.closest && e.target.closest('a, button, [data-no-flip]')) return;
-          toggleFlip(root);
-        });
-
-        root.addEventListener('keydown', (e) => {
-          if (e.target && e.target.closest && e.target.closest('a, button, input, textarea, select')) return;
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            toggleFlip(root);
-          }
-        });
-
-        return root;
+        return el('article', { class: 'card record-card reveal' }, children.filter(Boolean));
       }
 
       function drawGrid() {
@@ -490,7 +466,7 @@
 
         if (it.content) {
           const details = el('details', { class: 'blog-details' }, [
-            el('summary', {}, ['Open entry']),
+            el('summary', {}, ['Read note']),
             el('div', { class: 'blog-content' }, [it.content]),
           ]);
           cardChildren.push(details);
@@ -567,7 +543,7 @@
         const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
-          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['View abstract']);
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['Read More']);
           readMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -578,7 +554,7 @@
 
         if (detailHref) {
           const ctaRow = kids.find(node => node && node.className === 'cta-row');
-          const link = el('a', { class: 'btn small', href: detailHref }, ['Open record']);
+          const link = el('a', { class: 'btn small', href: detailHref }, ['Open Page']);
           if (ctaRow) ctaRow.appendChild(link);
           else kids.push(el('div', { class: 'cta-row' }, [link]));
         }

@@ -3,17 +3,17 @@
   const SOURCES = {
     cnel: {
       url: 'data/cnel_projects.json',
-      kicker: 'Archive Record · CNEL',
+      kicker: 'Research · CNEL',
       backHref: 'research-cnel.html',
-      backLabel: 'Return to CNEL collection',
-      crumbLabel: 'CNEL collection',
+      backLabel: 'Back to CNEL projects',
+      crumbLabel: 'CNEL projects',
     },
     sps: {
       url: 'data/sps_projects.json',
-      kicker: 'Archive Record · IEEE SPS @ UF',
+      kicker: 'Research · IEEE SPS @ UF',
       backHref: 'research-sps.html',
-      backLabel: 'Return to IEEE SPS collection',
-      crumbLabel: 'IEEE SPS collection',
+      backLabel: 'Back to IEEE SPS projects',
+      crumbLabel: 'IEEE SPS projects',
     },
   };
 
