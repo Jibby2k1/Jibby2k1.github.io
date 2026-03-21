@@ -116,19 +116,6 @@
     if (y) y.textContent = new Date().getFullYear();
   }
 
-  function applyTimeTheme() {
-    const h = new Date().getHours();
-    let theme = 'theme-night';
-    if (h >= 6 && h < 10) theme = 'theme-dawn';
-    else if (h >= 10 && h < 17) theme = 'theme-day';
-    else if (h >= 17 && h < 20) theme = 'theme-dusk';
-
-    document.body.classList.remove('theme-dawn', 'theme-day', 'theme-dusk', 'theme-night');
-    document.body.classList.add(theme);
-  }
-
-  applyTimeTheme();
-  setInterval(applyTimeTheme, 10 * 60 * 1000);
   initReveal();
 
   try {
@@ -144,12 +131,5 @@
     console.warn(e);
   }
 
-  // Background animation (canvas)
-  try {
-    if (window.SiteBackground && window.SiteBackground.startBackground) {
-      window.SiteBackground.startBackground();
-    }
-  } catch (e) {
-    console.warn(e);
-  }
+  // The shared archive theme uses a static background, so this hook is intentionally quiet.
 })();

@@ -118,18 +118,18 @@
     overlay.style.alignItems = 'center';
     overlay.style.justifyContent = 'center';
     overlay.style.padding = '24px';
-    overlay.style.background = 'rgba(0,0,0,0.55)';
-    overlay.style.backdropFilter = 'blur(6px)';
+    overlay.style.background = 'rgba(73,58,38,0.16)';
+    overlay.style.backdropFilter = 'blur(4px)';
     overlay.style.zIndex = '9999';
 
     const dialog = el('div', { class: 'modal' }, []);
     dialog.style.width = 'min(920px, 100%)';
     dialog.style.maxHeight = 'min(82vh, 760px)';
     dialog.style.overflow = 'hidden';
-    dialog.style.borderRadius = '22px';
-    dialog.style.border = '1px solid rgba(255,255,255,0.12)';
-    dialog.style.background = 'rgba(15,15,18,0.92)';
-    dialog.style.boxShadow = '0 20px 60px rgba(0,0,0,0.55)';
+    dialog.style.borderRadius = '0';
+    dialog.style.border = '1px solid #9b8f7b';
+    dialog.style.background = 'linear-gradient(180deg, #fffaf0, #ede5d3)';
+    dialog.style.boxShadow = '0 22px 50px rgba(57,40,16,0.18)';
 
     const header = el('div', { class: 'modal-header' }, []);
     header.style.display = 'flex';
@@ -137,16 +137,16 @@
     header.style.justifyContent = 'space-between';
     header.style.gap = '16px';
     header.style.padding = '18px 18px 10px 18px';
-    header.style.borderBottom = '1px solid rgba(255,255,255,0.10)';
+    header.style.borderBottom = '1px solid #cfc1ab';
 
     const title = el('h3', { class: 'modal-title' }, ['']);
     const closeBtn = el('button', { class: 'modal-close', type: 'button', 'aria-label': 'Close' }, ['×']);
     closeBtn.style.width = '38px';
     closeBtn.style.height = '38px';
-    closeBtn.style.borderRadius = '12px';
-    closeBtn.style.border = '1px solid rgba(255,255,255,0.14)';
-    closeBtn.style.background = 'rgba(255,255,255,0.06)';
-    closeBtn.style.color = '#fff';
+    closeBtn.style.borderRadius = '0';
+    closeBtn.style.border = '1px solid #9b8f7b';
+    closeBtn.style.background = '#fffaf0';
+    closeBtn.style.color = '#1f1a16';
     closeBtn.style.cursor = 'pointer';
     closeBtn.style.fontSize = '22px';
     closeBtn.style.lineHeight = '1';
@@ -316,13 +316,13 @@
       function drawFilters() {
         filtersEl.innerHTML = '';
 
-        filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Filters']));
+        filtersEl.appendChild(el('div', { class: 'filter-title' }, ['Archive Index']));
         filtersEl.appendChild(el('p', { class: 'filter-hint' }, ['Search titles, summaries, and tags.']));
 
         const input = el('input', {
           class: 'filter-input',
           type: 'search',
-          placeholder: 'Search projects…',
+          placeholder: 'Search records…',
           'aria-label': 'Search projects',
         });
         input.value = query;
@@ -359,7 +359,7 @@
           imgNode({ src: it.img, alt: it.imgAlt || it.title || '', className: (it.imgClass || 'card-img'), fit: (it.imgFit || null), aspect: (it.imgAspect || null) }),
           el('h3', {}, [it.title || 'Untitled']),
           it.meta ? el('div', { class: 'meta' }, [it.meta]) : null,
-          el('div', { class: 'flip-hint' }, ['Click to flip'])
+          el('div', { class: 'flip-hint' }, ['Open abstract'])
         ];
 
         const front = el('div', { class: 'flip-face flip-front' }, frontChildren);
@@ -385,7 +385,7 @@
         const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
-          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button', 'data-no-flip': 'true' }, ['Read More']);
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button', 'data-no-flip': 'true' }, ['View abstract']);
           readMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -395,7 +395,7 @@
         }
 
         if (detailHref) {
-          ctas.push(el('a', { class: 'btn small', href: detailHref, 'data-no-flip': 'true' }, ['Open Page']));
+          ctas.push(el('a', { class: 'btn small', href: detailHref, 'data-no-flip': 'true' }, ['Open record']));
         }
 
         if (ctas.length) {
@@ -490,7 +490,7 @@
 
         if (it.content) {
           const details = el('details', { class: 'blog-details' }, [
-            el('summary', {}, ['Read note']),
+            el('summary', {}, ['Open entry']),
             el('div', { class: 'blog-content' }, [it.content]),
           ]);
           cardChildren.push(details);
@@ -567,7 +567,7 @@
         const detailHref = projectHref(it._srcKey, it.slug);
 
         if (hasMore) {
-          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['Read More']);
+          const readMoreBtn = el('button', { class: 'btn small primary', type: 'button' }, ['View abstract']);
           readMoreBtn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -578,7 +578,7 @@
 
         if (detailHref) {
           const ctaRow = kids.find(node => node && node.className === 'cta-row');
-          const link = el('a', { class: 'btn small', href: detailHref }, ['Open Page']);
+          const link = el('a', { class: 'btn small', href: detailHref }, ['Open record']);
           if (ctaRow) ctaRow.appendChild(link);
           else kids.push(el('div', { class: 'cta-row' }, [link]));
         }
