@@ -3,9 +3,102 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CNEL Projects · Raul Valle</title>
-  <meta name="description" content="CNEL research projects in neuroengineering, EEG, and time-series modeling." />
+  <title>CNEL Research Projects | Raul Valle at the University of Florida</title>
+  <meta name="description" content="CNEL research by Raul Valle in Gainesville: EEG, biological signal processing, time-series modeling, voltage imaging, and reproducible machine learning infrastructure." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="CNEL Research Projects | Raul Valle at the University of Florida" />
+  <meta property="og:description" content="CNEL research by Raul Valle in Gainesville: EEG, biological signal processing, time-series modeling, voltage imaging, and reproducible machine learning infrastructure." />
+  <meta property="og:url" content="https://www.raulv.dev/research-cnel.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta property="og:image:alt" content="CNEL research visual for Raul Valle" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="CNEL Research Projects | Raul Valle at the University of Florida" />
+  <meta name="twitter:description" content="CNEL research by Raul Valle in Gainesville: EEG, biological signal processing, time-series modeling, voltage imaging, and reproducible machine learning infrastructure." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta name="twitter:image:alt" content="CNEL research visual for Raul Valle" />
+  <link rel="canonical" href="https://www.raulv.dev/research-cnel.html" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.raulv.dev/#person",
+        "name": "Raul Valle",
+        "url": "https://www.raulv.dev/",
+        "image": "https://www.raulv.dev/assets/img/me/Raul_me.jpeg",
+        "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
+        "description": "Raul Valle is a University of Florida Ph.D. student in Gainesville, Florida working on signal processing, machine learning, neuroengineering, and photography.",
+        "homeLocation": {
+          "@type": "Place",
+          "name": "Gainesville, Florida, USA"
+        },
+        "affiliation": [
+          {
+            "@type": "Organization",
+            "name": "University of Florida"
+          },
+          {
+            "@type": "Organization",
+            "name": "Computational NeuroEngineering Lab"
+          },
+          {
+            "@type": "Organization",
+            "name": "IEEE Signal Processing Society at the University of Florida"
+          }
+        ],
+        "sameAs": [
+          "https://github.com/Jibby2k1",
+          "https://www.linkedin.com/in/raul-valle1/",
+          "https://www.instagram.com/raul.research/"
+        ],
+        "knowsAbout": [
+          "signal processing",
+          "time-series machine learning",
+          "neuroengineering",
+          "EEG",
+          "controls",
+          "robotics",
+          "photography",
+          "Gainesville, Florida"
+        ]
+      },
+      {
+        "@type": "CollectionPage",
+        "@id": "https://www.raulv.dev/research-cnel.html#webpage",
+        "url": "https://www.raulv.dev/research-cnel.html",
+        "name": "CNEL Research Projects | Raul Valle at the University of Florida",
+        "description": "CNEL research by Raul Valle in Gainesville: EEG, biological signal processing, time-series modeling, voltage imaging, and reproducible machine learning infrastructure.",
+        "inLanguage": "en-US",
+        "about": {
+          "@id": "https://www.raulv.dev/#person"
+        },
+        "hasPart": [
+          {
+            "@type": "CreativeWork",
+            "name": "EEG-based sentiment & brain-state tracking (CNEL \u00d7 Sony \u00d7 LB3 dataset)",
+            "url": "https://www.raulv.dev/project.html?src=cnel&slug=eeg-sentiment-state-space"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Zebrafish voltage imaging: event detection & interpretation",
+            "url": "https://www.raulv.dev/project.html?src=cnel&slug=zebrafish-voltage-imaging-detection"
+          },
+          {
+            "@type": "CreativeWork",
+            "name": "Time-series ML experiment library",
+            "url": "https://www.raulv.dev/project.html?src=cnel&slug=time-series-ml-experiment-infra"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
@@ -16,14 +109,22 @@
       <section class="page-hero reveal accent-cool">
   <div class="kicker">Research · CNEL</div>
   <h1 class="h1">CNEL projects</h1>
-  <p class="lead">CNEL is the University of Florida’s <strong>Computational NeuroEngineering Lab</strong>. These projects focus on turning messy biological signals into reliable measurements, models, and tools.</p>
+  <p class="lead">CNEL is the University of Florida's <strong>Computational NeuroEngineering Lab</strong> in Gainesville. These projects focus on turning messy biological signals into reliable measurements, models, and tools across EEG, voltage imaging, time-series modeling, and reproducible machine learning infrastructure.</p>
 </section>
 
 <section id="cnel-projects" class="reveal project-layout accent-mint">
   <aside class="filters" data-project-filters></aside>
   <div class="project-grid" data-project-grid></div>
   <noscript>
-    <div class="notice">Enable JavaScript to load the searchable project directory.</div>
+    <article class="card" style="margin-top:16px;">
+      <h2>CNEL project index</h2>
+      <p>Browse the current CNEL project pages directly:</p>
+      <ul>
+        <li><a href="https://www.raulv.dev/project.html?src=cnel&slug=eeg-sentiment-state-space">EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)</a> - Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.</li>
+        <li><a href="https://www.raulv.dev/project.html?src=cnel&slug=zebrafish-voltage-imaging-detection">Zebrafish voltage imaging: event detection & interpretation</a> - Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.</li>
+        <li><a href="https://www.raulv.dev/project.html?src=cnel&slug=time-series-ml-experiment-infra">Time-series ML experiment library</a> - Reusable experiment scaffolding for time-series ML: standardized configs, runs, metrics, and plots so model comparisons are fair and repeatable.</li>
+      </ul>
+    </article>
   </noscript>
 </section>
     </div>

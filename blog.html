@@ -3,9 +3,85 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Blog · Raul Valle</title>
-  <meta name="description" content="Short notes, technical reflections, and project logs by Raul Valle." />
+  <title>Raul Valle Notes | Research, Engineering, and Photography</title>
+  <meta name="description" content="Technical notes and project logs by Raul Valle covering research, signal processing, machine learning, engineering workflows, and photography." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Raul Valle Notes | Research, Engineering, and Photography" />
+  <meta property="og:description" content="Technical notes and project logs by Raul Valle covering research, signal processing, machine learning, engineering workflows, and photography." />
+  <meta property="og:url" content="https://www.raulv.dev/blog.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/me/Raul_me.jpeg" />
+  <meta property="og:image:alt" content="Raul Valle notes and writing" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Raul Valle Notes | Research, Engineering, and Photography" />
+  <meta name="twitter:description" content="Technical notes and project logs by Raul Valle covering research, signal processing, machine learning, engineering workflows, and photography." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/me/Raul_me.jpeg" />
+  <meta name="twitter:image:alt" content="Raul Valle notes and writing" />
+  <link rel="canonical" href="https://www.raulv.dev/blog.html" />
   <link rel="stylesheet" href="assets/css/styles.css" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://www.raulv.dev/#person",
+        "name": "Raul Valle",
+        "url": "https://www.raulv.dev/",
+        "image": "https://www.raulv.dev/assets/img/me/Raul_me.jpeg",
+        "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
+        "description": "Raul Valle is a University of Florida Ph.D. student in Gainesville, Florida working on signal processing, machine learning, neuroengineering, and photography.",
+        "homeLocation": {
+          "@type": "Place",
+          "name": "Gainesville, Florida, USA"
+        },
+        "affiliation": [
+          {
+            "@type": "Organization",
+            "name": "University of Florida"
+          },
+          {
+            "@type": "Organization",
+            "name": "Computational NeuroEngineering Lab"
+          },
+          {
+            "@type": "Organization",
+            "name": "IEEE Signal Processing Society at the University of Florida"
+          }
+        ],
+        "sameAs": [
+          "https://github.com/Jibby2k1",
+          "https://www.linkedin.com/in/raul-valle1/",
+          "https://www.instagram.com/raul.research/"
+        ],
+        "knowsAbout": [
+          "signal processing",
+          "time-series machine learning",
+          "neuroengineering",
+          "EEG",
+          "controls",
+          "robotics",
+          "photography",
+          "Gainesville, Florida"
+        ]
+      },
+      {
+        "@type": "Blog",
+        "@id": "https://www.raulv.dev/blog.html#webpage",
+        "url": "https://www.raulv.dev/blog.html",
+        "name": "Raul Valle Notes | Research, Engineering, and Photography",
+        "description": "Technical notes and project logs by Raul Valle covering research, signal processing, machine learning, engineering workflows, and photography.",
+        "inLanguage": "en-US",
+        "about": {
+          "@id": "https://www.raulv.dev/#person"
+        }
+      }
+    ]
+  }
+  </script>
 </head>
 <body>
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
@@ -16,24 +92,32 @@
       <section class="page-hero reveal accent-cool">
   <div class="kicker">Blog</div>
   <h1 class="h1">Notes, write-ups, and logs</h1>
-  <p class="lead">Short notes, project logs, and technical reflections. Posts are laid out as cards so the page stays easier to browse.</p>
+  <p class="lead">Short notes, project logs, and technical reflections on signal processing, machine learning, research workflow, engineering systems, and the occasional photography experiment.</p>
 </section>
 
 <section class="accent-mint">
   <div class="grid two" style="margin-bottom:18px;">
     <article class="card reveal">
-      <h3>Easy to update</h3>
-      <p>Drop blog images into <code>assets/img/blog/</code>, then add or duplicate a post entry in <code>data/blog.json</code>. The page now renders each post as a card automatically.</p>
+      <h3>Research notes</h3>
+      <p>These entries document the thinking that sits between polished project pages and private lab notebooks: implementation details, experiment lessons, and concise technical write-ups.</p>
     </article>
     <article class="card reveal">
-      <h3>Suggested post fields</h3>
-      <p>Use <code>title</code>, <code>date</code>, <code>tag</code>, <code>img</code>, <code>imgAlt</code>, <code>summary</code>, and <code>content</code>. Optional <code>imgFit</code> and <code>imgAspect</code> let you tune each card without changing the renderer.</p>
+      <h3>What I write about</h3>
+      <p>Expect posts on research infrastructure, signal processing intuition, machine learning experiments, GPU workflows, and the practical details that make engineering work reproducible.</p>
     </article>
   </div>
 
   <div id="blog-mount" class="blog-grid"></div>
   <noscript>
-    <div class="notice">Enable JavaScript to load the blog posts.</div>
+    <article class="card" style="margin-top:16px;">
+      <h2>Notes index</h2>
+      <p>Current writing on this site:</p>
+      <ul>
+        <li><strong>Why I care about state-space models for EEG</strong> - A quick note on using HLDS and related models to capture structure in EEG, instead of treating everything as i.i.d. features.</li>
+        <li><strong>Building an EEG/EMG helmet from scratch</strong> - Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.</li>
+        <li><strong>Teaching analysis and ML with Jupyter at UF</strong> - How IEEE SPS @ UF and UF AI Club pushed me to build a curriculum that connects analysis, probability, and ML in concrete ways.</li>
+      </ul>
+    </article>
   </noscript>
 </section>
     </div>

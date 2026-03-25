@@ -1,5 +1,7 @@
 (() => {
   const PLACEHOLDER_IMG = 'assets/img/placeholder.svg';
+  const SITE_URL = 'https://www.raulv.dev';
+  const PERSON_ID = `${SITE_URL}/#person`;
   const SOURCES = {
     cnel: {
       url: 'data/cnel_projects.json',
@@ -53,9 +55,109 @@
     notice.textContent = message;
   }
 
+  function setMetaContent(selector, value) {
+    const node = document.querySelector(selector);
+    if (node && value) node.setAttribute('content', value);
+  }
+
+  function setLinkHref(selector, value) {
+    const node = document.querySelector(selector);
+    if (node && value) node.setAttribute('href', value);
+  }
+
   function setMetaDescription(text) {
-    const meta = document.querySelector('meta[name="description"]');
-    if (meta && text) meta.setAttribute('content', text);
+    setMetaContent('meta[name="description"]', text);
+  }
+
+  function setRobots(content) {
+    setMetaContent('meta[name="robots"]', content);
+  }
+
+  function absoluteAssetUrl(path) {
+    return new URL(path || PLACEHOLDER_IMG, window.location.origin).toString();
+  }
+
+  function buildProjectUrl(sourceKey, slug) {
+    const url = new URL(window.location.pathname, window.location.origin);
+    url.search = '';
+    if (sourceKey) url.searchParams.set('src', sourceKey);
+    if (slug) url.searchParams.set('slug', slug);
+    return url.toString();
+  }
+
+  function setStructuredData(data) {
+    const script = document.getElementById('project-structured-data');
+    if (!script || !data) return;
+    script.textContent = JSON.stringify(data);
+  }
+
+  function projectStructuredData(item, sourceKey, pageUrl) {
+    const source = SOURCES[sourceKey];
+    const description = item.desc || item.subtitle || 'Project details';
+    const keywords = []
+      .concat(item.tags || [])
+      .concat(item.pills || [])
+      .filter(Boolean)
+      .map((value) => String(value));
+
+    const crumbs = [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Home',
+        item: `${SITE_URL}/`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: 'Research',
+        item: `${SITE_URL}/research.html`,
+      },
+    ];
+
+    if (source) {
+      crumbs.push({
+        '@type': 'ListItem',
+        position: crumbs.length + 1,
+        name: source.crumbLabel,
+        item: new URL(source.backHref, window.location.origin).toString(),
+      });
+    }
+
+    crumbs.push({
+      '@type': 'ListItem',
+      position: crumbs.length + 1,
+      name: item.title || 'Project',
+      item: pageUrl,
+    });
+
+    return {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Person',
+          '@id': PERSON_ID,
+          name: 'Raul Valle',
+          url: `${SITE_URL}/`,
+          image: `${SITE_URL}/assets/img/me/Raul_me.jpeg`,
+        },
+        {
+          '@type': 'CreativeWork',
+          '@id': `${pageUrl}#project`,
+          url: pageUrl,
+          name: item.title || 'Project',
+          headline: item.title || 'Project',
+          description,
+          image: absoluteAssetUrl(item.img || PLACEHOLDER_IMG),
+          creator: { '@id': PERSON_ID },
+          keywords: keywords.join(', '),
+        },
+        {
+          '@type': 'BreadcrumbList',
+          itemListElement: crumbs,
+        },
+      ],
+    };
   }
 
   function renderProject(item, sourceKey) {
@@ -65,9 +167,26 @@
     const cta = document.getElementById('project-cta');
     const crumbs = document.getElementById('project-breadcrumbs');
     const heroImg = document.getElementById('project-hero-img');
+    const pageTitle = `${item.title || 'Project'} | Raul Valle Research`;
+    const pageDescription = item.desc || item.subtitle || 'Project details';
+    const pageUrl = buildProjectUrl(sourceKey, item.slug || 'project');
+    const pageImage = absoluteAssetUrl(item.img || PLACEHOLDER_IMG);
 
-    document.title = `${item.title || 'Project'} · Raul Valle`;
-    setMetaDescription(item.desc || item.subtitle || 'Project details');
+    document.title = pageTitle;
+    setMetaDescription(pageDescription);
+    setMetaContent('meta[property="og:title"]', pageTitle);
+    setMetaContent('meta[property="og:description"]', pageDescription);
+    setMetaContent('meta[property="og:url"]', pageUrl);
+    setMetaContent('meta[property="og:image"]', pageImage);
+    setMetaContent('meta[property="og:image:alt"]', item.imgAlt || item.title || 'Project image');
+    setMetaContent('meta[name="twitter:title"]', pageTitle);
+    setMetaContent('meta[name="twitter:description"]', pageDescription);
+    setMetaContent('meta[name="twitter:image"]', pageImage);
+    setMetaContent('meta[name="twitter:image:alt"]', item.imgAlt || item.title || 'Project image');
+    setLinkHref('link[rel="canonical"]', pageUrl);
+    setRobots('index, follow, max-image-preview:large');
+    setStructuredData(projectStructuredData(item, sourceKey, pageUrl));
+
     document.getElementById('project-kicker').textContent = source ? source.kicker : 'Project';
     document.getElementById('project-title').textContent = item.title || 'Untitled project';
     document.getElementById('project-subtitle').textContent = item.subtitle || item.desc || '';
@@ -194,6 +313,7 @@
     const requestedSource = params.get('src');
 
     if (!slug) {
+      setRobots('noindex, follow, max-image-preview:large');
       showNotice('No project was specified. Use the research pages to browse available work.');
       return;
     }
@@ -211,11 +331,13 @@
       }
     }
 
+    setRobots('noindex, follow, max-image-preview:large');
     showNotice('That project could not be found. Use the research pages to browse available work.');
   }
 
   findProject().catch((error) => {
     console.warn(error);
+    setRobots('noindex, follow, max-image-preview:large');
     showNotice('The project page could not be loaded right now.');
   });
 })();
