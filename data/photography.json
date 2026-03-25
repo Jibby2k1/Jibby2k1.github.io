@@ -158,6 +158,16 @@
       "imgAlt": "Might Guy",
       "caption": "Rock Lee",
       "imgAspect": "2 / 3"
+    },
+    {
+      "title": "Jolyne",
+      "collection": "Selected Work",
+      "location": "Location TBD",
+      "year": "Year TBD",
+      "img": "assets/img/photography/DSC04422.JPG",
+      "imgAlt": "Jolyne in cold stone spring water",
+      "caption": "Cold Stone Spring Water",
+      "imgAspect": "3 / 2"
     }
   ]
 }
