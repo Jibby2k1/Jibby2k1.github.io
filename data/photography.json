@@ -8,13 +8,20 @@
     "img": "assets/img/photography/example.jpg",
     "imgAlt": "Short description of the image",
     "caption": "One or two sentences about the shot.",
-    "imgAspect": "4 / 5"
+    "imgAspect": "4 / 5",
+    "instagramProfiles": [
+      {
+        "handle": "example_handle",
+        "url": "https://www.instagram.com/example_handle/"
+      }
+    ]
   },
   "workflow": [
     "The current batch is live with placeholder metadata so every uploaded image renders.",
     "Keep collection set to Selected Work unless you intentionally split the gallery into groups later.",
     "Replace each placeholder title, alt text, and caption with plain-language editorial copy.",
-    "Fill in year and optional location once you want the gallery cards to carry real context."
+    "Fill in year and optional location once you want the gallery cards to carry real context.",
+    "Use instagramProfiles when you want clickable profile links under a photo caption."
   ],
   "emptyTitle": "No photographs published yet",
   "emptyText": "The portfolio page is wired up and ready. Add image files under assets/img/photography/, duplicate the template entry, and list them in this file to publish work here.",
@@ -37,7 +44,13 @@
       "img": "assets/img/photography/DSC02570.JPG",
       "imgAlt": "Alvin and Brittany",
       "caption": "Chipmunk honeymoon & happy birthday",
-      "imgAspect": "3 / 2"
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "jordan.dobish",
+          "url": "https://www.instagram.com/jordan.dobish/"
+        }
+      ]
     },
     {
       "title": "Cheburaska and Sneha",
@@ -47,7 +60,17 @@
       "img": "assets/img/photography/DSC02589.JPG",
       "imgAlt": "Cheburaska and Sneha",
       "caption": "21 = 20+1",
-      "imgAspect": "3 / 2"
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "_roxyvalle",
+          "url": "https://www.instagram.com/_roxyvalle/"
+        },
+        {
+          "handle": "snehanair25",
+          "url": "https://www.instagram.com/snehanair25/"
+        }
+      ]
     },
     {
       "title": "Maxwell",
@@ -56,8 +79,22 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC02820.JPG",
       "imgAlt": "Maxwell",
-      "caption": "Cats don't play. IG: andre.reveles3 , jesus.cordovaa , javmats .",
-      "imgAspect": "3 / 2"
+      "caption": "Cats don't play.",
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        },
+        {
+          "handle": "jesus.cordovaa",
+          "url": "https://www.instagram.com/jesus.cordovaa/"
+        },
+        {
+          "handle": "javmats",
+          "url": "https://www.instagram.com/javmats/"
+        }
+      ]
     },
     {
       "title": "Shark Boy",
@@ -66,8 +103,14 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC03034.JPG",
       "imgAlt": "Shark Boy",
-      "caption": "The Shark is an apex predator of the sea. IG: andre.reveles3 .",
-      "imgAspect": "3 / 2"
+      "caption": "The Shark is an apex predator of the sea.",
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        }
+      ]
     },
     {
       "title": "Tank",
@@ -76,8 +119,14 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC03057.JPG",
       "imgAlt": "Tank",
-      "caption": "Even in the fog of war, you can spot a tank. IG: andre.reveles3 .",
-      "imgAspect": "2 / 3"
+      "caption": "Even in the fog of war, you can spot a tank.",
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        }
+      ]
     },
     {
       "title": "Sandevistan",
@@ -86,8 +135,14 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC03175.JPG",
       "imgAlt": "Sandevistan",
-      "caption": "Time moves slow. IG: andre.reveles3 .",
-      "imgAspect": "3 / 2"
+      "caption": "Time moves slow.",
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        }
+      ]
     },
     {
       "title": "Momentum",
@@ -96,8 +151,14 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC03391.JPG",
       "imgAlt": "Momentum",
-      "caption": "Break it hard. IG: andre.reveles3 .",
-      "imgAspect": "3 / 2"
+      "caption": "Break it hard.",
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        }
+      ]
     },
     {
       "title": "American Woman",
@@ -107,7 +168,13 @@
       "img": "assets/img/photography/DSC03396.JPG",
       "imgAlt": "American Woman",
       "caption": "Pool => PowaH",
-      "imgAspect": "2 / 3"
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "_meaganperez_",
+          "url": "https://www.instagram.com/_meaganperez_/"
+        }
+      ]
     },
     {
       "title": "Nana",
@@ -117,7 +184,13 @@
       "img": "assets/img/photography/DSC03940.JPG",
       "imgAlt": "Nana",
       "caption": "Osaki.",
-      "imgAspect": "2 / 3"
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "matthew._pz",
+          "url": "https://www.instagram.com/matthew._pz/"
+        }
+      ]
     },
     {
       "title": "Patrick Star",
@@ -127,7 +200,13 @@
       "img": "assets/img/photography/DSC03958.JPG",
       "imgAlt": "Patrick Star",
       "caption": "Put your toys away.",
-      "imgAspect": "2 / 3"
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "_meaganperez_",
+          "url": "https://www.instagram.com/_meaganperez_/"
+        }
+      ]
     },
     {
       "title": "Jim",
@@ -136,8 +215,14 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC04025.JPG",
       "imgAlt": "Jim",
-      "caption": " Chickens don't cross roads. IG: andre.reveles3 .",
-      "imgAspect": "2 / 3"
+      "caption": "Chickens don't cross roads.",
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        }
+      ]
     },
     {
       "title": "2016",
@@ -146,8 +231,22 @@
       "year": "Year TBD",
       "img": "assets/img/photography/DSC04130.JPG",
       "imgAlt": "2016",
-      "caption": "The Gentle Men. IG: andre.reveles3 .",
-      "imgAspect": "3 / 2"
+      "caption": "The Gentle Men.",
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "_meaganperez_",
+          "url": "https://www.instagram.com/_meaganperez_/"
+        },
+        {
+          "handle": "andre.reveles3",
+          "url": "https://www.instagram.com/andre.reveles3/"
+        },
+        {
+          "handle": "sebasishere",
+          "url": "https://www.instagram.com/sebasishere/"
+        }
+      ]
     },
     {
       "title": "Might Guy",
@@ -157,7 +256,13 @@
       "img": "assets/img/photography/DSC04233.JPG",
       "imgAlt": "Might Guy",
       "caption": "Rock Lee",
-      "imgAspect": "2 / 3"
+      "imgAspect": "2 / 3",
+      "instagramProfiles": [
+        {
+          "handle": "sebasishere",
+          "url": "https://www.instagram.com/sebasishere/"
+        }
+      ]
     },
     {
       "title": "Jolyne",
@@ -167,7 +272,13 @@
       "img": "assets/img/photography/DSC04422.JPG",
       "imgAlt": "Jolyne in cold stone spring water",
       "caption": "Cold Stone Spring Water",
-      "imgAspect": "3 / 2"
+      "imgAspect": "3 / 2",
+      "instagramProfiles": [
+        {
+          "handle": "_meaganperez_",
+          "url": "https://www.instagram.com/_meaganperez_/"
+        }
+      ]
     }
   ]
 }

@@ -610,6 +610,22 @@
           : media;
 
         const metaParts = [it.location, it.year].filter(Boolean).join(' · ');
+        const instagramProfiles = Array.isArray(it.instagramProfiles)
+          ? it.instagramProfiles.map((profile) => {
+              const rawHandle = typeof profile === 'string'
+                ? profile
+                : (profile && (profile.handle || profile.label || profile.url)) || '';
+              const normalizedHandle = String(rawHandle).replace(/^@/, '').replace(/^https?:\/\/www\.instagram\.com\//, '').replace(/\/$/, '');
+              if (!normalizedHandle) return null;
+              const url = typeof profile === 'object' && profile && profile.url
+                ? profile.url
+                : `https://www.instagram.com/${normalizedHandle}/`;
+              const label = typeof profile === 'object' && profile && profile.label
+                ? profile.label
+                : `@${normalizedHandle}`;
+              return el('a', { class: 'photo-link', href: url, target: '_blank', rel: 'noreferrer me' }, [label]);
+            }).filter(Boolean)
+          : [];
 
         mount.appendChild(el('figure', { class: 'photo-card reveal' }, [
           mediaNode,
@@ -617,6 +633,12 @@
             el('div', { class: 'photo-category' }, [it.collection || 'Photography']),
             el('h3', {}, [it.title || 'Untitled']),
             it.caption ? el('p', { class: 'photo-caption' }, [it.caption]) : null,
+            instagramProfiles.length
+              ? el('div', { class: 'photo-links' }, [
+                  el('span', { class: 'photo-links-label' }, ['Instagram']),
+                  ...instagramProfiles,
+                ])
+              : null,
             metaParts ? el('div', { class: 'photo-meta' }, [metaParts]) : null,
           ]),
         ]));

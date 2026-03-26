@@ -705,6 +705,32 @@ main{
   color:var(--ink-soft);
 }
 
+.photo-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px 10px;
+  align-items:center;
+}
+
+.photo-links-label{
+  font-family:var(--mono);
+  font-size:0.72rem;
+  letter-spacing:0.12em;
+  text-transform:uppercase;
+  color:var(--faint);
+}
+
+.photo-link{
+  color:var(--ink);
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+
+.photo-link:hover,
+.photo-link:focus-visible{
+  color:var(--accent);
+}
+
 .blog-details{
   margin-top:auto;
   padding-top:10px;
