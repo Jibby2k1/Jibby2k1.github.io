@@ -1,15 +1,14 @@
-(async () => {
-  async function loadPartial(id, url) {
-    const el = document.getElementById(id);
-    if (!el) return;
-    const res = await fetch(url, { cache: 'no-cache' });
-    if (!res.ok) throw new Error(`Failed to load ${url}`);
-    el.innerHTML = await res.text();
+(() => {
+  function currentRoute() {
+    const path = location.pathname;
+    if (path.includes('/projects/')) return 'research.html';
+    if (path.includes('/notes/')) return 'blog.html';
+    return path.split('/').pop() || 'index.html';
   }
 
   function setActiveNav() {
-    const path = location.pathname.split('/').pop() || 'index.html';
-    document.querySelectorAll('.navlink[data-route]').forEach(a => {
+    const path = currentRoute();
+    document.querySelectorAll('.navlink[data-route]').forEach((a) => {
       const route = a.getAttribute('data-route');
       const isActive = route === path;
       a.classList.toggle('active', isActive);
@@ -117,19 +116,7 @@
   }
 
   initReveal();
-
-  try {
-    await Promise.all([
-      loadPartial('site-nav', 'partials/nav.html'),
-      loadPartial('site-footer', 'partials/footer.html'),
-    ]);
-    setActiveNav();
-    initBurger();
-    initYear();
-  } catch (e) {
-    // If partial fetch fails, fail gracefully; page content still renders.
-    console.warn(e);
-  }
-
-  // The shared archive theme uses a static background, so this hook is intentionally quiet.
+  setActiveNav();
+  initBurger();
+  initYear();
 })();

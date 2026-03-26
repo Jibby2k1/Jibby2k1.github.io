@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Zebrafish voltage imaging: event detection &amp; interpretation | Raul Valle Research Project</title>
+        <meta name="description" content="Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis." />
+        <meta name="author" content="Raul Valle" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Zebrafish voltage imaging: event detection &amp; interpretation | Raul Valle Research Project" />
+        <meta property="og:description" content="Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis." />
+        <meta property="og:url" content="https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html" />
+        <meta property="og:site_name" content="Raul Valle" />
+        <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/Zebra_snip.png" />
+        <meta property="og:image:alt" content="Frame from a zebrafish voltage imaging video." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Zebrafish voltage imaging: event detection &amp; interpretation | Raul Valle Research Project" />
+        <meta name="twitter:description" content="Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis." />
+        <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/Zebra_snip.png" />
+        <meta name="twitter:image:alt" content="Frame from a zebrafish voltage imaging video." />
+        <link rel="canonical" href="https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html" />
+        <link rel="stylesheet" href="../assets/css/styles.css" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://www.raulv.dev/#person",
+      "name": "Raul Valle",
+      "url": "https://www.raulv.dev/",
+      "image": "https://www.raulv.dev/assets/img/me/Raul_me.jpeg",
+      "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
+      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+      "homeLocation": {
+        "@type": "Place",
+        "name": "Gainesville, Florida, USA"
+      },
+      "affiliation": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida",
+          "url": "https://www.ufl.edu/"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida Department of Electrical & Computer Engineering",
+          "url": "https://www.ece.ufl.edu/"
+        },
+        {
+          "@type": "ResearchOrganization",
+          "name": "Computational NeuroEngineering Lab"
+        },
+        {
+          "@type": "Organization",
+          "name": "IEEE Signal Processing Society at the University of Florida"
+        }
+      ],
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "Doral Academy Charter School"
+        }
+      ],
+      "memberOf": [
+        {
+          "@type": "Organization",
+          "name": "IEEE Signal Processing Society at the University of Florida"
+        }
+      ],
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Ph.D. Student Researcher"
+      },
+      "sameAs": [
+        "https://github.com/Jibby2k1",
+        "https://www.linkedin.com/in/raul-valle1/",
+        "https://www.instagram.com/raul.research/"
+      ],
+      "knowsAbout": [
+        "signal processing",
+        "time-series machine learning",
+        "neuroengineering",
+        "EEG",
+        "biological signal processing",
+        "research software",
+        "controls",
+        "robotics",
+        "photography",
+        "Gainesville, Florida"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.raulv.dev/#website",
+      "url": "https://www.raulv.dev/",
+      "name": "Raul Valle",
+      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+      "publisher": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html#webpage",
+      "url": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html",
+      "name": "Zebrafish voltage imaging: event detection & interpretation | Raul Valle Research Project",
+      "description": "Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.",
+      "inLanguage": "en-US",
+      "about": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "isPartOf": {
+        "@id": "https://www.raulv.dev/#website"
+      },
+      "mainEntity": {
+        "@id": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html#project"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html#project",
+      "url": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html",
+      "name": "Zebrafish voltage imaging: event detection & interpretation",
+      "headline": "Zebrafish voltage imaging: event detection & interpretation",
+      "description": "Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.",
+      "image": "https://www.raulv.dev/assets/img/projects/Zebra_snip.png",
+      "creator": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "keywords": [
+        "research",
+        "imaging",
+        "detection",
+        "Voltage imaging (video)",
+        "Event detection",
+        "Statistical detectors (CFAR-style)",
+        "Quadratic Gamma Discriminator (QGD)"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.raulv.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Research",
+          "item": "https://www.raulv.dev/research.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "CNEL projects",
+          "item": "https://www.raulv.dev/research-cnel.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 4,
+          "name": "Zebrafish voltage imaging: event detection & interpretation",
+          "item": "https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html"
+        }
+      ]
+    }
+  ]
+}
+        </script>
+      </head>
+      <body>
+        <canvas id="bg-canvas" aria-hidden="true"></canvas>
+        <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+        <span class="brand-eyebrow">Official site of a UF Ph.D. student and researcher</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Notes</a>
+      <a class="navlink" href="../awards.html" data-route="awards.html">Awards</a>
+      <a class="navlink" href="../photography.html" data-route="photography.html">Photography</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
+      <a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
+      <a class="icon-link" href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+    </div>
+  </div>
+</header>
+        <main id="main">
+        <div class="container">
+          <section class="page-hero reveal hero-split accent-cool" id="project-hero">
+            <div>
+              <div class="kicker">CNEL research</div>
+              <h1 class="h1">Zebrafish voltage imaging: event detection &amp; interpretation</h1>
+              <p class="lead">Signal-processing pipeline for 2D voltage imaging videos that detects brief neural events and produces interpretable visual summaries.</p>
+              <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../research-cnel.html">CNEL projects</a> / <span>Zebrafish voltage imaging: event detection &amp; interpretation</span></div>
+              <div class="cta-row">
+                <a class="btn" href="../research-cnel.html">Back to CNEL projects</a>
+
+              </div>
+            </div>
+            <img class="card-img compact project-hero-img" src="../assets/img/projects/Zebra_snip.png" alt="Frame from a zebrafish voltage imaging video." loading="lazy" decoding="async" />
+          </section>
+
+          <section class="project-detail reveal accent-mint">
+            <div class="project-main">
+              <article class="card reveal">
+                <h2 class="project-section-title">Overview</h2>
+                <p>Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.</p><p>Voltage imaging produces high-frame-rate videos where brightness changes correspond (imperfectly) to changes in neural electrical activity. The practical challenge is separating true events from noise, motion, and background drift. I built and tested detectors that highlight candidate events and produce interpretable outputs for scientists to review.</p>
+              </article>
+              <article class="card reveal">
+  <h2 class="project-section-title">What I built</h2>
+  <ul><li>Preprocessing routines for voltage imaging videos (normalization, background handling, and region-wise aggregation).</li><li>Event detectors that score pixels/regions over time and surface candidate events for review.</li><li>Evaluation utilities to compare detector behavior across recordings and parameter settings.</li><li>Exportable visual summaries (event maps and time-series traces) to support interpretation.</li></ul>
+</article> <article class="card reveal">
+  <h2 class="project-section-title">How it works</h2>
+  <ul><li>Treat each pixel/region as a time-series.</li><li>Estimate a baseline/noise profile from nearby frames.</li><li>Apply statistical tests to flag frames/regions whose changes are unlikely under the noise model.</li><li>Aggregate detections into event maps and interpretable summaries.</li></ul>
+</article>
+            </div>
+            <div class="project-side">
+              <article class="card reveal">
+                <h2 class="project-section-title">Snapshot</h2>
+                <div class="kv">
+                  <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Research · imaging · time-series detection</div></div>
+                  <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Active research / iterative refinement.</div></div>
+                  <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Voltage imaging (video)</span><span class="pill">Event detection</span><span class="pill">Statistical detectors (CFAR-style)</span><span class="pill">Quadratic Gamma Discriminator (QGD)</span></div></div>
+                </div>
+              </article>
+              <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>Voltage imaging</dt><dd>A microscopy method that records fast changes related to electrical activity as video.</dd><dt>CFAR</dt><dd>Constant False Alarm Rate: a family of adaptive thresholding methods that aim to keep false detections stable across changing noise.</dd><dt>QGD</dt><dd>Quadratic Gamma Discriminator: a statistical detector designed to highlight deviations from a learned background/noise model.</dd></dl></article>
+              <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Python</li><li>Scientific computing</li><li>GPU acceleration where helpful</li></ul></article>
+
+
+            </div>
+          </section>
+        </div>
+      </main>
+        <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Official Site</div>
+      <p>The official website of Raul Valle, a University of Florida Ph.D. student in Electrical and Computer Engineering working on signal processing, machine learning, neuroengineering, and research software in Gainesville.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Notes</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links">
+        <a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
+        <a href="https://www.instagram.com/raul.research/" target="_blank" rel="me noreferrer">Instagram</a>
+        <a href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
+        <a href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+      </div>
+    </div>
+  </div>
+</footer>
+        <script src="../assets/js/background.js"></script>
+        <script src="../assets/js/site.js"></script>
+
+      </body>
+      </html>

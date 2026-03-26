@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width,initial-scale=1" />
+        <title>Building an EEG/EMG helmet from scratch | Raul Valle Notes</title>
+        <meta name="description" content="Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints." />
+        <meta name="author" content="Raul Valle" />
+        <meta name="robots" content="index, follow, max-image-preview:large" />
+        <meta property="og:locale" content="en_US" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="Building an EEG/EMG helmet from scratch | Raul Valle Notes" />
+        <meta property="og:description" content="Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints." />
+        <meta property="og:url" content="https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html" />
+        <meta property="og:site_name" content="Raul Valle" />
+        <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/Ergo.png" />
+        <meta property="og:image:alt" content="Visual representing the Ergo biosignal acquisition project." />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Building an EEG/EMG helmet from scratch | Raul Valle Notes" />
+        <meta name="twitter:description" content="Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints." />
+        <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/Ergo.png" />
+        <meta name="twitter:image:alt" content="Visual representing the Ergo biosignal acquisition project." />
+        <link rel="canonical" href="https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html" />
+        <link rel="stylesheet" href="../assets/css/styles.css" />
+        <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": "https://www.raulv.dev/#person",
+      "name": "Raul Valle",
+      "url": "https://www.raulv.dev/",
+      "image": "https://www.raulv.dev/assets/img/me/Raul_me.jpeg",
+      "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
+      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+      "homeLocation": {
+        "@type": "Place",
+        "name": "Gainesville, Florida, USA"
+      },
+      "affiliation": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida",
+          "url": "https://www.ufl.edu/"
+        },
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida Department of Electrical & Computer Engineering",
+          "url": "https://www.ece.ufl.edu/"
+        },
+        {
+          "@type": "ResearchOrganization",
+          "name": "Computational NeuroEngineering Lab"
+        },
+        {
+          "@type": "Organization",
+          "name": "IEEE Signal Processing Society at the University of Florida"
+        }
+      ],
+      "alumniOf": [
+        {
+          "@type": "CollegeOrUniversity",
+          "name": "University of Florida"
+        },
+        {
+          "@type": "EducationalOrganization",
+          "name": "Doral Academy Charter School"
+        }
+      ],
+      "memberOf": [
+        {
+          "@type": "Organization",
+          "name": "IEEE Signal Processing Society at the University of Florida"
+        }
+      ],
+      "hasOccupation": {
+        "@type": "Occupation",
+        "name": "Ph.D. Student Researcher"
+      },
+      "sameAs": [
+        "https://github.com/Jibby2k1",
+        "https://www.linkedin.com/in/raul-valle1/",
+        "https://www.instagram.com/raul.research/"
+      ],
+      "knowsAbout": [
+        "signal processing",
+        "time-series machine learning",
+        "neuroengineering",
+        "EEG",
+        "biological signal processing",
+        "research software",
+        "controls",
+        "robotics",
+        "photography",
+        "Gainesville, Florida"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://www.raulv.dev/#website",
+      "url": "https://www.raulv.dev/",
+      "name": "Raul Valle",
+      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+      "publisher": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "inLanguage": "en-US"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html#webpage",
+      "url": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html",
+      "name": "Building an EEG/EMG helmet from scratch",
+      "description": "Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.",
+      "inLanguage": "en-US",
+      "about": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "isPartOf": {
+        "@id": "https://www.raulv.dev/#website"
+      },
+      "mainEntity": {
+        "@id": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html#post"
+      }
+    },
+    {
+      "@type": "BlogPosting",
+      "@id": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html#post",
+      "headline": "Building an EEG/EMG helmet from scratch",
+      "description": "Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.",
+      "datePublished": "2025-10-01",
+      "dateModified": "2025-10-01",
+      "author": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "publisher": {
+        "@id": "https://www.raulv.dev/#person"
+      },
+      "image": "https://www.raulv.dev/assets/img/projects/Ergo.png",
+      "mainEntityOfPage": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html",
+      "keywords": [
+        "Hardware",
+        "Raul Valle",
+        "University of Florida"
+      ]
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://www.raulv.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Notes",
+          "item": "https://www.raulv.dev/blog.html"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Building an EEG/EMG helmet from scratch",
+          "item": "https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html"
+        }
+      ]
+    }
+  ]
+}
+        </script>
+      </head>
+      <body>
+        <canvas id="bg-canvas" aria-hidden="true"></canvas>
+        <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+        <span class="brand-eyebrow">Official site of a UF Ph.D. student and researcher</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Notes</a>
+      <a class="navlink" href="../awards.html" data-route="awards.html">Awards</a>
+      <a class="navlink" href="../photography.html" data-route="photography.html">Photography</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
+      <a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
+      <a class="icon-link" href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+    </div>
+  </div>
+</header>
+        <main id="main">
+  <div class="container">
+    <section class="page-hero hero-split reveal accent-cool">
+      <div>
+        <div class="kicker">Hardware note</div>
+        <h1 class="h1">Building an EEG/EMG helmet from scratch</h1>
+        <p class="lead">Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.</p>
+        <div class="breadcrumbs"><a href="../blog.html">Notes</a> / <span>Building an EEG/EMG helmet from scratch</span></div>
+      </div>
+      <img class="card-img compact project-hero-img" src="../assets/img/projects/Ergo.png" alt="Visual representing the Ergo biosignal acquisition project." loading="lazy" decoding="async" />
+    </section>
+
+    <section class="project-detail reveal accent-mint">
+      <div class="project-main">
+        <article class="card reveal">
+          <h2 class="project-section-title">Note</h2>
+          <div class="meta">Oct 2025 · Hardware</div>
+          <p>The interesting part of a biosignal system is rarely only the final classifier. The real work starts earlier, at the layer where electrode contact, cable routing, grounding, shielding, synchronization, and physical comfort decide whether the data is usable at all.</p><p>Working on an EEG/EMG helmet makes that obvious very quickly. Small mechanical choices change the noise floor. Convenience features become signal-quality decisions. A design that looks elegant in a block diagram can become unmaintainable the moment a person has to wear it for a full session.</p><p>That is why I treat hardware, firmware, and analysis as one system. Acquisition quality constrains the models you can train, the features you can trust, and the experiments you can repeat. A poor interface upstream creates ambiguity all the way down the pipeline.</p><p>The payoff is that once the physical system is disciplined, the modeling questions become cleaner. You can spend more time on dynamics, stability, and interpretation, and less time guessing whether a result is just a wiring artifact.</p>
+        </article>
+      </div>
+      <div class="project-side">
+        <article class="card reveal">
+          <h2 class="project-section-title">Key takeaways</h2>
+          <ul><li>Signal quality is a systems problem, not only a modeling problem.</li><li>Human factors and hardware constraints shape what research is actually feasible.</li><li>A repeatable acquisition stack is a prerequisite for trustworthy neuroengineering work.</li></ul>
+        </article>
+        <article class="card reveal">
+          <h2 class="project-section-title">Related links</h2>
+          <ul><li><a href="../projects/ergo.html">Ergo project page</a></li><li><a href="../research.html">Research overview</a></li></ul>
+        </article>
+      </div>
+    </section>
+  </div>
+</main>
+        <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Official Site</div>
+      <p>The official website of Raul Valle, a University of Florida Ph.D. student in Electrical and Computer Engineering working on signal processing, machine learning, neuroengineering, and research software in Gainesville.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Notes</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links">
+        <a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
+        <a href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
+        <a href="https://www.instagram.com/raul.research/" target="_blank" rel="me noreferrer">Instagram</a>
+        <a href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
+        <a href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+      </div>
+    </div>
+  </div>
+</footer>
+        <script src="../assets/js/background.js"></script>
+        <script src="../assets/js/site.js"></script>
+
+      </body>
+      </html>
