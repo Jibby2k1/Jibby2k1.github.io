@@ -924,6 +924,18 @@ main{
   align-items:start;
 }
 
+.about-hero{
+  grid-template-columns:minmax(0, 1.6fr) minmax(220px, 280px);
+}
+
+.about-hero > div{
+  min-width:0;
+}
+
+.about-hero .lead{
+  max-width:82ch;
+}
+
 .portrait{
   width:min(280px, 100%);
   aspect-ratio:4 / 5;
