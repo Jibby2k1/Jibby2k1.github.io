@@ -926,6 +926,7 @@ main{
 
 .about-hero{
   grid-template-columns:minmax(0, 1.6fr) minmax(220px, 280px);
+  gap:18px;
 }
 
 .about-hero > div{
@@ -933,7 +934,13 @@ main{
 }
 
 .about-hero .lead{
-  max-width:82ch;
+  max-width:100%;
+}
+
+@media (min-width: 981px){
+  .about-shell{
+    max-width:980px;
+  }
 }
 
 .portrait{
