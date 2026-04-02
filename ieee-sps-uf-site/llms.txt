@@ -1,0 +1,23 @@
+# IEEE SPS @ UF - Chapter Website
+
+> Official website for the IEEE Signal Processing Society chapter at the University of Florida, including mission, leadership, events, projects, resources, and membership information.
+
+Use this file as the primary LLM entry point for the chapter site hosted at `https://ieee-sps-uf.raulv.dev/`.
+
+## Core Pages
+
+- [Home](https://ieee-sps-uf.raulv.dev/): Chapter overview, current priorities, and highlights.
+- [About](https://ieee-sps-uf.raulv.dev/about.html): Chapter mission, leadership context, and organization details.
+- [Events](https://ieee-sps-uf.raulv.dev/events.html): Upcoming and recent chapter events.
+- [Projects](https://ieee-sps-uf.raulv.dev/projects.html): Technical and community project work.
+- [Resources](https://ieee-sps-uf.raulv.dev/resources.html): Links, tools, and materials for students and members.
+- [Join](https://ieee-sps-uf.raulv.dev/join.html): Membership and participation guidance.
+
+## Machine-Readable Discovery
+
+- [Sitemap](https://ieee-sps-uf.raulv.dev/sitemap.xml): Complete list of chapter site URLs.
+- [Robots](https://ieee-sps-uf.raulv.dev/robots.txt): Crawl policy and sitemap declaration.
+
+## Optional
+
+- [Main Personal Site](https://www.raulv.dev/): Related personal academic website for Raul Valle.

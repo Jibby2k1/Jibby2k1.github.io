@@ -1,0 +1,35 @@
+# Raul Valle - Official Website
+
+> Personal academic and research website for Raul Valle (University of Florida Ph.D. student in Electrical and Computer Engineering), focused on signal processing, time-series machine learning, neuroengineering, and research software.
+
+Use this file as the primary entry point for LLM-assisted browsing of this site. Prefer canonical URLs on `https://www.raulv.dev/` and rely on page-specific metadata and structured data in each page when available.
+
+## Core Pages
+
+- [Home](https://www.raulv.dev/): Site overview and featured work.
+- [About](https://www.raulv.dev/about.html): Background, research orientation, and affiliations.
+- [CV](https://www.raulv.dev/cv.html): Education, experience, skills, and credentials.
+- [Research](https://www.raulv.dev/research.html): Main research themes and technical direction.
+- [Publications](https://www.raulv.dev/publications.html): Publications and scholarly output.
+- [Contact](https://www.raulv.dev/contact.html): Preferred ways to reach out.
+
+## Research Detail Pages
+
+- [Computational NeuroEngineering Lab](https://www.raulv.dev/research-cnel.html): Work related to neuroengineering and lab activity.
+- [IEEE SPS at UF](https://www.raulv.dev/research-sps.html): Signal processing society and chapter-related technical work.
+- [Projects](https://www.raulv.dev/project.html): Index of engineering and research projects.
+
+## Writing And Media
+
+- [Notes](https://www.raulv.dev/blog.html): Technical notes and essays.
+- [Photography](https://www.raulv.dev/photography.html): Photography portfolio and captions.
+- [Awards](https://www.raulv.dev/awards.html): Honors and distinctions.
+
+## Machine-Readable Discovery
+
+- [Sitemap](https://www.raulv.dev/sitemap.xml): Complete list of indexable URLs.
+- [Robots](https://www.raulv.dev/robots.txt): Crawl policy and sitemap declaration.
+
+## Optional
+
+- [UF IEEE SPS Chapter Site](https://www.raulv.dev/ieee-sps-uf-site/): Related subsite for chapter operations, events, projects, and resources.
