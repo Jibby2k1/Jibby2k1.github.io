@@ -925,16 +925,34 @@ main{
 }
 
 .about-hero{
-  grid-template-columns:minmax(0, 1.6fr) minmax(220px, 280px);
+  grid-template-columns:1fr;
   gap:18px;
 }
 
-.about-hero > div{
+.about-hero-head{
+  display:grid;
+  grid-template-columns:minmax(0, 7fr) minmax(220px, 3fr);
+  gap:18px;
+  align-items:start;
+}
+
+.about-hero-title,
+.about-hero-body{
   min-width:0;
 }
 
-.about-hero .lead{
+.about-hero-body .lead{
   max-width:100%;
+}
+
+@media (max-width: 980px){
+  .about-hero-head{
+    grid-template-columns:1fr;
+  }
+
+  .about-hero-head .portrait{
+    justify-self:start;
+  }
 }
 
 @media (min-width: 981px){
