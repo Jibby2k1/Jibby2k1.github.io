@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+  <channel>
+    <title>Raul Valle Writing</title>
+    <link>https://www.raulv.dev/blog.html</link>
+    <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.</description>
+    
+    <item>
+      <title>Why I care about state-space models for EEG</title>
+      <link>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</link>
+      <guid>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</guid>
+      <pubDate>Sat, 01 Nov 2025 00:00:00 GMT</pubDate>
+      <description>A quick note on using HLDS and related models to capture structure in EEG, instead of treating everything as i.i.d. features.</description>
+    </item>
+    <item>
+      <title>Building an EEG/EMG helmet from scratch</title>
+      <link>https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html</link>
+      <guid>https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html</guid>
+      <pubDate>Wed, 01 Oct 2025 00:00:00 GMT</pubDate>
+      <description>Lessons from turning a modular acquisition concept into a real device that must deal with cables, noise, and human constraints.</description>
+    </item>
+    <item>
+      <title>Teaching analysis and ML with Jupyter at UF</title>
+      <link>https://www.raulv.dev/notes/teaching-analysis-and-ml-with-jupyter-at-uf.html</link>
+      <guid>https://www.raulv.dev/notes/teaching-analysis-and-ml-with-jupyter-at-uf.html</guid>
+      <pubDate>Mon, 01 Sep 2025 00:00:00 GMT</pubDate>
+      <description>How IEEE SPS @ UF and UF AI Club pushed me to build a curriculum that connects analysis, probability, and ML in concrete ways.</description>
+    </item>
+  </channel>
+</rss>

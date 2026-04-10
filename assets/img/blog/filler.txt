@@ -1,2 +1,2 @@
-Drop blog card images in this directory and reference them from data/blog.json.
+Drop writing images in this directory and reference them from Markdown frontmatter in `content/writing/`.
 Use one image per post and keep filenames slugged, for example: eeg-state-space-note.jpg.

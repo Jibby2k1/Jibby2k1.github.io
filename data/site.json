@@ -1,0 +1,60 @@
+{
+  "name": "Raul Valle",
+  "siteUrl": "https://www.raulv.dev",
+  "tagline": "Signal processing, neuroengineering, research systems, and writing.",
+  "shortBio": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.",
+  "longBio": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+  "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
+  "location": "Gainesville, Florida, USA",
+  "email": "raulresearch@proton.me",
+  "sameAs": [
+    "https://orcid.org/0009-0004-0487-0086",
+    "https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en",
+    "https://github.com/Jibby2k1",
+    "https://www.linkedin.com/in/raul-valle1/",
+    "https://www.instagram.com/raul.research/",
+    "https://www.youtube.com/watch?v=yuJaMaA18js"
+  ],
+  "affiliations": [
+    {
+      "type": "CollegeOrUniversity",
+      "name": "University of Florida",
+      "url": "https://www.ufl.edu/"
+    },
+    {
+      "type": "CollegeOrUniversity",
+      "name": "University of Florida Department of Electrical & Computer Engineering",
+      "url": "https://www.ece.ufl.edu/"
+    },
+    {
+      "type": "ResearchOrganization",
+      "name": "Computational NeuroEngineering Lab"
+    },
+    {
+      "type": "Organization",
+      "name": "IEEE Signal Processing Society at the University of Florida"
+    }
+  ],
+  "profiles": [
+    {
+      "label": "GitHub",
+      "href": "https://github.com/Jibby2k1",
+      "rel": "me noreferrer"
+    },
+    {
+      "label": "LinkedIn",
+      "href": "https://www.linkedin.com/in/raul-valle1/",
+      "rel": "me noreferrer"
+    },
+    {
+      "label": "ORCID",
+      "href": "https://orcid.org/0009-0004-0487-0086",
+      "rel": "me noreferrer"
+    },
+    {
+      "label": "Google Scholar",
+      "href": "https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en",
+      "rel": "me noreferrer"
+    }
+  ]
+}

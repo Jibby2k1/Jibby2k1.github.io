@@ -1,175 +1,103 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
-    <url>
-  <loc>https://www.raulv.dev/</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/about.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/cv.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/research.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/publications.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/research-cnel.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/research-sps.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/blog.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/awards.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-            <loc>https://www.raulv.dev/photography.html</loc>
-            <lastmod>2026-03-26</lastmod>
-
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC02466.JPG</image:loc>
-  <image:title>untitled1</image:title>
-  <image:caption>The lights glimmering was a cool effect, haven&#x27;t been able to recreate this intentionally.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC02570.JPG</image:loc>
-  <image:title>Alvin and Brittany</image:title>
-  <image:caption>Chipmunk honeymoon &amp; happy birthday</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC02589.JPG</image:loc>
-  <image:title>Cheburaska and Sneha</image:title>
-  <image:caption>21 = 20+1</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC02820.JPG</image:loc>
-  <image:title>Maxwell</image:title>
-  <image:caption>Cats don&#x27;t play.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03034.JPG</image:loc>
-  <image:title>Shark Boy</image:title>
-  <image:caption>The Shark is an apex predator of the sea.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03057.JPG</image:loc>
-  <image:title>Tank</image:title>
-  <image:caption>Even in the fog of war, you can spot a tank.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03175.JPG</image:loc>
-  <image:title>Sandevistan</image:title>
-  <image:caption>Time moves slow.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03391.JPG</image:loc>
-  <image:title>Momentum</image:title>
-  <image:caption>Break it hard.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03396.JPG</image:loc>
-  <image:title>American Woman</image:title>
-  <image:caption>Pool =&gt; PowaH</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03940.JPG</image:loc>
-  <image:title>Nana</image:title>
-  <image:caption>Osaki.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC03958.JPG</image:loc>
-  <image:title>Patrick Star</image:title>
-  <image:caption>Put your toys away.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC04025.JPG</image:loc>
-  <image:title>Jim</image:title>
-  <image:caption>Chickens don&#x27;t cross roads.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC04130.JPG</image:loc>
-  <image:title>2016</image:title>
-  <image:caption>The Gentle Men.</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC04233.JPG</image:loc>
-  <image:title>Might Guy</image:title>
-  <image:caption>Rock Lee</image:caption>
-</image:image>
-<image:image>
-  <image:loc>https://www.raulv.dev/assets/img/photography/DSC04422.JPG</image:loc>
-  <image:title>Jolyne</image:title>
-  <image:caption>Cold Stone Spring Water</image:caption>
-</image:image>
-          </url>
-    <url>
-  <loc>https://www.raulv.dev/contact.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/eeg-sentiment-state-space.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/time-series-ml-experiment-infra.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/sps-curriculum-workshops.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/aude.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/platos-cave.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/ergo.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/nano-robotics.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/ora.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/projects/vie.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-    <url>
-  <loc>https://www.raulv.dev/notes/teaching-analysis-and-ml-with-jupyter-at-uf.html</loc>
-  <lastmod>2026-03-26</lastmod>
-</url>
-  </urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://www.raulv.dev/</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/about.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/cv.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/contact.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/publications.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/research.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/research-cnel.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/research-sps.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/blog.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/awards.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/photography.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/project.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/eeg-sentiment-state-space.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/time-series-ml-experiment-infra.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/sps-curriculum-workshops.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/aude.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/platos-cave.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/ergo.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/nano-robotics.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/ora.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/projects/vie.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/building-an-eeg-emg-helmet-from-scratch.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/teaching-analysis-and-ml-with-jupyter-at-uf.html</loc>
+    <lastmod>2026-04-10</lastmod>
+  </url>
+</urlset>

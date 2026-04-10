@@ -1,194 +1,38 @@
 <!DOCTYPE html>
-      <html lang="en">
-      <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <title>EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project</title>
-        <meta name="description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
-        <meta name="author" content="Raul Valle" />
-        <meta name="robots" content="index, follow, max-image-preview:large" />
-        <meta property="og:locale" content="en_US" />
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project" />
-        <meta property="og:description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
-        <meta property="og:url" content="https://www.raulv.dev/projects/eeg-sentiment-state-space.html" />
-        <meta property="og:site_name" content="Raul Valle" />
-        <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
-        <meta property="og:image:alt" content="Diagram showing an EEG modeling pipeline." />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project" />
-        <meta name="twitter:description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
-        <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
-        <meta name="twitter:image:alt" content="Diagram showing an EEG modeling pipeline." />
-        <link rel="canonical" href="https://www.raulv.dev/projects/eeg-sentiment-state-space.html" />
-        <link rel="stylesheet" href="../assets/css/styles.css" />
-        <script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "Person",
-      "@id": "https://www.raulv.dev/#person",
-      "name": "Raul Valle",
-      "url": "https://www.raulv.dev/",
-      "image": "https://www.raulv.dev/assets/img/me/Raul_me.jpeg",
-      "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
-      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
-      "homeLocation": {
-        "@type": "Place",
-        "name": "Gainesville, Florida, USA"
-      },
-      "affiliation": [
-        {
-          "@type": "CollegeOrUniversity",
-          "name": "University of Florida",
-          "url": "https://www.ufl.edu/"
-        },
-        {
-          "@type": "CollegeOrUniversity",
-          "name": "University of Florida Department of Electrical & Computer Engineering",
-          "url": "https://www.ece.ufl.edu/"
-        },
-        {
-          "@type": "ResearchOrganization",
-          "name": "Computational NeuroEngineering Lab"
-        },
-        {
-          "@type": "Organization",
-          "name": "IEEE Signal Processing Society at the University of Florida"
-        }
-      ],
-      "alumniOf": [
-        {
-          "@type": "CollegeOrUniversity",
-          "name": "University of Florida"
-        },
-        {
-          "@type": "EducationalOrganization",
-          "name": "Doral Academy Charter School"
-        }
-      ],
-      "memberOf": [
-        {
-          "@type": "Organization",
-          "name": "IEEE Signal Processing Society at the University of Florida"
-        }
-      ],
-      "hasOccupation": {
-        "@type": "Occupation",
-        "name": "Ph.D. Student Researcher"
-      },
-      "sameAs": [
-        "https://orcid.org/0009-0004-0487-0086",
-        "https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en",
-        "https://github.com/Jibby2k1",
-        "https://www.linkedin.com/in/raul-valle1/",
-        "https://www.instagram.com/raul.research/",
-        "https://www.youtube.com/watch?v=yuJaMaA18js"
-      ],
-      "knowsAbout": [
-        "signal processing",
-        "time-series machine learning",
-        "neuroengineering",
-        "EEG",
-        "biological signal processing",
-        "research software",
-        "controls",
-        "robotics",
-        "photography",
-        "Gainesville, Florida"
-      ]
-    },
-    {
-      "@type": "WebSite",
-      "@id": "https://www.raulv.dev/#website",
-      "url": "https://www.raulv.dev/",
-      "name": "Raul Valle",
-      "description": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
-      "publisher": {
-        "@id": "https://www.raulv.dev/#person"
-      },
-      "inLanguage": "en-US"
-    },
-    {
-      "@type": "WebPage",
-      "@id": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html#webpage",
-      "url": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html",
-      "name": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project",
-      "description": "Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.",
-      "inLanguage": "en-US",
-      "about": {
-        "@id": "https://www.raulv.dev/#person"
-      },
-      "isPartOf": {
-        "@id": "https://www.raulv.dev/#website"
-      },
-      "mainEntity": {
-        "@id": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html#project"
-      }
-    },
-    {
-      "@type": "CreativeWork",
-      "@id": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html#project",
-      "url": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html",
-      "name": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
-      "headline": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
-      "description": "Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.",
-      "image": "https://www.raulv.dev/assets/img/projects/HLDS_Inf.png",
-      "creator": {
-        "@id": "https://www.raulv.dev/#person"
-      },
-      "keywords": [
-        "research",
-        "eeg",
-        "time-series",
-        "Electroencephalography (EEG)",
-        "State-space modeling (HLDS)",
-        "Sony–UF ‘LB3’ dataset (internal codename)"
-      ]
-    },
-    {
-      "@type": "BreadcrumbList",
-      "itemListElement": [
-        {
-          "@type": "ListItem",
-          "position": 1,
-          "name": "Home",
-          "item": "https://www.raulv.dev/"
-        },
-        {
-          "@type": "ListItem",
-          "position": 2,
-          "name": "Research",
-          "item": "https://www.raulv.dev/research.html"
-        },
-        {
-          "@type": "ListItem",
-          "position": 3,
-          "name": "CNEL projects",
-          "item": "https://www.raulv.dev/research-cnel.html"
-        },
-        {
-          "@type": "ListItem",
-          "position": 4,
-          "name": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
-          "item": "https://www.raulv.dev/projects/eeg-sentiment-state-space.html"
-        }
-      ]
-    }
-  ]
-}
-        </script>
-      </head>
-      <body>
-        <canvas id="bg-canvas" aria-hidden="true"></canvas>
-        <header class="site-header">
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project</title>
+  <meta name="description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project" />
+  <meta property="og:description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
+  <meta property="og:url" content="https://www.raulv.dev/projects/eeg-sentiment-state-space.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta property="og:image:alt" content="Diagram showing an EEG modeling pipeline." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project" />
+  <meta name="twitter:description" content="Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta name="twitter:image:alt" content="Diagram showing an EEG modeling pipeline." />
+  <link rel="canonical" href="https://www.raulv.dev/projects/eeg-sentiment-state-space.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.jpeg","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.","homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/projects/eeg-sentiment-state-space.html#webpage","url":"https://www.raulv.dev/projects/eeg-sentiment-state-space.html","name":"EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset) | Raul Valle Research Project","description":"Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"CreativeWork","@id":"https://www.raulv.dev/projects/eeg-sentiment-state-space.html#project","url":"https://www.raulv.dev/projects/eeg-sentiment-state-space.html","name":"EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)","headline":"EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)","description":"Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.","image":"https://www.raulv.dev/assets/img/projects/HLDS_Inf.png","creator":{"@id":"https://www.raulv.dev/#person"},"keywords":["research","eeg","time-series","Electroencephalography (EEG)","State-space modeling (HLDS)","Sony–UF ‘LB3’ dataset (internal codename)"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://www.raulv.dev/research.html"},{"@type":"ListItem","position":3,"name":"CNEL projects","item":"https://www.raulv.dev/research-cnel.html"},{"@type":"ListItem","position":4,"name":"EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)","item":"https://www.raulv.dev/projects/eeg-sentiment-state-space.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="container navbar" role="navigation" aria-label="Primary">
     <a class="brand" href="../index.html">
       <span class="brand-copy">
         <span class="brand-name">Raul Valle</span>
-        <span class="brand-eyebrow">Official site of a UF Ph.D. student and researcher</span>
+        <span class="brand-eyebrow">Signal processing, neuroengineering, research systems, and writing.</span>
       </span>
     </a>
 
@@ -202,7 +46,7 @@
       <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
       <a class="navlink" href="../research.html" data-route="research.html">Research</a>
       <a class="navlink" href="../publications.html" data-route="publications.html">Publications</a>
-      <a class="navlink" href="../blog.html" data-route="blog.html">Notes</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
       <a class="navlink" href="../awards.html" data-route="awards.html">Awards</a>
       <a class="navlink" href="../photography.html" data-route="photography.html">Photography</a>
       <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
@@ -215,74 +59,62 @@
     </div>
   </div>
 </header>
-        <main id="main">
-        <div class="container">
-          <section class="page-hero reveal hero-split accent-cool" id="project-hero">
-            <div>
-              <div class="kicker">CNEL research</div>
-              <h1 class="h1">EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset)</h1>
-              <p class="lead">End-to-end pipeline that cleans raw EEG and learns a compact, time-evolving ‘hidden state’ summary that can be evaluated against labels and behavioral outcomes.</p>
-              <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../research-cnel.html">CNEL projects</a> / <span>EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset)</span></div>
-              <div class="cta-row">
-                <a class="btn" href="../research-cnel.html">Back to CNEL projects</a>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal hero-split accent-cool">
+          <div>
+            <div class="kicker">CNEL</div>
+            <h1 class="h1">EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset)</h1>
+            <p class="lead">End-to-end pipeline that cleans raw EEG and learns a compact, time-evolving ‘hidden state’ summary that can be evaluated against labels and behavioral outcomes.</p>
+            <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../research-cnel.html">CNEL projects</a> / <span>EEG-based sentiment &amp; brain-state tracking (CNEL × Sony × LB3 dataset)</span></div>
+            <div class="cta-row">
+              <a class="btn" href="../research-cnel.html">Back to CNEL projects</a>
+              
+            </div>
+          </div>
+          <img class="card-img compact project-hero-img" src="../assets/img/projects/HLDS_Inf.png" alt="Diagram showing an EEG modeling pipeline." loading="lazy" decoding="async" />
+        </section>
 
+        <section class="project-detail reveal accent-mint">
+          <div class="project-main">
+            <article class="card reveal">
+              <h2 class="project-section-title">Overview</h2>
+              <p>Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.</p>
+              <p>In this work, I focused on making brain-signal modeling practical: take raw EEG recordings collected while participants view media, clean and standardize them, fit a time-series model that tracks a few hidden variables over time, and produce clear metrics and reports so results are comparable across sessions and subjects.</p>
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">What I built</h2><ul><li>A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns raw EEG into model-ready inputs.</li><li>Training and evaluation scripts for a state-space model called a Hierarchical Linear Dynamical System (HLDS), used to track hidden ‘brain state’ trajectories.</li><li>Diagnostics and scoring outputs (e.g., stability checks, prediction metrics, and class/condition separability summaries).</li><li>Automated summaries and artifacts so runs can be audited and compared (configuration capture, standardized outputs, and plots).</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">How it works</h2><ul><li>EEG is cleaned and aligned into consistent time windows.</li><li>The HLDS model learns hidden variables that evolve over time and explain the observed EEG signals.</li><li>Those hidden variables (and model outputs) are evaluated against labels/conditions to test whether the model captures meaningful structure.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Deliverables</h2><ul><li>Run folders with configs, logs, metrics, and plots.</li><li>A standardized summary table used for comparison across papers/conditions.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related writing</h2><div class="grid two"><a class="related-link" href="../notes/why-i-care-about-state-space-models-for-eeg.html"><strong>Why I care about state-space models for EEG</strong><span>EEG work gets more informative when temporal structure is part of the model instead of something the pipeline averages away.</span></a></div></article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal">
+              <h2 class="project-section-title">Snapshot</h2>
+              <div class="kv">
+                <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Research · neurotechnology · time-series modeling</div></div>
+                <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Active research / ongoing iteration.</div></div>
+                <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Electroencephalography (EEG)</span><span class="pill">State-space modeling (HLDS)</span><span class="pill">Sony–UF ‘LB3’ dataset (internal codename)</span></div></div>
               </div>
-            </div>
-            <img class="card-img compact project-hero-img" src="../assets/img/projects/HLDS_Inf.png" alt="Diagram showing an EEG modeling pipeline." loading="lazy" decoding="async" />
-          </section>
-
-          <section class="project-detail reveal accent-mint">
-            <div class="project-main">
-              <article class="card reveal">
-                <h2 class="project-section-title">Overview</h2>
-                <p>Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.</p><p>In this work, I focused on making brain-signal modeling practical: take raw EEG recordings collected while participants view media, clean and standardize them, fit a time-series model that tracks a few hidden variables over time, and produce clear metrics and reports so results are comparable across sessions and subjects.</p>
-              </article>
-              <article class="card reveal">
-  <h2 class="project-section-title">What I built</h2>
-  <ul><li>A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns raw EEG into model-ready inputs.</li><li>Training and evaluation scripts for a state-space model called a Hierarchical Linear Dynamical System (HLDS), used to track hidden ‘brain state’ trajectories.</li><li>Diagnostics and scoring outputs (e.g., stability checks, prediction metrics, and class/condition separability summaries).</li><li>Automated summaries and artifacts so runs can be audited and compared (configuration capture, standardized outputs, and plots).</li></ul>
-</article> <article class="card reveal">
-  <h2 class="project-section-title">How it works</h2>
-  <ul><li>EEG is cleaned and aligned into consistent time windows.</li><li>The HLDS model learns hidden variables that evolve over time and explain the observed EEG signals.</li><li>Those hidden variables (and model outputs) are evaluated against labels/conditions to test whether the model captures meaningful structure.</li></ul>
-</article> <article class="card reveal">
-  <h2 class="project-section-title">Deliverables</h2>
-  <ul><li>Run folders with configs, logs, metrics, and plots.</li><li>A standardized summary table used for comparison across papers/conditions.</li></ul>
-</article>
-            </div>
-            <div class="project-side">
-              <article class="card reveal">
-                <h2 class="project-section-title">Snapshot</h2>
-                <div class="kv">
-                  <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Research · neurotechnology · time-series modeling</div></div>
-                  <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Active research / ongoing iteration.</div></div>
-                  <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Electroencephalography (EEG)</span><span class="pill">State-space modeling (HLDS)</span><span class="pill">Sony–UF ‘LB3’ dataset (internal codename)</span></div></div>
-                </div>
-              </article>
-              <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>EEG</dt><dd>Electroencephalography: non-invasive measurement of brain electrical activity from the scalp.</dd><dt>HLDS</dt><dd>Hierarchical Linear Dynamical System: a state-space model that represents a signal using a small set of hidden variables that change over time.</dd><dt>State-space model</dt><dd>A model that explains observations using hidden variables (‘state’) plus rules for how those variables evolve over time.</dd><dt>LB3</dt><dd>Internal codename for a Sony–UF research dataset used in this project.</dd></dl></article>
-              <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Python</li><li>NumPy</li><li>PyTorch/CuPy (GPU acceleration where appropriate)</li><li>Reproducible experiment scripting</li></ul></article>
-              <article class="card reveal"><h2 class="project-section-title">Collaborators</h2><ul><li>Computational NeuroEngineering Lab (CNEL), University of Florida</li><li>Sony Research collaboration (dataset and research context)</li></ul></article>
-
-            </div>
-          </section>
-        </div>
-      </main>
-        <footer class="footer">
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Python</li><li>NumPy</li><li>PyTorch/CuPy (GPU acceleration where appropriate)</li><li>Reproducible experiment scripting</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Collaborators</h2><ul><li>Computational NeuroEngineering Lab (CNEL), University of Florida</li><li>Sony Research collaboration (dataset and research context)</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>EEG</dt><dd>Electroencephalography: non-invasive measurement of brain electrical activity from the scalp.</dd><dt>HLDS</dt><dd>Hierarchical Linear Dynamical System: a state-space model that represents a signal using a small set of hidden variables that change over time.</dd><dt>State-space model</dt><dd>A model that explains observations using hidden variables (‘state’) plus rules for how those variables evolve over time.</dd><dt>LB3</dt><dd>Internal codename for a Sony–UF research dataset used in this project.</dd></dl></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
   <div class="container footer-row">
     <div class="footer-copy">
-      <div class="footer-label">Official Site</div>
-      <p>The official website of Raul Valle, a University of Florida Ph.D. student in Electrical and Computer Engineering working on signal processing, machine learning, neuroengineering, and research software in Gainesville.</p>
+      <div class="footer-label">About This Site</div>
+      <p>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.</p>
       <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
     </div>
 
     <div class="footer-group">
       <div class="footer-label">Browse</div>
       <div class="footer-links">
-        <a href="../index.html">Home</a>
-        <a href="../about.html">About</a>
-        <a href="../cv.html">CV</a>
         <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
         <a href="../publications.html">Publications</a>
-        <a href="../blog.html">Notes</a>
-        <a href="../awards.html">Awards</a>
         <a href="../photography.html">Photography</a>
         <a href="../contact.html">Contact</a>
       </div>
@@ -291,19 +123,11 @@
     <div class="footer-group">
       <div class="footer-label">Profiles</div>
       <div class="footer-links">
-        <a href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a>
-        <a href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a>
-        <a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
-        <a href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
-        <a href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">YouTube</a>
-        <a href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
-        <a href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+        <a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a><a href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a><a href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a><a href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer">Google Scholar</a>
       </div>
     </div>
   </div>
 </footer>
-        <script src="../assets/js/background.js"></script>
-        <script src="../assets/js/site.js"></script>
-
-      </body>
-      </html>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
