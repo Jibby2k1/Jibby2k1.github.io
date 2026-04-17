@@ -2,8 +2,11 @@
   function currentRoute() {
     const path = location.pathname;
     if (path.includes('/projects/')) return 'research.html';
-    if (path.includes('/notes/')) return 'blog.html';
-    return path.split('/').pop() || 'index.html';
+    if (path.includes('/notes/')) return 'about.html';
+    const file = path.split('/').pop() || 'index.html';
+    if (file === 'publications.html') return 'research.html';
+    if (['blog.html', 'awards.html', 'photography.html'].includes(file)) return 'about.html';
+    return file;
   }
 
   function setActiveNav() {

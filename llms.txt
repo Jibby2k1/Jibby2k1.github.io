@@ -7,10 +7,9 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 ## Core Pages
 
 - [Home](https://www.raulv.dev/): Site overview and featured work.
-- [About](https://www.raulv.dev/about.html): Background, research orientation, and affiliations.
+- [About](https://www.raulv.dev/about.html): Background, research orientation, affiliations, writing, recognition, and selected visual work.
 - [CV](https://www.raulv.dev/cv.html): Education, experience, skills, and credentials.
-- [Research](https://www.raulv.dev/research.html): Main research themes and technical direction.
-- [Publications](https://www.raulv.dev/publications.html): Publications and scholarly output.
+- [Research](https://www.raulv.dev/research.html): Main research themes, projects, publications, talks, and public proof.
 - [Contact](https://www.raulv.dev/contact.html): Preferred ways to reach out.
 
 ## Research Detail Pages
@@ -19,11 +18,12 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 - [IEEE SPS at UF](https://www.raulv.dev/research-sps.html): Signal processing society and chapter-related technical work.
 - [Projects](https://www.raulv.dev/project.html): Index of engineering and research projects.
 
-## Writing And Media
+## Secondary Archives
 
-- [Notes](https://www.raulv.dev/blog.html): Technical notes and essays.
-- [Photography](https://www.raulv.dev/photography.html): Photography portfolio and captions.
-- [Awards](https://www.raulv.dev/awards.html): Honors and distinctions.
+- [Publications](https://www.raulv.dev/publications.html): Legacy outputs archive; primary outputs are also summarized on Research.
+- [Notes](https://www.raulv.dev/blog.html): Technical notes and essays; linked from About.
+- [Photography](https://www.raulv.dev/photography.html): Photography portfolio and captions; linked from About.
+- [Awards](https://www.raulv.dev/awards.html): Honors and distinctions; linked from About.
 
 ## Machine-Readable Discovery
 

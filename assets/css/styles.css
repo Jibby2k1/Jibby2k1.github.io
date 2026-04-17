@@ -222,7 +222,8 @@ code{
   gap:10px;
 }
 
-.icon-link{
+.icon-link,
+.profile-icon{
   display:inline-flex;
   align-items:center;
   justify-content:center;
@@ -803,17 +804,6 @@ main{
 
 .profile-links{
   gap:10px;
-}
-
-.profile-icon{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:38px;
-  height:38px;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,0.32);
-  color:var(--ink-soft);
 }
 
 .profile-icon:hover{

@@ -100,10 +100,6 @@ function nav(outputPath) {
       <a class="navlink" href="${prefix}about.html" data-route="about.html">About</a>
       <a class="navlink" href="${prefix}cv.html" data-route="cv.html">CV</a>
       <a class="navlink" href="${prefix}research.html" data-route="research.html">Research</a>
-      <a class="navlink" href="${prefix}publications.html" data-route="publications.html">Publications</a>
-      <a class="navlink" href="${prefix}blog.html" data-route="blog.html">Writing</a>
-      <a class="navlink" href="${prefix}awards.html" data-route="awards.html">Awards</a>
-      <a class="navlink" href="${prefix}photography.html" data-route="photography.html">Photography</a>
       <a class="navlink" href="${prefix}contact.html" data-route="contact.html">Contact</a>
     </nav>
 
@@ -127,10 +123,10 @@ function footer(outputPath) {
     <div class="footer-group">
       <div class="footer-label">Browse</div>
       <div class="footer-links">
+        <a href="${prefix}index.html">Home</a>
+        <a href="${prefix}about.html">About</a>
+        <a href="${prefix}cv.html">CV</a>
         <a href="${prefix}research.html">Research</a>
-        <a href="${prefix}blog.html">Writing</a>
-        <a href="${prefix}publications.html">Publications</a>
-        <a href="${prefix}photography.html">Photography</a>
         <a href="${prefix}contact.html">Contact</a>
       </div>
     </div>
@@ -417,6 +413,57 @@ function filterBar({ searchLabel, buttons, emptyMessage }) {
 </div>`;
 }
 
+function outputsSection({ includeIntro = false } = {}) {
+  return `<section class="accent-cool">
+    <h2 class="section-title reveal">Publications, talks, and public proof</h2>
+    ${includeIntro ? '<p class="section-subtitle reveal">The strongest external references are grouped here so visitors can verify the research identity quickly: paper indexes, official UF coverage, talk recordings, and related project pages.</p>' : ''}
+    <div class="grid two" style="margin-top:14px; gap:14px;">
+      <article class="card reveal">
+        <div class="archive-ledger-label">Preprint</div>
+        <h3>Plato's Cave: A Human-Centered Research Verification System</h3>
+        <p>March 2026 · arXiv</p>
+        <p>This preprint documents the Plato's Cave system for structured claims, agent-based verification, and human-centered research review.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://arxiv.org/abs/2603.23526" target="_blank" rel="noreferrer">Open paper</a>
+          <a class="btn" href="projects/platos-cave.html">Related project</a>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="archive-ledger-label">Research identity</div>
+        <h3>Persistent profiles</h3>
+        <p>ORCID, Google Scholar, and the CV provide the shortest verification path for academic visitors.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a>
+          <a class="btn" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a>
+          <a class="btn" href="cv.html">CV</a>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="archive-ledger-label">Talk</div>
+        <h3>Foundations of Signal Processing</h3>
+        <p>2025 · UF Data Science &amp; Informatics · DSI Spring Symposium</p>
+        <p>Public signal-processing workshop recording connected to IEEE SPS at UF.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">Open video</a>
+          <a class="btn" href="projects/sps-curriculum-workshops.html">Workshop project</a>
+        </div>
+      </article>
+      <article class="card reveal">
+        <div class="archive-ledger-label">Official coverage</div>
+        <h3>UF coverage and recognition</h3>
+        <p>University pages connect the work to UF AI, UF ECE, and public award context.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a>
+          <a class="btn" href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a>
+        </div>
+      </article>
+    </div>
+    <div class="cta-row">
+      <a class="btn" href="publications.html">Open full outputs archive</a>
+    </div>
+  </section>`;
+}
+
 async function buildStaticPage(file, type) {
   const current = await fs.readFile(path.join(root, file), 'utf8');
   const body = extractMain(current);
@@ -457,27 +504,27 @@ async function main() {
 
   await writePage('index.html', pageShell({
     outputPath: 'index.html',
-    title: 'Raul Valle | Signal Processing, Neuroengineering, and Research Writing',
-    description: 'Research site and writing archive for Raul Valle, a University of Florida Ph.D. student working on signal processing, neuroengineering, research software, and technical commentary.',
+    title: 'Raul Valle | UF Ph.D. Student in Signal Processing and Neuroengineering',
+    description: 'Professional research site for Raul Valle, a University of Florida Ph.D. student working on signal processing, neuroengineering, time-series machine learning, and research systems.',
     image: `${site.siteUrl}/assets/img/me/Raul_me.jpeg`,
     main: `<div class="container">
       <section class="page-hero archive-hero reveal accent-cool">
         <div class="archive-hero-main">
           <div class="kicker">Raul Valle · University of Florida · Gainesville, Florida</div>
-          <h1 class="h1">Signal processing, neuroengineering, and research systems that hold up outside the benchmark.</h1>
+          <h1 class="h1">Signal processing and neuroengineering research grounded in real biological data.</h1>
           <p class="lead">${escapeHtml(site.shortBio)}</p>
           <div class="cta-row">
-            <a class="btn primary" href="research.html">Explore research</a>
-            <a class="btn" href="blog.html">Read writing</a>
-            <a class="btn" href="publications.html">Publications and talks</a>
+            <a class="btn primary" href="research.html">Research and publications</a>
+            <a class="btn" href="cv.html">CV</a>
+            <a class="btn" href="contact.html">Contact and verify</a>
           </div>
         </div>
         <aside class="card archive-ledger reveal">
-          <div class="archive-ledger-label">Current focus</div>
+          <div class="archive-ledger-label">Professional focus</div>
           <dl class="archive-stats">
             <div><dt>Research</dt><dd>EEG, voltage imaging, time-series models, and reproducible experimentation.</dd></div>
-            <div><dt>Engineering</dt><dd>Research tooling, biosignal systems, workshop infrastructure, and deployable prototypes.</dd></div>
-            <div><dt>Writing</dt><dd>Paper commentary, research journal notes, and state-of-research reflections.</dd></div>
+            <div><dt>Affiliation</dt><dd>University of Florida ECE, CNEL, and IEEE Signal Processing Society activity at UF.</dd></div>
+            <div><dt>Outputs</dt><dd>Project pages, talks, preprints, official UF references, and public profile identifiers.</dd></div>
           </dl>
         </aside>
       </section>
@@ -491,13 +538,27 @@ async function main() {
       </section>
 
       <section class="accent-amber">
-        <h2 class="section-title reveal">Recent writing</h2>
-        <p class="section-subtitle reveal">A public research journal for technical reflections, paper notes, and commentary on what is worth paying attention to.</p>
+        <h2 class="section-title reveal">Professional profile</h2>
+        <p class="section-subtitle reveal">Fast paths for visitors who need context, credentials, or verification.</p>
         <div class="grid three" style="margin-top:14px; gap:14px;">
-          ${writing.slice(0, 3).map((post) => cardWriting(post)).join('')}
-        </div>
-        <div class="cta-row">
-          <a class="btn primary" href="blog.html">Open writing archive</a>
+          <article class="card reveal">
+            <div class="archive-ledger-label">About</div>
+            <h3>Background and interests</h3>
+            <p>Education, affiliations, writing, recognition, and selected personal context collected in one place.</p>
+            <div class="cta-row"><a class="btn primary" href="about.html">Open about</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="archive-ledger-label">CV</div>
+            <h3>Academic profile</h3>
+            <p>Research interests, affiliations, identifiers, awards, and public mentions in a compact CV format.</p>
+            <div class="cta-row"><a class="btn primary" href="cv.html">Open CV</a></div>
+          </article>
+          <article class="card reveal">
+            <div class="archive-ledger-label">Contact</div>
+            <h3>Verify and reach out</h3>
+            <p>Official profiles, UF references, and professional contact surfaces for identity verification.</p>
+            <div class="cta-row"><a class="btn primary" href="contact.html">Open contact</a></div>
+          </article>
         </div>
       </section>
 
@@ -507,8 +568,8 @@ async function main() {
           <article class="card reveal">
             <div class="archive-ledger-label">Publications</div>
             <h3>Talks, preprints, and official coverage</h3>
-            <p>One page for papers, talk videos, UF profiles, and public references tied to the work on this site.</p>
-            <div class="cta-row"><a class="btn primary" href="publications.html">Open publications</a></div>
+            <p>Research outputs now live with the research overview so papers, projects, and public proof stay connected.</p>
+            <div class="cta-row"><a class="btn primary" href="research.html">Open research</a></div>
           </article>
           <article class="card reveal">
             <div class="archive-ledger-label">Research tracks</div>
@@ -518,9 +579,9 @@ async function main() {
           </article>
           <article class="card reveal">
             <div class="archive-ledger-label">Secondary portfolio</div>
-            <h3>Selected photography</h3>
-            <p>Portrait and character photography remains part of the site, but clearly secondary to the research and writing surfaces.</p>
-            <div class="cta-row"><a class="btn primary" href="photography.html">Open photography</a></div>
+            <h3>Writing and photography</h3>
+            <p>Personal and reflective material stays available from About without competing with the research-facing surface.</p>
+            <div class="cta-row"><a class="btn primary" href="about.html">Open about</a></div>
           </article>
         </div>
       </section>
@@ -542,16 +603,16 @@ async function main() {
 
   await writePage('research.html', pageShell({
     outputPath: 'research.html',
-    title: 'Raul Valle Research | Signal Processing, Neuroengineering, and Research Systems',
-    description: 'Research overview for Raul Valle at the University of Florida, covering CNEL work, IEEE SPS projects, publications, and technical writing.',
+    title: 'Raul Valle Research | Projects, Publications, and Public Proof',
+    description: 'Research overview for Raul Valle at the University of Florida, covering CNEL work, IEEE SPS projects, publications, talks, and public research references.',
     pageType: 'CollectionPage',
     image: `${site.siteUrl}/assets/img/projects/HLDS_Inf.png`,
     imageAlt: 'Research visual for Raul Valle',
     main: `<div class="container">
       <section class="page-hero reveal accent-cool">
         <div class="kicker">Research overview</div>
-        <h1 class="h1">Research and engineering tracks</h1>
-        <p class="lead">My work is organized around two tracks: lab-focused research in CNEL and engineering, workshop, and prototype work through IEEE SPS at UF. The common thread is signal processing that remains useful when the data is noisy, the hardware is imperfect, and the deployment constraints are real.</p>
+        <h1 class="h1">Research, publications, and public proof</h1>
+        <p class="lead">My work is organized around lab-focused research in CNEL and engineering, workshop, and prototype work through IEEE SPS at UF. The common thread is signal processing that remains useful when the data is noisy, the hardware is imperfect, and the deployment constraints are real.</p>
       </section>
 
       <div class="grid two accent-mint" style="margin-top:18px; gap:14px;">
@@ -572,6 +633,8 @@ async function main() {
           ${featuredProjects.map((project) => cardProject(project)).join('')}
         </div>
       </section>
+
+      ${outputsSection({ includeIntro: true })}
 
       <section class="accent-cool">
         <h2 class="section-title reveal">Writing connected to the work</h2>
