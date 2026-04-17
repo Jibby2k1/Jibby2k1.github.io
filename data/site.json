@@ -12,6 +12,7 @@
     "https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en",
     "https://github.com/Jibby2k1",
     "https://www.linkedin.com/in/raul-valle1/",
+    "https://x.com/raulvalle2k1",
     "https://www.instagram.com/raul.research/",
     "https://www.youtube.com/watch?v=yuJaMaA18js"
   ],
@@ -39,22 +40,35 @@
     {
       "label": "GitHub",
       "href": "https://github.com/Jibby2k1",
-      "rel": "me noreferrer"
+      "rel": "me noreferrer",
+      "icon": "github",
+      "header": true
     },
     {
       "label": "LinkedIn",
       "href": "https://www.linkedin.com/in/raul-valle1/",
-      "rel": "me noreferrer"
+      "rel": "me noreferrer",
+      "icon": "linkedin",
+      "header": true
+    },
+    {
+      "label": "X",
+      "href": "https://x.com/raulvalle2k1",
+      "rel": "me noreferrer",
+      "icon": "x",
+      "header": true
     },
     {
       "label": "ORCID",
       "href": "https://orcid.org/0009-0004-0487-0086",
-      "rel": "me noreferrer"
+      "rel": "me noreferrer",
+      "icon": "orcid"
     },
     {
       "label": "Google Scholar",
       "href": "https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en",
-      "rel": "me noreferrer"
+      "rel": "me noreferrer",
+      "icon": "scholar"
     }
   ]
 }
