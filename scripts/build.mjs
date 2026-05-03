@@ -497,6 +497,20 @@ async function main() {
     ...spsData.items.map((item) => ({ ...item, track: 'sps' }))
   ];
   const featuredProjects = projects.filter((item) => item.featured).slice(0, 4);
+  const personalProjects = [
+    {
+      name: 'Ora',
+      url: 'https://ora.raulv.dev/',
+      label: 'Personal app',
+      description: 'A standalone personal project and product surface built outside the research archive.'
+    },
+    {
+      name: 'Gradus',
+      url: 'https://gradus.raulv.dev/',
+      label: 'Personal app',
+      description: 'A separate personal project with its own public site, hosted as part of the raulv.dev ecosystem.'
+    }
+  ];
 
   for (const page of staticPages) {
     await buildStaticPage(page.file, page.type);
@@ -534,6 +548,21 @@ async function main() {
         <p class="section-subtitle reveal">The highest-signal project pages that explain what I am building and why it matters.</p>
         <div class="grid two" style="margin-top:14px; gap:14px;">
           ${featuredProjects.map((project) => cardProject(project)).join('')}
+        </div>
+      </section>
+
+      <section class="accent-cool">
+        <h2 class="section-title reveal">Personal projects</h2>
+        <p class="section-subtitle reveal">Standalone projects with their own public homes, separate from the research archive.</p>
+        <div class="grid two" style="margin-top:14px; gap:14px;">
+          ${personalProjects.map((project) => `<article class="card reveal">
+            <div class="archive-ledger-label">${escapeHtml(project.label)}</div>
+            <h3>${escapeHtml(project.name)}</h3>
+            <p>${escapeHtml(project.description)}</p>
+            <div class="cta-row">
+              <a class="btn primary" href="${project.url}" target="_blank" rel="me noreferrer">Open ${escapeHtml(project.name)}</a>
+            </div>
+          </article>`).join('')}
         </div>
       </section>
 
@@ -596,6 +625,20 @@ async function main() {
           '@type': 'CreativeWork',
           name: item.title,
           url: `${site.siteUrl}/projects/${item.slug}.html`
+        }
+      }))
+    }, {
+      '@type': 'ItemList',
+      '@id': `${site.siteUrl}/#personal-projects`,
+      name: 'Personal projects',
+      itemListElement: personalProjects.map((item, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'CreativeWork',
+          name: item.name,
+          url: item.url,
+          description: item.description
         }
       }))
     }]
