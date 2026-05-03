@@ -525,7 +525,7 @@ async function main() {
       <section class="page-hero archive-hero reveal accent-cool">
         <div class="archive-hero-main">
           <div class="kicker">Raul Valle · University of Florida · Gainesville, Florida</div>
-          <h1 class="h1">Signal processing and neuroengineering research grounded in real biological data.</h1>
+          <h1 class="h1">Machine Learning and Neuroengineering.</h1>
           <p class="lead">${escapeHtml(site.shortBio)}</p>
           <div class="cta-row">
             <a class="btn primary" href="research.html">Research and publications</a>
