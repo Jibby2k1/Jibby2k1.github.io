@@ -9,7 +9,7 @@ topics:
   - teaching
   - machine learning
   - jupyter
-heroImage: assets/img/projects/SPS_Logo.png
+heroImage: assets/img/projects/SPS_Logo.webp
 heroAlt: IEEE SPS at UF logo used for workshop and curriculum work.
 summary: Workshop design works better when theory and application are taught as one loop instead of two separate tracks.
 relatedProjects:

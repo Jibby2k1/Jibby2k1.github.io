@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
-const SIZE_LIMIT = 300 * 1024;
+const SIZE_LIMIT = 150 * 1024;
 const FULL_WIDTH = 1600;
 const THUMB_WIDTH = 640;
 
@@ -56,6 +56,8 @@ async function optimizeLargeRasters() {
   for (const file of files) {
     if (!/\.(png|jpe?g)$/i.test(file)) continue;
     if (file.includes(`${path.sep}photography${path.sep}`)) continue;
+    // og-card/favicons stay PNG for scraper compatibility
+    if (/og-card\.png$|favicon|apple-touch/i.test(file)) continue;
     const stat = await fs.stat(file);
     if (stat.size <= SIZE_LIMIT) continue;
     const dest = file.replace(/\.(png|jpe?g)$/i, '.webp');
@@ -71,7 +73,8 @@ async function rewriteReferences() {
   const targets = [
     ...(await fs.readdir(path.join(root, 'data'))).map((f) => `data/${f}`),
     ...(await fs.readdir(path.join(root, 'content/writing'))).map((f) => `content/writing/${f}`),
-    'scripts/build.mjs'
+    'scripts/build.mjs',
+    'scripts/pages.mjs'
   ];
   for (const target of targets) {
     const file = path.join(root, target);
@@ -102,7 +105,16 @@ async function writeManifest() {
   console.log(`manifest: ${Object.keys(sorted).length} images`);
 }
 
+async function makeHeroPortrait() {
+  // dedicated small portrait for the hero/about pages (displayed ~340px wide)
+  const src = (await fs.readdir(path.join(root, 'assets/img/me'))).find((f) => /^Raul_me\.(jpe?g|webp)$/i.test(f));
+  if (!src) return;
+  await toWebp(path.join(root, 'assets/img/me', src), path.join(root, 'assets/img/me/portrait-680.webp'), 680);
+  console.log('portrait: assets/img/me/portrait-680.webp');
+}
+
 await optimizePhotography();
 await optimizeLargeRasters();
+await makeHeroPortrait();
 await rewriteReferences();
 await writeManifest();

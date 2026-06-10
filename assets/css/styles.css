@@ -164,7 +164,6 @@ code{
   z-index:1000;
   background:var(--header-bg);
   border-bottom:1px solid var(--line-strong);
-  backdrop-filter: blur(8px);
   box-shadow:0 10px 24px rgba(57, 40, 16, 0.07);
 }
 

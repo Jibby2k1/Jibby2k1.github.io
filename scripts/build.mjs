@@ -170,7 +170,7 @@ function personSchema() {
     '@id': `${site.siteUrl}/#person`,
     name: site.name,
     url: `${site.siteUrl}/`,
-    image: `${site.siteUrl}/assets/img/me/Raul_me.jpeg`,
+    image: `${site.siteUrl}/assets/img/me/Raul_me.webp`,
     jobTitle: site.jobTitle,
     description: site.longBio,
     homeLocation: {
@@ -572,7 +572,7 @@ async function main() {
     outputPath: 'index.html',
     title: 'Raul Valle | UF Ph.D. Student in Signal Processing and Neuroengineering',
     description: 'Professional research site for Raul Valle, a University of Florida Ph.D. student working on signal processing, neuroengineering, time-series machine learning, and research systems.',
-    image: `${site.siteUrl}/assets/img/me/Raul_me.jpeg`,
+    image: `${site.siteUrl}/assets/img/me/Raul_me.webp`,
     main: `<div class="container">
       <section class="page-hero archive-hero reveal accent-cool">
         <div class="archive-hero-main">
@@ -586,7 +586,7 @@ async function main() {
           </div>
         </div>
         <div class="hero-portrait reveal">
-          ${imgTag('assets/img/me/Raul_me.jpeg', { alt: 'Portrait of Raul Valle', eager: true })}
+          ${imgTag('assets/img/me/portrait-680.webp', { alt: 'Portrait of Raul Valle', eager: true })}
         </div>
       </section>
 
@@ -723,7 +723,7 @@ async function main() {
       title: `${track.name} | Raul Valle`,
       description: track.description,
       pageType: 'CollectionPage',
-      image: `${site.siteUrl}/${items[0]?.img || 'assets/img/me/Raul_me.jpeg'}`,
+      image: `${site.siteUrl}/${items[0]?.img || 'assets/img/me/Raul_me.webp'}`,
       imageAlt: `${track.name} visual`,
       main: `<div class="container">
         <section class="page-hero reveal accent-cool">
@@ -763,7 +763,7 @@ async function main() {
     title: 'Raul Valle Writing | Research Journal, Paper Notes, and Commentary',
     description: 'Public writing by Raul Valle: paper notes, research journal entries, and state-of-research commentary on signal processing, machine learning, and neuroengineering.',
     pageType: 'CollectionPage',
-    image: `${site.siteUrl}/${writing[0]?.heroImage || 'assets/img/me/Raul_me.jpeg'}`,
+    image: `${site.siteUrl}/${writing[0]?.heroImage || 'assets/img/me/Raul_me.webp'}`,
     imageAlt: 'Raul Valle writing archive',
     main: `<div class="container">
       <section class="page-hero reveal accent-cool">

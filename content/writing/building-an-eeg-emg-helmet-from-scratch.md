@@ -10,7 +10,7 @@ topics:
   - emg
   - hardware
   - neuroengineering
-heroImage: assets/img/projects/Ergo.png
+heroImage: assets/img/projects/Ergo.webp
 heroAlt: Visual representing the Ergo biosignal acquisition project.
 summary: Biosignal research gets cleaner when hardware, firmware, and modeling are treated as one system instead of three separate concerns.
 relatedProjects:

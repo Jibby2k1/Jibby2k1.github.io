@@ -4,7 +4,7 @@
       "slug": "sps-curriculum-workshops",
       "title": "IEEE SPS @ UF — curriculum & workshops",
       "subtitle": "Hands-on workshops that bridge math fundamentals to real applications (audio, images, sensors) using clear notebooks and demos.",
-      "img": "assets/img/projects/SPS_Icon_nobg.png",
+      "img": "assets/img/projects/SPS_Icon_nobg.webp",
       "imgAlt": "IEEE Signal Processing Society logo.",
       "tags": [
         "teaching",
@@ -55,7 +55,7 @@
       "slug": "aude",
       "title": "Aude — biologically plausible audio scene analysis",
       "subtitle": "Research on source separation and sound localization in real-world environments using informed models and a multi-microphone capture pipeline.",
-      "img": "assets/img/projects/Aude_Icon_nobg.png",
+      "img": "assets/img/projects/Aude_Icon_nobg.webp",
       "imgAlt": "Aude project logo.",
       "tags": [
         "audio",

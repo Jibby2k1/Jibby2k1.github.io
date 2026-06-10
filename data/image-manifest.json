@@ -1,4 +1,8 @@
 {
+  "assets/img/apple-touch-icon.png": {
+    "width": 180,
+    "height": 180
+  },
   "assets/img/awards/EarlyCareerAward.webp": {
     "width": 1600,
     "height": 1066
@@ -7,9 +11,21 @@
     "width": 1600,
     "height": 731
   },
-  "assets/img/me/Raul_me.jpeg": {
-    "width": 1361,
-    "height": 1815
+  "assets/img/favicon-48.png": {
+    "width": 48,
+    "height": 48
+  },
+  "assets/img/me/portrait-680.webp": {
+    "width": 510,
+    "height": 680
+  },
+  "assets/img/me/Raul_me.webp": {
+    "width": 1200,
+    "height": 1600
+  },
+  "assets/img/og-card.png": {
+    "width": 1200,
+    "height": 630
   },
   "assets/img/photography/web/DSC02466-1600.webp": {
     "width": 1600,
@@ -139,11 +155,11 @@
     "width": 1024,
     "height": 1024
   },
-  "assets/img/projects/Aude_Icon_nobg.png": {
+  "assets/img/projects/Aude_Icon_nobg.webp": {
     "width": 714,
     "height": 714
   },
-  "assets/img/projects/Aude.png": {
+  "assets/img/projects/Aude.webp": {
     "width": 1024,
     "height": 1024
   },
@@ -151,7 +167,7 @@
     "width": 714,
     "height": 714
   },
-  "assets/img/projects/Ergo.png": {
+  "assets/img/projects/Ergo.webp": {
     "width": 1024,
     "height": 1024
   },
@@ -159,7 +175,7 @@
     "width": 1069,
     "height": 636
   },
-  "assets/img/projects/Guru.png": {
+  "assets/img/projects/Guru.webp": {
     "width": 1024,
     "height": 1024
   },
@@ -187,11 +203,11 @@
     "width": 1024,
     "height": 1024
   },
-  "assets/img/projects/SPS_Icon_nobg.png": {
+  "assets/img/projects/SPS_Icon_nobg.webp": {
     "width": 752,
     "height": 713
   },
-  "assets/img/projects/SPS_Logo.png": {
+  "assets/img/projects/SPS_Logo.webp": {
     "width": 1500,
     "height": 1425
   },
@@ -199,7 +215,7 @@
     "width": 714,
     "height": 714
   },
-  "assets/img/projects/Vie.png": {
+  "assets/img/projects/Vie.webp": {
     "width": 1024,
     "height": 1024
   },

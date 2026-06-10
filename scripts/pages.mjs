@@ -10,7 +10,7 @@ export function aboutPage({ imgTag }) {
           <div class="kicker">About</div>
           <h1 class="h1">About Raul Valle</h1>
         </div>
-        ${imgTag('assets/img/me/Raul_me.jpeg', { className: 'portrait', alt: 'Portrait of Raul Valle', eager: true })}
+        ${imgTag('assets/img/me/portrait-680.webp', { className: 'portrait', alt: 'Portrait of Raul Valle', eager: true })}
       </div>
       <div class="about-hero-body">
         <p class="lead">I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida, working across signal processing, time-series machine learning, neuroengineering, and research software. My goal is to build mathematically grounded systems that stay useful when they meet real biological data, real hardware, and real deployment constraints.</p>

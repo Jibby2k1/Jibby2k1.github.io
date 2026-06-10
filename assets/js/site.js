@@ -67,11 +67,15 @@
     // Geometry sweep instead of IntersectionObserver: IO notifications can be
     // dropped during fast scrolling, permanently leaving content invisible.
     const MARGIN = 200;
+    let unrevealed = new Set(document.querySelectorAll('.reveal:not(.visible)'));
     const sweep = () => {
-      document.querySelectorAll('.reveal:not(.visible)').forEach((node) => {
+      if (!unrevealed.size) return;
+      const limit = window.innerHeight + MARGIN;
+      unrevealed.forEach((node) => {
         const rect = node.getBoundingClientRect();
-        if (rect.top < window.innerHeight + MARGIN && rect.bottom > -MARGIN) {
+        if (rect.top < limit && rect.bottom > -MARGIN) {
           node.classList.add('visible');
+          unrevealed.delete(node);
         }
       });
     };
@@ -93,12 +97,18 @@
     // Last-resort safety net: nothing stays hidden for more than a few seconds.
     window.addEventListener('load', () => {
       setTimeout(() => {
-        document.querySelectorAll('.reveal:not(.visible)').forEach((node) => node.classList.add('visible'));
+        unrevealed.forEach((node) => node.classList.add('visible'));
+        unrevealed.clear();
       }, 5000);
     });
 
     sweep();
-    window.SiteUI = Object.assign(window.SiteUI || {}, { refreshReveal: sweep });
+    window.SiteUI = Object.assign(window.SiteUI || {}, {
+      refreshReveal: () => {
+        unrevealed = new Set(document.querySelectorAll('.reveal:not(.visible)'));
+        sweep();
+      }
+    });
   }
 
   function initYear() {
