@@ -3,7 +3,7 @@ import path from 'node:path';
 import sharp from 'sharp';
 
 const root = process.cwd();
-const SIZE_LIMIT = 150 * 1024;
+const SIZE_LIMIT = 100 * 1024;
 const FULL_WIDTH = 1600;
 const THUMB_WIDTH = 640;
 

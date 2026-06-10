@@ -161,7 +161,7 @@
       "slug": "ergo",
       "title": "Ergo — EMG/EEG biosignal acquisition + dynamical systems",
       "subtitle": "A neuroengineering platform for studying stability in cooperative and competitive human-in-the-loop control using multi-subject EMG features and EEG/EMG acquisition.",
-      "img": "assets/img/projects/Ergo_Icon_nobg.png",
+      "img": "assets/img/projects/Ergo_Icon_nobg.webp",
       "imgAlt": "Ergo project logo.",
       "tags": [
         "hardware",
