@@ -16,11 +16,9 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 
 - [Computational NeuroEngineering Lab](https://www.raulv.dev/research-cnel.html): Work related to neuroengineering and lab activity.
 - [IEEE SPS at UF](https://www.raulv.dev/research-sps.html): Signal processing society and chapter-related technical work.
-- [Projects](https://www.raulv.dev/project.html): Index of engineering and research projects.
 
 ## Secondary Archives
 
-- [Publications](https://www.raulv.dev/publications.html): Legacy outputs archive; primary outputs are also summarized on Research.
 - [Notes](https://www.raulv.dev/blog.html): Technical notes and essays; linked from About.
 - [Photography](https://www.raulv.dev/photography.html): Photography portfolio and captions; linked from About.
 - [Awards](https://www.raulv.dev/awards.html): Honors and distinctions; linked from About.

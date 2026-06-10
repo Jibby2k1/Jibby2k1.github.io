@@ -1,16 +1,33 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { execSync } from 'node:child_process';
+import { aboutPage, cvPage, contactPage } from './pages.mjs';
 
 const root = process.cwd();
 const site = JSON.parse(await fs.readFile(path.join(root, 'data/site.json'), 'utf8'));
-const nowIso = new Date().toISOString().slice(0, 10);
+const imageManifest = JSON.parse(await fs.readFile(path.join(root, 'data/image-manifest.json'), 'utf8'));
+// Deterministic lastmod so the CI build-reproducibility gate doesn't churn daily:
+// SITE_LASTMOD env wins, then the last git commit date, then today.
+const nowIso = process.env.SITE_LASTMOD || (() => {
+  try {
+    return execSync('git log -1 --format=%cs', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+  } catch {
+    return new Date().toISOString().slice(0, 10);
+  }
+})();
 
-const staticPages = [
-  { file: 'about.html', type: 'ProfilePage' },
-  { file: 'cv.html', type: 'WebPage' },
-  { file: 'contact.html', type: 'ContactPage' },
-  { file: 'publications.html', type: 'CollectionPage' }
-];
+function imageSize(src) {
+  const size = imageManifest[src];
+  if (!size) console.warn(`[build] no manifest entry for image: ${src}`);
+  return size;
+}
+
+function imgTag(src, { alt = '', className = '', prefix = '', eager = false } = {}) {
+  const size = imageSize(src);
+  const dims = size ? ` width="${size.width}" height="${size.height}"` : '';
+  const loading = eager ? '' : ' loading="lazy"';
+  return `<img${className ? ` class="${className}"` : ''} src="${prefix}${src}" alt="${escapeHtml(alt)}"${dims}${loading} decoding="async" />`;
+}
 
 const tagLabels = {
   'paper-note': 'Paper note',
@@ -106,6 +123,12 @@ function nav(outputPath) {
     <div class="nav-right">
       ${site.profiles.filter((profile) => profile.header).map((profile) => profileIconLink(profile)).join('')}
     </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
   </div>
 </header>`;
 }
@@ -115,8 +138,8 @@ function footer(outputPath) {
   return `<footer class="footer">
   <div class="container footer-row">
     <div class="footer-copy">
-      <div class="footer-label">About This Site</div>
-      <p>${escapeHtml(site.shortBio)}</p>
+      <div class="footer-label">${site.name}</div>
+      <p>Signal processing, neuroengineering, and research systems at the University of Florida.</p>
       <div class="footer-meta">© <span id="year"></span> ${site.name} · Built for GitHub Pages</div>
     </div>
 
@@ -181,8 +204,8 @@ function pageShell({
   description,
   type = 'website',
   pageType = 'WebPage',
-  image = `${site.siteUrl}/assets/img/me/Raul_me.jpeg`,
-  imageAlt = `Portrait of ${site.name}`,
+  image = `${site.siteUrl}/assets/img/og-card.png`,
+  imageAlt = `${site.name} — machine learning and neuroengineering at the University of Florida`,
   main,
   schemaExtras = []
 }) {
@@ -228,6 +251,10 @@ function pageShell({
   <meta name="twitter:image:alt" content="${escapeHtml(imageAlt)}" />
   <link rel="canonical" href="${canonical}" />
   <link rel="alternate" type="application/rss+xml" title="${escapeHtml(site.name)} Writing RSS" href="${prefix}rss.xml" />
+  <link rel="icon" href="${prefix}assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="${prefix}assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="${prefix}assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
   <link rel="stylesheet" href="${prefix}assets/css/styles.css" />
   <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}</script>
 </head>
@@ -250,19 +277,6 @@ function uniqueTags(items) {
 
 function searchText(parts) {
   return parts.filter(Boolean).join(' ').toLowerCase();
-}
-
-function extractMain(html) {
-  const match = html.match(/<main id="main">([\s\S]*?)<\/main>/i);
-  return match ? match[1].trim() : '';
-}
-
-function extractTitle(html) {
-  return html.match(/<title>([\s\S]*?)<\/title>/i)?.[1]?.trim() || '';
-}
-
-function extractDescription(html) {
-  return html.match(/<meta name="description" content="([\s\S]*?)"/i)?.[1]?.trim() || '';
 }
 
 function renderMarkdown(markdown) {
@@ -370,7 +384,7 @@ async function loadWriting() {
 function cardProject(project, prefix = '', extraClass = '') {
   const href = `${prefix}projects/${project.slug}.html`;
   return `<article class="card record-card reveal filter-card ${extraClass}" data-filter-item data-tags="${escapeHtml((project.tags || []).join(','))}" data-search="${escapeHtml(searchText([project.title, project.subtitle, project.desc, ...(project.tags || []), ...(project.pills || [])]))}">
-  <img class="card-img" src="${prefix}${project.img}" alt="${escapeHtml(project.imgAlt || project.title)}" loading="lazy" decoding="async" />
+  ${imgTag(project.img, { className: 'card-img', alt: project.imgAlt || project.title, prefix })}
   <div class="meta">${escapeHtml(project.meta || '')}</div>
   <h3>${escapeHtml(project.title)}</h3>
   <p>${escapeHtml(project.desc || project.subtitle || '')}</p>
@@ -384,7 +398,7 @@ function cardProject(project, prefix = '', extraClass = '') {
 function cardWriting(post, prefix = '') {
   const href = `${prefix}${post.url}`;
   return `<article class="card blog-card reveal filter-card" data-filter-item data-tags="${escapeHtml([post.kind, ...(post.topics || [])].join(','))}" data-search="${escapeHtml(searchText([post.title, post.summary, post.description, post.kind, ...(post.topics || [])]))}">
-  <img class="blog-media" src="${prefix}${post.heroImage}" alt="${escapeHtml(post.heroAlt || post.title)}" loading="lazy" decoding="async" />
+  ${imgTag(post.heroImage, { className: 'blog-media', alt: post.heroAlt || post.title, prefix })}
   <div class="blog-copy">
     <div class="blog-meta">${formatDate(post.date)} · ${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</div>
     <h3 class="blog-title">${escapeHtml(post.title)}</h3>
@@ -416,7 +430,7 @@ function filterBar({ searchLabel, buttons, emptyMessage }) {
 function outputsSection({ includeIntro = false } = {}) {
   return `<section class="accent-cool">
     <h2 class="section-title reveal">Publications, talks, and public proof</h2>
-    ${includeIntro ? '<p class="section-subtitle reveal">The strongest external references are grouped here so visitors can verify the research identity quickly: paper indexes, official UF coverage, talk recordings, and related project pages.</p>' : ''}
+    ${includeIntro ? '<p class="section-subtitle reveal">Papers, talk recordings, and official University of Florida coverage connected to the projects above.</p>' : ''}
     <div class="grid two" style="margin-top:14px; gap:14px;">
       <article class="card reveal">
         <div class="archive-ledger-label">Preprint</div>
@@ -458,24 +472,7 @@ function outputsSection({ includeIntro = false } = {}) {
         </div>
       </article>
     </div>
-    <div class="cta-row">
-      <a class="btn" href="publications.html">Open full outputs archive</a>
-    </div>
   </section>`;
-}
-
-async function buildStaticPage(file, type) {
-  const current = await fs.readFile(path.join(root, file), 'utf8');
-  const body = extractMain(current);
-  const title = extractTitle(current);
-  const description = extractDescription(current);
-  await fs.writeFile(path.join(root, file), pageShell({
-    outputPath: file,
-    title,
-    description,
-    pageType: type,
-    main: body
-  }));
 }
 
 async function writePage(outputPath, content) {
@@ -502,19 +499,74 @@ async function main() {
       name: 'Ora',
       url: 'https://ora.raulv.dev/',
       label: 'Personal app',
-      description: 'A standalone personal project and product surface built outside the research archive.'
+      description: 'A training console for athletes and coaches: programs, diet tracking, progress reports, and coach review in one place.'
     },
     {
       name: 'Gradus',
       url: 'https://gradus.raulv.dev/',
       label: 'Personal app',
-      description: 'A separate personal project with its own public site, hosted as part of the raulv.dev ecosystem.'
+      description: 'A practice platform for STEM students built to find the exact idea you missed: attempt a problem, get targeted feedback, repair the gap, and prove it in a new context.'
     }
   ];
 
-  for (const page of staticPages) {
-    await buildStaticPage(page.file, page.type);
-  }
+  const pageCtx = { site, escapeHtml, imgTag, awards: awardsData, projects, writing };
+
+  await writePage('about.html', pageShell({
+    outputPath: 'about.html',
+    title: 'About Raul Valle | UF Ph.D. Student in Signal Processing and Neuroengineering',
+    description: 'Background, education, research approach, and interests of Raul Valle, a University of Florida Ph.D. student in Electrical and Computer Engineering.',
+    pageType: 'ProfilePage',
+    main: aboutPage(pageCtx)
+  }));
+
+  await writePage('cv.html', pageShell({
+    outputPath: 'cv.html',
+    title: 'Curriculum Vitae | Raul Valle',
+    description: 'Curriculum vitae for Raul Valle: education, research experience at CNEL and IEEE SPS at UF, publications, talks, recognition, and skills.',
+    pageType: 'WebPage',
+    main: cvPage(pageCtx)
+  }));
+
+  await writePage('contact.html', pageShell({
+    outputPath: 'contact.html',
+    title: 'Contact Raul Valle',
+    description: 'How to contact Raul Valle, plus public profiles and official University of Florida references.',
+    pageType: 'ContactPage',
+    main: contactPage(pageCtx)
+  }));
+
+  await writePage('publications.html', `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Publications Have Moved | Raul Valle</title>
+  <meta name="description" content="Publications, talks, and public references for Raul Valle now live with the research overview." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="canonical" href="${site.siteUrl}/research.html" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  ${nav('publications.html')}
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal accent-cool">
+        <div class="kicker">Moved</div>
+        <h1 class="h1">Publications now live with the research overview</h1>
+        <p class="lead">Papers, talks, and official coverage are collected on the research page so projects and outputs stay connected.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="research.html">Open research</a>
+          <a class="btn" href="cv.html">Open CV</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  ${footer('publications.html')}
+  <script src="assets/js/site.js"></script>
+</body>
+</html>`);
 
   await writePage('index.html', pageShell({
     outputPath: 'index.html',
@@ -526,21 +578,16 @@ async function main() {
         <div class="archive-hero-main">
           <div class="kicker">Raul Valle · University of Florida · Gainesville, Florida</div>
           <h1 class="h1">Machine Learning and Neuroengineering.</h1>
-          <p class="lead">${escapeHtml(site.shortBio)}</p>
+          <p class="lead">I build signal-processing and machine-learning systems for messy biological data: EEG state-space models, voltage-imaging event detection, and the research software that keeps experiments honest. I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida.</p>
           <div class="cta-row">
             <a class="btn primary" href="research.html">Research and publications</a>
             <a class="btn" href="cv.html">CV</a>
-            <a class="btn" href="contact.html">Contact and verify</a>
+            <a class="btn" href="contact.html">Contact</a>
           </div>
         </div>
-        <aside class="card archive-ledger reveal">
-          <div class="archive-ledger-label">Professional focus</div>
-          <dl class="archive-stats">
-            <div><dt>Research</dt><dd>EEG, voltage imaging, time-series models, and reproducible experimentation.</dd></div>
-            <div><dt>Affiliation</dt><dd>University of Florida ECE, CNEL, and IEEE Signal Processing Society activity at UF.</dd></div>
-            <div><dt>Outputs</dt><dd>Project pages, talks, preprints, official UF references, and public profile identifiers.</dd></div>
-          </dl>
-        </aside>
+        <div class="hero-portrait reveal">
+          ${imgTag('assets/img/me/Raul_me.jpeg', { alt: 'Portrait of Raul Valle', eager: true })}
+        </div>
       </section>
 
       <section class="accent-mint">
@@ -567,50 +614,23 @@ async function main() {
       </section>
 
       <section class="accent-amber">
-        <h2 class="section-title reveal">Professional profile</h2>
-        <p class="section-subtitle reveal">Fast paths for visitors who need context, credentials, or verification.</p>
-        <div class="grid three" style="margin-top:14px; gap:14px;">
+        <h2 class="section-title reveal">Latest writing and elsewhere</h2>
+        <div class="grid two" style="margin-top:14px; gap:14px;">
+          ${writing.length ? cardWriting(writing[0]) : ''}
           <article class="card reveal">
-            <div class="archive-ledger-label">About</div>
-            <h3>Background and interests</h3>
-            <p>Education, affiliations, writing, recognition, and selected personal context collected in one place.</p>
-            <div class="cta-row"><a class="btn primary" href="about.html">Open about</a></div>
-          </article>
-          <article class="card reveal">
-            <div class="archive-ledger-label">CV</div>
-            <h3>Academic profile</h3>
-            <p>Research interests, affiliations, identifiers, awards, and public mentions in a compact CV format.</p>
-            <div class="cta-row"><a class="btn primary" href="cv.html">Open CV</a></div>
-          </article>
-          <article class="card reveal">
-            <div class="archive-ledger-label">Contact</div>
-            <h3>Verify and reach out</h3>
-            <p>Official profiles, UF references, and professional contact surfaces for identity verification.</p>
-            <div class="cta-row"><a class="btn primary" href="contact.html">Open contact</a></div>
-          </article>
-        </div>
-      </section>
-
-      <section class="accent-cool">
-        <h2 class="section-title reveal">Proof and context</h2>
-        <div class="grid three" style="margin-top:14px;">
-          <article class="card reveal">
-            <div class="archive-ledger-label">Publications</div>
-            <h3>Talks, preprints, and official coverage</h3>
-            <p>Research outputs now live with the research overview so papers, projects, and public proof stay connected.</p>
-            <div class="cta-row"><a class="btn primary" href="research.html">Open research</a></div>
-          </article>
-          <article class="card reveal">
-            <div class="archive-ledger-label">Research tracks</div>
-            <h3>CNEL and IEEE SPS @ UF</h3>
-            <p>The project archive is organized by lab-focused work and student-facing engineering work so the site stays legible.</p>
-            <div class="cta-row"><a class="btn primary" href="research.html">Open research overview</a></div>
-          </article>
-          <article class="card reveal">
-            <div class="archive-ledger-label">Secondary portfolio</div>
-            <h3>Writing and photography</h3>
-            <p>Personal and reflective material stays available from About without competing with the research-facing surface.</p>
-            <div class="cta-row"><a class="btn primary" href="about.html">Open about</a></div>
+            <div class="archive-ledger-label">Elsewhere</div>
+            <h3>Profiles and coverage</h3>
+            <p>Papers, citations, code, and the official University of Florida references for this work.</p>
+            <div class="cta-row">
+              <a class="btn primary" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a>
+              <a class="btn" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a>
+              <a class="btn" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
+            </div>
+            <div class="cta-row">
+              <a class="btn" href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a>
+              <a class="btn" href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a>
+              <a class="btn" href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">Talk video</a>
+            </div>
           </article>
         </div>
       </section>
@@ -749,7 +769,7 @@ async function main() {
       <section class="page-hero reveal accent-cool">
         <div class="kicker">Writing and commentary</div>
         <h1 class="h1">A public research journal</h1>
-        <p class="lead">This section is where I write more often: paper reactions, research notes, hardware lessons, and commentary on what seems important or overhyped in the current research landscape.</p>
+        <p class="lead">Paper reactions, research notes, hardware lessons, and commentary on what seems important or overhyped in the current research landscape.</p>
       </section>
       ${filterBar({
         searchLabel: 'Search writing',
@@ -787,6 +807,20 @@ async function main() {
     const relatedWriting = writing.filter((post) => (post.relatedProjects || []).includes(project.slug));
     const track = trackMeta[project.track];
     const details = project.details || {};
+    const siblings = projects.filter((item) => item.track === project.track);
+    const position = siblings.findIndex((item) => item.slug === project.slug);
+    const prevProject = siblings[(position - 1 + siblings.length) % siblings.length];
+    const nextProject = siblings[(position + 1) % siblings.length];
+    const relatedProjects = projects
+      .filter((item) => item.slug !== project.slug)
+      .map((item) => ({
+        item,
+        shared: (item.tags || []).filter((tag) => (project.tags || []).includes(tag)).length
+      }))
+      .filter((entry) => entry.shared > 0)
+      .sort((a, b) => b.shared - a.shared)
+      .slice(0, 2)
+      .map((entry) => entry.item);
     await writePage(`projects/${project.slug}.html`, pageShell({
       outputPath: `projects/${project.slug}.html`,
       title: `${project.title} | Raul Valle Research Project`,
@@ -805,7 +839,7 @@ async function main() {
               ${(project.links || []).map((link, index) => `<a class="btn${index === 0 ? ' primary' : ''}" href="${link.href}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join('')}
             </div>
           </div>
-          <img class="card-img compact project-hero-img" src="../${project.img}" alt="${escapeHtml(project.imgAlt || project.title)}" loading="lazy" decoding="async" />
+          ${imgTag(project.img, { className: 'card-img compact project-hero-img', alt: project.imgAlt || project.title, prefix: '../', eager: true })}
         </section>
 
         <section class="project-detail reveal accent-mint">
@@ -819,6 +853,11 @@ async function main() {
             ${Array.isArray(details.how_it_works) && details.how_it_works.length ? `<article class="card reveal"><h2 class="project-section-title">How it works</h2><ul>${details.how_it_works.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${Array.isArray(details.deliverables) && details.deliverables.length ? `<article class="card reveal"><h2 class="project-section-title">Deliverables</h2><ul>${details.deliverables.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${relatedWriting.length ? `<article class="card reveal"><h2 class="project-section-title">Related writing</h2><div class="grid two">${relatedWriting.map((post) => `<a class="related-link" href="../${post.url}"><strong>${escapeHtml(post.title)}</strong><span>${escapeHtml(post.summary || post.description)}</span></a>`).join('')}</div></article>` : ''}
+            ${relatedProjects.length ? `<article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="grid two">${relatedProjects.map((item) => `<a class="related-link" href="${item.slug}.html"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.desc || item.subtitle || '')}</span></a>`).join('')}</div></article>` : ''}
+            ${siblings.length > 1 ? `<nav class="project-pager reveal" aria-label="More ${track.name}">
+              <a class="pager-link pager-prev" href="${prevProject.slug}.html"><span class="pager-label">← Previous</span><strong>${escapeHtml(prevProject.title)}</strong></a>
+              <a class="pager-link pager-next" href="${nextProject.slug}.html"><span class="pager-label">Next →</span><strong>${escapeHtml(nextProject.title)}</strong></a>
+            </nav>` : ''}
           </div>
           <div class="project-side">
             <article class="card reveal">
@@ -879,7 +918,7 @@ async function main() {
             <div class="breadcrumbs"><a href="../blog.html">Writing</a> / <span>${escapeHtml(post.title)}</span></div>
             <div class="meta">${formatDate(post.date)} · ${(post.topics || []).map((topic) => escapeHtml(topic)).join(' · ')}</div>
           </div>
-          <img class="card-img compact project-hero-img" src="../${post.heroImage}" alt="${escapeHtml(post.heroAlt || post.title)}" loading="lazy" decoding="async" />
+          ${imgTag(post.heroImage, { className: 'card-img compact project-hero-img', alt: post.heroAlt || post.title, prefix: '../', eager: true })}
         </section>
 
         <section class="project-detail reveal accent-mint">
@@ -936,7 +975,7 @@ async function main() {
       <section class="accent-mint">
         <div class="grid three" style="margin-top:14px; gap:14px;">
           ${awardsData.items.map((award) => `<article class="card reveal">
-            <img class="card-img" src="${award.img}" alt="${escapeHtml(award.imgAlt || award.title)}" loading="lazy" decoding="async" />
+            ${award.img && award.img !== 'assets/img/placeholder.svg' ? imgTag(award.img, { className: 'card-img', alt: award.imgAlt || award.title }) : ''}
             <div class="meta">${escapeHtml(award.meta || '')}</div>
             <h3>${escapeHtml(award.title)}</h3>
             <p>${escapeHtml(award.desc)}</p>
@@ -959,13 +998,15 @@ async function main() {
       </section>
       <section class="accent-mint">
         <div class="photo-grid" style="margin-top:14px;">
-          ${photographyData.items.map((item) => `<figure class="photo-card reveal">
-            <img class="photo-media" src="${item.img}" alt="${escapeHtml(item.imgAlt || item.title)}" loading="lazy" decoding="async" />
+          ${photographyData.items.map((item, index) => `<figure class="photo-card reveal">
+            <button class="photo-trigger" type="button" data-lightbox data-lightbox-index="${index}" data-full="${item.img}" data-title="${escapeHtml(item.title)}" data-caption="${escapeHtml(item.caption || '')}" aria-label="View ${escapeHtml(item.title)} at full size">
+              ${imgTag(item.img.replace('-1600.webp', '-640.webp'), { className: 'photo-media', alt: item.imgAlt || item.title })}
+            </button>
             <figcaption class="photo-copy">
               <div class="photo-category">${escapeHtml(item.collection || 'Selected Work')}</div>
               <h3>${escapeHtml(item.title)}</h3>
               <p class="photo-caption">${escapeHtml(item.caption || '')}</p>
-              <div class="photo-meta">${escapeHtml([item.location, item.year].filter(Boolean).join(' · '))}</div>
+              <div class="photo-meta">${escapeHtml([item.location, item.year].filter((value) => value && !/TBD/i.test(value)).join(' · '))}</div>
             </figcaption>
           </figure>`).join('')}
         </div>
@@ -982,6 +1023,8 @@ async function main() {
   <meta name="description" content="Legacy project route for Raul Valle. Use the canonical static project pages under /projects/ instead." />
   <meta name="robots" content="noindex, follow, max-image-preview:large" />
   <link rel="canonical" href="${site.siteUrl}/research.html" />
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
   <link rel="stylesheet" href="assets/css/styles.css" />
 </head>
 <body>
@@ -1013,13 +1056,14 @@ async function main() {
 
   const sitemapUrls = [
     'index.html',
-    ...staticPages.map((page) => page.file),
+    'about.html',
+    'cv.html',
+    'contact.html',
     'research.html',
     ...Object.values(trackMeta).map((track) => track.slug),
     'blog.html',
     'awards.html',
     'photography.html',
-    'project.html',
     ...projects.map((project) => `projects/${project.slug}.html`),
     ...writing.map((post) => post.url)
   ];
