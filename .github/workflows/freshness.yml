@@ -1,0 +1,41 @@
+name: Monthly freshness check
+
+on:
+  schedule:
+    - cron: '0 13 1 * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  freshness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Run freshness and external link check
+        id: fresh
+        run: |
+          set +e
+          node scripts/check-freshness.mjs > report.txt 2>&1
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+          cat report.txt
+
+      - name: Open issue if anything is stale or broken
+        if: steps.fresh.outputs.status != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          title="Site freshness report $(date +%Y-%m)"
+          existing=$(gh issue list --search "$title in:title" --state open --json number --jq length)
+          if [ "$existing" = "0" ]; then
+            gh issue create --title "$title" --body-file report.txt --label maintenance || gh issue create --title "$title" --body-file report.txt
+          else
+            echo "open issue already exists, skipping"
+          fi

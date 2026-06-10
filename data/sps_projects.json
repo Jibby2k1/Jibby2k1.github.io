@@ -4,7 +4,7 @@
       "slug": "sps-curriculum-workshops",
       "title": "IEEE SPS @ UF — curriculum & workshops",
       "subtitle": "Hands-on workshops that bridge math fundamentals to real applications (audio, images, sensors) using clear notebooks and demos.",
-      "img": "assets/img/projects/SPS_Icon_nobg.png",
+      "img": "assets/img/projects/SPS_Icon_nobg.webp",
       "imgAlt": "IEEE Signal Processing Society logo.",
       "tags": [
         "teaching",
@@ -55,7 +55,7 @@
       "slug": "aude",
       "title": "Aude — biologically plausible audio scene analysis",
       "subtitle": "Research on source separation and sound localization in real-world environments using informed models and a multi-microphone capture pipeline.",
-      "img": "assets/img/projects/Aude_Icon_nobg.png",
+      "img": "assets/img/projects/Aude_Icon_nobg.webp",
       "imgAlt": "Aude project logo.",
       "tags": [
         "audio",
@@ -105,7 +105,7 @@
       "slug": "platos-cave",
       "title": "Plato’s Cave",
       "subtitle": "Tooling that helps reviewers read faster by turning papers into structured ‘claims and evidence’ graphs with audit-friendly outputs.",
-      "img": "assets/img/projects/PlatoCave.png",
+      "img": "assets/img/projects/PlatoCave.webp",
       "imgAlt": "Plato’s Cave project logo.",
       "tags": [
         "tools",
@@ -161,7 +161,7 @@
       "slug": "ergo",
       "title": "Ergo — EMG/EEG biosignal acquisition + dynamical systems",
       "subtitle": "A neuroengineering platform for studying stability in cooperative and competitive human-in-the-loop control using multi-subject EMG features and EEG/EMG acquisition.",
-      "img": "assets/img/projects/Ergo_Icon_nobg.png",
+      "img": "assets/img/projects/Ergo_Icon_nobg.webp",
       "imgAlt": "Ergo project logo.",
       "tags": [
         "hardware",
@@ -211,7 +211,7 @@
       "slug": "nano-robotics",
       "title": "Nano — robotics stack (Ergo interface)",
       "subtitle": "Robotics and systems engineering focused on reliable real-time interfaces: sensing, control, and data paths that can connect to Ergo.",
-      "img": "assets/img/projects/Nano.png",
+      "img": "assets/img/projects/Nano.webp",
       "imgAlt": "Nano robotics project logo.",
       "tags": [
         "robotics",
@@ -274,8 +274,8 @@
       "featured": false,
       "links": [
         {
-          "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Ora"
+          "label": "Open Ora app",
+          "href": "https://ora.raulv.dev/"
         }
       ],
       "details": {
