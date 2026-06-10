@@ -105,7 +105,7 @@
       "slug": "platos-cave",
       "title": "Plato’s Cave",
       "subtitle": "Tooling that helps reviewers read faster by turning papers into structured ‘claims and evidence’ graphs with audit-friendly outputs.",
-      "img": "assets/img/projects/PlatoCave.png",
+      "img": "assets/img/projects/PlatoCave.webp",
       "imgAlt": "Plato’s Cave project logo.",
       "tags": [
         "tools",
@@ -211,7 +211,7 @@
       "slug": "nano-robotics",
       "title": "Nano — robotics stack (Ergo interface)",
       "subtitle": "Robotics and systems engineering focused on reliable real-time interfaces: sensing, control, and data paths that can connect to Ergo.",
-      "img": "assets/img/projects/Nano.png",
+      "img": "assets/img/projects/Nano.webp",
       "imgAlt": "Nano robotics project logo.",
       "tags": [
         "robotics",
@@ -274,8 +274,8 @@
       "featured": false,
       "links": [
         {
-          "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Ora"
+          "label": "Open Ora app",
+          "href": "https://ora.raulv.dev/"
         }
       ],
       "details": {

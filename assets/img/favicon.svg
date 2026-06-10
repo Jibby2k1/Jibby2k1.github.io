@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <rect width="64" height="64" fill="#efe7d9"/>
+  <rect x="3" y="3" width="58" height="58" fill="none" stroke="#9d8f76" stroke-width="2"/>
+  <text x="32" y="44" text-anchor="middle" font-family="Iowan Old Style, Palatino Linotype, Georgia, serif" font-size="34" font-weight="700" fill="#1f1a16">RV</text>
+</svg>

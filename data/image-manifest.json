@@ -1,0 +1,210 @@
+{
+  "assets/img/awards/EarlyCareerAward.webp": {
+    "width": 1600,
+    "height": 1066
+  },
+  "assets/img/awards/PlatoCaveAward.webp": {
+    "width": 1600,
+    "height": 731
+  },
+  "assets/img/me/Raul_me.jpeg": {
+    "width": 1361,
+    "height": 1815
+  },
+  "assets/img/photography/web/DSC02466-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC02466-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC02570-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC02570-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC02589-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC02589-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC02820-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC02820-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC03034-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC03034-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC03057-1600.webp": {
+    "width": 1067,
+    "height": 1600
+  },
+  "assets/img/photography/web/DSC03057-640.webp": {
+    "width": 427,
+    "height": 640
+  },
+  "assets/img/photography/web/DSC03175-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC03175-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC03391-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC03391-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC03396-1600.webp": {
+    "width": 1600,
+    "height": 2400
+  },
+  "assets/img/photography/web/DSC03396-640.webp": {
+    "width": 640,
+    "height": 960
+  },
+  "assets/img/photography/web/DSC03940-1600.webp": {
+    "width": 1067,
+    "height": 1600
+  },
+  "assets/img/photography/web/DSC03940-640.webp": {
+    "width": 427,
+    "height": 640
+  },
+  "assets/img/photography/web/DSC03958-1600.webp": {
+    "width": 1067,
+    "height": 1600
+  },
+  "assets/img/photography/web/DSC03958-640.webp": {
+    "width": 427,
+    "height": 640
+  },
+  "assets/img/photography/web/DSC04025-1600.webp": {
+    "width": 1067,
+    "height": 1600
+  },
+  "assets/img/photography/web/DSC04025-640.webp": {
+    "width": 427,
+    "height": 640
+  },
+  "assets/img/photography/web/DSC04130-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC04130-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/photography/web/DSC04233-1600.webp": {
+    "width": 1600,
+    "height": 2400
+  },
+  "assets/img/photography/web/DSC04233-640.webp": {
+    "width": 640,
+    "height": 960
+  },
+  "assets/img/photography/web/DSC04422-1600.webp": {
+    "width": 1600,
+    "height": 1067
+  },
+  "assets/img/photography/web/DSC04422-640.webp": {
+    "width": 640,
+    "height": 427
+  },
+  "assets/img/projects/Adap_Filt.png": {
+    "width": 474,
+    "height": 235
+  },
+  "assets/img/projects/Ares.webp": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/Aude_Icon_nobg.png": {
+    "width": 714,
+    "height": 714
+  },
+  "assets/img/projects/Aude.png": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/Ergo_Icon_nobg.png": {
+    "width": 714,
+    "height": 714
+  },
+  "assets/img/projects/Ergo.png": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/GH05T.png": {
+    "width": 1069,
+    "height": 636
+  },
+  "assets/img/projects/Guru.png": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/HLDS_Inf.png": {
+    "width": 1009,
+    "height": 841
+  },
+  "assets/img/projects/Nano.webp": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/Ora_Icon_nobg.png": {
+    "width": 500,
+    "height": 500
+  },
+  "assets/img/projects/Ora.webp": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/PlatoCave.webp": {
+    "width": 1600,
+    "height": 395
+  },
+  "assets/img/projects/Sinbad.webp": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/SPS_Icon_nobg.png": {
+    "width": 752,
+    "height": 713
+  },
+  "assets/img/projects/SPS_Logo.png": {
+    "width": 1500,
+    "height": 1425
+  },
+  "assets/img/projects/Vie_Icon_nobg.png": {
+    "width": 714,
+    "height": 714
+  },
+  "assets/img/projects/Vie.png": {
+    "width": 1024,
+    "height": 1024
+  },
+  "assets/img/projects/Zebra_snip.webp": {
+    "width": 1316,
+    "height": 934
+  }
+}

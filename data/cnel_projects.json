@@ -72,7 +72,7 @@
       "slug": "zebrafish-voltage-imaging-detection",
       "title": "Zebrafish voltage imaging: event detection & interpretation",
       "subtitle": "Signal-processing pipeline for 2D voltage imaging videos that detects brief neural events and produces interpretable visual summaries.",
-      "img": "assets/img/projects/Zebra_snip.png",
+      "img": "assets/img/projects/Zebra_snip.webp",
       "imgAlt": "Frame from a zebrafish voltage imaging video.",
       "tags": [
         "research",
