@@ -59,32 +59,170 @@
 
   function initReveal() {
     const reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reducedMotion || !('IntersectionObserver' in window)) {
+    if (reducedMotion) {
       document.querySelectorAll('.reveal').forEach((node) => node.classList.add('visible'));
       return;
     }
 
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+    // Geometry sweep instead of IntersectionObserver: IO notifications can be
+    // dropped during fast scrolling, permanently leaving content invisible.
+    const MARGIN = 200;
+    const sweep = () => {
+      document.querySelectorAll('.reveal:not(.visible)').forEach((node) => {
+        const rect = node.getBoundingClientRect();
+        if (rect.top < window.innerHeight + MARGIN && rect.bottom > -MARGIN) {
+          node.classList.add('visible');
         }
       });
-    }, { threshold: 0.12 });
-
-    const scan = (root = document) => {
-      if (root instanceof Element && root.classList.contains('reveal')) observer.observe(root);
-      if (root.querySelectorAll) root.querySelectorAll('.reveal').forEach((node) => observer.observe(node));
     };
 
-    scan(document);
-    window.SiteUI = Object.assign(window.SiteUI || {}, { refreshReveal: scan });
+    let pending = false;
+    const scheduleSweep = () => {
+      if (pending) return;
+      pending = true;
+      requestAnimationFrame(() => {
+        sweep();
+        pending = false;
+      });
+    };
+
+    window.addEventListener('scroll', scheduleSweep, { passive: true });
+    window.addEventListener('resize', scheduleSweep, { passive: true });
+    window.addEventListener('load', scheduleSweep);
+
+    // Last-resort safety net: nothing stays hidden for more than a few seconds.
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        document.querySelectorAll('.reveal:not(.visible)').forEach((node) => node.classList.add('visible'));
+      }, 5000);
+    });
+
+    sweep();
+    window.SiteUI = Object.assign(window.SiteUI || {}, { refreshReveal: sweep });
   }
 
   function initYear() {
     const node = document.getElementById('year');
     if (node) node.textContent = new Date().getFullYear();
+  }
+
+  function initPrint() {
+    document.querySelectorAll('[data-print]').forEach((button) => {
+      button.addEventListener('click', () => window.print());
+    });
+  }
+
+  function initLightbox() {
+    const triggers = [...document.querySelectorAll('[data-lightbox]')];
+    if (!triggers.length) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'lightbox';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', 'Photo viewer');
+    overlay.innerHTML = `
+      <button class="lightbox-btn lightbox-close" type="button" aria-label="Close viewer">✕</button>
+      <button class="lightbox-btn lightbox-prev" type="button" aria-label="Previous photo">‹</button>
+      <figure class="lightbox-figure">
+        <img class="lightbox-img" alt="" />
+        <figcaption class="lightbox-caption"></figcaption>
+      </figure>
+      <button class="lightbox-btn lightbox-next" type="button" aria-label="Next photo">›</button>`;
+    document.body.appendChild(overlay);
+
+    const img = overlay.querySelector('.lightbox-img');
+    const caption = overlay.querySelector('.lightbox-caption');
+    const closeBtn = overlay.querySelector('.lightbox-close');
+    let current = 0;
+    let lastFocused = null;
+
+    const render = () => {
+      const trigger = triggers[current];
+      img.src = trigger.dataset.full;
+      img.alt = trigger.dataset.title || '';
+      const title = trigger.dataset.title || '';
+      const text = trigger.dataset.caption || '';
+      caption.innerHTML = '';
+      const strong = document.createElement('strong');
+      strong.textContent = title;
+      caption.appendChild(strong);
+      if (text) caption.appendChild(document.createTextNode(` — ${text}`));
+      caption.appendChild(document.createTextNode(` (${current + 1}/${triggers.length})`));
+    };
+
+    const open = (index) => {
+      current = index;
+      lastFocused = document.activeElement;
+      render();
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    };
+
+    const close = () => {
+      overlay.classList.remove('open');
+      img.src = '';
+      document.body.style.overflow = '';
+      if (lastFocused) lastFocused.focus();
+    };
+
+    const step = (delta) => {
+      current = (current + delta + triggers.length) % triggers.length;
+      render();
+    };
+
+    triggers.forEach((trigger, index) => {
+      trigger.addEventListener('click', () => open(index));
+    });
+    closeBtn.addEventListener('click', close);
+    overlay.querySelector('.lightbox-prev').addEventListener('click', () => step(-1));
+    overlay.querySelector('.lightbox-next').addEventListener('click', () => step(1));
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) close();
+    });
+
+    window.addEventListener('keydown', (event) => {
+      if (!overlay.classList.contains('open')) return;
+      if (event.key === 'Escape') close();
+      else if (event.key === 'ArrowLeft') step(-1);
+      else if (event.key === 'ArrowRight') step(1);
+      else if (event.key === 'Tab') {
+        const focusable = [...overlay.querySelectorAll('button')];
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+  }
+
+  function initTheme() {
+    const buttons = document.querySelectorAll('[data-theme-toggle]');
+    if (!buttons.length) return;
+
+    const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
+    const sync = () => {
+      const label = isDark() ? 'Switch to light theme' : 'Switch to dark theme';
+      buttons.forEach((button) => button.setAttribute('aria-label', label));
+    };
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const next = isDark() ? 'light' : 'dark';
+        if (next === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        else document.documentElement.removeAttribute('data-theme');
+        try { localStorage.setItem('theme', next); } catch { /* private mode */ }
+        sync();
+      });
+    });
+
+    sync();
   }
 
   function initFilters() {
@@ -132,5 +270,8 @@
   setActiveNav();
   initBurger();
   initYear();
+  initPrint();
+  initTheme();
+  initLightbox();
   initFilters();
 })();
