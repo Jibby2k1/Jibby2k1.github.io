@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Raul Valle Writing</title>
     <link>https://www.raulv.dev/blog.html</link>
+    <atom:link href="https://www.raulv.dev/rss.xml" rel="self" type="application/rss+xml" />
     <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.</description>
     
     <item>

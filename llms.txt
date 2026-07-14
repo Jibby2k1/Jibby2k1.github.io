@@ -19,7 +19,7 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 
 ## Secondary Archives
 
-- [Notes](https://www.raulv.dev/blog.html): Technical notes and essays; linked from About.
+- [Writing](https://www.raulv.dev/blog.html): Research journal, paper notes, and commentary; linked from the primary navigation.
 - [Photography](https://www.raulv.dev/photography.html): Photography portfolio and captions; linked from About.
 - [Awards](https://www.raulv.dev/awards.html): Honors and distinctions; linked from About.
 

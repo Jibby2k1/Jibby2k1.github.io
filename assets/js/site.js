@@ -2,10 +2,10 @@
   function currentRoute() {
     const path = location.pathname;
     if (path.includes('/projects/')) return 'research.html';
-    if (path.includes('/notes/')) return 'about.html';
+    if (path.includes('/notes/')) return 'blog.html';
     const file = path.split('/').pop() || 'index.html';
     if (file === 'publications.html') return 'research.html';
-    if (['blog.html', 'awards.html', 'photography.html'].includes(file)) return 'about.html';
+    if (['awards.html', 'photography.html'].includes(file)) return 'about.html';
     return file;
   }
 

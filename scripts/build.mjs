@@ -117,6 +117,7 @@ function nav(outputPath) {
       <a class="navlink" href="${prefix}about.html" data-route="about.html">About</a>
       <a class="navlink" href="${prefix}cv.html" data-route="cv.html">CV</a>
       <a class="navlink" href="${prefix}research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="${prefix}blog.html" data-route="blog.html">Writing</a>
       <a class="navlink" href="${prefix}contact.html" data-route="contact.html">Contact</a>
     </nav>
 
@@ -150,6 +151,9 @@ function footer(outputPath) {
         <a href="${prefix}about.html">About</a>
         <a href="${prefix}cv.html">CV</a>
         <a href="${prefix}research.html">Research</a>
+        <a href="${prefix}blog.html">Writing</a>
+        <a href="${prefix}awards.html">Awards</a>
+        <a href="${prefix}photography.html">Photography</a>
         <a href="${prefix}contact.html">Contact</a>
       </div>
     </div>
@@ -173,6 +177,24 @@ function personSchema() {
     image: `${site.siteUrl}/assets/img/me/Raul_me.webp`,
     jobTitle: site.jobTitle,
     description: site.longBio,
+    email: `mailto:${site.email}`,
+    knowsAbout: [
+      'Signal processing',
+      'Time-series machine learning',
+      'Neuroengineering',
+      'Electroencephalography (EEG)',
+      'State-space models',
+      'Statistical detection',
+      'Research software engineering',
+      'Python',
+      'PyTorch',
+      'GPU computing'
+    ],
+    alumniOf: {
+      '@type': 'CollegeOrUniversity',
+      name: 'University of Florida',
+      url: 'https://www.ufl.edu/'
+    },
     homeLocation: {
       '@type': 'Place',
       name: site.location
@@ -236,6 +258,8 @@ function pageShell({
   <meta name="description" content="${escapeHtml(description)}" />
   <meta name="author" content="${site.name}" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161210" media="(prefers-color-scheme: dark)" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="${type}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
@@ -1054,6 +1078,41 @@ async function main() {
 </body>
 </html>`);
 
+  // GitHub Pages serves 404.html for any missing URL, at any path depth, so
+  // every href/src here must be root-relative.
+  await writePage('404.html', `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Page Not Found | ${site.name}</title>
+  <meta name="description" content="This page does not exist on raulv.dev. Find research, writing, CV, and contact information from the links below." />
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="stylesheet" href="/assets/css/styles.css" />
+</head>
+<body>
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal accent-cool">
+        <div class="kicker">404</div>
+        <h1 class="h1">This page does not exist</h1>
+        <p class="lead">The link may be old or mistyped. Everything on this site is reachable from the pages below.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="/index.html">Home</a>
+          <a class="btn" href="/research.html">Research</a>
+          <a class="btn" href="/blog.html">Writing</a>
+          <a class="btn" href="/cv.html">CV</a>
+          <a class="btn" href="/contact.html">Contact</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  <script src="/assets/js/site.js"></script>
+</body>
+</html>`);
+
   const sitemapUrls = [
     'index.html',
     'about.html',
@@ -1077,10 +1136,11 @@ async function main() {
   await writePage('sitemap.xml', sitemap);
 
   const rss = `<?xml version="1.0" encoding="UTF-8" ?>
-<rss version="2.0">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeHtml(site.name)} Writing</title>
     <link>${site.siteUrl}/blog.html</link>
+    <atom:link href="${site.siteUrl}/rss.xml" rel="self" type="application/rss+xml" />
     <description>${escapeHtml(site.shortBio)}</description>
     ${writing.map((post) => `
     <item>
