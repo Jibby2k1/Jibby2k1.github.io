@@ -27,6 +27,15 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
+      # The sitemap's <lastmod> is stamped from the HEAD commit date at build
+      # time. Output is built and committed *before* that commit exists, so a
+      # fresh CI build would otherwise compute a newer date and fail the diff
+      # gate on any commit made on a different UTC day than its parent. Pin the
+      # build to the committed sitemap's date so the sitemap reproduces exactly;
+      # every other file is still built from scratch and checked below.
+      - name: Pin sitemap lastmod for reproducible build
+        run: echo "SITE_LASTMOD=$(grep -m1 -oP '(?<=<lastmod>)[^<]+' sitemap.xml)" >> "$GITHUB_ENV"
+
       - name: Build site
         run: npm run build
 
