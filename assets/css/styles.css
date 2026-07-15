@@ -975,6 +975,120 @@ main{
   font-size:1rem;
 }
 
+.writeup .project-section-title{
+  margin-top:22px;
+  font-size:1.02rem;
+}
+.writeup .project-section-title:first-child{ margin-top:0; }
+.writeup-lead{
+  font-size:1.06rem;
+  color:var(--ink-soft);
+}
+
+.writeup .writeup-list{
+  margin:12px 0 0;
+  padding-left:20px;
+}
+.writeup .writeup-list li{ margin:7px 0; color:var(--ink-soft); }
+
+.breakdown{
+  margin:14px 0 0;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.breakdown-row{
+  display:grid;
+  grid-template-columns:180px 1fr;
+  gap:16px;
+  padding:11px 0;
+  border-top:1px solid var(--line);
+  align-items:baseline;
+}
+.breakdown-row:first-child{ border-top:0; }
+.breakdown-row dt{
+  font-family:var(--mono);
+  font-size:0.78rem;
+  letter-spacing:0.04em;
+  color:var(--ink);
+  font-weight:700;
+}
+.breakdown-row dd{ margin:0; color:var(--ink-soft); }
+@media (max-width: 620px){
+  .breakdown-row{ grid-template-columns:1fr; gap:4px; }
+}
+
+.writeup-figure{
+  margin:24px 0 8px;
+}
+.writeup-figure .figure-svg,
+.writeup-figure .figure-img{
+  border:1px solid var(--line);
+  background:var(--surface);
+  padding:20px 22px;
+  color:var(--ink-soft);
+}
+.writeup-figure .figure-svg svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.writeup-figure .figure-img{
+  padding:0;
+}
+.writeup-figure figcaption{
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:0.76rem;
+  line-height:1.5;
+  letter-spacing:0.03em;
+  color:var(--faint);
+}
+
+.faq{ display:flex; flex-direction:column; gap:0; }
+.faq-item{
+  border-top:1px solid var(--line);
+  padding:2px 0;
+}
+.faq-item:first-child{ border-top:0; }
+.faq-item summary{
+  cursor:pointer;
+  padding:12px 0;
+  font-weight:700;
+  list-style:none;
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+.faq-item summary::-webkit-details-marker{ display:none; }
+.faq-item summary::before{
+  content:"+";
+  font-family:var(--mono);
+  color:var(--section-accent);
+  font-weight:700;
+}
+.faq-item[open] summary::before{ content:"\2212"; }
+.faq-item summary:hover{ color:var(--section-accent); }
+.faq-body{ padding:0 0 12px 22px; color:var(--ink-soft); }
+.faq-body p{ margin:0; }
+
+.cite-block{
+  margin:0;
+  padding:14px 16px;
+  background:var(--code-bg);
+  border:1px solid var(--line);
+  overflow-x:auto;
+}
+.cite-block code{
+  font-family:var(--mono);
+  font-size:0.8rem;
+  line-height:1.7;
+  background:none;
+  padding:0;
+  white-space:pre;
+  color:var(--ink-soft);
+}
+
 .related-link{
   display:grid;
   gap:6px;

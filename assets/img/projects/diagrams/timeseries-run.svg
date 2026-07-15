@@ -1,0 +1,56 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.66; }
+    .stage{ font-family: var(--mono, monospace); font-size:9px; letter-spacing:1.5px; fill: var(--section-accent); }
+    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
+    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
+    .acf{ fill: var(--section-accent); }
+    .acs{ stroke: var(--section-accent); stroke-width:1.5; fill:none; }
+    .ln{ stroke: currentColor; stroke-width:1.2; fill:none; opacity:0.5; }
+  </style>
+
+  <!-- config -->
+  <rect class="box" x="16" y="70" width="150" height="110" rx="2"/>
+  <text class="stage" x="30" y="92">DECLARE</text>
+  <text class="t" x="30" y="114">config.yaml</text>
+  <text class="s" x="30" y="134">dataset</text>
+  <text class="s" x="30" y="150">model + params</text>
+  <text class="s" x="30" y="166">seed</text>
+
+  <!-- one command arrow -->
+  <path class="arw" d="M166 125 h44"/>
+  <path class="acf" d="M210 120 l8 5 -8 5 z"/>
+  <text class="s" x="168" y="116">one</text>
+  <text class="s" x="168" y="146">command</text>
+
+  <!-- run folder -->
+  <rect class="box" x="228" y="52" width="200" height="150" rx="2"/>
+  <text class="stage" x="244" y="74">RUN FOLDER (auditable)</text>
+  <g class="ln">
+    <path d="M244 92 h168"/><path d="M244 118 h168"/><path d="M244 144 h168"/><path d="M244 170 h168"/>
+  </g>
+  <text class="s" x="248" y="110">├─ config snapshot</text>
+  <text class="s" x="248" y="136">├─ logs + metrics.json</text>
+  <text class="s" x="248" y="162">├─ plots/</text>
+  <text class="s" x="248" y="188">└─ standardized layout</text>
+
+  <!-- comparable arrow -->
+  <path class="arw" d="M428 127 h44"/>
+  <path class="acf" d="M472 122 l8 5 -8 5 z"/>
+
+  <!-- comparison -->
+  <rect class="box" x="490" y="70" width="274" height="110" rx="2"/>
+  <text class="stage" x="504" y="92">COMPARE</text>
+  <text class="t" x="504" y="114">run A vs run B — apples to apples</text>
+  <!-- mini bars -->
+  <g>
+    <rect class="acf" x="504" y="132" width="46" height="30" opacity="0.35"/>
+    <rect class="acf" x="558" y="122" width="46" height="40"/>
+    <rect class="box" x="620" y="146" width="46" height="16"/>
+    <rect class="box" x="674" y="138" width="46" height="24"/>
+  </g>
+  <text class="s" x="504" y="176">same metric, same plot, every time</text>
+
+  <text class="s" x="16" y="232">Reproducibility is a constraint built in from the first run, not a feature bolted on at the end.</text>
+</svg>

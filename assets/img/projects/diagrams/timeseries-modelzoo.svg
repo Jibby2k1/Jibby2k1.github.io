@@ -1,0 +1,61 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .tag{ font-family: var(--mono, monospace); font-size:9px; letter-spacing:1.4px; fill: var(--section-accent); }
+    .ttl{ font-family: var(--mono, monospace); font-size:11px; font-weight:700; fill: currentColor; }
+    .sub{ font-family: var(--mono, monospace); font-size:9.5px; fill: currentColor; opacity:0.64; }
+    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
+    .chip{ fill: var(--surface, rgba(255,255,255,0.4)); stroke: currentColor; stroke-width:1; }
+    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
+    .acf{ fill: var(--section-accent); }
+    .runner{ fill: var(--surface-strong,#fff); stroke: var(--section-accent); stroke-width:1.8; }
+  </style>
+
+  <!-- model families -->
+  <rect class="box" x="14" y="42" width="184" height="96" rx="2"/>
+  <text class="tag" x="26" y="62">ADAPTIVE + KERNEL FILTERS</text>
+  <g class="sub">
+    <text x="26" y="82">QKLMS · KRLS · KRR</text>
+    <text x="26" y="100">GPR · ASLM · Wiener</text>
+    <text x="26" y="118">FWF / FWFE · FKF</text>
+  </g>
+
+  <rect class="box" x="14" y="162" width="184" height="82" rx="2"/>
+  <text class="tag" x="26" y="182">CONFIGURABLE NNS</text>
+  <g class="sub">
+    <text x="26" y="202">ITL stacked auto-encoder</text>
+    <text x="26" y="220">hyper-parameter search</text>
+    <text x="26" y="238">GPU / HiPerGator</text>
+  </g>
+
+  <!-- unified runner -->
+  <rect class="runner" x="290" y="104" width="150" height="78" rx="2"/>
+  <text class="tag" x="302" y="124">SHARED HARNESS</text>
+  <text class="ttl" x="302" y="144">Unified runner</text>
+  <text class="sub" x="302" y="162">one config →</text>
+  <text class="sub" x="302" y="176">standardized run</text>
+
+  <!-- benchmark signals -->
+  <rect class="box" x="520" y="42" width="176" height="96" rx="2"/>
+  <text class="tag" x="532" y="62">BENCHMARK SIGNALS</text>
+  <g class="sub">
+    <text x="532" y="82">Mackey–Glass</text>
+    <text x="532" y="100">Lorenz · Hénon</text>
+    <text x="532" y="118">Sunspot</text>
+  </g>
+
+  <!-- output -->
+  <rect class="box" x="520" y="162" width="176" height="82" rx="2"/>
+  <text class="tag" x="532" y="182">OUTPUT</text>
+  <text class="ttl" x="532" y="202">Train / test MSE</text>
+  <text class="sub" x="532" y="220">same metric + plot</text>
+  <text class="sub" x="532" y="236">across every model</text>
+
+  <!-- arrows into runner -->
+  <g class="arw"><path d="M198 90 q60 0 84 30"/><path d="M198 200 q60 0 84 -30"/></g>
+  <g class="acf"><path d="M276 116 l10 5 -3 -10 z"/><path d="M276 106 l10 -5 -3 10 z"/></g>
+  <!-- runner to signals + output -->
+  <g class="arw"><path d="M440 128 q50 -20 78 -40"/><path d="M440 158 q50 20 78 40"/></g>
+  <g class="acf"><path d="M512 90 l9 -3 -6 -8 z"/><path d="M512 196 l9 3 -6 8 z"/></g>
+
+  <text class="sub" x="14" y="278">Different model families, one harness — so a kernel filter and a neural net are compared on identical signals and metrics.</text>
+</svg>

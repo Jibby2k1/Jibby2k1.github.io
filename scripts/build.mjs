@@ -1,4 +1,5 @@
 import fs from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { aboutPage, cvPage, contactPage } from './pages.mjs';
@@ -499,6 +500,77 @@ function outputsSection({ includeIntro = false } = {}) {
   </section>`;
 }
 
+// Inline an SVG diagram file so it inherits the page's theme tokens
+// (currentColor + CSS custom properties) instead of being isolated in an <img>.
+const svgCache = new Map();
+function inlineSvg(file) {
+  if (!svgCache.has(file)) {
+    try {
+      svgCache.set(file, readFileSync(path.join(root, file), 'utf8').trim());
+    } catch {
+      console.warn(`[build] missing svg diagram: ${file}`);
+      svgCache.set(file, '');
+    }
+  }
+  return svgCache.get(file);
+}
+
+function figureHtml(figure) {
+  if (!figure) return '';
+  let media = '';
+  if (figure.svgFile) {
+    media = `<div class="figure-svg" role="img" aria-label="${escapeHtml(figure.alt || figure.caption || '')}">${inlineSvg(figure.svgFile)}</div>`;
+  } else if (figure.img) {
+    media = imgTag(figure.img, { className: 'figure-img', alt: figure.alt || figure.caption || '' });
+  }
+  if (!media) return '';
+  return `<figure class="writeup-figure">${media}${figure.caption ? `<figcaption>${inlineMarkdown(figure.caption)}</figcaption>` : ''}</figure>`;
+}
+
+// Long-form narrative write-up for a project page (Q&A-style sections, inline
+// figures, FAQ, optional citation). Rendered only when details.writeup is present.
+function writeupHtml(details) {
+  const w = details.writeup;
+  if (!w) return '';
+  const parts = [];
+  const sections = (w.sections || [])
+    .map((section) => {
+      const body = (section.body || []).map((paragraph) => `<p>${inlineMarkdown(paragraph)}</p>`).join('');
+      const bullets = Array.isArray(section.bullets) && section.bullets.length
+        ? `<ul class="writeup-list">${section.bullets.map((item) => `<li>${inlineMarkdown(item)}</li>`).join('')}</ul>`
+        : '';
+      const breakdown = Array.isArray(section.breakdown) && section.breakdown.length
+        ? `<dl class="breakdown">${section.breakdown.map((row) => `<div class="breakdown-row"><dt>${inlineMarkdown(row.label)}</dt><dd>${inlineMarkdown(row.text)}</dd></div>`).join('')}</dl>`
+        : '';
+      return `<h2 class="project-section-title">${inlineMarkdown(section.heading)}</h2>${body}${bullets}${breakdown}${figureHtml(section.figure)}`;
+    })
+    .join('\n');
+  if (sections) {
+    parts.push(`<article class="card reveal prose-card writeup">${w.lead ? `<p class="writeup-lead">${inlineMarkdown(w.lead)}</p>` : ''}${sections}</article>`);
+  }
+  if (Array.isArray(w.faq) && w.faq.length) {
+    parts.push(`<article class="card reveal"><h2 class="project-section-title">FAQ</h2><div class="faq">${w.faq.map((item) => `<details class="faq-item"><summary>${inlineMarkdown(item.q)}</summary><div class="faq-body"><p>${inlineMarkdown(item.a)}</p></div></details>`).join('')}</div></article>`);
+  }
+  if (w.citation) {
+    parts.push(`<article class="card reveal"><h2 class="project-section-title">Cite this work</h2><pre class="cite-block"><code>${escapeHtml(w.citation)}</code></pre></article>`);
+  }
+  return parts.join('\n');
+}
+
+function faqSchema(details, id) {
+  const faq = details.writeup && details.writeup.faq;
+  if (!Array.isArray(faq) || !faq.length) return [];
+  return [{
+    '@type': 'FAQPage',
+    '@id': id,
+    mainEntity: faq.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a }
+    }))
+  }];
+}
+
 async function writePage(outputPath, content) {
   await fs.mkdir(path.dirname(path.join(root, outputPath)), { recursive: true });
   await fs.writeFile(path.join(root, outputPath), content);
@@ -873,6 +945,7 @@ async function main() {
               <p>${escapeHtml(project.desc || '')}</p>
               ${details.overview ? `<p>${escapeHtml(details.overview)}</p>` : ''}
             </article>
+            ${writeupHtml(details)}
             ${Array.isArray(details.what_i_built) && details.what_i_built.length ? `<article class="card reveal"><h2 class="project-section-title">What I built</h2><ul>${details.what_i_built.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${Array.isArray(details.how_it_works) && details.how_it_works.length ? `<article class="card reveal"><h2 class="project-section-title">How it works</h2><ul>${details.how_it_works.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${Array.isArray(details.deliverables) && details.deliverables.length ? `<article class="card reveal"><h2 class="project-section-title">Deliverables</h2><ul>${details.deliverables.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
@@ -918,7 +991,8 @@ async function main() {
             { '@type': 'ListItem', position: 3, name: track.name, item: `${site.siteUrl}/${track.slug}` },
             { '@type': 'ListItem', position: 4, name: project.title, item: `${site.siteUrl}/projects/${project.slug}.html` }
           ]
-        }
+        },
+        ...faqSchema(details, `${site.siteUrl}/projects/${project.slug}.html#faq`)
       ]
     }));
   }

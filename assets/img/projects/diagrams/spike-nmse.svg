@@ -1,0 +1,36 @@
+<svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .ttl{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .lbl{ font-family: var(--mono, monospace); font-size:11.5px; fill: currentColor; }
+    .val{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .sub{ font-family: var(--mono, monospace); font-size:10px; fill: currentColor; opacity:0.6; }
+    .bar{ fill: currentColor; opacity:0.28; }
+    .bar-best{ fill: var(--section-accent); }
+    .axis{ stroke: currentColor; stroke-width:1; opacity:0.4; }
+  </style>
+
+  <text class="ttl" x="16" y="28">Synthetic reconstruction error — NMSE (lower is better)</text>
+
+  <!-- baseline axis -->
+  <line class="axis" x1="212" y1="52" x2="212" y2="196"/>
+
+  <!-- Spike-KLMS 0.13 (best) -->
+  <text class="lbl" x="200" y="79" text-anchor="end">Spike-KLMS</text>
+  <rect class="bar-best" x="212" y="64" width="156" height="24"/>
+  <text class="val" x="378" y="81">0.13</text>
+
+  <!-- Binned-KLMS 0.27 -->
+  <text class="lbl" x="200" y="129" text-anchor="end">Binned-KLMS</text>
+  <rect class="bar" x="212" y="114" width="324" height="24"/>
+  <text class="val" x="546" y="131">0.27</text>
+
+  <!-- Binned-GLM 0.35 (baseline) -->
+  <text class="lbl" x="200" y="179" text-anchor="end">Binned-GLM</text>
+  <rect class="bar" x="212" y="164" width="420" height="24"/>
+  <text class="val" x="642" y="181">0.35</text>
+
+  <text class="sub" x="212" y="214">0.0</text>
+  <text class="sub" x="430" y="214">0.2</text>
+  <text class="sub" x="632" y="214">0.4</text>
+  <text class="sub" x="16" y="240">Paper-reported synthetic targets (Li et al., 2011) reproduced in Python — the spike-time kernel decoder leads the binned baselines.</text>
+</svg>

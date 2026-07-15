@@ -1,0 +1,38 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.62; }
+    .wave{ stroke: currentColor; stroke-width:1.4; fill:none; opacity:0.8; }
+    .state{ fill: var(--surface-strong, #fff); stroke: var(--section-accent); stroke-width:1.8; }
+    .stln{ stroke: var(--section-accent); stroke-width:1.8; fill:none; }
+    .up{ stroke: currentColor; stroke-width:1.2; fill:none; stroke-dasharray:3 4; opacity:0.55; }
+    .acf{ fill: var(--section-accent); }
+  </style>
+
+  <text class="t" x="16" y="30">Observed EEG — many noisy channels</text>
+  <!-- three wavy channels (clean sines at different wavelengths) -->
+  <path class="wave" d="M40 60 q18 -14 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+  <path class="wave" d="M40 92 q16 12 32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0" opacity="0.6"/>
+  <path class="wave" d="M40 122 q20 -12 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.72"/>
+
+  <!-- vertical generative arrows -->
+  <g class="up">
+    <path d="M215 232 v-92"/><path d="M390 232 v-92"/><path d="M565 232 v-92"/>
+  </g>
+  <g class="acf">
+    <path d="M211 146 l4 -8 4 8 z"/><path d="M386 146 l4 -8 4 8 z"/><path d="M561 146 l4 -8 4 8 z"/>
+  </g>
+
+  <!-- hidden state chain -->
+  <path class="stln" d="M224 246 h158 M399 246 h158"/>
+  <g class="acf"><path d="M378 241 l8 5 -8 5 z"/><path d="M553 241 l8 5 -8 5 z"/></g>
+  <circle class="state" cx="215" cy="246" r="15"/>
+  <circle class="state" cx="390" cy="246" r="15"/>
+  <circle class="state" cx="565" cy="246" r="15"/>
+  <text class="t" x="200" y="251">z</text><text class="s" x="212" y="255">t-1</text>
+  <text class="t" x="378" y="251">z</text><text class="s" x="390" y="255">t</text>
+  <text class="t" x="550" y="251">z</text><text class="s" x="562" y="255">t+1</text>
+
+  <text class="t" x="610" y="251">hidden</text>
+  <text class="s" x="16" y="285">A few latent states evolve over time and generate the observed signal — small, interpretable, data-efficient.</text>
+</svg>

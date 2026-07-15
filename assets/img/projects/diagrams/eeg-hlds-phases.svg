@@ -1,0 +1,66 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .ph{ font-family: var(--mono, monospace); font-size:11px; letter-spacing:1.5px; fill: var(--section-accent); font-weight:700; }
+    .ttl{ font-family: var(--mono, monospace); font-size:11.5px; font-weight:700; fill: currentColor; }
+    .sub{ font-family: var(--mono, monospace); font-size:10px; fill: currentColor; opacity:0.62; }
+    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
+    .panel{ fill:none; stroke: currentColor; stroke-width:1.2; opacity:0.35; }
+    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
+    .acf{ fill: var(--section-accent); }
+    .acs{ stroke: var(--section-accent); stroke-width:1.5; fill:none; }
+  </style>
+
+  <!-- divider -->
+  <line x1="390" y1="20" x2="390" y2="280" class="panel"/>
+
+  <!-- ===== TRAINING ===== -->
+  <text class="ph" x="24" y="34">TRAINING · learn parameters</text>
+  <rect class="box" x="24" y="52" width="120" height="46" rx="2"/>
+  <text class="ttl" x="34" y="72">EEG epochs</text>
+  <text class="sub" x="34" y="88">cleaned + aligned</text>
+
+  <!-- dual update loop -->
+  <rect class="box" x="24" y="128" width="150" height="94" rx="2"/>
+  <text class="ph" x="36" y="148">DUAL KALMAN LOOP</text>
+  <text class="sub" x="36" y="168">infer hidden states</text>
+  <text class="sub" x="36" y="186">update parameters</text>
+  <text class="sub" x="36" y="204">repeat over passes</text>
+  <path class="acs" d="M188 150 a30 30 0 0 1 0 60" />
+  <path class="acf" d="M184 205 l4 9 6 -7 z"/>
+  <text class="sub" x="210" y="184">multiple</text>
+  <text class="sub" x="210" y="198">passes</text>
+
+  <rect class="box" x="24" y="246" width="150" height="40" rx="2"/>
+  <text class="ttl" x="34" y="264">Learned parameters θ</text>
+  <text class="sub" x="34" y="279">transition + emission</text>
+
+  <path class="arw" d="M84 98 v26"/><path class="acf" d="M79 122 l5 8 5 -8 z"/>
+  <path class="arw" d="M99 222 v20"/><path class="acf" d="M94 240 l5 8 5 -8 z"/>
+
+  <!-- ===== INFERENCE ===== -->
+  <text class="ph" x="414" y="34">INFERENCE · fixed θ</text>
+  <rect class="box" x="414" y="52" width="120" height="46" rx="2"/>
+  <text class="ttl" x="424" y="72">New EEG</text>
+  <text class="sub" x="424" y="88">held-out epoch</text>
+
+  <rect class="box" x="414" y="128" width="150" height="58" rx="2"/>
+  <text class="ph" x="426" y="148">KALMAN RECURSION</text>
+  <text class="sub" x="426" y="166">bottom-up solver,</text>
+  <text class="sub" x="426" y="180">parameters frozen</text>
+
+  <rect class="box" x="414" y="212" width="150" height="40" rx="2"/>
+  <text class="ttl" x="424" y="230">Hidden-state encodings</text>
+  <text class="sub" x="424" y="245">compact trajectory</text>
+
+  <rect class="box" x="620" y="212" width="136" height="40" rx="2"/>
+  <text class="ttl" x="630" y="230">Classifier</text>
+  <text class="sub" x="630" y="245">condition / label</text>
+
+  <!-- theta feeds inference -->
+  <path class="arw" d="M174 266 h40 q12 0 12 -12 v-98 q0 -12 12 -12 h166" stroke-dasharray="4 4" opacity="0.6"/>
+  <text class="ph" x="250" y="150">θ</text>
+
+  <path class="arw" d="M474 98 v26"/><path class="acf" d="M469 122 l5 8 5 -8 z"/>
+  <path class="arw" d="M489 186 v20"/><path class="acf" d="M484 204 l5 8 5 -8 z"/>
+  <path class="arw" d="M564 232 h50"/><path class="acf" d="M614 227 l8 5 -8 5 z"/>
+</svg>

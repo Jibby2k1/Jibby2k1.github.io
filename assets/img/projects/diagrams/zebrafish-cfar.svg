@@ -1,0 +1,39 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.62; }
+    .ac{ font-family: var(--mono, monospace); font-size:10.5px; fill: var(--section-accent); font-weight:700; }
+    .axis{ stroke: currentColor; stroke-width:1.2; opacity:0.5; }
+    .sig{ stroke: currentColor; stroke-width:1.5; fill:none; }
+    .band{ fill: currentColor; opacity:0.08; }
+    .thr{ stroke: var(--section-accent); stroke-width:1.6; fill:none; stroke-dasharray:6 4; }
+    .acf{ fill: var(--section-accent); }
+  </style>
+
+  <text class="t" x="16" y="28">One pixel's intensity over time</text>
+
+  <!-- axes -->
+  <line class="axis" x1="50" y1="60" x2="50" y2="230"/>
+  <line class="axis" x1="50" y1="230" x2="748" y2="230"/>
+  <text class="s" x="700" y="248">time →</text>
+
+  <!-- noise band (baseline ± noise) -->
+  <rect class="band" x="50" y="150" width="698" height="60"/>
+  <text class="s" x="56" y="205">estimated noise band</text>
+
+  <!-- adaptive CFAR threshold -->
+  <line class="thr" x1="50" y1="140" x2="748" y2="140"/>
+  <text class="ac" x="600" y="134">CFAR threshold</text>
+
+  <!-- signal: wiggles in noise, one spike crosses -->
+  <path class="sig" d="M50 182 l24 -6 24 10 24 -8 24 6 24 -4 24 8 24 -6 24 4 l24 -2
+    l14 -96 l14 96
+    l24 6 24 -8 24 6 24 -4 24 8 24 -6 24 4 24 -6 24 6 24 -4 24 6 24 -4 24 4"/>
+
+  <!-- detected event marker -->
+  <circle class="acf" cx="298" cy="86" r="5"/>
+  <path class="thr" d="M298 92 v40" stroke-dasharray="2 3"/>
+  <text class="ac" x="312" y="86">detected event</text>
+
+  <text class="s" x="16" y="284">Radar-style detection: flag frames whose change is unlikely under the local noise model, not just "bright" ones.</text>
+</svg>

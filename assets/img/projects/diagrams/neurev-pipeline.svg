@@ -1,0 +1,64 @@
+<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .tag{ font-family: var(--mono, monospace); font-size:9px; letter-spacing:1.5px; fill: var(--section-accent); }
+    .ttl{ font-family: var(--mono, monospace); font-size:11px; font-weight:700; fill: currentColor; }
+    .sub{ font-family: var(--mono, monospace); font-size:9.5px; fill: currentColor; opacity:0.62; }
+    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
+    .swap{ fill: var(--surface, rgba(255,255,255,0.4)); stroke: currentColor; stroke-width:1.2; }
+    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
+    .acf{ fill: var(--section-accent); }
+    .loop{ stroke: var(--section-accent); stroke-width:1.4; fill:none; stroke-dasharray:5 4; }
+  </style>
+
+  <!-- stage 1: video -->
+  <rect class="box" x="16" y="60" width="120" height="70" rx="2"/>
+  <text class="tag" x="28" y="80">INPUT</text>
+  <text class="ttl" x="28" y="100">Imaging video</text>
+  <text class="sub" x="28" y="117">voltage / calcium</text>
+
+  <!-- stage 2: filter (interchangeable) -->
+  <rect class="box" x="176" y="48" width="150" height="94" rx="2"/>
+  <text class="tag" x="188" y="68">PRE-PROCESS (swap)</text>
+  <rect class="swap" x="188" y="78" width="126" height="24"/>
+  <text class="sub" x="196" y="94">Gamma ST filter</text>
+  <rect class="swap" x="188" y="108" width="126" height="24"/>
+  <text class="sub" x="196" y="124">Kalman–MCC</text>
+
+  <!-- stage 3: CFAR detect -->
+  <rect class="box" x="366" y="60" width="120" height="70" rx="2"/>
+  <text class="tag" x="378" y="80">DETECT</text>
+  <text class="ttl" x="378" y="100">CFAR detector</text>
+  <text class="sub" x="378" y="117">candidate events</text>
+
+  <!-- stage 4: evaluate/select -->
+  <rect class="box" x="526" y="48" width="140" height="94" rx="2"/>
+  <text class="tag" x="538" y="68">EVALUATE + SELECT</text>
+  <text class="sub" x="538" y="90">FROC · truncated AUC</text>
+  <text class="sub" x="538" y="112">top-K model summary</text>
+
+  <!-- stage 5: report -->
+  <rect class="box" x="696" y="60" width="72" height="70" rx="2"/>
+  <text class="tag" x="708" y="80">REPORT</text>
+  <text class="sub" x="708" y="100">figures</text>
+  <text class="sub" x="708" y="115">+ diagnostics</text>
+
+  <!-- arrows -->
+  <g class="arw"><path d="M136 95 h34"/><path d="M326 95 h34"/><path d="M486 95 h34"/><path d="M666 95 h24"/></g>
+  <g class="acf">
+    <path d="M170 90 l8 5 -8 5 z"/><path d="M360 90 l8 5 -8 5 z"/><path d="M520 90 l8 5 -8 5 z"/><path d="M690 90 l8 5 -8 5 z"/>
+  </g>
+
+  <!-- parallel grid-search note across filter+detector -->
+  <path class="loop" d="M251 142 v34 h175 v-46" />
+  <path class="acf" d="M421 135 l5 -8 5 8 z" transform="translate(0,0)"/>
+  <text class="tag" x="266" y="170">PARALLEL GRID SEARCH OVER FILTER + DETECTOR PARAMS</text>
+
+  <!-- human review loop -->
+  <rect class="box" x="176" y="222" width="310" height="56" rx="2"/>
+  <text class="tag" x="188" y="242">HUMAN REVIEW WORKBENCH</text>
+  <text class="sub" x="188" y="260">ROI + event accept / reject / unsure · trace denoising</text>
+  <text class="sub" x="188" y="273">autosave + TSV export for downstream analysis</text>
+  <path class="loop" d="M426 130 v92 M331 222 v-92" />
+  <path class="acf" d="M426 216 l-5 8 10 0 z"/>
+  <path class="acf" d="M331 138 l-5 -8 10 0 z"/>
+</svg>

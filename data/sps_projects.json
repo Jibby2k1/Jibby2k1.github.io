@@ -43,6 +43,56 @@
           "Matplotlib"
         ],
         "status": "Ongoing; continuously expanded.",
+        "writeup": {
+          "lead": "A public, notebook-based workshop series at UF that walks from math fundamentals to applied signal processing — running since 2024.",
+          "sections": [
+            {
+              "heading": "What it is",
+              "body": [
+                "The SPS curriculum is a series of educational workshops I have built and taught at the University of Florida since 2024, covering topics across signal processing and machine-learning systems. The aim is to make rigorous material genuinely learnable in a student setting: minimal prerequisites, clear explanations, and demos you can actually run and modify."
+              ]
+            },
+            {
+              "heading": "How a workshop is built",
+              "body": [
+                "Every workshop follows the same shape, so a newcomer always knows what to expect and can go from idea to running code in one sitting:"
+              ],
+              "breakdown": [
+                { "label": "Concept", "text": "The core idea stated plainly, with the minimum notation needed." },
+                { "label": "Intuition", "text": "Why it is true and when it matters, before any heavy machinery." },
+                { "label": "Demo", "text": "A runnable Jupyter notebook with example data, so parameters can be changed and consequences seen." },
+                { "label": "Exercises", "text": "Reusable problems for journal clubs and study groups." }
+              ]
+            },
+            {
+              "heading": "What it covers",
+              "body": [
+                "The material is deliberately sequenced from foundations up toward applied signal-processing and machine-learning case studies:"
+              ],
+              "bullets": [
+                "**Introduction to Mathematics** — real number systems, basic topology, sequences and series, measure theory, random variables, and independence.",
+                "**Introduction to Functional Programming** — Python, C, and MATLAB for people who need the tools, not just the theory.",
+                "**Applied signal processing** — connecting the analysis and probability foundations to real case studies."
+              ]
+            },
+            {
+              "heading": "Why teach it this way",
+              "body": [
+                "If a concept cannot survive being explained clearly, demoed, and reused by someone else, the underlying understanding probably is not solid yet. Teaching the material the same way I would want to consume it keeps the whole series honest — and the notebooks are public, so anyone can check the work."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Who is it for?",
+              "a": "UF students and study groups, and anyone who wants a from-fundamentals path into signal processing and machine learning. The prerequisites are kept deliberately low."
+            },
+            {
+              "q": "Is the material public?",
+              "a": "Yes — the notebooks are on GitHub and meant to be run, modified, and reused."
+            }
+          ]
+        },
         "glossary": [
           {
             "term": "Signal processing",
@@ -89,6 +139,35 @@
           "Microphone array + ESP32 capture hardware"
         ],
         "status": "Active; baseline and data-capture phase in progress.",
+        "writeup": {
+          "lead": "Aude is early-stage and honest about it: a charter, a roadmap, and a hardware plan for machine listening in messy real-world rooms.",
+          "sections": [
+            {
+              "heading": "The idea",
+              "body": [
+                "Aude is aimed at biologically plausible audio scene analysis: separating overlapping sound sources and locating them spatially in real, reverberant environments rather than clean benchmark recordings. The plan pairs hardware-informed data capture — a small multi-microphone array — with models for source separation and localization, benchmarked against strong baselines."
+              ]
+            },
+            {
+              "heading": "How the project runs",
+              "body": [
+                "Aude is run as a disciplined team project, which for research code matters as much as the models:"
+              ],
+              "bullets": [
+                "Every piece of work starts as an issue with a named owner.",
+                "Work happens on a branch per issue, and each pull request links its issue.",
+                "Nothing merges without passing CI and review.",
+                "Docs are split into meetings, experiments, datasets, and hardware so decisions are traceable."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "This is the planning and data-capture stage: the charter, roadmap, and hardware plan exist, and the first runnable baselines are being stood up. I am keeping this page honest — there is no finished architecture to show yet, and I would rather say so than draw one that does not exist."
+              ]
+            }
+          ]
+        },
         "glossary": [
           {
             "term": "Source separation",
@@ -145,6 +224,93 @@
           "Experiment logging"
         ],
         "status": "Active; evolving with new evaluation experiments.",
+        "writeup": {
+          "lead": "Plato's Cave began as a GatorHack hackathon build — a first-place win at UF AI Days — and grew into a research paper on whether a paper's claims actually hold up.",
+          "sections": [
+            {
+              "heading": "What is Plato's Cave?",
+              "body": [
+                "Plato's Cave is an open-source, human-centered system for validating research papers. You give it a PDF, a URL, or even a natural-language query; it locates the paper, breaks it into the individual claims the authors are making, sends browser-based agents out to check each claim against outside evidence, and returns a paper-level integrity score with the full reasoning behind it.",
+                "It started as a hackathon project — first place at the UF AI Days GatorHack — and grew, with a team at the University of Florida, into a research paper. I designed the system's mathematics and architecture: the claim-graph formulation and the trust-propagation scheme were my ideas, as was the construction of the experiments."
+              ]
+            },
+            {
+              "heading": "How the pipeline works",
+              "body": [
+                "The system runs a six-stage pipeline. The important design idea is in the last stage: instead of scoring claims in isolation, trust propagates along the dependency edges of the graph, so a confident-sounding conclusion built on weak premises cannot inherit a high score."
+              ],
+              "breakdown": [
+                { "label": "1 · Validate", "text": "Accept a PDF upload or URL and extract the full text of the paper." },
+                { "label": "2 · Decompose", "text": "Use an LLM to break the paper into atomic, individually-checkable claims." },
+                { "label": "3 · Build graph", "text": "Structure the claims as a directed acyclic graph with role-aware nodes — Hypothesis, Evidence, Method, Conclusion." },
+                { "label": "4 · Organize agents", "text": "Dispatch browser-based agents to independently verify each claim against external sources." },
+                { "label": "5 · Compile evidence", "text": "Aggregate agent findings and score every node on six dimensions (below)." },
+                { "label": "6 · Evaluate integrity", "text": "Propagate trust through the graph using role-aware edge confidences and trust gating, producing a final integrity score." }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/platos-pipeline.svg",
+                "alt": "Six-stage pipeline: validate, decompose into claims, build a role-aware DAG, dispatch verification agents, compile six-dimension scores, and evaluate integrity via trust-gated propagation.",
+                "caption": "Figure 1 — The six-stage verification pipeline. Trust-gated propagation in stage six is what stops weak premises from being laundered into confident conclusions."
+              }
+            },
+            {
+              "heading": "How each claim is scored",
+              "body": [
+                "Every node in the graph is scored on six dimensions before trust is propagated. Keeping the axes explicit is what makes the final number auditable rather than a single opaque verdict."
+              ],
+              "bullets": [
+                "**Credibility** — is the source of the claim trustworthy?",
+                "**Relevance** — does the cited evidence actually bear on the claim?",
+                "**Evidence strength** — how strong is the support behind it?",
+                "**Method rigor** — is the underlying method sound?",
+                "**Reproducibility** — could the result be reproduced?",
+                "**Citation support** — do the references back up what is asserted?"
+              ]
+            },
+            {
+              "heading": "System architecture",
+              "body": [
+                "Plato's Cave is deployed as three cooperating services rather than one monolith, which is what lets the verification agents run in parallel and in isolation from the app the reviewer is looking at."
+              ],
+              "breakdown": [
+                { "label": "Frontend", "text": "A Gatsby.js + React interface that renders the claim graph interactively, shows the integrity score, and lets a reviewer share a live browser session with an agent." },
+                { "label": "Backend", "text": "A Python service that handles claim extraction, graph construction, the six-dimension scorer, and trust-gated propagation." },
+                { "label": "Verification agents", "text": "Browser-use agents packaged in Docker containers, dispatched per claim to gather external evidence." },
+                { "label": "Deployment", "text": "The services run together on AWS EC2." }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/platos-architecture.svg",
+                "alt": "Three-tier architecture on AWS EC2: a Gatsby and React frontend, a Python scoring backend, and Dockerized browser-use verification agents.",
+                "caption": "Figure 2 — The deployed architecture: frontend, scoring backend, and containerized verification agents as separate services behind one EC2 deployment."
+              }
+            },
+            {
+              "heading": "The human stays in the loop",
+              "body": [
+                "The part I care about most is that this is not meant to replace a reviewer. Because the frontend can share a browser session with an agent, a person can watch exactly what each agent checks and step in. The output is an integrity score you can trace back through the graph, not a verdict handed down from a black box."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Is it open source?",
+              "a": "Yes. The code is public on GitHub and the paper is available as an arXiv preprint."
+            },
+            {
+              "q": "Does it detect fraud?",
+              "a": "No. It measures how well a paper's claims are supported by available evidence, which is a narrower and different question than authorial intent."
+            },
+            {
+              "q": "Why call it an 'integrity score' instead of a verdict?",
+              "a": "Because it is an aggregate of six auditable dimensions propagated through a dependency graph — you can always open the graph and see which claim dragged the score down, rather than trusting a single opaque number."
+            },
+            {
+              "q": "What was your role on the team?",
+              "a": "I designed the mathematics and architecture of the system — the claim-graph formulation and the trust-gated propagation were my ideas, as was the construction of the experiments. I am the paper's second author."
+            }
+          ],
+          "citation": "@misc{maldaner2026platoscave,\n  title         = {Plato's Cave: A Human-Centered Research Verification System},\n  author        = {Maldaner, Matheus Kunzler and Valle, Raul and Kim, Junsung and Sultan, Tonuka and Bhargava, Pranav and Maloni, Matthew and Courtney, John and Nguyen, Hoang and Sawant, Aamogh and O'Connor, Kristian and Wormald, Stephen and Woodard, Damon L.},\n  year          = {2026},\n  eprint        = {2603.23526},\n  archivePrefix = {arXiv},\n  url           = {https://arxiv.org/abs/2603.23526}\n}"
+        },
         "glossary": [
           {
             "term": "LLM",
@@ -199,6 +365,40 @@
           "Control/dynamical systems simulation"
         ],
         "status": "Active; hardware integration and simulation phases underway.",
+        "writeup": {
+          "lead": "Ergo pairs custom EMG/EEG acquisition hardware with dynamical-systems analysis of human-in-the-loop control.",
+          "sections": [
+            {
+              "heading": "The idea",
+              "body": [
+                "Ergo builds biosignal-acquisition tooling — with an emphasis on EMG and EEG — and uses it to study how a control system's stability shifts when it is driven by human biosignals. The working hypothesis is that cooperation and competition between subjects, and fatigue-linked changes in EMG, produce measurably different stability trajectories."
+              ]
+            },
+            {
+              "heading": "Planned acquisition stack",
+              "body": [
+                "The intended hardware path is deliberately standard and repeatable rather than exotic:"
+              ],
+              "breakdown": [
+                { "label": "Analog front-end", "text": "An ADS1299 biopotential front-end for EMG/EEG capture." },
+                { "label": "MCU", "text": "An STM32 handling acquisition and streaming." },
+                { "label": "Analysis", "text": "Feature extraction feeding a control / dynamical-stability simulation." }
+              ]
+            },
+            {
+              "heading": "How the project runs",
+              "body": [
+                "Like the other SPS team projects, Ergo runs on issue-per-task ownership, a branch and linked pull request per issue, and CI plus review before anything merges — with hardware specs and a bill of materials tracked alongside the code."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "Hardware integration and the simulation side are both underway; this is an active build rather than a finished system, so the page describes the plan and the acquisition stack rather than claiming results."
+              ]
+            }
+          ]
+        },
         "glossary": [
           {
             "term": "EMG",
@@ -337,6 +537,29 @@
           "Real-time inference prototyping"
         ],
         "status": "Active; dataset and initial model pipeline in progress.",
+        "writeup": {
+          "lead": "Vie is early-stage: biologically plausible video scene analysis that learns from real-world dynamics.",
+          "sections": [
+            {
+              "heading": "The idea",
+              "body": [
+                "Vie targets real-time machine perception that models moving and static objects jointly, with an eye toward wearable-friendly deployment. The near-term focus is the unglamorous groundwork that decides whether the later models mean anything: a reproducible data and annotation pipeline and a clear set of benchmark baselines."
+              ]
+            },
+            {
+              "heading": "How the project runs",
+              "body": [
+                "Vie follows the same team discipline as its sibling projects — issue-per-task with an owner, a branch and linked pull request per issue, and CI plus review before merge — with datasets and experiments documented as first-class artifacts."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "This is the dataset-and-baseline stage. The charter and roadmap are in place and the first perception pipeline is being built; there is no finished architecture to diagram yet, and the page says so rather than inventing one."
+              ]
+            }
+          ]
+        },
         "glossary": [
           {
             "term": "Dynamic entities",
