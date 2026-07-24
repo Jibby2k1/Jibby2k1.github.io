@@ -16,7 +16,7 @@
   <!-- ===== TRAINING ===== -->
   <text class="ph" x="24" y="34">TRAINING · learn parameters</text>
   <rect class="box" x="24" y="52" width="120" height="46" rx="2"/>
-  <text class="ttl" x="34" y="72">EEG epochs</text>
+  <text class="ttl" x="34" y="72">Observed sequences</text>
   <text class="sub" x="34" y="88">cleaned + aligned</text>
 
   <!-- dual update loop -->
@@ -40,7 +40,7 @@
   <!-- ===== INFERENCE ===== -->
   <text class="ph" x="414" y="34">INFERENCE · fixed θ</text>
   <rect class="box" x="414" y="52" width="120" height="46" rx="2"/>
-  <text class="ttl" x="424" y="72">New EEG</text>
+  <text class="ttl" x="424" y="72">New sequence</text>
   <text class="sub" x="424" y="88">held-out epoch</text>
 
   <rect class="box" x="414" y="128" width="150" height="58" rx="2"/>
@@ -54,7 +54,7 @@
 
   <rect class="box" x="620" y="212" width="136" height="40" rx="2"/>
   <text class="ttl" x="630" y="230">Classifier</text>
-  <text class="sub" x="630" y="245">condition / label</text>
+  <text class="sub" x="630" y="245">class / label</text>
 
   <!-- theta feeds inference -->
   <path class="arw" d="M174 266 h40 q12 0 12 -12 v-98 q0 -12 12 -12 h166" stroke-dasharray="4 4" opacity="0.6"/>

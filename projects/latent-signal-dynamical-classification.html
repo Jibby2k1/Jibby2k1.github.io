@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Latent-signal classification with hierarchical dynamical systems | Raul Valle Research Project</title>
+  <meta name="description" content="Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161210" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Latent-signal classification with hierarchical dynamical systems | Raul Valle Research Project" />
+  <meta property="og:description" content="Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability." />
+  <meta property="og:url" content="https://www.raulv.dev/projects/latent-signal-dynamical-classification.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta property="og:image:alt" content="Diagram of a hierarchical dynamical system: noisy observed signals generate compact latent trajectories used by a classifier." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Latent-signal classification with hierarchical dynamical systems | Raul Valle Research Project" />
+  <meta name="twitter:description" content="Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/HLDS_Inf.png" />
+  <meta name="twitter:image:alt" content="Diagram of a hierarchical dynamical system: noisy observed signals generate compact latent trajectories used by a classifier." />
+  <link rel="canonical" href="https://www.raulv.dev/projects/latent-signal-dynamical-classification.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.","email":"mailto:raulresearch@proton.me","knowsAbout":["Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html#webpage","url":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html","name":"Latent-signal classification with hierarchical dynamical systems | Raul Valle Research Project","description":"Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"CreativeWork","@id":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html#project","url":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html","name":"Latent-signal classification with hierarchical dynamical systems","headline":"Latent-signal classification with hierarchical dynamical systems","description":"Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.","image":"https://www.raulv.dev/assets/img/projects/HLDS_Inf.png","creator":{"@id":"https://www.raulv.dev/#person"},"keywords":["research","latent-signals","dynamical-systems","Hierarchical Linear Dynamical System (HLDS)","Latent-signal classification","Temporal representation learning"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://www.raulv.dev/research.html"},{"@type":"ListItem","position":3,"name":"CNEL projects","item":"https://www.raulv.dev/research-cnel.html"},{"@type":"ListItem","position":4,"name":"Latent-signal classification with hierarchical dynamical systems","item":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html"}]},{"@type":"FAQPage","@id":"https://www.raulv.dev/projects/latent-signal-dynamical-classification.html#faq","mainEntity":[{"@type":"Question","name":"What does latent signal mean here?","acceptedAnswer":{"@type":"Answer","text":"It means a lower-dimensional trajectory inferred from observed time-series measurements. The trajectory is not measured directly; the dynamical model estimates it from the observations and their temporal structure."}},{"@type":"Question","name":"Why use a hierarchical dynamical system?","acceptedAnswer":{"@type":"Answer","text":"The hierarchy lets higher-level states summarize lower-level dynamics, while the state-space formulation makes transitions, emissions, and inference steps inspectable."}},{"@type":"Question","name":"How does classification enter the pipeline?","acceptedAnswer":{"@type":"Answer","text":"The HLDS produces a latent trajectory for each held-out sequence. A downstream classifier then tests whether those trajectories contain information that separates the labeled classes."}},{"@type":"Question","name":"Does this page report a benchmark result?","acceptedAnswer":{"@type":"Answer","text":"No. It describes the model and evaluation framework without publishing application-specific data, results, or claims that would identify the underlying study."}}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+        <span class="brand-eyebrow">Signal processing, neuroengineering, research systems, and writing.</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal hero-split accent-cool">
+          <div>
+            <div class="kicker">CNEL</div>
+            <h1 class="h1">Latent-signal classification with hierarchical dynamical systems</h1>
+            <p class="lead">Reproducible pipeline that infers compact latent trajectories from multichannel time-series signals and evaluates them for downstream classification.</p>
+            <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../research-cnel.html">CNEL projects</a> / <span>Latent-signal classification with hierarchical dynamical systems</span></div>
+            <div class="cta-row">
+              <a class="btn" href="../research-cnel.html">Back to CNEL projects</a>
+            </div>
+          </div>
+          <img class="card-img compact project-hero-img" src="../assets/img/projects/HLDS_Inf.png" alt="Diagram of a hierarchical dynamical system: noisy observed signals generate compact latent trajectories used by a classifier." width="1009" height="841" decoding="async" />
+        </section>
+
+        <section class="project-detail reveal accent-mint">
+          <div class="project-main">
+            <article class="card reveal">
+              <h2 class="project-section-title">Overview</h2>
+              <p>Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.</p>
+              <p>I built a reproducible pipeline for a general signal-modeling problem: infer low-dimensional latent dynamics from noisy multichannel observations, then use those latent trajectories as inputs to a downstream classifier. The public description stays at the level of the model, evaluation protocol, and research artifacts.</p>
+            </article>
+            <article class="card reveal prose-card writeup"><p class="writeup-lead">A state-space pipeline for turning noisy multichannel observations into latent trajectories that a classifier can evaluate.</p><h2 class="project-section-title">The problem: classify structure that is not directly observed</h2><p>In many time-series problems, labels describe a class or regime while the observations are high-dimensional, noisy measurements. The useful representation is not given directly; it is a latent trajectory that evolves over time. This project asks whether a compact dynamical representation can make downstream classification more stable and interpretable than treating every window as an independent feature vector.</p><p>The goal is deliberately narrow: learn latent states, then test whether those states separate classes under a fixed evaluation protocol. The public page focuses on that technical problem rather than the application that motivated it.</p>
+<h2 class="project-section-title">Why a hierarchical dynamical system?</h2><p>A Hierarchical Linear Dynamical System (HLDS) separates three things that are easy to conflate in a generic sequence model: what is observed, what is hidden, and how the hidden variables evolve. The hierarchy lets a small set of higher-level states summarize lower-level dynamics, while the linear-Gaussian structure keeps inference inspectable and data-efficient.</p><p>That structure gives the project useful failure modes. An unstable latent trajectory, a poor reconstruction, or a class boundary that disappears under held-out inference points to a different problem than a classifier score moving without explanation.</p><figure class="writeup-figure"><div class="figure-svg" role="img" aria-label="Diagram of a hierarchical dynamical system: noisy observed signal channels are generated by a compact chain of latent states evolving over time."><svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
+    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.62; }
+    .wave{ stroke: currentColor; stroke-width:1.4; fill:none; opacity:0.8; }
+    .state{ fill: var(--surface-strong, #fff); stroke: var(--section-accent); stroke-width:1.8; }
+    .stln{ stroke: var(--section-accent); stroke-width:1.8; fill:none; }
+    .up{ stroke: currentColor; stroke-width:1.2; fill:none; stroke-dasharray:3 4; opacity:0.55; }
+    .acf{ fill: var(--section-accent); }
+  </style>
+
+  <text class="t" x="16" y="30">Observed signal — many noisy channels</text>
+  <!-- three wavy channels (clean sines at different wavelengths) -->
+  <path class="wave" d="M40 60 q18 -14 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
+  <path class="wave" d="M40 92 q16 12 32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0" opacity="0.6"/>
+  <path class="wave" d="M40 122 q20 -12 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.72"/>
+
+  <!-- vertical generative arrows -->
+  <g class="up">
+    <path d="M215 232 v-92"/><path d="M390 232 v-92"/><path d="M565 232 v-92"/>
+  </g>
+  <g class="acf">
+    <path d="M211 146 l4 -8 4 8 z"/><path d="M386 146 l4 -8 4 8 z"/><path d="M561 146 l4 -8 4 8 z"/>
+  </g>
+
+  <!-- hidden state chain -->
+  <path class="stln" d="M224 246 h158 M399 246 h158"/>
+  <g class="acf"><path d="M378 241 l8 5 -8 5 z"/><path d="M553 241 l8 5 -8 5 z"/></g>
+  <circle class="state" cx="215" cy="246" r="15"/>
+  <circle class="state" cx="390" cy="246" r="15"/>
+  <circle class="state" cx="565" cy="246" r="15"/>
+  <text class="t" x="200" y="251">z</text><text class="s" x="212" y="255">t-1</text>
+  <text class="t" x="378" y="251">z</text><text class="s" x="390" y="255">t</text>
+  <text class="t" x="550" y="251">z</text><text class="s" x="562" y="255">t+1</text>
+
+  <text class="t" x="610" y="251">hidden</text>
+  <text class="s" x="16" y="285">A few latent states evolve over time and generate the observed signal — compact, interpretable, data-efficient.</text>
+</svg></div><figcaption>Figure 1 — The state-space view: a compact chain of hidden states evolves over time and generates the observed multichannel signal.</figcaption></figure>
+<h2 class="project-section-title">Training and inference are separate</h2><p>The HLDS runs in two clearly separated phases. During training, a dual-Kalman procedure alternates between inferring hidden states and updating model parameters over multiple passes. During inference, those parameters are frozen and a Kalman-style recursion produces the latent trajectory for a new sequence.</p><p>Keeping the phases separate prevents a subtle evaluation leak: the classifier receives encodings produced under fixed parameters rather than a representation quietly re-fit to each held-out sequence.</p><figure class="writeup-figure"><div class="figure-svg" role="img" aria-label="Two-phase hierarchical dynamical system: training learns parameters with a dual-Kalman loop, then inference freezes them and produces latent trajectories for a classifier."><svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    .ph{ font-family: var(--mono, monospace); font-size:11px; letter-spacing:1.5px; fill: var(--section-accent); font-weight:700; }
+    .ttl{ font-family: var(--mono, monospace); font-size:11.5px; font-weight:700; fill: currentColor; }
+    .sub{ font-family: var(--mono, monospace); font-size:10px; fill: currentColor; opacity:0.62; }
+    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
+    .panel{ fill:none; stroke: currentColor; stroke-width:1.2; opacity:0.35; }
+    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
+    .acf{ fill: var(--section-accent); }
+    .acs{ stroke: var(--section-accent); stroke-width:1.5; fill:none; }
+  </style>
+
+  <!-- divider -->
+  <line x1="390" y1="20" x2="390" y2="280" class="panel"/>
+
+  <!-- ===== TRAINING ===== -->
+  <text class="ph" x="24" y="34">TRAINING · learn parameters</text>
+  <rect class="box" x="24" y="52" width="120" height="46" rx="2"/>
+  <text class="ttl" x="34" y="72">Observed sequences</text>
+  <text class="sub" x="34" y="88">cleaned + aligned</text>
+
+  <!-- dual update loop -->
+  <rect class="box" x="24" y="128" width="150" height="94" rx="2"/>
+  <text class="ph" x="36" y="148">DUAL KALMAN LOOP</text>
+  <text class="sub" x="36" y="168">infer hidden states</text>
+  <text class="sub" x="36" y="186">update parameters</text>
+  <text class="sub" x="36" y="204">repeat over passes</text>
+  <path class="acs" d="M188 150 a30 30 0 0 1 0 60" />
+  <path class="acf" d="M184 205 l4 9 6 -7 z"/>
+  <text class="sub" x="210" y="184">multiple</text>
+  <text class="sub" x="210" y="198">passes</text>
+
+  <rect class="box" x="24" y="246" width="150" height="40" rx="2"/>
+  <text class="ttl" x="34" y="264">Learned parameters θ</text>
+  <text class="sub" x="34" y="279">transition + emission</text>
+
+  <path class="arw" d="M84 98 v26"/><path class="acf" d="M79 122 l5 8 5 -8 z"/>
+  <path class="arw" d="M99 222 v20"/><path class="acf" d="M94 240 l5 8 5 -8 z"/>
+
+  <!-- ===== INFERENCE ===== -->
+  <text class="ph" x="414" y="34">INFERENCE · fixed θ</text>
+  <rect class="box" x="414" y="52" width="120" height="46" rx="2"/>
+  <text class="ttl" x="424" y="72">New sequence</text>
+  <text class="sub" x="424" y="88">held-out epoch</text>
+
+  <rect class="box" x="414" y="128" width="150" height="58" rx="2"/>
+  <text class="ph" x="426" y="148">KALMAN RECURSION</text>
+  <text class="sub" x="426" y="166">bottom-up solver,</text>
+  <text class="sub" x="426" y="180">parameters frozen</text>
+
+  <rect class="box" x="414" y="212" width="150" height="40" rx="2"/>
+  <text class="ttl" x="424" y="230">Hidden-state encodings</text>
+  <text class="sub" x="424" y="245">compact trajectory</text>
+
+  <rect class="box" x="620" y="212" width="136" height="40" rx="2"/>
+  <text class="ttl" x="630" y="230">Classifier</text>
+  <text class="sub" x="630" y="245">class / label</text>
+
+  <!-- theta feeds inference -->
+  <path class="arw" d="M174 266 h40 q12 0 12 -12 v-98 q0 -12 12 -12 h166" stroke-dasharray="4 4" opacity="0.6"/>
+  <text class="ph" x="250" y="150">θ</text>
+
+  <path class="arw" d="M474 98 v26"/><path class="acf" d="M469 122 l5 8 5 -8 z"/>
+  <path class="arw" d="M489 186 v20"/><path class="acf" d="M484 204 l5 8 5 -8 z"/>
+  <path class="arw" d="M564 232 h50"/><path class="acf" d="M614 227 l8 5 -8 5 z"/>
+</svg></div><figcaption>Figure 2 — Training learns the dynamical parameters; inference freezes them and turns a new sequence into a latent trajectory for classification.</figcaption></figure>
+<h2 class="project-section-title">The pipeline around the model</h2><p>Each experiment is a fixed sequence of stages so representation quality and classifier performance can be compared fairly:</p><dl class="breakdown"><div class="breakdown-row"><dt>Preprocessing</dt><dd>Clean, standardize, and align observed signals into consistent time windows.</dd></div><div class="breakdown-row"><dt>Training</dt><dd>Fit HLDS transition and emission parameters with the dual-Kalman procedure.</dd></div><div class="breakdown-row"><dt>Latent inference</dt><dd>Run the fixed model on held-out sequences to produce compact trajectories.</dd></div><div class="breakdown-row"><dt>Classification</dt><dd>Evaluate whether the latent trajectories predict and separate the labeled classes.</dd></div><div class="breakdown-row"><dt>Diagnostics</dt><dd>Check stability, reconstruction behavior, class separability, and run-to-run consistency.</dd></div></dl>
+<h2 class="project-section-title">Classification on latent trajectories</h2><p>The classifier is intentionally downstream of the dynamical model. That makes it possible to ask two separate questions: did the HLDS learn a stable, useful representation, and do those representations contain information that separates the classes? Evaluation artifacts keep those questions visible instead of collapsing everything into one score.</p>
+<h2 class="project-section-title">Where it stands</h2><p>The reproducible pipeline, HLDS training/inference phases, classifier evaluation, diagnostics, and standardized run artifacts are in place. The next iteration is continued comparison across evaluation splits and model settings, with attention to latent-state stability and out-of-sample separability.</p><p>The public claim is intentionally bounded: this is a general latent-signal classification framework. The source data and application context are not part of the public project description.</p></article>
+<article class="card reveal"><h2 class="project-section-title">FAQ</h2><div class="faq"><details class="faq-item"><summary>What does latent signal mean here?</summary><div class="faq-body"><p>It means a lower-dimensional trajectory inferred from observed time-series measurements. The trajectory is not measured directly; the dynamical model estimates it from the observations and their temporal structure.</p></div></details><details class="faq-item"><summary>Why use a hierarchical dynamical system?</summary><div class="faq-body"><p>The hierarchy lets higher-level states summarize lower-level dynamics, while the state-space formulation makes transitions, emissions, and inference steps inspectable.</p></div></details><details class="faq-item"><summary>How does classification enter the pipeline?</summary><div class="faq-body"><p>The HLDS produces a latent trajectory for each held-out sequence. A downstream classifier then tests whether those trajectories contain information that separates the labeled classes.</p></div></details><details class="faq-item"><summary>Does this page report a benchmark result?</summary><div class="faq-body"><p>No. It describes the model and evaluation framework without publishing application-specific data, results, or claims that would identify the underlying study.</p></div></details></div></article>
+            <article class="card reveal"><h2 class="project-section-title">What I built</h2><ul><li>A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns observed time-series signals into model-ready inputs.</li><li>Training and evaluation scripts for a Hierarchical Linear Dynamical System (HLDS) that infers hidden variables evolving over time.</li><li>Diagnostics and scoring outputs for latent-trajectory stability, prediction, and class separability.</li><li>Automated summaries and artifacts so runs can be audited and compared (configuration capture, standardized outputs, and plots).</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">How it works</h2><ul><li>Observed signals are cleaned, standardized, and aligned into consistent time windows.</li><li>The HLDS learns hidden variables and transition structure that explain how those observations evolve.</li><li>At inference time, learned parameters are fixed and a Kalman-style recursion produces latent trajectories for held-out sequences.</li><li>A downstream classifier evaluates whether those latent trajectories separate the labeled classes under the same evaluation protocol.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Deliverables</h2><ul><li>Run folders with configs, logs, metrics, and plots.</li><li>A standardized summary table for comparing latent representations and classifiers across evaluation splits.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related writing</h2><div class="grid two"><a class="related-link" href="../notes/why-i-care-about-state-space-models-for-eeg.html"><strong>Why I care about state-space models for EEG</strong><span>EEG work gets more informative when temporal structure is part of the model instead of something the pipeline averages away.</span></a></div></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="grid two"><a class="related-link" href="zebrafish-voltage-imaging-detection.html"><strong>Zebrafish voltage imaging: event detection &amp; interpretation</strong><span>Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.</span></a><a class="related-link" href="time-series-ml-experiment-infra.html"><strong>Time-series ML experiment library</strong><span>Reusable experiment scaffolding for time-series ML: standardized configs, runs, metrics, and plots so model comparisons are fair and repeatable.</span></a></div></article>
+            <nav class="project-pager reveal" aria-label="More CNEL projects">
+              <a class="pager-link pager-prev" href="kernel-adaptive-memory.html"><span class="pager-label">← Previous</span><strong>Kernel Adaptive Memory: a transformer alternative for sequence modeling</strong></a>
+              <a class="pager-link pager-next" href="zebrafish-voltage-imaging-detection.html"><span class="pager-label">Next →</span><strong>Zebrafish voltage imaging: event detection &amp; interpretation</strong></a>
+            </nav>
+          </div>
+          <div class="project-side">
+            <article class="card reveal">
+              <h2 class="project-section-title">Snapshot</h2>
+              <div class="kv">
+                <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Research · dynamical systems · classification</div></div>
+                <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Active research / ongoing iteration.</div></div>
+                <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Hierarchical Linear Dynamical System (HLDS)</span><span class="pill">Latent-signal classification</span><span class="pill">Temporal representation learning</span></div></div>
+              </div>
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Python</li><li>NumPy</li><li>PyTorch/CuPy (GPU acceleration where appropriate)</li><li>Reproducible experiment scripting</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Collaborators</h2><ul><li>Computational NeuroEngineering Lab (CNEL), University of Florida</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>HLDS</dt><dd>Hierarchical Linear Dynamical System: a state-space model that represents observations with layered hidden variables evolving over time.</dd><dt>Latent trajectory</dt><dd>A time-evolving sequence of hidden variables inferred from observed signals.</dd><dt>State-space model</dt><dd>A model that explains observations using hidden variables plus rules for how those variables evolve over time.</dd><dt>Separability</dt><dd>How distinctly a representation supports distinguishing the labeled classes in an evaluation set.</dd></dl></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Signal processing, neuroengineering, and research systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

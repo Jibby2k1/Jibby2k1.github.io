@@ -931,8 +931,7 @@ async function main() {
             <p class="lead">${escapeHtml(project.subtitle || project.desc)}</p>
             <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../${track.slug}">${track.name}</a> / <span>${escapeHtml(project.title)}</span></div>
             <div class="cta-row">
-              <a class="btn" href="../${track.slug}">Back to ${track.name}</a>
-              ${(project.links || []).map((link, index) => `<a class="btn${index === 0 ? ' primary' : ''}" href="${link.href}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join('')}
+              <a class="btn" href="../${track.slug}">Back to ${track.name}</a>${(project.links || []).map((link, index) => `<a class="btn${index === 0 ? ' primary' : ''}" href="${link.href}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join('')}
             </div>
           </div>
           ${imgTag(project.img, { className: 'card-img compact project-hero-img', alt: project.imgAlt || project.title, prefix: '../', eager: true })}

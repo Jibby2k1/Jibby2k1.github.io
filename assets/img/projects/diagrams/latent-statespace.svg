@@ -9,7 +9,7 @@
     .acf{ fill: var(--section-accent); }
   </style>
 
-  <text class="t" x="16" y="30">Observed EEG — many noisy channels</text>
+  <text class="t" x="16" y="30">Observed signal — many noisy channels</text>
   <!-- three wavy channels (clean sines at different wavelengths) -->
   <path class="wave" d="M40 60 q18 -14 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
   <path class="wave" d="M40 92 q16 12 32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0" opacity="0.6"/>
@@ -34,5 +34,5 @@
   <text class="t" x="550" y="251">z</text><text class="s" x="562" y="255">t+1</text>
 
   <text class="t" x="610" y="251">hidden</text>
-  <text class="s" x="16" y="285">A few latent states evolve over time and generate the observed signal — small, interpretable, data-efficient.</text>
+  <text class="s" x="16" y="285">A few latent states evolve over time and generate the observed signal — compact, interpretable, data-efficient.</text>
 </svg>

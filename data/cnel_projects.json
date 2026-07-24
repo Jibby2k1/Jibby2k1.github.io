@@ -171,41 +171,42 @@
       }
     },
     {
-      "slug": "eeg-sentiment-state-space",
-      "title": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
-      "subtitle": "End-to-end pipeline that cleans raw EEG and learns a compact, time-evolving ‘hidden state’ summary that can be evaluated against labels and behavioral outcomes.",
+      "slug": "latent-signal-dynamical-classification",
+      "title": "Latent-signal classification with hierarchical dynamical systems",
+      "subtitle": "Reproducible pipeline that infers compact latent trajectories from multichannel time-series signals and evaluates them for downstream classification.",
       "img": "assets/img/projects/HLDS_Inf.png",
-      "imgAlt": "Diagram showing an EEG modeling pipeline.",
+      "imgAlt": "Diagram of a hierarchical dynamical system: noisy observed signals generate compact latent trajectories used by a classifier.",
       "tags": [
         "research",
-        "eeg",
-        "time-series"
+        "latent-signals",
+        "dynamical-systems"
       ],
       "pills": [
-        "Electroencephalography (EEG)",
-        "State-space modeling (HLDS)",
-        "Sony–UF ‘LB3’ dataset (internal codename)"
+        "Hierarchical Linear Dynamical System (HLDS)",
+        "Latent-signal classification",
+        "Temporal representation learning"
       ],
-      "meta": "Research · neurotechnology · time-series modeling",
-      "desc": "Pipeline that turns brain-wave recordings (EEG) into a small set of hidden time-series ‘states’ using a state-space model (Hierarchical Linear Dynamical System, HLDS), then evaluates those states for prediction and separability.",
+      "meta": "Research · dynamical systems · classification",
+      "desc": "Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.",
       "featured": true,
       "links": [],
       "details": {
-        "overview": "In this work, I focused on making brain-signal modeling practical: take raw EEG recordings collected while participants view media, clean and standardize them, fit a time-series model that tracks a few hidden variables over time, and produce clear metrics and reports so results are comparable across sessions and subjects.",
+        "overview": "I built a reproducible pipeline for a general signal-modeling problem: infer low-dimensional latent dynamics from noisy multichannel observations, then use those latent trajectories as inputs to a downstream classifier. The public description stays at the level of the model, evaluation protocol, and research artifacts.",
         "what_i_built": [
-          "A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns raw EEG into model-ready inputs.",
-          "Training and evaluation scripts for a state-space model called a Hierarchical Linear Dynamical System (HLDS), used to track hidden ‘brain state’ trajectories.",
-          "Diagnostics and scoring outputs (e.g., stability checks, prediction metrics, and class/condition separability summaries).",
+          "A reproducible data pipeline (loading → cleaning → segmentation → feature preparation) that turns observed time-series signals into model-ready inputs.",
+          "Training and evaluation scripts for a Hierarchical Linear Dynamical System (HLDS) that infers hidden variables evolving over time.",
+          "Diagnostics and scoring outputs for latent-trajectory stability, prediction, and class separability.",
           "Automated summaries and artifacts so runs can be audited and compared (configuration capture, standardized outputs, and plots)."
         ],
         "how_it_works": [
-          "EEG is cleaned and aligned into consistent time windows.",
-          "The HLDS model learns hidden variables that evolve over time and explain the observed EEG signals.",
-          "Those hidden variables (and model outputs) are evaluated against labels/conditions to test whether the model captures meaningful structure."
+          "Observed signals are cleaned, standardized, and aligned into consistent time windows.",
+          "The HLDS learns hidden variables and transition structure that explain how those observations evolve.",
+          "At inference time, learned parameters are fixed and a Kalman-style recursion produces latent trajectories for held-out sequences.",
+          "A downstream classifier evaluates whether those latent trajectories separate the labeled classes under the same evaluation protocol."
         ],
         "deliverables": [
           "Run folders with configs, logs, metrics, and plots.",
-          "A standardized summary table used for comparison across papers/conditions."
+          "A standardized summary table for comparing latent representations and classifiers across evaluation splits."
         ],
         "stack": [
           "Python",
@@ -214,110 +215,120 @@
           "Reproducible experiment scripting"
         ],
         "collaborators": [
-          "Computational NeuroEngineering Lab (CNEL), University of Florida",
-          "Sony Research collaboration (dataset and research context)"
+          "Computational NeuroEngineering Lab (CNEL), University of Florida"
         ],
         "status": "Active research / ongoing iteration.",
         "writeup": {
-          "lead": "This project turns messy EEG recordings into a compact, moving summary of brain state that you can actually evaluate.",
+          "lead": "A state-space pipeline for turning noisy multichannel observations into latent trajectories that a classifier can evaluate.",
           "sections": [
             {
-              "heading": "What problem is this solving?",
+              "heading": "The problem: classify structure that is not directly observed",
               "body": [
-                "EEG is cheap, non-invasive, and extremely noisy. When you record it while someone watches media, the interesting structure — how a person's internal state shifts over time — is buried under muscle artifacts, drift, and large differences from one subject to the next. The goal here is to recover a small number of hidden variables that track that state cleanly enough to test against labels.",
-                "The emphasis is on *practical* brain-signal modeling: not a demo that works on one clean recording, but a pipeline that stays honest across sessions and subjects."
+                "In many time-series problems, labels describe a class or regime while the observations are high-dimensional, noisy measurements. The useful representation is not given directly; it is a latent trajectory that evolves over time. This project asks whether a compact dynamical representation can make downstream classification more stable and interpretable than treating every window as an independent feature vector.",
+                "The goal is deliberately narrow: learn latent states, then test whether those states separate classes under a fixed evaluation protocol. The public page focuses on that technical problem rather than the application that motivated it."
               ]
             },
             {
-              "heading": "Why a state-space model?",
+              "heading": "Why a hierarchical dynamical system?",
               "body": [
-                "Rather than throw a large black-box network at the raw signal, I use a Hierarchical Linear Dynamical System (HLDS). It assumes the EEG is generated by a few latent variables that evolve smoothly over time, and that assumption is a feature rather than a limitation: the hidden states stay interpretable, the model needs far less data than a deep network, and you can directly inspect whether the learned dynamics are stable.",
-                "When the question is what the brain is doing over time, a model whose internal variables you can read is worth more than a slightly higher benchmark number you cannot explain."
+                "A Hierarchical Linear Dynamical System (HLDS) separates three things that are easy to conflate in a generic sequence model: what is observed, what is hidden, and how the hidden variables evolve. The hierarchy lets a small set of higher-level states summarize lower-level dynamics, while the linear-Gaussian structure keeps inference inspectable and data-efficient.",
+                "That structure gives the project useful failure modes. An unstable latent trajectory, a poor reconstruction, or a class boundary that disappears under held-out inference points to a different problem than a classifier score moving without explanation."
               ],
               "figure": {
-                "svgFile": "assets/img/projects/diagrams/eeg-statespace.svg",
-                "alt": "Diagram of a state-space model: a few hidden states evolving over time generate the many observed EEG channels above them.",
-                "caption": "Figure 1 — The state-space view: a small chain of hidden states evolves over time and generates the many noisy EEG channels we actually record."
+                "svgFile": "assets/img/projects/diagrams/latent-statespace.svg",
+                "alt": "Diagram of a hierarchical dynamical system: noisy observed signal channels are generated by a compact chain of latent states evolving over time.",
+                "caption": "Figure 1 — The state-space view: a compact chain of hidden states evolves over time and generates the observed multichannel signal."
               }
             },
             {
-              "heading": "How the model is trained and used",
+              "heading": "Training and inference are separate",
               "body": [
-                "The HLDS runs in two clearly separated phases. In training, it learns its parameters with a dual-Kalman-filter procedure: it alternates between inferring the hidden states and updating the model parameters, repeating over multiple passes through the data. At inference time those parameters are frozen, and a Kalman-style recursion runs bottom-up to infer the hidden-state trajectory for a new recording. Those trajectories become the compact encodings the classifier reads.",
-                "Splitting learning from inference this way is what keeps evaluation honest: the encodings a downstream classifier sees are produced under fixed parameters, not quietly re-fit to each test recording."
+                "The HLDS runs in two clearly separated phases. During training, a dual-Kalman procedure alternates between inferring hidden states and updating model parameters over multiple passes. During inference, those parameters are frozen and a Kalman-style recursion produces the latent trajectory for a new sequence.",
+                "Keeping the phases separate prevents a subtle evaluation leak: the classifier receives encodings produced under fixed parameters rather than a representation quietly re-fit to each held-out sequence."
               ],
               "figure": {
-                "svgFile": "assets/img/projects/diagrams/eeg-hlds-phases.svg",
-                "alt": "Two-phase HLDS: training alternates hidden-state inference and parameter updates over multiple passes to learn parameters; inference freezes those parameters and runs a Kalman recursion to produce hidden-state encodings for a classifier.",
-                "caption": "Figure 2 — Training learns the parameters with a dual-Kalman loop; inference freezes them and runs a Kalman recursion to turn a new recording into hidden-state encodings for the classifier."
+                "svgFile": "assets/img/projects/diagrams/latent-hlds-phases.svg",
+                "alt": "Two-phase hierarchical dynamical system: training learns parameters with a dual-Kalman loop, then inference freezes them and produces latent trajectories for a classifier.",
+                "caption": "Figure 2 — Training learns the dynamical parameters; inference freezes them and turns a new sequence into a latent trajectory for classification."
               }
             },
             {
               "heading": "The pipeline around the model",
               "body": [
-                "Each experiment is a fixed sequence of stages, so a result from one subject or session can be compared fairly against another:"
+                "Each experiment is a fixed sequence of stages so representation quality and classifier performance can be compared fairly:"
               ],
               "breakdown": [
-                { "label": "Preprocessing", "text": "Clean, standardize, and align raw recordings into consistent time windows the model can consume." },
-                { "label": "Training", "text": "Fit the HLDS parameters with the dual-Kalman procedure over multiple passes." },
-                { "label": "Post-processing", "text": "Turn inferred states into the encodings and summaries used downstream." },
-                { "label": "Classification", "text": "Evaluate how well those encodings predict and separate the conditions of interest." },
-                { "label": "Analysis (EDA)", "text": "Stability checks, diagnostics, and plots so a run can be audited, not just scored." }
+                {
+                  "label": "Preprocessing",
+                  "text": "Clean, standardize, and align observed signals into consistent time windows."
+                },
+                {
+                  "label": "Training",
+                  "text": "Fit HLDS transition and emission parameters with the dual-Kalman procedure."
+                },
+                {
+                  "label": "Latent inference",
+                  "text": "Run the fixed model on held-out sequences to produce compact trajectories."
+                },
+                {
+                  "label": "Classification",
+                  "text": "Evaluate whether the latent trajectories predict and separate the labeled classes."
+                },
+                {
+                  "label": "Diagnostics",
+                  "text": "Check stability, reconstruction behavior, class separability, and run-to-run consistency."
+                }
               ]
             },
             {
-              "heading": "One model, several experiment tracks",
+              "heading": "Classification on latent trajectories",
               "body": [
-                "The same core model is run across a few parallel tracks so results can be cross-checked rather than resting on a single configuration:"
-              ],
-              "bullets": [
-                "**Single-channel** — isolate what one channel can carry before scaling up.",
-                "**Multi-channel EEG** — the full scalp montage as a joint signal.",
-                "**Multi-modal** — EEG together with pupillometry, so a second physiological stream can corroborate the brain-state estimate."
+                "The classifier is intentionally downstream of the dynamical model. That makes it possible to ask two separate questions: did the HLDS learn a stable, useful representation, and do those representations contain information that separates the classes? Evaluation artifacts keep those questions visible instead of collapsing everything into one score."
               ]
             },
             {
-              "heading": "What the system is for",
+              "heading": "Where it stands",
               "body": [
-                "The goal of the system is classification: turning the HLDS-derived hidden-state encodings into predictions of the condition or brain state, judged by how well those encodings separate the classes of interest. This is active research inside a collaboration, so the page stays at the level of the model and the pipeline — the HLDS and the classification goal it feeds — rather than reporting numbers."
+                "The reproducible pipeline, HLDS training/inference phases, classifier evaluation, diagnostics, and standardized run artifacts are in place. The next iteration is continued comparison across evaluation splits and model settings, with attention to latent-state stability and out-of-sample separability.",
+                "The public claim is intentionally bounded: this is a general latent-signal classification framework. The source data and application context are not part of the public project description."
               ]
             }
           ],
           "faq": [
             {
-              "q": "What makes it 'hierarchical'?",
-              "a": "The state-space structure is layered so that higher-level hidden variables summarize the behavior of lower-level ones, which is what lets a small number of states stand in for many EEG channels."
+              "q": "What does latent signal mean here?",
+              "a": "It means a lower-dimensional trajectory inferred from observed time-series measurements. The trajectory is not measured directly; the dynamical model estimates it from the observations and their temporal structure."
             },
             {
-              "q": "Why not just use a deep neural network?",
-              "a": "With limited, noisy data and a need to explain what the model is tracking, a linear dynamical system wins on interpretability and data efficiency — you can inspect the states and check that the learned dynamics are stable, which a black box does not give you."
+              "q": "Why use a hierarchical dynamical system?",
+              "a": "The hierarchy lets higher-level states summarize lower-level dynamics, while the state-space formulation makes transitions, emissions, and inference steps inspectable."
             },
             {
-              "q": "What is LB3?",
-              "a": "An internal codename tied to this collaboration. I keep the specifics deliberately vague on the public site."
+              "q": "How does classification enter the pipeline?",
+              "a": "The HLDS produces a latent trajectory for each held-out sequence. A downstream classifier then tests whether those trajectories contain information that separates the labeled classes."
             },
             {
-              "q": "Can this read emotions?",
-              "a": "It tracks brain-state structure that correlates with labeled conditions. Calling that 'emotion detection' would be overclaiming what the signal supports."
+              "q": "Does this page report a benchmark result?",
+              "a": "No. It describes the model and evaluation framework without publishing application-specific data, results, or claims that would identify the underlying study."
             }
           ]
         },
         "glossary": [
           {
-            "term": "EEG",
-            "definition": "Electroencephalography: non-invasive measurement of brain electrical activity from the scalp."
+            "term": "HLDS",
+            "definition": "Hierarchical Linear Dynamical System: a state-space model that represents observations with layered hidden variables evolving over time."
           },
           {
-            "term": "HLDS",
-            "definition": "Hierarchical Linear Dynamical System: a state-space model that represents a signal using a small set of hidden variables that change over time."
+            "term": "Latent trajectory",
+            "definition": "A time-evolving sequence of hidden variables inferred from observed signals."
           },
           {
             "term": "State-space model",
-            "definition": "A model that explains observations using hidden variables (‘state’) plus rules for how those variables evolve over time."
+            "definition": "A model that explains observations using hidden variables plus rules for how those variables evolve over time."
           },
           {
-            "term": "LB3",
-            "definition": "An internal project codename tied to this collaboration; kept deliberately vague on the public site."
+            "term": "Separability",
+            "definition": "How distinctly a representation supports distinguishing the labeled classes in an evaluation set."
           }
         ]
       }
