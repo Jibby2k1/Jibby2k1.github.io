@@ -1,6 +1,176 @@
 {
   "items": [
     {
+      "slug": "kernel-adaptive-memory",
+      "title": "Kernel Adaptive Memory: a transformer alternative for sequence modeling",
+      "subtitle": "Research prototype that replaces dot-product attention with radial kernel context attention, learned persistent supports, and an optional online adaptive readout.",
+      "img": "assets/img/projects/diagrams/kam-architecture.svg",
+      "imgAlt": "Diagram of Kernel Adaptive Memory: a sequence feeds radial context attention and learned persistent supports before a residual readout and optional online NLMS adaptation.",
+      "tags": [
+        "sequence-modeling",
+        "kernel-methods",
+        "adaptive-memory"
+      ],
+      "pills": [
+        "Radial kernel attention",
+        "Persistent memory supports",
+        "Transformer comparison",
+        "Online NLMS adaptation"
+      ],
+      "meta": "Research · sequence modeling · adaptive memory",
+      "desc": "A proposal for a transformer alternative: use a learned radial geometry for local context, a finite bank of persistent supports for reusable structure, and a lightweight online readout for adaptation after distribution shift.",
+      "featured": true,
+      "links": [],
+      "details": {
+        "overview": "Kernel Adaptive Memory (KAM) is a compact reference implementation for testing whether kernel geometry and persistent supports can provide a useful alternative to standard dot-product attention. The project is deliberately framed as a falsifiable research program: it defines matched baselines, diagnostic outputs, and failure conditions instead of claiming a benchmark win before the grid is run.",
+        "what_i_built": [
+          "A PyTorch sequence model with radial context attention, learned persistent support keys and values, residual feed-forward blocks, and language/regression readouts.",
+          "Matched ablations: context-only kernel self-attention, memory-only, the full KAM hybrid, dot-product transformer attention, and a dot-product hybrid.",
+          "Four experiment families: exact copy retrieval, hidden-regime grammar, Mackey–Glass delayed dynamics, and character-level language modeling.",
+          "Benchmark and diagnostic tooling for parameter count, wall-clock timing, throughput, peak memory, attention maps, support utilization, and support-regime purity."
+        ],
+        "how_it_works": [
+          "Represent queries and keys in a normalized feature geometry and score them with a positive diagonal radial metric rather than a dot product.",
+          "Let each token retrieve from its causal context, optionally restricted to a local window, using the same generic attention calculation.",
+          "Let contextual tokens also retrieve from a finite learned bank of persistent support keys and values that can encode reusable prototypes across sequences.",
+          "For a Mackey–Glass parameter shift, freeze the learned feature geometry and adapt only the scalar readout with normalized least-mean-squares (NLMS)."
+        ],
+        "stack": [
+          "Python",
+          "PyTorch",
+          "NumPy",
+          "Matplotlib",
+          "pytest"
+        ],
+        "status": "Research prototype / hypothesis-testing phase.",
+        "writeup": {
+          "lead": "What if a sequence model could keep the useful parts of attention while giving memory a more explicit geometry and a path to fast online adaptation?",
+          "sections": [
+            {
+              "heading": "The question: can memory be more structured than a context window?",
+              "body": [
+                "Transformers are remarkably general, but their default memory is a sequence of pairwise dot-product comparisons. KAM asks whether a model can separate two jobs that are often mixed together: retrieving relevant recent context, and recalling reusable structure that should persist across examples.",
+                "The project is not presented as a finished replacement for transformers. It is a small, controlled testbed for a more specific hypothesis: a kernel-defined geometry plus a fixed bank of learned supports might make sequence representations more interpretable, more diagnostic, or quicker to adapt when the data-generating process changes."
+              ]
+            },
+            {
+              "heading": "One kernel calculation, two kinds of memory",
+              "body": [
+                "KAM uses one generic attention primitive in two roles. In context attention, a token queries earlier tokens from its own sequence. In persistent-memory attention, a contextual token queries a finite bank of learned support keys and values. The architecture can therefore be ablated cleanly: remove the support bank, remove context attention, or replace the radial score with the familiar scaled dot product."
+              ],
+              "breakdown": [
+                {
+                  "label": "Context attention",
+                  "text": "Causal retrieval from the current sequence; an optional local window W tests whether a bounded context is enough."
+                },
+                {
+                  "label": "Persistent supports",
+                  "text": "A learned bank of M key/value pairs that can act as reusable prototypes across sequences."
+                },
+                {
+                  "label": "Readout",
+                  "text": "A standard prediction head, with an optional NLMS update applied only to the final scalar readout during shift evaluation."
+                }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/kam-architecture.svg",
+                "alt": "Kernel Adaptive Memory architecture: tokens flow through radial context attention and a learned persistent support bank into a residual readout, with an optional online NLMS update.",
+                "caption": "Figure 1 — KAM separates local context retrieval from persistent support retrieval, then keeps online adaptation confined to the readout."
+              }
+            },
+            {
+              "heading": "What is different from a standard transformer?",
+              "body": [
+                "The attention score is a radial energy under a learned positive diagonal metric. That changes the inductive bias — similarity is expressed as distance in a learned feature geometry — while keeping the implementation close enough to a transformer that matched comparisons are meaningful.",
+                "This is not a claim of free asymptotic scaling. Full context still has quadratic sequence cost. The proposal instead exposes two knobs: a local context window W and a persistent support count M, with leading-order attention work of O(TWd) and O(TMd) for those two paths. The benchmark records measured latency and memory because the radial score adds norm and elementwise work that asymptotic notation does not capture."
+              ]
+            },
+            {
+              "heading": "A benchmark grid designed to falsify the idea",
+              "body": [
+                "Each task isolates a different reason a structured memory mechanism might help. Every KAM variant is trained with the same width, depth, optimizer, token budget, and evaluation budget as its comparison models; the goal is to report parameter count and measured wall-clock cost alongside accuracy."
+              ],
+              "breakdown": [
+                {
+                  "label": "Copy language",
+                  "text": "Tests exact contextual retrieval and length generalization; success means matched accuracy with useful, sparse lag maps."
+                },
+                {
+                  "label": "Hidden-regime grammar",
+                  "text": "Tests whether persistent supports discover and reuse one of several unobserved transition rules; support purity is measured against the hidden regime."
+                },
+                {
+                  "label": "Mackey–Glass",
+                  "text": "Tests delayed dynamics and adaptation after a change in the delay parameter, against GRU, MLP, and budgeted KLMS baselines."
+                },
+                {
+                  "label": "Character language",
+                  "text": "Tests whether the proposal remains competitive on realistic text at matched timing; a slowdown without an accuracy or interpretability gain is a failure."
+                }
+              ]
+            },
+            {
+              "heading": "Online adaptation after a distribution shift",
+              "body": [
+                "The most distinctive systems question is what happens after the stream changes. In the Mackey–Glass experiment, KAM first learns a feature geometry and readout on one delay regime. During shift evaluation, the feature extractor is frozen and only the scalar readout receives a normalized-LMS update. Frozen-versus-adapted error traces, early and late MSE, and integrated error ratio make the adaptation claim measurable rather than anecdotal."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "The minimal reference implementation, task generators, ablation factory, benchmark harness, and diagnostics are in place. The next research step is the matched multi-seed grid: copy, hidden regimes, Mackey–Glass, and character text, with deletion/perturbation tests to check whether high-weight tokens and supports causally matter.",
+                "The public claim is intentionally bounded: KAM is a proposed transformer alternative and an experimental framework, not a reported state-of-the-art result. Support birth/death, moving-geometry coefficient transport, compactly supported kernels, low-rank full metrics, and PDE loaders remain follow-on work."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Is KAM a transformer?",
+              "a": "It is transformer-like in its residual sequence-modeling structure, but it replaces standard dot-product attention with radial kernel scores and adds a persistent support-memory path. The page uses “alternative” to describe the research direction, not a claim that it has already displaced transformers."
+            },
+            {
+              "q": "What is the kernel doing?",
+              "a": "The kernel defines a learned radial geometry for comparing query and key representations. A positive diagonal metric lets each feature dimension contribute a learned amount to the distance."
+            },
+            {
+              "q": "Does KAM beat a transformer yet?",
+              "a": "Not claimed. The repository defines the comparisons and success/failure criteria; benchmark results should be reported only after the matched multi-seed grid is run."
+            },
+            {
+              "q": "What are persistent supports?",
+              "a": "A finite learned bank of key/value vectors that every sequence can query. They are intended to represent reusable global structure rather than another copy of the current context window."
+            },
+            {
+              "q": "What does online NLMS adaptation change?",
+              "a": "Only the final scalar readout is updated during the shift experiment. The KAM feature extractor stays frozen, making recovery speed and error reduction easy to measure."
+            }
+          ]
+        },
+        "glossary": [
+          {
+            "term": "KAM",
+            "definition": "Kernel Adaptive Memory: the proposed sequence architecture combining radial context attention, persistent supports, and an optional adaptive readout."
+          },
+          {
+            "term": "Persistent support",
+            "definition": "A learned key/value vector in a finite memory bank that can be queried by tokens from any sequence."
+          },
+          {
+            "term": "Radial kernel score",
+            "definition": "A similarity score derived from a learned distance in feature space rather than a dot product."
+          },
+          {
+            "term": "NLMS",
+            "definition": "Normalized least-mean-squares: an online update for a linear readout that scales its step by feature energy."
+          },
+          {
+            "term": "Mackey–Glass",
+            "definition": "A delayed nonlinear dynamical system used here to test sequence prediction and recovery after a parameter shift."
+          }
+        ]
+      }
+    },
+    {
       "slug": "eeg-sentiment-state-space",
       "title": "EEG-based sentiment & brain-state tracking (CNEL × Sony × LB3 dataset)",
       "subtitle": "End-to-end pipeline that cleans raw EEG and learns a compact, time-evolving ‘hidden state’ summary that can be evaluated against labels and behavioral outcomes.",
