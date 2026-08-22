@@ -43,6 +43,15 @@ jobs:
         run: |
           git diff --stat
           git diff --exit-code
+          # `git diff` ignores untracked files: a generated page whose source
+          # was committed but whose output was never `git add`ed would pass the
+          # diff gate (and the link check, which sees the freshly built file)
+          # yet 404 in production, where Pages serves only committed files.
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::Build produced files missing from the commit:"
+            git status --porcelain
+            exit 1
+          fi
 
       - name: Asset budgets
         run: node scripts/check-budgets.mjs
