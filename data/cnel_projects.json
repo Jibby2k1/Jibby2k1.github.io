@@ -335,23 +335,24 @@
     },
     {
       "slug": "zebrafish-voltage-imaging-detection",
-      "title": "Zebrafish voltage imaging: event detection & interpretation",
-      "subtitle": "Signal-processing pipeline for 2D voltage imaging videos that detects brief neural events and produces interpretable visual summaries.",
+      "title": "Zebrafish neural imaging: event detection & source separation",
+      "subtitle": "Signal-processing research for detecting brief neural events and separating activity from background, artifacts, and measurement noise in zebrafish imaging video.",
       "img": "assets/img/projects/Zebra_snip.webp",
-      "imgAlt": "Frame from a zebrafish voltage imaging video.",
+      "imgAlt": "Frame from a zebrafish neural imaging video.",
       "tags": [
         "research",
         "imaging",
-        "detection"
+        "detection",
+        "source separation"
       ],
       "pills": [
-        "Voltage imaging (video)",
+        "Voltage & calcium imaging",
         "Event detection",
-        "Statistical detectors (CFAR-style)",
-        "Quadratic Gamma Discriminator (QGD)"
+        "Source separation",
+        "Statistical detection"
       ],
-      "meta": "Research · imaging · time-series detection",
-      "desc": "Pipeline for 2D voltage imaging videos that flags ‘events’ (fast, localized changes) using statistical detectors inspired by radar signal processing, producing maps and summaries for downstream analysis.",
+      "meta": "Research · neural imaging · signal separation",
+      "desc": "Research platform for zebrafish neural-imaging video: statistical event detection for voltage recordings and a calcium-imaging experiment program that separates activity from background, artifacts, and noise.",
       "featured": true,
       "links": [
         {
@@ -360,33 +361,48 @@
         }
       ],
       "details": {
-        "overview": "Voltage imaging produces high-frame-rate videos where brightness changes correspond (imperfectly) to changes in neural electrical activity. The practical challenge is separating true events from noise, motion, and background drift. I built and tested detectors that highlight candidate events and produce interpretable outputs for scientists to review.",
+        "overview": "The project began with high-frame-rate voltage-imaging videos and now includes a calcium-imaging source-separation track. Across both modalities, the practical challenge is the same: preserve biologically meaningful activity while distinguishing it from motion, background structure, measurement noise, and other bright but misleading signals.",
         "what_i_built": [
-          "Preprocessing routines for voltage imaging videos (normalization, background handling, and region-wise aggregation).",
-          "Event detectors that score pixels/regions over time and surface candidate events for review.",
-          "Evaluation utilities to compare detector behavior across recordings and parameter settings.",
-          "Exportable visual summaries (event maps and time-series traces) to support interpretation."
+          "Preprocessing and normalization routines for voltage- and calcium-imaging video.",
+          "Statistical event detectors and proposal generators that score pixels and regions over time.",
+          "Source-separation experiments spanning PCA, ICA, nonnegative factorization, spectral denoising, latent dynamics, and morphology-aware spatial features.",
+          "Nested evaluation and human-review tools that separate proposal coverage, candidate ranking, signal preservation, and scientific interpretation."
         ],
         "how_it_works": [
-          "Treat each pixel/region as a time-series.",
-          "Estimate a baseline/noise profile from nearby frames.",
-          "Apply statistical tests to flag frames/regions whose changes are unlikely under the noise model.",
-          "Aggregate detections into event maps and interpretable summaries."
+          "Preserve an immutable activity carrier instead of allowing a denoiser to silently redefine the scientific signal.",
+          "Compute bounded source-separation, spatial, spectral, and dynamical features as auxiliary evidence.",
+          "Generate candidate events, then rank them independently under fixed candidate budgets.",
+          "Audit detection recall together with amplitude, area, timing, morphology, candidate burden, and visual remainders."
         ],
         "stack": [
           "Python",
           "Scientific computing",
           "GPU acceleration where helpful"
         ],
-        "status": "Active research / iterative refinement.",
+        "status": "Active research; source-separation methods are under gated evaluation.",
         "writeup": {
-          "lead": "Voltage imaging gives you video of neural activity — and the hard part is telling a real event apart from noise.",
+          "lead": "Neural imaging gives you video of activity — and the hard part is deciding what belongs to the biology, what belongs to the measurement, and what evidence is safe to trust.",
           "sections": [
             {
               "heading": "The problem: brief events in noisy video",
               "body": [
-                "Voltage imaging records fast changes in brightness that correspond, imperfectly, to electrical activity in neurons. The events you care about are short, localized, and low-contrast, sitting on top of photobleaching, motion, and sensor noise. A naive brightness threshold either drowns in false positives or misses the real thing entirely.",
+                "Voltage and calcium imaging record brightness changes that correspond, imperfectly and on different time scales, to neural activity. The events you care about are localized and low-contrast, sitting on top of photobleaching, motion, persistent anatomy, and sensor noise. A naive brightness threshold either drowns in candidates or misses real activity.",
                 "So the real task is not 'find bright spots' — it is 'decide, per pixel and per frame, whether a change is more surprising than the background should produce.'"
+              ]
+            },
+            {
+              "heading": "Current research: source separation without erasing the signal",
+              "body": [
+                "The newest experiment track asks whether source-separation and denoising methods can improve event discovery in spontaneous calcium-burst recordings without changing the amplitude, footprint, or timing of the activity we ultimately want to interpret.",
+                "The clearest result so far is architectural rather than a single winning model: quiet-field standardization and spatial context have mattered more than model depth. At a budget of 58 candidates per burst, nested single-feature selection recovered **58 of 79** known events, compared with **51 of 79** for the archived carrier. At tighter budgets of 20 and 40, however, the native standardized carrier still performed best.",
+                "That trade-off matters. Several PCA, ICA, factorization, spectral, and state-space methods reduced noise or improved ranking, but none simultaneously passed the full preservation audit. The working design therefore keeps the activity carrier intact, uses separation outputs as bounded auxiliary evidence, and ranks candidates with a separate score.",
+                "[Read the experiment note →](../notes/source-separation-for-zebrafish-calcium-imaging.html)"
+              ],
+              "breakdown": [
+                { "label": "Preserve", "text": "Keep an immutable activity carrier for scientific traces, timing, and downstream interpretation." },
+                { "label": "Separate", "text": "Use spatial, spectral, ICA, factorization, and dynamical channels as bounded auxiliary features." },
+                { "label": "Rank", "text": "Compare candidate ordering at fixed budgets instead of treating a larger candidate list as better precision." },
+                { "label": "Gate", "text": "Advance only when detection improves without unacceptable amplitude, area, timing, morphology, or stability loss." }
               ]
             },
             {
@@ -447,6 +463,10 @@
             {
               "q": "Does this run in real time?",
               "a": "It is offline analysis today, built for careful review and reproducible reports, with GPU acceleration where it helps."
+            },
+            {
+              "q": "Has source separation solved the detection problem?",
+              "a": "Not yet. Some methods reduce noise or improve fixed-budget ranking, but no source-separation lane has passed every preservation and detection gate. The current evidence supports using separation outputs as auxiliary evidence while keeping the original activity carrier intact."
             }
           ]
         },
@@ -462,6 +482,14 @@
           {
             "term": "QGD",
             "definition": "Quadratic Gamma Discriminator: a statistical detector designed to highlight deviations from a learned background/noise model."
+          },
+          {
+            "term": "Source separation",
+            "definition": "A family of methods that decomposes an observed recording into candidate sources such as neural activity, background structure, artifacts, and measurement noise."
+          },
+          {
+            "term": "Fixed-budget recall",
+            "definition": "The fraction of known events recovered when every method is allowed the same number of ranked candidates."
           }
         ]
       }

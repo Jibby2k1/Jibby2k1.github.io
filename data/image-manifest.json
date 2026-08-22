@@ -230,5 +230,17 @@
   "assets/img/projects/diagrams/kam-architecture.svg": {
     "width": 960,
     "height": 430
+  },
+  "assets/img/research/source-separation/denoising-audit-frame212.webp": {
+    "width": 1600,
+    "height": 831
+  },
+  "assets/img/research/source-separation/label-projection-overlay.webp": {
+    "width": 1800,
+    "height": 1050
+  },
+  "assets/img/research/source-separation/ranked-candidate-overlay-burst1.webp": {
+    "width": 1146,
+    "height": 680
   }
 }

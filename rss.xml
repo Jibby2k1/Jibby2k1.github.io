@@ -7,6 +7,13 @@
     <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.</description>
     
     <item>
+      <title>Source separation for zebrafish calcium imaging</title>
+      <link>https://www.raulv.dev/notes/source-separation-for-zebrafish-calcium-imaging.html</link>
+      <guid>https://www.raulv.dev/notes/source-separation-for-zebrafish-calcium-imaging.html</guid>
+      <pubDate>Thu, 30 Jul 2026 00:00:00 GMT</pubDate>
+      <description>What a broad experiment program taught us about separating neural activity from background, artifacts, and measurement noise without erasing the signal.</description>
+    </item>
+    <item>
       <title>Why I care about state-space models for EEG</title>
       <link>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</link>
       <guid>https://www.raulv.dev/notes/why-i-care-about-state-space-models-for-eeg.html</guid>
