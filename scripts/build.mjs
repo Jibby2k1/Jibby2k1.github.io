@@ -37,12 +37,19 @@ const tagLabels = {
 };
 
 const trackMeta = {
+  physics: {
+    slug: 'research-physics.html',
+    label: 'SmartDATA Lab',
+    name: 'Physics & simulation projects',
+    kicker: 'SmartDATA Lab · Smart Diagnostics, Acoustics, and Time-Series Analysis',
+    description: 'Machine-learning surrogates for computational fluid dynamics and physics simulation with the SmartDATA Lab at UF: neural operators, mesh-based networks, and physics-informed training.'
+  },
   cnel: {
     slug: 'research-cnel.html',
     label: 'CNEL',
     name: 'CNEL projects',
     kicker: 'Computational NeuroEngineering Lab',
-    description: 'EEG, voltage imaging, biological time-series modeling, and experiment infrastructure connected to CNEL research at UF.'
+    description: 'Voltage imaging, biological time-series modeling, and experiment infrastructure connected to CNEL research at UF.'
   },
   sps: {
     slug: 'research-sps.html',
@@ -141,7 +148,7 @@ function footer(outputPath) {
   <div class="container footer-row">
     <div class="footer-copy">
       <div class="footer-label">${site.name}</div>
-      <p>Signal processing, neuroengineering, and research systems at the University of Florida.</p>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
       <div class="footer-meta">© <span id="year"></span> ${site.name} · Built for GitHub Pages</div>
     </div>
 
@@ -180,6 +187,11 @@ function personSchema() {
     description: site.longBio,
     email: `mailto:${site.email}`,
     knowsAbout: [
+      'Scientific machine learning',
+      'Computational fluid dynamics (CFD) surrogate modeling',
+      'Physics-informed machine learning',
+      'Neural operators',
+      'Reduced-order modeling',
       'Signal processing',
       'Time-series machine learning',
       'Neuroengineering',
@@ -228,10 +240,15 @@ function pageShell({
   type = 'website',
   pageType = 'WebPage',
   image = `${site.siteUrl}/assets/img/og-card.png`,
-  imageAlt = `${site.name} — machine learning and neuroengineering at the University of Florida`,
+  imageAlt = `${site.name} — machine learning for physical and neural systems at the University of Florida`,
   main,
   schemaExtras = []
 }) {
+  // Social scrapers don't render SVG og:images; substitute the raster card.
+  if (image.endsWith('.svg')) {
+    image = `${site.siteUrl}/assets/img/og-card.png`;
+    imageAlt = `${site.name} — machine learning for physical and neural systems at the University of Florida`;
+  }
   const prefix = prefixFor(outputPath);
   const canonical = canonicalFor(outputPath);
   const graph = [
@@ -332,6 +349,14 @@ function renderMarkdown(markdown) {
     if (line.startsWith('- ')) {
       flushParagraph();
       list.push(inlineMarkdown(line.slice(2)));
+      continue;
+    }
+    const imageMatch = line.match(/^!\[([^\]]*)\]\((\S+)(?:\s+"([^"]+)")?\)$/);
+    if (imageMatch) {
+      flushParagraph();
+      flushList();
+      const [, alt, src, caption] = imageMatch;
+      blocks.push(`<figure class="writeup-figure"><img class="figure-img" src="${escapeHtml(src)}" alt="${escapeHtml(alt)}" loading="lazy" decoding="async" />${caption ? `<figcaption>${inlineMarkdown(caption)}</figcaption>` : ''}</figure>`);
       continue;
     }
     flushList();
@@ -577,7 +602,8 @@ async function writePage(outputPath, content) {
 }
 
 async function main() {
-  const [cnelData, spsData, awardsData, photographyData, writing] = await Promise.all([
+  const [physicsData, cnelData, spsData, awardsData, photographyData, writing] = await Promise.all([
+    loadJson('data/physics_projects.json'),
     loadJson('data/cnel_projects.json'),
     loadJson('data/sps_projects.json'),
     loadJson('data/awards.json'),
@@ -586,6 +612,7 @@ async function main() {
   ]);
 
   const projects = [
+    ...physicsData.items.map((item) => ({ ...item, track: 'physics' })),
     ...cnelData.items.map((item) => ({ ...item, track: 'cnel' })),
     ...spsData.items.map((item) => ({ ...item, track: 'sps' }))
   ];
@@ -609,8 +636,8 @@ async function main() {
 
   await writePage('about.html', pageShell({
     outputPath: 'about.html',
-    title: 'About Raul Valle | UF Ph.D. Student in Signal Processing and Neuroengineering',
-    description: 'Background, education, research approach, and interests of Raul Valle, a University of Florida Ph.D. student in Electrical and Computer Engineering.',
+    title: 'About Raul Valle | Background, Education, and Research Approach',
+    description: 'Background, education, and research approach of Raul Valle: CFD surrogate modeling in the SmartDATA Lab and neuroengineering work at the University of Florida.',
     pageType: 'ProfilePage',
     main: aboutPage(pageCtx)
   }));
@@ -618,7 +645,7 @@ async function main() {
   await writePage('cv.html', pageShell({
     outputPath: 'cv.html',
     title: 'Curriculum Vitae | Raul Valle',
-    description: 'Curriculum vitae for Raul Valle: education, research experience at CNEL and IEEE SPS at UF, publications, talks, recognition, and skills.',
+    description: 'Curriculum vitae for Raul Valle: education, research experience in the SmartDATA Lab, CNEL, and IEEE SPS at UF, publications, talks, recognition, and skills.',
     pageType: 'WebPage',
     main: cvPage(pageCtx)
   }));
@@ -666,15 +693,15 @@ async function main() {
 
   await writePage('index.html', pageShell({
     outputPath: 'index.html',
-    title: 'Raul Valle | UF Ph.D. Student in Signal Processing and Neuroengineering',
-    description: 'Professional research site for Raul Valle, a University of Florida Ph.D. student working on signal processing, neuroengineering, time-series machine learning, and research systems.',
+    title: 'Raul Valle | Machine Learning for Physical and Neural Systems',
+    description: 'Research site for Raul Valle, a UF Ph.D. student building CFD surrogate models in the SmartDATA Lab and machine-learning systems for neural imaging.',
     image: `${site.siteUrl}/assets/img/me/Raul_me.webp`,
     main: `<div class="container">
       <section class="page-hero archive-hero reveal accent-cool">
         <div class="archive-hero-main">
           <div class="kicker">Raul Valle · University of Florida · Gainesville, Florida</div>
-          <h1 class="h1">Machine Learning and Neuroengineering.</h1>
-          <p class="lead">I build signal-processing and machine-learning systems for messy biological data: EEG state-space models, voltage-imaging event detection, and the research software that keeps experiments honest. I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida.</p>
+          <h1 class="h1">Machine Learning for Physical and Neural Systems.</h1>
+          <p class="lead">I build machine-learning systems for hard physical and biological data: surrogate models for computational fluid dynamics in the SmartDATA Lab, event detection and source separation for neural imaging, and the research software that keeps experiments honest. I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida.</p>
           <div class="cta-row">
             <a class="btn primary" href="research.html">Research and publications</a>
             <a class="btn" href="cv.html">CV</a>
@@ -763,7 +790,7 @@ async function main() {
   await writePage('research.html', pageShell({
     outputPath: 'research.html',
     title: 'Raul Valle Research | Projects, Publications, and Public Proof',
-    description: 'Research overview for Raul Valle at the University of Florida, covering CNEL work, IEEE SPS projects, publications, talks, and public research references.',
+    description: 'Research overview for Raul Valle at UF: CFD surrogate modeling in the SmartDATA Lab, CNEL neuroengineering projects, IEEE SPS work, publications, and talks.',
     pageType: 'CollectionPage',
     image: `${site.siteUrl}/assets/img/projects/HLDS_Inf.png`,
     imageAlt: 'Research visual for Raul Valle',
@@ -771,7 +798,7 @@ async function main() {
       <section class="page-hero reveal accent-cool">
         <div class="kicker">Research overview</div>
         <h1 class="h1">Research, publications, and public proof</h1>
-        <p class="lead">My work is organized around lab-focused research in CNEL and engineering, workshop, and prototype work through IEEE SPS at UF. The common thread is signal processing that remains useful when the data is noisy, the hardware is imperfect, and the deployment constraints are real.</p>
+        <p class="lead">My current research builds machine-learning surrogates for physics simulation in the SmartDATA Lab, alongside neuroengineering work in CNEL and engineering, workshop, and prototype work through IEEE SPS at UF. The common thread is modeling that remains useful when the data is noisy, the physics is unforgiving, and the deployment constraints are real.</p>
       </section>
 
       <div class="grid two accent-mint" style="margin-top:18px; gap:14px;">

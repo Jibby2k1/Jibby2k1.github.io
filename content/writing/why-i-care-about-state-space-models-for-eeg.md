@@ -13,7 +13,7 @@ heroImage: assets/img/projects/HLDS_Inf.png
 heroAlt: Diagram representing a state-space modeling pipeline for EEG.
 summary: EEG work gets more informative when temporal structure is part of the model instead of something the pipeline averages away.
 relatedProjects:
-  - latent-signal-dynamical-classification
+  - time-series-ml-experiment-infra
 takeaways:
   - Temporal dependence is part of the signal, not only a nuisance to remove.
   - Latent-state models make debugging and interpretation easier than static feature pipelines.

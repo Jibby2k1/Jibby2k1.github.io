@@ -13,8 +13,8 @@ export function aboutPage({ imgTag }) {
         ${imgTag('assets/img/me/portrait-680.webp', { className: 'portrait', alt: 'Portrait of Raul Valle', eager: true })}
       </div>
       <div class="about-hero-body">
-        <p class="lead">I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida, working across signal processing, time-series machine learning, neuroengineering, and research software. My goal is to build mathematically grounded systems that stay useful when they meet real biological data, real hardware, and real deployment constraints.</p>
-        <p class="lead">The work that matters most to me sits at the intersection of signals and systems, controls, machine learning, and neurotechnology. I care about models that remain interpretable under noise, limited data, and practical hardware limits instead of only looking good in idealized benchmarks.</p>
+        <p class="lead">I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida. My current research in the SmartDATA Lab builds machine-learning surrogate models for computational fluid dynamics — fast learned stand-ins for expensive physics solvers that are audited against the physics they approximate. That work sits on a foundation of signal processing, time-series machine learning, and neuroengineering built in the Computational NeuroEngineering Lab.</p>
+        <p class="lead">The work that matters most to me sits at the intersection of physical modeling, signals and systems, and machine learning. I care about models that remain interpretable under noise, limited data, and real deployment constraints instead of only looking good in idealized benchmarks.</p>
       </div>
     </section>
 
@@ -29,10 +29,11 @@ export function aboutPage({ imgTag }) {
 
       <article class="card reveal">
         <h3>Affiliations and profiles</h3>
-        <p>My current work is connected to UF ECE, the Computational NeuroEngineering Lab, and IEEE Signal Processing Society activities at UF.</p>
+        <p>My current work is connected to UF ECE, the SmartDATA Lab, the Computational NeuroEngineering Lab, and IEEE Signal Processing Society activities at UF.</p>
         <div class="pill-row">
           <a class="pill" href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
           <a class="pill" href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
+          <a class="pill" href="https://smartdata.ece.ufl.edu/" target="_blank" rel="noreferrer">SmartDATA Lab</a>
           <a class="pill" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
           <a class="pill" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
           <a class="pill" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer">X</a>
@@ -52,10 +53,11 @@ export function aboutPage({ imgTag }) {
         <article class="card reveal">
           <h3>Primary topics</h3>
           <div class="pill-row">
+            <span class="pill">CFD surrogate modeling</span>
+            <span class="pill">Scientific ML</span>
             <span class="pill">Signal processing</span>
             <span class="pill">Time-series ML</span>
             <span class="pill">Neuroengineering</span>
-            <span class="pill">Research software</span>
           </div>
         </article>
         <article class="card reveal">
@@ -112,7 +114,7 @@ export function cvPage({ escapeHtml, awards }) {
     <section class="page-hero reveal accent-cool">
       <div class="kicker">Curriculum vitae</div>
       <h1 class="h1">Curriculum vitae</h1>
-      <p class="lead">Ph.D. student in Electrical and Computer Engineering at the University of Florida, working on signal processing, time-series machine learning, neuroengineering, and research software.</p>
+      <p class="lead">Ph.D. student in Electrical and Computer Engineering at the University of Florida, working on machine-learning surrogates for physics simulation, signal processing, time-series machine learning, and neuroengineering.</p>
       <div class="cta-row no-print">
         <button class="btn primary" type="button" data-print>Download as PDF</button>
         <a class="btn" href="contact.html">Contact</a>
@@ -132,6 +134,13 @@ export function cvPage({ escapeHtml, awards }) {
 
     <section class="accent-amber">
       <h2 class="section-title reveal">Research experience</h2>
+      <article class="card reveal">
+        <h3>SmartDATA Lab, University of Florida</h3>
+        <div class="meta">Graduate researcher · Advisor: Dr. Joel B. Harley · Fall 2025–present</div>
+        <ul class="cv-list">
+          <li>Surrogate modeling for computational fluid dynamics: learned stand-ins for expensive CFD solvers spanning neural operators (FNO/DeepONet), mesh-based graph networks, physics-informed training, and reduced-order latent dynamics, evaluated on rollout stability, physical consistency, and generalization.</li>
+        </ul>
+      </article>
       <article class="card reveal">
         <h3>Computational NeuroEngineering Lab (CNEL), University of Florida</h3>
         <div class="meta">Graduate researcher · Gainesville, FL</div>
@@ -178,11 +187,12 @@ export function cvPage({ escapeHtml, awards }) {
         <article class="card reveal">
           <h3>Methods</h3>
           <div class="pill-row">
+            <span class="pill">Surrogate modeling</span>
+            <span class="pill">Physics-informed ML</span>
             <span class="pill">Signal processing</span>
             <span class="pill">State-space modeling</span>
             <span class="pill">Time-series ML</span>
             <span class="pill">Statistical detection</span>
-            <span class="pill">Controls</span>
           </div>
         </article>
         <article class="card reveal">
@@ -207,6 +217,7 @@ export function cvPage({ escapeHtml, awards }) {
           <ul class="cv-list">
             <li>University of Florida</li>
             <li>UF Department of Electrical &amp; Computer Engineering</li>
+            <li>SmartDATA Lab</li>
             <li>Computational NeuroEngineering Lab</li>
             <li>IEEE Signal Processing Society at the University of Florida</li>
           </ul>

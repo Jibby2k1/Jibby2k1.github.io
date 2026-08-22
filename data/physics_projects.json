@@ -1,0 +1,136 @@
+{
+  "items": [
+    {
+      "slug": "cfd-surrogate-modeling",
+      "title": "Learning surrogate models for computational fluid dynamics",
+      "subtitle": "Current Ph.D. research in the SmartDATA Lab with Dr. Joel B. Harley: replacing expensive computational-fluid-dynamics solver runs with fast learned surrogates that are held accountable to the physics they approximate.",
+      "img": "assets/img/projects/diagrams/cfd-surrogates.svg",
+      "imgAlt": "Diagram of CFD surrogate modeling: high-fidelity solver snapshots and physics constraints train neural operators, mesh graph networks, and latent-dynamics models that produce fast predictions audited for stability and physical consistency.",
+      "tags": [
+        "surrogate-modeling",
+        "scientific-ml",
+        "fluid-dynamics"
+      ],
+      "pills": [
+        "Neural operators",
+        "Mesh graph networks",
+        "Physics-informed training",
+        "Latent dynamics"
+      ],
+      "meta": "Research · scientific ML · SmartDATA Lab",
+      "desc": "Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.",
+      "featured": true,
+      "links": [],
+      "details": {
+        "overview": "The project asks a simple question with a demanding answer: when can a learned model stand in for a numerical fluid-dynamics solver? A surrogate that is fast but physically wrong is worse than useless in a design loop, so the program treats evaluation — rollout stability, conservation behavior, and out-of-distribution generalization — as a first-class research object rather than an afterthought.",
+        "status": "Active research since Fall 2025 · results not yet public.",
+        "collaborators": [
+          "SmartDATA Lab, University of Florida — Dr. Joel B. Harley (advisor)"
+        ],
+        "stack": [
+          "Python",
+          "PyTorch",
+          "NumPy",
+          "GPU computing"
+        ],
+        "writeup": {
+          "lead": "High-fidelity CFD is accurate and expensive; design iteration wants answers in milliseconds. This project studies how much of the solver's job a learned model can take over — and how to tell when it should not be trusted.",
+          "sections": [
+            {
+              "heading": "Why surrogates: the cost of asking a solver a question",
+              "body": [
+                "A high-fidelity computational-fluid-dynamics run integrates the governing equations over a fine mesh, and the price is hours of compute per case. That cost is acceptable for a final answer and prohibitive for everything before it: design sweeps, optimization loops, uncertainty quantification, and real-time settings all want thousands of evaluations, not one.",
+                "Surrogate modeling replaces most of those evaluations with a learned approximation trained on solver output. The interesting research questions are not whether a network can fit the training snapshots — it can — but whether the surrogate stays stable when rolled forward in time, respects physics it never explicitly saw, and degrades honestly when asked about conditions outside its training distribution."
+              ]
+            },
+            {
+              "heading": "Four modeling families, one evaluation discipline",
+              "body": [
+                "The program deliberately spans the main families of learned surrogates rather than committing to one architecture early, because each family encodes a different assumption about which structure in the flow is worth preserving."
+              ],
+              "breakdown": [
+                {
+                  "label": "Neural operators",
+                  "text": "FNO- and DeepONet-style models that learn maps between function spaces, so one trained model can answer for new initial and boundary conditions."
+                },
+                {
+                  "label": "Mesh graph networks",
+                  "text": "Message passing over the simulation mesh itself, keeping unstructured geometry and local interactions explicit."
+                },
+                {
+                  "label": "Physics-informed training",
+                  "text": "PDE residuals and conservation terms in the loss, so the governing equations constrain the model where data is sparse."
+                },
+                {
+                  "label": "Latent dynamics",
+                  "text": "Compress the field to a low-dimensional latent state and learn its dynamics — the same state-space discipline as my earlier time-series work."
+                }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/cfd-surrogates.svg",
+                "alt": "CFD surrogate modeling pipeline: expensive solver runs and PDE constraints feed neural operators, mesh graph networks, and latent-dynamics models, which produce fast predictions that are audited for rollout stability and physical consistency.",
+                "caption": "Figure 1 — Expensive solver runs and physics constraints train a family of surrogates; the fast model is then audited for stability and physical consistency, not just pointwise error."
+              }
+            },
+            {
+              "heading": "What counts as success",
+              "body": [
+                "Pointwise error on held-out snapshots is the weakest claim a surrogate can make. The evaluation questions that matter compound over time and under distribution shift:"
+              ],
+              "bullets": [
+                "**Rollout stability** — does autoregressive prediction stay bounded and physical over long horizons, or does error accumulate into blow-up?",
+                "**Physical consistency** — are conserved quantities approximately conserved and boundary conditions respected, even though the model is not a solver?",
+                "**Generalization** — what happens on geometries, boundary conditions, and flow regimes the training set never covered?",
+                "**Honest speed accounting** — speedups only mean something when measured at the accuracy actually required, on matched hardware."
+              ]
+            },
+            {
+              "heading": "The through-line from my earlier work",
+              "body": [
+                "This direction is a change of domain, not of discipline. The neural-imaging work in CNEL was about extracting trustworthy structure from noisy spatiotemporal data; the experiment-infrastructure work was about making model comparisons fair and repeatable; the state-space projects were about latent dynamics with interpretable failure modes. CFD surrogate modeling stresses all three habits at once: fluid fields are spatiotemporal data with known governing structure, surrogate families must be compared under matched budgets, and a latent-dynamics view is itself one of the candidate architectures."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "The work has been under way in the SmartDATA Lab since Fall 2025. Results, code, and write-ups are not yet public; this page will link them as they are released. In the meantime, the CNEL and IEEE SPS project pages are the best public evidence of how I run a research program."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "What is a CFD surrogate model?",
+              "a": "A machine-learning model trained on the outputs of an expensive computational-fluid-dynamics solver so it can approximate new solutions in a fraction of the time. The solver stays the ground truth; the surrogate makes the solver's answers affordable inside design and analysis loops."
+            },
+            {
+              "q": "Why work across four model families instead of picking one?",
+              "a": "Each family bakes in a different assumption: neural operators generalize across conditions, mesh networks respect geometry, physics-informed losses inject the governing equations, and reduced-order models make the latent dynamics explicit. Comparing them under one evaluation discipline is the point of the program."
+            },
+            {
+              "q": "Is any of this work public yet?",
+              "a": "Not yet. The work started in Fall 2025, and results and code will be linked from this page when they are released."
+            }
+          ]
+        },
+        "glossary": [
+          {
+            "term": "Computational fluid dynamics (CFD)",
+            "definition": "Numerical simulation of fluid flow by solving the governing equations (such as Navier–Stokes) over a discretized domain."
+          },
+          {
+            "term": "Surrogate model",
+            "definition": "A fast learned approximation of an expensive simulation, trained on the simulation's inputs and outputs."
+          },
+          {
+            "term": "Neural operator",
+            "definition": "A model that learns a mapping between function spaces rather than between fixed-size vectors, so it can transfer across resolutions and conditions."
+          },
+          {
+            "term": "Rollout",
+            "definition": "Feeding a model's own predictions back as inputs for the next step; the standard stress test for learned dynamics."
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Raul Valle - Official Website
 
-> Personal academic and research website for Raul Valle (University of Florida Ph.D. student in Electrical and Computer Engineering), focused on signal processing, time-series machine learning, neuroengineering, and research software.
+> Personal academic and research website for Raul Valle (University of Florida Ph.D. student in Electrical and Computer Engineering), focused on machine learning for physical and neural systems: surrogate models for computational fluid dynamics (SmartDATA Lab), signal processing, time-series machine learning, neuroengineering, and research software.
 
 Use this file as the primary entry point for LLM-assisted browsing of this site. Prefer canonical URLs on `https://www.raulv.dev/` and rely on page-specific metadata and structured data in each page when available.
 
@@ -14,6 +14,7 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 
 ## Research Detail Pages
 
+- [SmartDATA Lab — Physics & simulation](https://www.raulv.dev/research-physics.html): Current research on machine-learning surrogates for computational fluid dynamics.
 - [Computational NeuroEngineering Lab](https://www.raulv.dev/research-cnel.html): Work related to neuroengineering and lab activity.
 - [IEEE SPS at UF](https://www.raulv.dev/research-sps.html): Signal processing society and chapter-related technical work.
 

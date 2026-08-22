@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Learning surrogate models for computational fluid dynamics | Raul Valle Research Project</title>
+  <meta name="description" content="Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#161210" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Learning surrogate models for computational fluid dynamics | Raul Valle Research Project" />
+  <meta property="og:description" content="Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization." />
+  <meta property="og:url" content="https://www.raulv.dev/projects/cfd-surrogate-modeling.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta property="og:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Learning surrogate models for computational fluid dynamics | Raul Valle Research Project" />
+  <meta name="twitter:description" content="Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta name="twitter:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <link rel="canonical" href="https://www.raulv.dev/projects/cfd-surrogate-modeling.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html#webpage","url":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html","name":"Learning surrogate models for computational fluid dynamics | Raul Valle Research Project","description":"Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"CreativeWork","@id":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html#project","url":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html","name":"Learning surrogate models for computational fluid dynamics","headline":"Learning surrogate models for computational fluid dynamics","description":"Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.","image":"https://www.raulv.dev/assets/img/projects/diagrams/cfd-surrogates.svg","creator":{"@id":"https://www.raulv.dev/#person"},"keywords":["surrogate-modeling","scientific-ml","fluid-dynamics","Neural operators","Mesh graph networks","Physics-informed training","Latent dynamics"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://www.raulv.dev/research.html"},{"@type":"ListItem","position":3,"name":"Physics & simulation projects","item":"https://www.raulv.dev/research-physics.html"},{"@type":"ListItem","position":4,"name":"Learning surrogate models for computational fluid dynamics","item":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html"}]},{"@type":"FAQPage","@id":"https://www.raulv.dev/projects/cfd-surrogate-modeling.html#faq","mainEntity":[{"@type":"Question","name":"What is a CFD surrogate model?","acceptedAnswer":{"@type":"Answer","text":"A machine-learning model trained on the outputs of an expensive computational-fluid-dynamics solver so it can approximate new solutions in a fraction of the time. The solver stays the ground truth; the surrogate makes the solver's answers affordable inside design and analysis loops."}},{"@type":"Question","name":"Why work across four model families instead of picking one?","acceptedAnswer":{"@type":"Answer","text":"Each family bakes in a different assumption: neural operators generalize across conditions, mesh networks respect geometry, physics-informed losses inject the governing equations, and reduced-order models make the latent dynamics explicit. Comparing them under one evaluation discipline is the point of the program."}},{"@type":"Question","name":"Is any of this work public yet?","acceptedAnswer":{"@type":"Answer","text":"Not yet. The work started in Fall 2025, and results and code will be linked from this page when they are released."}}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+        <span class="brand-eyebrow">Machine learning for physical and neural systems.</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal hero-split accent-cool">
+          <div>
+            <div class="kicker">SmartDATA Lab</div>
+            <h1 class="h1">Learning surrogate models for computational fluid dynamics</h1>
+            <p class="lead">Current Ph.D. research in the SmartDATA Lab with Dr. Joel B. Harley: replacing expensive computational-fluid-dynamics solver runs with fast learned surrogates that are held accountable to the physics they approximate.</p>
+            <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../research-physics.html">Physics & simulation projects</a> / <span>Learning surrogate models for computational fluid dynamics</span></div>
+            <div class="cta-row">
+              <a class="btn" href="../research-physics.html">Back to Physics & simulation projects</a>
+            </div>
+          </div>
+          <img class="card-img compact project-hero-img" src="../assets/img/projects/diagrams/cfd-surrogates.svg" alt="Diagram of CFD surrogate modeling: high-fidelity solver snapshots and physics constraints train neural operators, mesh graph networks, and latent-dynamics models that produce fast predictions audited for stability and physical consistency." width="960" height="430" decoding="async" />
+        </section>
+
+        <section class="project-detail reveal accent-mint">
+          <div class="project-main">
+            <article class="card reveal">
+              <h2 class="project-section-title">Overview</h2>
+              <p>Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.</p>
+              <p>The project asks a simple question with a demanding answer: when can a learned model stand in for a numerical fluid-dynamics solver? A surrogate that is fast but physically wrong is worse than useless in a design loop, so the program treats evaluation — rollout stability, conservation behavior, and out-of-distribution generalization — as a first-class research object rather than an afterthought.</p>
+            </article>
+            <article class="card reveal prose-card writeup"><p class="writeup-lead">High-fidelity CFD is accurate and expensive; design iteration wants answers in milliseconds. This project studies how much of the solver's job a learned model can take over — and how to tell when it should not be trusted.</p><h2 class="project-section-title">Why surrogates: the cost of asking a solver a question</h2><p>A high-fidelity computational-fluid-dynamics run integrates the governing equations over a fine mesh, and the price is hours of compute per case. That cost is acceptable for a final answer and prohibitive for everything before it: design sweeps, optimization loops, uncertainty quantification, and real-time settings all want thousands of evaluations, not one.</p><p>Surrogate modeling replaces most of those evaluations with a learned approximation trained on solver output. The interesting research questions are not whether a network can fit the training snapshots — it can — but whether the surrogate stays stable when rolled forward in time, respects physics it never explicitly saw, and degrades honestly when asked about conditions outside its training distribution.</p>
+<h2 class="project-section-title">Four modeling families, one evaluation discipline</h2><p>The program deliberately spans the main families of learned surrogates rather than committing to one architecture early, because each family encodes a different assumption about which structure in the flow is worth preserving.</p><dl class="breakdown"><div class="breakdown-row"><dt>Neural operators</dt><dd>FNO- and DeepONet-style models that learn maps between function spaces, so one trained model can answer for new initial and boundary conditions.</dd></div><div class="breakdown-row"><dt>Mesh graph networks</dt><dd>Message passing over the simulation mesh itself, keeping unstructured geometry and local interactions explicit.</dd></div><div class="breakdown-row"><dt>Physics-informed training</dt><dd>PDE residuals and conservation terms in the loss, so the governing equations constrain the model where data is sparse.</dd></div><div class="breakdown-row"><dt>Latent dynamics</dt><dd>Compress the field to a low-dimensional latent state and learn its dynamics — the same state-space discipline as my earlier time-series work.</dd></div></dl><figure class="writeup-figure"><div class="figure-svg" role="img" aria-label="CFD surrogate modeling pipeline: expensive solver runs and PDE constraints feed neural operators, mesh graph networks, and latent-dynamics models, which produce fast predictions that are audited for rollout stability and physical consistency."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title desc">
+  <title id="title">CFD surrogate modeling pipeline</title>
+  <desc id="desc">High-fidelity CFD solver runs and PDE constraints train three surrogate families — neural operators, mesh graph networks, and latent dynamics — which produce fast predictions that are audited for rollout stability and physical consistency.</desc>
+  <!-- Colors are baked (light plate) instead of currentColor so the diagram stays
+       legible when referenced as a card <img>, where CSS variables cannot reach. -->
+  <style>
+    .box { fill: rgba(255,255,255,.55); stroke: #2c241d; stroke-width: 1.5; }
+    .accent { fill: rgba(138,90,43,.12); stroke: #8a5a2b; stroke-width: 2; }
+    .line { fill: none; stroke: #4a4238; stroke-width: 2; marker-end: url(#arrow-cfd); opacity: .8; }
+    .label { font-family: ui-monospace, "IBM Plex Mono", Consolas, monospace; font-size: 15px; fill: #2c241d; }
+    .small { font-family: ui-monospace, "IBM Plex Mono", Consolas, monospace; font-size: 12px; fill: #6b6156; }
+    .title { font-family: ui-monospace, "IBM Plex Mono", Consolas, monospace; font-size: 16px; font-weight: 700; fill: #2c241d; }
+  </style>
+  <defs>
+    <marker id="arrow-cfd" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0,0 L9,4.5 L0,9 Z" fill="#4a4238"/>
+    </marker>
+  </defs>
+  <rect x="1" y="1" width="958" height="428" rx="14" fill="#fbf7ef" stroke="#d8cfc0"/>
+  <text class="title" x="30" y="36">CFD surrogate modeling</text>
+  <text class="small" x="30" y="57">learn from expensive solver runs · predict fast · audit against the physics</text>
+  <rect class="box" x="30" y="140" width="170" height="92" rx="12"/>
+  <text class="label" x="115" y="172" text-anchor="middle">high-fidelity CFD</text>
+  <text class="small" x="115" y="195" text-anchor="middle">PDE solver runs</text>
+  <text class="small" x="115" y="213" text-anchor="middle">hours per case</text>
+  <rect class="box" x="30" y="300" width="170" height="88" rx="12"/>
+  <text class="label" x="115" y="330" text-anchor="middle">PDE constraints</text>
+  <text class="small" x="115" y="352" text-anchor="middle">residual losses</text>
+  <text class="small" x="115" y="370" text-anchor="middle">conservation terms</text>
+  <rect class="accent" x="260" y="95" width="220" height="70" rx="12"/>
+  <text class="label" x="370" y="124" text-anchor="middle">neural operators</text>
+  <text class="small" x="370" y="145" text-anchor="middle">FNO · DeepONet</text>
+  <rect class="accent" x="260" y="180" width="220" height="70" rx="12"/>
+  <text class="label" x="370" y="209" text-anchor="middle">mesh graph networks</text>
+  <text class="small" x="370" y="230" text-anchor="middle">unstructured geometry</text>
+  <rect class="accent" x="260" y="265" width="220" height="70" rx="12"/>
+  <text class="label" x="370" y="294" text-anchor="middle">latent dynamics</text>
+  <text class="small" x="370" y="315" text-anchor="middle">reduced-order states</text>
+  <rect class="box" x="550" y="175" width="170" height="82" rx="12"/>
+  <text class="label" x="635" y="207" text-anchor="middle">fast surrogate</text>
+  <text class="small" x="635" y="230" text-anchor="middle">milliseconds per case</text>
+  <rect class="box" x="780" y="170" width="155" height="92" rx="12"/>
+  <text class="label" x="857" y="202" text-anchor="middle">evaluation</text>
+  <text class="small" x="857" y="225" text-anchor="middle">rollout stability</text>
+  <text class="small" x="857" y="243" text-anchor="middle">physics audits</text>
+  <path class="line" d="M200 186 C228 186 228 130 260 130"/>
+  <path class="line" d="M200 186 C228 186 228 215 260 215"/>
+  <path class="line" d="M200 186 C228 186 228 300 260 300"/>
+  <path class="line" d="M200 344 C228 344 228 318 260 318"/>
+  <path class="line" d="M480 130 C515 130 515 205 550 205"/>
+  <path class="line" d="M480 215 H550"/>
+  <path class="line" d="M480 300 C515 300 515 228 550 228"/>
+  <path class="line" d="M720 216 H780"/>
+  <text class="small" x="30" y="412">Active research in the SmartDATA Lab at UF since Fall 2025: where can a learned surrogate be trusted, and where does it break?</text>
+</svg></div><figcaption>Figure 1 — Expensive solver runs and physics constraints train a family of surrogates; the fast model is then audited for stability and physical consistency, not just pointwise error.</figcaption></figure>
+<h2 class="project-section-title">What counts as success</h2><p>Pointwise error on held-out snapshots is the weakest claim a surrogate can make. The evaluation questions that matter compound over time and under distribution shift:</p><ul class="writeup-list"><li><strong>Rollout stability</strong> — does autoregressive prediction stay bounded and physical over long horizons, or does error accumulate into blow-up?</li><li><strong>Physical consistency</strong> — are conserved quantities approximately conserved and boundary conditions respected, even though the model is not a solver?</li><li><strong>Generalization</strong> — what happens on geometries, boundary conditions, and flow regimes the training set never covered?</li><li><strong>Honest speed accounting</strong> — speedups only mean something when measured at the accuracy actually required, on matched hardware.</li></ul>
+<h2 class="project-section-title">The through-line from my earlier work</h2><p>This direction is a change of domain, not of discipline. The neural-imaging work in CNEL was about extracting trustworthy structure from noisy spatiotemporal data; the experiment-infrastructure work was about making model comparisons fair and repeatable; the state-space projects were about latent dynamics with interpretable failure modes. CFD surrogate modeling stresses all three habits at once: fluid fields are spatiotemporal data with known governing structure, surrogate families must be compared under matched budgets, and a latent-dynamics view is itself one of the candidate architectures.</p>
+<h2 class="project-section-title">Where it stands</h2><p>The work has been under way in the SmartDATA Lab since Fall 2025. Results, code, and write-ups are not yet public; this page will link them as they are released. In the meantime, the CNEL and IEEE SPS project pages are the best public evidence of how I run a research program.</p></article>
+<article class="card reveal"><h2 class="project-section-title">FAQ</h2><div class="faq"><details class="faq-item"><summary>What is a CFD surrogate model?</summary><div class="faq-body"><p>A machine-learning model trained on the outputs of an expensive computational-fluid-dynamics solver so it can approximate new solutions in a fraction of the time. The solver stays the ground truth; the surrogate makes the solver's answers affordable inside design and analysis loops.</p></div></details><details class="faq-item"><summary>Why work across four model families instead of picking one?</summary><div class="faq-body"><p>Each family bakes in a different assumption: neural operators generalize across conditions, mesh networks respect geometry, physics-informed losses inject the governing equations, and reduced-order models make the latent dynamics explicit. Comparing them under one evaluation discipline is the point of the program.</p></div></details><details class="faq-item"><summary>Is any of this work public yet?</summary><div class="faq-body"><p>Not yet. The work started in Fall 2025, and results and code will be linked from this page when they are released.</p></div></details></div></article>
+            
+            
+            
+            
+            
+            
+          </div>
+          <div class="project-side">
+            <article class="card reveal">
+              <h2 class="project-section-title">Snapshot</h2>
+              <div class="kv">
+                <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Research · scientific ML · SmartDATA Lab</div></div>
+                <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Active research since Fall 2025 · results not yet public.</div></div>
+                <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Neural operators</span><span class="pill">Mesh graph networks</span><span class="pill">Physics-informed training</span><span class="pill">Latent dynamics</span></div></div>
+              </div>
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Python</li><li>PyTorch</li><li>NumPy</li><li>GPU computing</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Collaborators</h2><ul><li>SmartDATA Lab, University of Florida — Dr. Joel B. Harley (advisor)</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>Computational fluid dynamics (CFD)</dt><dd>Numerical simulation of fluid flow by solving the governing equations (such as Navier–Stokes) over a discretized domain.</dd><dt>Surrogate model</dt><dd>A fast learned approximation of an expensive simulation, trained on the simulation's inputs and outputs.</dd><dt>Neural operator</dt><dd>A model that learns a mapping between function spaces rather than between fixed-size vectors, so it can transfer across resolutions and conditions.</dd><dt>Rollout</dt><dd>Feeding a model's own predictions back as inputs for the next step; the standard stress test for learned dynamics.</dd></dl></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

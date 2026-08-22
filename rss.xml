@@ -4,7 +4,7 @@
     <title>Raul Valle Writing</title>
     <link>https://www.raulv.dev/blog.html</link>
     <atom:link href="https://www.raulv.dev/rss.xml" rel="self" type="application/rss+xml" />
-    <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.</description>
+    <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering building machine learning for physical and neural systems: surrogate models for computational fluid dynamics, neural-imaging analysis, and research software.</description>
     
     <item>
       <title>Source separation for zebrafish calcium imaging</title>

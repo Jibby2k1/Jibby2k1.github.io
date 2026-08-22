@@ -1,9 +1,9 @@
 {
   "name": "Raul Valle",
   "siteUrl": "https://www.raulv.dev",
-  "tagline": "Signal processing, neuroengineering, research systems, and writing.",
-  "shortBio": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering working across signal processing, time-series machine learning, neuroengineering, and research software in Gainesville, Florida.",
-  "longBio": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering in Gainesville, Florida. His work focuses on signal processing, time-series machine learning, neuroengineering, research software, and engineering systems.",
+  "tagline": "Machine learning for physical and neural systems.",
+  "shortBio": "Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering building machine learning for physical and neural systems: surrogate models for computational fluid dynamics, neural-imaging analysis, and research software.",
+  "longBio": "Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.",
   "jobTitle": "Ph.D. Student in Electrical and Computer Engineering",
   "location": "Gainesville, Florida, USA",
   "email": "raulresearch@proton.me",
@@ -26,6 +26,11 @@
       "type": "CollegeOrUniversity",
       "name": "University of Florida Department of Electrical & Computer Engineering",
       "url": "https://www.ece.ufl.edu/"
+    },
+    {
+      "type": "ResearchOrganization",
+      "name": "SmartDATA Lab, University of Florida",
+      "url": "https://smartdata.ece.ufl.edu/"
     },
     {
       "type": "ResearchOrganization",
