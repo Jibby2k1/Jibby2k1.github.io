@@ -1192,8 +1192,16 @@ a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-colo
   }
 
   /* Figure diagrams in write-ups are in normal flow rather than a well,
-     but the same 0.41x problem applies. */
-  .writeup-figure .figure-svg{ overflow-x:auto; overscroll-behavior-x:contain; }
+     but the same 0.41x problem applies -- and this is the context where a
+     clipped diagram is most likely to read as simply cut off, so it gets the
+     same fade affordance. */
+  .writeup-figure .figure-svg{
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+  }
   .writeup-figure .figure-svg svg{ width:var(--diagram-w); max-width:none; }
 }
 
