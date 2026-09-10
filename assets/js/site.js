@@ -280,7 +280,36 @@
     });
   }
 
+  // A diagram well that has become a horizontal scroller must be reachable by
+  // keyboard, or its right-hand side is unreachable without a mouse or a
+  // finger. Applied from the actual overflow rather than from the markup, so
+  // that wells wide enough to show the whole diagram don't leave a focusable
+  // element behind that does nothing.
+  function initScrollableDiagrams() {
+    const wells = [...document.querySelectorAll('.media, .hero-media, .figure-svg')];
+    if (!wells.length) return;
+    const sync = () => {
+      wells.forEach((el) => {
+        if (el.scrollWidth > el.clientWidth + 1) {
+          el.setAttribute('tabindex', '0');
+          if (!el.hasAttribute('aria-roledescription')) el.setAttribute('aria-roledescription', 'scrollable diagram');
+        } else {
+          el.removeAttribute('tabindex');
+          el.removeAttribute('aria-roledescription');
+        }
+      });
+    };
+    sync();
+    if (window.ResizeObserver) {
+      const observer = new ResizeObserver(sync);
+      wells.forEach((el) => observer.observe(el));
+    } else {
+      window.addEventListener('resize', sync);
+    }
+  }
+
   initReveal();
+  initScrollableDiagrams();
   setActiveNav();
   initBurger();
   initYear();

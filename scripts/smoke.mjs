@@ -17,7 +17,9 @@ const browser = await chromium.launch();
 // hasTouch matters: without it the mobile context still reports a fine
 // pointer and real hover, so the (pointer: coarse) tap-target rules and the
 // (hover: hover) guard never evaluate the way they do on an actual phone.
-for (const viewport of [{ name: 'desktop', width: 1440, height: 900, touch: false }, { name: 'mobile', width: 390, height: 844, touch: true }]) {
+// 880 is not decoration: it is the two-column band where the diagram
+// container queries actually fire, and nothing else in this loop covers it.
+for (const viewport of [{ name: 'desktop', width: 1440, height: 900, touch: false }, { name: 'tablet', width: 880, height: 1000, touch: true }, { name: 'mobile', width: 390, height: 844, touch: true }]) {
   const ctx = await browser.newContext({ viewport: { width: viewport.width, height: viewport.height }, hasTouch: viewport.touch, isMobile: viewport.touch });
   for (const p of pages) {
     const page = await ctx.newPage();
@@ -38,7 +40,7 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 900, touch: fals
       // body{overflow-x:hidden} silently clips sideways overflow, so it looks
       // fine in a screenshot but strands content off-screen on a real phone.
       // Deliberate horizontal scrollers (phone diagram wells) are excluded.
-      if (viewport.name === 'mobile') {
+      if (viewport.touch) {
         const overflow = await page.evaluate(() => {
           const doc = document.documentElement;
           if (doc.scrollWidth > window.innerWidth) return `document scrollWidth ${doc.scrollWidth} > viewport ${window.innerWidth}`;
@@ -57,10 +59,10 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 900, touch: fals
           }
           return null;
         });
-        if (overflow) failures.push(`${p} (mobile): horizontal overflow — ${overflow}`);
+        if (overflow) failures.push(`${p} (${viewport.name}): horizontal overflow — ${overflow}`);
       }
       // Interactive controls must be finger-sized on a coarse pointer.
-      if (viewport.name === 'mobile') {
+      if (viewport.touch) {
         const small = await page.evaluate(() => {
           if (!window.matchMedia('(pointer: coarse)').matches) return ['context is not reporting a coarse pointer'];
           const sel = '.btn, .filter-btn, .icon-link, .profile-icon, .burger, .navlinks a, .lightbox-btn';
@@ -71,8 +73,17 @@ for (const viewport of [{ name: 'desktop', width: 1440, height: 900, touch: fals
             .map(({ el, r }) => `${el.className.toString().split(' ')[0] || el.tagName.toLowerCase()} ${Math.round(r.width)}x${Math.round(r.height)}`)
             .slice(0, 4);
         });
-        if (small.length) failures.push(`${p} (mobile): tap targets under 40px — ${small.join(', ')}`);
+        if (small.length) failures.push(`${p} (${viewport.name}): tap targets under 40px — ${small.join(', ')}`);
       }
+      // Any well that scrolls horizontally must be keyboard reachable, or its
+      // right-hand side is unreachable without a mouse or a finger.
+      const unreachable = await page.evaluate(() => {
+        return [...document.querySelectorAll('.media, .hero-media, .figure-svg')]
+          .filter((el) => el.scrollWidth > el.clientWidth + 1 && el.getAttribute('tabindex') !== '0')
+          .map((el) => el.className.toString().split(' ')[0])
+          .slice(0, 3);
+      });
+      if (unreachable.length) failures.push(`${p} (${viewport.name}): scrollable diagram wells not keyboard reachable — ${unreachable.join(', ')}`);
       const hidden = await page.evaluate(() => document.querySelectorAll('.reveal:not(.visible)').length);
       // the 5s load fallback is the last resort; nothing should rely on it during a normal scroll
       if (hidden > 0) {
@@ -134,4 +145,4 @@ if (failures.length) {
   console.error(`SMOKE FAILURES (${failures.length}):\n${failures.join('\n')}`);
   process.exit(1);
 }
-console.log(`smoke passed: ${pages.length} pages × 2 viewports (mobile with touch), overflow, tap targets, lightbox × 2 viewports, theme`);
+console.log(`smoke passed: ${pages.length} pages × 3 viewports (tablet/mobile with touch), overflow, tap targets, keyboard-reachable scrollers, lightbox × 2 viewports, theme`);

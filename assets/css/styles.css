@@ -1148,61 +1148,6 @@ a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-colo
   .section-title{ margin-top:40px; padding-top:32px; }
   .section-head{ margin-top:40px; padding-top:32px; }
 
-  /* Diagrams on a phone. The house diagrams are 960x480 with 21px labels;
-     squeezed into a 390px well that is a 0.41x scale, which puts label type
-     at about 8.6px -- unreadable, and the whole plate reads as a grey smudge.
-     So on phone the well stops shrinking the diagram and becomes a
-     horizontal scroller instead: the diagram holds a legible width and the
-     reader swipes it. Everything keeps its proportions and its theme
-     tokens, which a tap-to-zoom lightbox could not do (the lightbox takes
-     an <img> src, and file-loaded SVG loses the theme.)
-     :has() keeps photos out of this -- they share the .media selector but
-     scale down perfectly well. */
-  .media:has(> .diagram),
-  .hero-media:has(> .diagram){
-    /* flex-start, explicitly: the wells are centred grids at desktop sizes,
-       and a centred item wider than its container overflows equally in both
-       directions -- the left half then sits at a negative offset that no
-       amount of scrolling can reach. Starting the item at the left edge puts
-       the whole overflow on the scrollable side. */
-    display:flex;
-    justify-content:flex-start;
-    align-items:stretch;
-    place-items:stretch start;
-    aspect-ratio:auto;
-    height:var(--diagram-h);
-    overflow-x:auto;
-    overflow-y:hidden;
-    -webkit-overflow-scrolling:touch;
-    overscroll-behavior-x:contain;
-    /* The fade sits on the border box, not the scrolled content, so it
-       stays pinned to the right edge and reads as "there is more here."
-       iOS hides scrollbars, so without it a clipped diagram looks broken. */
-    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
-    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
-  }
-  .media:has(> .diagram) > .diagram,
-  .hero-media:has(> .diagram) > .diagram{
-    position:static;
-    flex:0 0 auto;
-    width:var(--diagram-w);
-    max-width:none;
-    height:100%;
-    margin:0;
-  }
-
-  /* Figure diagrams in write-ups are in normal flow rather than a well,
-     but the same 0.41x problem applies -- and this is the context where a
-     clipped diagram is most likely to read as simply cut off, so it gets the
-     same fade affordance. */
-  .writeup-figure .figure-svg{
-    overflow-x:auto;
-    overscroll-behavior-x:contain;
-    -webkit-overflow-scrolling:touch;
-    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
-    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
-  }
-  .writeup-figure .figure-svg svg{ width:var(--diagram-w); max-width:none; }
 }
 
 /* ---------- motion ---------- */
@@ -1337,4 +1282,104 @@ a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-colo
   .lightbox-btn{ min-width:44px; min-height:44px; }
   .btn{ min-height:44px; display:inline-flex; align-items:center; }
   .btn.small{ min-height:40px; }
+}
+
+
+/* ---------- diagram wells that are too narrow to read ----------
+   What decides whether a 960x480 house diagram is legible is the width of
+   the well it sits in, not the width of the window -- which is why the same
+   diagram is fine at a 760px viewport (one column, 712px well) and unreadable
+   at 880px (two columns, 406px well). So this is a container query, not
+   another breakpoint.
+
+   At 21px labels in a 960-wide viewBox, a well under ~500px puts label type
+   below ~11px. Those wells stop shrinking the diagram and become horizontal
+   scrollers instead: the diagram holds --diagram-w and the reader swipes it,
+   keeping its proportions and its theme tokens. A tap-to-zoom lightbox was
+   the alternative, but it takes an <img> src and a file-loaded SVG loses the
+   theme in dark mode -- the bug that inlining the diagrams fixed.
+
+   Container thresholds are on the card, which runs a little wider than the
+   well it holds. */
+/* Named, because a card thumbnail and an in-body figure earn different
+   thresholds: a thumbnail is glanced at on the way to clicking through to the
+   project page (whose hero diagram runs 18px on any desktop), while a figure
+   in a write-up is meant to be read where it sits. */
+.card{ container:diagram-card / inline-size; }
+.page-hero{ container:diagram-hero / inline-size; }
+.writeup-figure{ container:diagram-figure / inline-size; }
+
+@container diagram-card (max-width: 460px){
+  .media:has(> .diagram){
+    /* flex-start, explicitly: the wells are centred grids at comfortable
+       sizes, and a centred item wider than its container overflows equally in
+       both directions -- the left half then sits at a negative offset that no
+       amount of scrolling can reach. Starting the item at the left edge puts
+       the whole overflow on the scrollable side. */
+    display:flex;
+    justify-content:flex-start;
+    align-items:stretch;
+    place-items:stretch start;
+    aspect-ratio:auto;
+    height:var(--diagram-h);
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    /* The fade sits on the border box, not the scrolled content, so it stays
+       pinned to the right edge and reads as "there is more here." iOS hides
+       scrollbars, so without it a clipped diagram looks broken. */
+    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+  }
+  .media:has(> .diagram) > .diagram{
+    position:static;
+    flex:0 0 auto;
+    width:var(--diagram-w);
+    max-width:none;
+    height:100%;
+    margin:0;
+  }
+}
+
+/* The hero well on a project page, same threshold as a card: it only gets
+   tight on a phone, and runs ~18px labels at any desktop width. */
+@container diagram-hero (max-width: 460px){
+  .hero-media:has(> .diagram){
+    display:flex;
+    justify-content:flex-start;
+    align-items:stretch;
+    place-items:stretch start;
+    aspect-ratio:auto;
+    height:var(--diagram-h);
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+  }
+  .hero-media:has(> .diagram) > .diagram{
+    position:static;
+    flex:0 0 auto;
+    width:var(--diagram-w);
+    max-width:none;
+    height:100%;
+    margin:0;
+  }
+}
+
+/* Figures in write-ups are in normal flow rather than a well, and are read
+   in place rather than glanced at, so they get the more generous threshold.
+   This is also the context where a clipped diagram is most likely to read as
+   simply cut off, so the fade matters most here. */
+@container diagram-figure (max-width: 560px){
+  .writeup-figure .figure-svg{
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    -webkit-overflow-scrolling:touch;
+    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+  }
+  .writeup-figure .figure-svg svg{ width:var(--diagram-w); max-width:none; }
 }
