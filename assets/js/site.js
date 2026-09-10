@@ -50,9 +50,13 @@
     });
 
     nav.querySelectorAll('a').forEach((link) => link.addEventListener('click', close));
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 980) close();
-    });
+    // Must match the .burger breakpoint in styles.css (900px). It used to be
+    // 980, which left the menu stuck open with no burger to close it when a
+    // window was resized from 880 to 950.
+    const wide = window.matchMedia('(min-width: 901px)');
+    const onWide = (event) => { if (event.matches) close(); };
+    if (wide.addEventListener) wide.addEventListener('change', onWide);
+    else wide.addListener(onWide);
 
     syncLabel(false);
   }

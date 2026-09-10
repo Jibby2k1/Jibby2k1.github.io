@@ -63,6 +63,12 @@
   --radius: 0;
   --maxw: 1160px;
   --navh: 60px;
+  /* Width a 960x480 house diagram is held to on a phone, where the well
+     turns into a horizontal scroller. 640px is a 0.67x scale, which puts
+     the 21px labels at ~14px -- readable. --diagram-h keeps the 2:1 plate
+     proportion so nothing is distorted. */
+  --diagram-w: 640px;
+  --diagram-h: 320px;
   --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
   --serif: "Source Serif 4", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
   --display: "Fraunces", "Iowan Old Style", "Palatino Linotype", "Book Antiqua", Georgia, serif;
@@ -155,7 +161,6 @@ body{
 }
 [hidden]{ display:none !important; }
 a{ color:inherit; text-decoration:none; }
-a:hover{ text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
 small{ color:var(--muted); }
 img{ max-width:100%; height:auto; display:block; }
 svg{ max-width:100%; height:auto; }
@@ -256,10 +261,6 @@ code{
   text-decoration-thickness:1px;
   text-underline-offset:0.16em;
 }
-.prose-card a:hover,
-.writeup a:hover,
-.cv-list a:hover,
-.card p a:hover{ text-decoration-thickness:2px; }
 
 /* ---------- header ---------- */
 .site-header{
@@ -281,7 +282,6 @@ code{
 }
 
 .brand{ display:grid; align-items:center; }
-.brand:hover{ text-decoration:none; }
 .brand-copy{ display:grid; }
 .brand-name{
   font-family:var(--display);
@@ -308,7 +308,6 @@ code{
   color:var(--ink-soft);
   font-size:0.98rem;
 }
-.navlinks a:hover{ text-decoration:none; color:var(--ink); }
 .navlinks a.active{ color:var(--ink); border-bottom-color:var(--accent); }
 
 .nav-right{ display:flex; align-items:center; gap:4px; }
@@ -328,8 +327,6 @@ code{
 }
 .icon-link svg,
 .profile-icon svg{ width:17px; height:17px; fill:currentColor; }
-.icon-link:hover,
-.profile-icon:hover{ text-decoration:none; background:var(--raised); color:var(--ink); }
 
 .theme-toggle .icon-moon{ display:none; }
 [data-theme="dark"] .theme-toggle .icon-moon{ display:block; }
@@ -345,7 +342,6 @@ code{
   font-size:1.1rem;
   cursor:pointer;
 }
-.burger:hover{ background:var(--raised); }
 
 @media (max-width: 1080px){
   .nav-right{ display:none; }
@@ -377,7 +373,13 @@ code{
 }
 
 /* ---------- main / hero ---------- */
-main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
+main{
+  padding:0 0 56px;
+  min-height:calc(100vh - var(--navh));
+  /* svh, not dvh: a stable small-viewport height means the page doesn't
+     resize as the mobile browser toolbar collapses on scroll. */
+  min-height:calc(100svh - var(--navh));
+}
 
 .page-hero{
   position:relative;
@@ -484,9 +486,7 @@ main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
   line-height:1.1;
   cursor:pointer;
 }
-.btn:hover{ text-decoration:none; background:var(--raised); border-color:var(--ink-soft); }
 .btn.primary{ background:var(--accent-ink); border-color:var(--accent-ink); color:var(--paper-3); }
-.btn.primary:hover{ background:var(--btn-hover-fill); border-color:var(--btn-hover-fill); }
 .btn.small{ padding:8px 14px; font-size:0.95rem; }
 .btn.text{
   border:0;
@@ -496,7 +496,6 @@ main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
   text-decoration-color:var(--accent);
   text-underline-offset:0.18em;
 }
-.btn.text:hover{ background:transparent; text-decoration-thickness:2px; }
 
 /* Home hero portrait keeps the matte frame; it is the one framed image. */
 .hero-portrait{
@@ -614,8 +613,6 @@ main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
 .blog-card h3{ margin:0; }
 .record-card h3 a::after,
 .blog-card h3 a::after{ content:""; position:absolute; inset:0; }
-.record-card:hover h3 a,
-.blog-card:hover h3 a{ text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.14em; }
 .record-card .meta,
 .blog-card .blog-meta{ margin:0; }
 .record-card p,
@@ -629,8 +626,6 @@ main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
   letter-spacing:0.04em;
   color:var(--accent-ink);
 }
-.record-card:hover .read,
-.blog-card:hover .read{ text-decoration:underline; }
 .record-card .cta-row,
 .blog-card .cta-row{ margin-top:auto; padding-top:6px; }
 
@@ -698,7 +693,6 @@ main{ padding:0 0 56px; min-height:calc(100vh - var(--navh)); }
 .pill{ display:inline; padding:0; border:0; background:none; }
 .pill + .pill::before{ content:" · "; color:var(--line-strong); }
 a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
-a.pill:hover{ text-decoration-thickness:2px; }
 .kv-val.pill-row{ margin-top:0; }
 
 .notice{
@@ -730,7 +724,6 @@ a.pill:hover{ text-decoration-thickness:2px; }
   line-height:1.1;
   cursor:pointer;
 }
-.filter-btn:hover{ background:var(--raised); color:var(--ink); }
 .filter-btn.active{ background:var(--accent-soft); color:var(--accent-ink); border-color:var(--accent-ink); }
 .filter-hint{ margin:0; color:var(--muted); font-size:0.95rem; }
 .filter-search{ width:100%; display:grid; gap:8px; }
@@ -770,6 +763,7 @@ a.pill:hover{ text-decoration-thickness:2px; }
   position:sticky;
   top:calc(var(--navh) + 18px);
   max-height:calc(100vh - var(--navh) - 36px);
+  max-height:calc(100svh - var(--navh) - 36px);
   overflow:auto;
   display:flex;
   flex-direction:column;
@@ -832,9 +826,7 @@ a.pill:hover{ text-decoration-thickness:2px; }
 .footer-group{ display:flex; flex-direction:column; gap:10px; }
 .footer-links{ display:flex; flex-wrap:wrap; gap:8px 16px; }
 .footer a{ color:var(--ink-soft); }
-.footer a:hover{ color:var(--accent-ink); }
 .profile-links{ gap:4px; }
-.profile-icon:hover{ text-decoration:none; }
 .footer-meta{ margin-top:6px; }
 
 /* ---------- reveal ---------- */
@@ -953,7 +945,6 @@ a.pill:hover{ text-decoration-thickness:2px; }
 .faq-item summary::-webkit-details-marker{ display:none; }
 .faq-item summary::before{ content:"+"; font-family:var(--mono); color:var(--section-accent); font-weight:500; }
 .faq-item[open] summary::before{ content:"\2212"; }
-.faq-item summary:hover{ color:var(--section-accent); }
 .faq-body{ padding:0 0 12px 22px; color:var(--ink-soft); max-width:66ch; }
 .faq-body p{ margin:0; }
 
@@ -981,7 +972,6 @@ a.pill:hover{ text-decoration-thickness:2px; }
   background:var(--raised);
   color:var(--ink);
 }
-.related-link:hover{ text-decoration:none; background:var(--surface-strong); }
 .related-link strong{ font-weight:600; }
 .related-link span{ color:var(--ink-soft); font-size:0.95rem; }
 .stack-links{ display:grid; gap:10px; }
@@ -1006,7 +996,6 @@ a.pill:hover{ text-decoration-thickness:2px; }
   box-shadow:var(--shadow-soft);
   color:var(--ink);
 }
-.pager-link:hover{ text-decoration:none; background:var(--raised); }
 .pager-link strong{ font-family:var(--display); font-weight:600; font-size:1.05rem; }
 .pager-next{ text-align:right; }
 
@@ -1079,6 +1068,7 @@ a.pill:hover{ text-decoration-thickness:2px; }
 .lightbox-img{
   max-width:100%;
   max-height:80vh;
+  max-height:80dvh;
   width:auto;
   height:auto;
   margin:0 auto;
@@ -1102,11 +1092,19 @@ a.pill:hover{ text-decoration-thickness:2px; }
   font-size:1.2rem;
   cursor:pointer;
 }
-.lightbox-btn:hover{ background:var(--surface); }
 .lightbox-btn:focus-visible{ outline:2px solid var(--overlay-ink); outline-offset:2px; }
 .lightbox-close{ position:absolute; top:18px; right:18px; }
 
-/* ---------- responsive ---------- */
+/* ---------- responsive ----------
+   Breakpoints in use, and what each one is actually for:
+     1080  profile icons leave the header (they stay in the footer)
+      980  two-column layouts stack; .grid.three drops to two
+      981  (min-width) pairs with 980 to cap .about-shell on wide screens
+      900  nav collapses to the burger -- site.js matches this exact value
+      860  .grid.two / .grid.three drop to a single column
+      700  phone: type, padding, full-bleed media, diagram scrollers
+   They are close together but each answers a different question, so they
+   are deliberately not collapsed into one scale. */
 @media (max-width: 980px){
   .archive-hero{ grid-template-columns:1fr; gap:28px; padding:44px 0 40px; }
   .hero-portrait{ justify-self:start; width:min(280px, 100%); }
@@ -1146,9 +1144,57 @@ a.pill:hover{ text-decoration-thickness:2px; }
   .lightbox{ padding:12px; gap:8px; }
   .lightbox-prev{ position:absolute; left:10px; bottom:18px; }
   .lightbox-next{ position:absolute; right:10px; bottom:18px; }
-  .lightbox-img{ max-height:66vh; }
+  .lightbox-img{ max-height:66vh; max-height:66dvh; }
   .section-title{ margin-top:40px; padding-top:32px; }
   .section-head{ margin-top:40px; padding-top:32px; }
+
+  /* Diagrams on a phone. The house diagrams are 960x480 with 21px labels;
+     squeezed into a 390px well that is a 0.41x scale, which puts label type
+     at about 8.6px -- unreadable, and the whole plate reads as a grey smudge.
+     So on phone the well stops shrinking the diagram and becomes a
+     horizontal scroller instead: the diagram holds a legible width and the
+     reader swipes it. Everything keeps its proportions and its theme
+     tokens, which a tap-to-zoom lightbox could not do (the lightbox takes
+     an <img> src, and file-loaded SVG loses the theme.)
+     :has() keeps photos out of this -- they share the .media selector but
+     scale down perfectly well. */
+  .media:has(> .diagram),
+  .hero-media:has(> .diagram){
+    /* flex-start, explicitly: the wells are centred grids at desktop sizes,
+       and a centred item wider than its container overflows equally in both
+       directions -- the left half then sits at a negative offset that no
+       amount of scrolling can reach. Starting the item at the left edge puts
+       the whole overflow on the scrollable side. */
+    display:flex;
+    justify-content:flex-start;
+    align-items:stretch;
+    place-items:stretch start;
+    aspect-ratio:auto;
+    height:var(--diagram-h);
+    overflow-x:auto;
+    overflow-y:hidden;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior-x:contain;
+    /* The fade sits on the border box, not the scrolled content, so it
+       stays pinned to the right edge and reads as "there is more here."
+       iOS hides scrollbars, so without it a clipped diagram looks broken. */
+    -webkit-mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+    mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
+  }
+  .media:has(> .diagram) > .diagram,
+  .hero-media:has(> .diagram) > .diagram{
+    position:static;
+    flex:0 0 auto;
+    width:var(--diagram-w);
+    max-width:none;
+    height:100%;
+    margin:0;
+  }
+
+  /* Figure diagrams in write-ups are in normal flow rather than a well,
+     but the same 0.41x problem applies. */
+  .writeup-figure .figure-svg{ overflow-x:auto; overscroll-behavior-x:contain; }
+  .writeup-figure .figure-svg svg{ width:var(--diagram-w); max-width:none; }
 }
 
 /* ---------- motion ---------- */
@@ -1203,7 +1249,6 @@ a.pill:hover{ text-decoration-thickness:2px; }
 }
 .track-card{ border-top:3px solid var(--section-accent); }
 .track-card h3 a::after{ content:""; position:absolute; inset:0; }
-.track-card:hover h3 a{ text-decoration:underline; text-decoration-color:var(--accent); }
 .hero-mark{ margin-bottom:14px; }
 .hero-mark img{ width:30px; height:30px; }
 .card > .cta-row:last-child{ margin-top:16px; }
@@ -1221,3 +1266,67 @@ a.pill:hover{ text-decoration-thickness:2px; }
 }
 .media-mark > img[src*="Logo"],
 .media-mark > img[src*="PlatoCave"]{ width:56%; height:52%; }
+
+/* ---------- pointer affordances ----------
+   Every :hover rule on the site lives in this one block. Guarded by
+   (hover: hover) so touch devices never get a hover state that latches on
+   first tap and stays stuck until you tap elsewhere. No (pointer: fine)
+   clause on purpose: a touchscreen laptop with a mouse attached reports a
+   coarse pointer but does have real hover, and should keep these.
+   Touch feedback is handled by the :active rules further down. */
+@media (hover: hover){
+  a:hover{ text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
+  .prose-card a:hover,
+  .writeup a:hover,
+  .cv-list a:hover,
+  .card p a:hover{ text-decoration-thickness:2px; }
+  .brand:hover{ text-decoration:none; }
+  .navlinks a:hover{ text-decoration:none; color:var(--ink); }
+  .icon-link:hover,
+  .profile-icon:hover{ text-decoration:none; background:var(--raised); color:var(--ink); }
+  .burger:hover{ background:var(--raised); }
+  .btn:hover{ text-decoration:none; background:var(--raised); border-color:var(--ink-soft); }
+  .btn.primary:hover{ background:var(--btn-hover-fill); border-color:var(--btn-hover-fill); }
+  .btn.text:hover{ background:transparent; text-decoration-thickness:2px; }
+  .record-card:hover h3 a,
+  .blog-card:hover h3 a{ text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.14em; }
+  .record-card:hover .read,
+  .blog-card:hover .read{ text-decoration:underline; }
+  a.pill:hover{ text-decoration-thickness:2px; }
+  .filter-btn:hover{ background:var(--raised); color:var(--ink); }
+  .footer a:hover{ color:var(--accent-ink); }
+  .profile-icon:hover{ text-decoration:none; }
+  .faq-item summary:hover{ color:var(--section-accent); }
+  .related-link:hover{ text-decoration:none; background:var(--surface-strong); }
+  .pager-link:hover{ text-decoration:none; background:var(--raised); }
+  .lightbox-btn:hover{ background:var(--surface); }
+  .track-card:hover h3 a{ text-decoration:underline; text-decoration-color:var(--accent); }
+}
+
+/* Touch feedback. Record/blog/track cards are divs whose title link is
+   stretched over the card with an ::after, so the card element itself never
+   receives :active on iOS — match the link's active state instead. */
+.btn:active,
+.filter-btn:active,
+.pager-link:active,
+.related-link:active,
+.icon-link:active,
+.profile-icon:active,
+.burger:active{ background:var(--surface-strong); }
+.btn.primary:active{ background:var(--btn-hover-fill); border-color:var(--btn-hover-fill); }
+.record-card:has(a:active),
+.blog-card:has(a:active),
+.track-card:has(a:active){ background:var(--surface); }
+
+/* Coarse pointers get targets that a fingertip can actually hit (>=44px).
+   The visual box stays the same; the hit area grows around it. */
+@media (pointer: coarse){
+  .icon-link,
+  .profile-icon{ width:44px; height:44px; }
+  .burger{ width:44px; height:44px; }
+  .navlinks a{ padding-top:12px; padding-bottom:12px; }
+  .filter-btn{ min-height:44px; }
+  .lightbox-btn{ min-width:44px; min-height:44px; }
+  .btn{ min-height:44px; display:inline-flex; align-items:center; }
+  .btn.small{ min-height:40px; }
+}
