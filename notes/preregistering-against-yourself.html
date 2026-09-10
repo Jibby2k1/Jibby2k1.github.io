@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Preregistering against yourself: six phases of trying to falsify a memory architecture | Raul Valle Writing</title>
+  <meta name="description" content="A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return &quot;no advantage established yet.&quot;" />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Preregistering against yourself: six phases of trying to falsify a memory architecture | Raul Valle Writing" />
+  <meta property="og:description" content="A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return &quot;no advantage established yet.&quot;" />
+  <meta property="og:url" content="https://www.raulv.dev/notes/preregistering-against-yourself.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta property="og:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Preregistering against yourself: six phases of trying to falsify a memory architecture | Raul Valle Writing" />
+  <meta name="twitter:description" content="A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return &quot;no advantage established yet.&quot;" />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta name="twitter:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <link rel="canonical" href="https://www.raulv.dev/notes/preregistering-against-yourself.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/notes/preregistering-against-yourself.html#webpage","url":"https://www.raulv.dev/notes/preregistering-against-yourself.html","name":"Preregistering against yourself: six phases of trying to falsify a memory architecture | Raul Valle Writing","description":"A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return \"no advantage established yet.\"","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"BlogPosting","@id":"https://www.raulv.dev/notes/preregistering-against-yourself.html#post","headline":"Preregistering against yourself: six phases of trying to falsify a memory architecture","description":"A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return \"no advantage established yet.\"","datePublished":"2026-09-08","dateModified":"2026-09-08","author":{"@id":"https://www.raulv.dev/#person"},"publisher":{"@id":"https://www.raulv.dev/#person"},"image":"https://www.raulv.dev/assets/img/blog/preregistering-against-yourself.svg","mainEntityOfPage":"https://www.raulv.dev/notes/preregistering-against-yourself.html","articleSection":"Research log","keywords":["kernel methods","preregistration","sequence modeling","research methodology","hpc"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://www.raulv.dev/blog.html"},{"@type":"ListItem","position":3,"name":"Preregistering against yourself: six phases of trying to falsify a memory architecture","item":"https://www.raulv.dev/notes/preregistering-against-yourself.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="cnel">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">Research log</div>
+          <h1 class="h1">Preregistering against yourself: six phases of trying to falsify a memory architecture</h1>
+          <p class="lead">A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return &quot;no advantage established yet.&quot;</p>
+          <div class="meta hero-meta"><span class="track">Sep 8, 2026</span> · kernel methods · preregistration · sequence modeling · research methodology · hpc</div>
+          <div class="hero-media" role="img" aria-label="Timeline of six research phases, each with a locked decision memo and a validity gate, with the hypothesis narrowing from dense radial attention to sparse memory."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="kam-prereg-title kam-prereg-desc" style="font-family:var(--mono, ui-monospace, monospace);fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round" class="diagram" id="svg-1jnt8o2">
+  <title id="kam-prereg-title">Preregistration timeline with validity gates</title>
+  <desc id="kam-prereg-desc">Six research phases along a timeline. Each phase has a locked decision memo written before results, a validity gate that must pass before interpretation, and a recorded outcome. Phase V and Phase VI gates are marked failed; under Phase VI the 156-row confirmation failed its superiority gate and the separate 168-row atlas failed on top-k tie ordering, then was fixed and rerun under preregistration. Behind the timeline a wedge narrows from the dense radial attention hypothesis to sparse separable memory.</desc>
+
+  <!-- narrowing hypothesis wedge -->
+  <path d="M80 200 L1120 330 L1120 440 L80 600 Z" fill="var(--section-accent, currentColor)" opacity="0.07" stroke="none"/>
+  <text x="90" y="172" font-size="24" fill="currentColor" stroke="none" opacity="0.8">hypothesis: dense radial attention replaces dot-product attention</text>
+  <text x="1120" y="206" font-size="22" fill="currentColor" stroke="none" opacity="0.8" text-anchor="end">narrowed to: sparse, top-K separable memory</text>
+
+  <!-- main timeline -->
+  <line x1="80" y1="400" x2="1120" y2="400" stroke="currentColor" stroke-width="3"/>
+  <path d="M1108 390 L1122 400 L1108 410" stroke="currentColor" stroke-width="3"/>
+
+  <!-- phase groups: memo above, gate on line, outcome below (alternating bands) -->
+  <g>
+    <g transform="translate(130 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">I</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">45 runs</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">no advantage</text>
+    <text x="0" y="520" font-size="22" fill="var(--section-accent, currentColor)" stroke="none" text-anchor="middle">shift: -44.5%</text>
+    </g>
+    <g transform="translate(300 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">II</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">50 runs, 5 seeds</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">Holm: inconclusive</text>
+    </g>
+    <g transform="translate(465 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">III</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">1,728-row manifest</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">development only</text>
+    </g>
+    <g transform="translate(625 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">IV</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">data-regime screen</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">diagnostic only</text>
+    </g>
+    <g transform="translate(790 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="-12" y1="388" x2="12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="12" y1="388" x2="-12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">V</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">validity gate</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">pilot 144/144</text>
+    <text x="0" y="520" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">Stage 2 blocked</text>
+    </g>
+    <g transform="translate(1000 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="-12" y1="388" x2="12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="12" y1="388" x2="-12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">VI</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">156-row confirmation:</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">superiority gate failed</text>
+    <text x="0" y="620" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">168-row atlas: top-k ties</text>
+    <text x="0" y="650" font-size="22" fill="var(--section-accent, currentColor)" stroke="none" text-anchor="middle">fix, rerun preregistered</text>
+    </g>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(80 705)">
+    <rect x="0" y="-14" width="34" height="24" rx="4" stroke="currentColor" opacity="0.85"/>
+    <rect x="12" y="-8" width="10" height="10" rx="2" fill="currentColor" opacity="0.6" stroke="none"/>
+    <text x="48" y="4" font-size="22" fill="currentColor" stroke="none">memo locked before results</text>
+    <path d="M440 -14 L454 -2 L440 10 L426 -2 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M440 -14 L454 -2 L440 10 L426 -2 Z" stroke="currentColor"/>
+    <text x="468" y="4" font-size="22" fill="currentColor" stroke="none">validity gate</text>
+    <line x1="690" y1="-10" x2="706" y2="6" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="706" y1="-10" x2="690" y2="6" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <text x="720" y="4" font-size="22" fill="currentColor" stroke="none">gate failed</text>
+  </g>
+
+  <text x="600" y="90" font-size="30" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">Kernel Adaptive Memory, Phases I to VI</text>
+  <text x="600" y="128" font-size="24" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">outcome after six phases: no general advantage established yet</text>
+</svg></div>
+        </section>
+
+        <section class="project-detail reveal" data-track="cnel">
+          <div class="project-main">
+            <article class="card reveal prose-card">
+              <h2 class="project-section-title">Entry</h2>
+              <p>Kernel Adaptive Memory (KAM) started as a bridge between two things I like: kernel least-mean-squares filters, which predict with localized basis functions and adapt cheaply online, and Transformers, which learn context-dependent routing. The first version replaced dot-product attention with a radial kernel score under a learned metric, added a bank of persistent support vectors, and kept a normalized least-mean-squares (NLMS) readout for adaptation after a distribution shift.</p>
+<p>I liked the idea enough to distrust myself with it. So I ran it the way a clinical trial is run: every phase got a written brief, a set of validity checks that had to pass before anyone was allowed to interpret anything, and a decision memo mapping each possible outcome to an action. The <a href="https://github.com/Jibby2k1/KAM">repository is public</a>, and by August it held 34 commits, 19 briefs and memos for the phases, and 82 report files. Most of them say some version of &quot;not established.&quot;</p>
+<h2>Phase I: the grid I was sure would work</h2>
+<p>The first matched grid was 45 runs: five model variants, three tasks, three seeds. Dot-product attention won or tied on the copy task and the hidden-regime grammar. A dot-product hybrid won on Mackey-Glass, a delayed chaotic time series. On character-level Tiny Shakespeare, the dot-product Transformer reached perplexity 6.96 to KAM's 7.41, in about half the runtime. Copy length-generalization failed outright.</p>
+<p>One thing survived. After a shift in the Mackey-Glass delay parameter, freezing the feature geometry and letting only the readout adapt with NLMS cut post-shift error by 44.5 percent against a static readout. I wrote that down and moved on.</p>
+<h2>Phases II through V: hardening the method, not the model</h2>
+<p>Phase II was a five-seed paired grid, 50 runs, with bootstrap confidence intervals and Holm correction for multiple comparisons. No corrected comparison excluded zero. The decision memo has five questions and five answers: not established, not established, not established, not yet, none.</p>
+<p>Phase III built a 1,728-row development manifest for the university cluster; nothing confirmatory was submitted. Phase IV was a bounded data-regime screen whose decision line reads &quot;retain as diagnostic only&quot;; no architecture was promoted from it. Phase V introduced the rule I now consider most important: a validity gate of structural checks that must pass before anything downstream runs or gets interpreted. Its pilot passed 144 of 144 rows; its larger sub-studies then blocked themselves on stream-generation and capacity-consistency checks, which is exactly what the gate was for.</p>
+<h2>Phase VI: abandoning the original claim</h2>
+<p>The Phase VI brief opens with a sentence I had to write myself: &quot;The broad claim that the current dense KAM bank should replace Transformer attention is not supported.&quot; The hypothesis narrowed. Instead of replacing attention, a standard decoder block gets a memory branch that routes each token to only the top-K of M supports by kernel distance, applies a small local expert at each, and re-enters the residual stream through a zero-initialized gate. &quot;Separable&quot; means two parameter classes on two timescales: fast algebra (the expert values, which admit closed-form or recursive solves) and slow geometry (the keys, optionally frozen late in training). That is the adaptation signal from Phase I, rebuilt as a component instead of a replacement.</p>
+<p>An overnight pilot on four GPUs looked striking: fixed-key KAM reached validation loss 2.0081 against 2.8833 for a widened Transformer, 30.4 percent lower. With three paired seeds, the permutation p-value was 0.25 and the Holm-adjusted value 0.75. The locked rule filed it as &quot;retain as diagnostic only,&quot; which the correction memo glosses as &quot;run a clean, adequately powered confirmation before acceleration,&quot; not &quot;KAM failed.&quot;</p>
+<p>So I preregistered the confirmation: 156 rows at 50 million tokens each, 30 paired seeds on the primary corpus, a 2 percent minimum relevant improvement, and roughly 90 percent power at a planning effect deliberately far below the pilot effect, to protect against winner's curse. No optional stopping, no seed replacement, no peeking. Later documents describe the primary superiority gate as failed. The numeric report is not committed, so I will not quote it here. The honest summary is that no general advantage has been established.</p>
+<h2>When the gate fails for a reason that is not science</h2>
+<p>The current thread is a mechanism study, a &quot;behavioral atlas&quot; of what sparse memory actually learns. Its 168-row, 50-million-token Stage 1 finished training and then failed its own preregistered validity gate: two rows failed a strict FP32 check that a matched permutation of keys and experts must leave predictions unchanged, and 118 failed the looser BF16 version.</p>
+<p>That check exists because a memory bank whose output depends on the storage order of its supports is not measuring memory. The locked audit plan had four possible outcomes and forbade any efficacy interpretation. Replaying saved checkpoints localized the failure to late memory layers, reproduced it on three GPU hosts, and found it absent on CPU. The cause was CUDA top-k tie ordering: when routing scores tie at the K boundary, the GPU's selection order is not invariant to a permutation of the inputs. The fix is an opt-in tie-breaker keyed to a support identity that travels with the permutation. It passed a 26-checkpoint replay and a 24-row training pilot, and a fresh 168-row run was preregistered on August 9 with one declared difference from the original. The original campaign is not rehabilitated; it is shown only as historical context.</p>
+<h2>What the audits actually caught</h2>
+<p>Independent audits of each phase were where the value of the process showed. None of these would have shown up as a bad loss, and every one would have produced a confident, wrong table.</p>
+<ul><li>A plural-to-singular field mapping turned &quot;geometries&quot; into &quot;geometrie,&quot; so every row silently ran the default geometry.</li><li>Rows labelled with one retrieval task ran a fallback task instead.</li><li>Optimizer labels were recorded, but a single joint loop ran regardless.</li><li>Adaptation rows declared recursive least squares while the runner used full-model AdamW.</li><li>A first full deployment was cancelled after 1,315 partial rows when the audit found that short schedules had produced zero geometry updates.</li></ul>
+<h2>What it feels like</h2>
+<p>Mostly it feels slow. Occasionally it feels like arguing with a version of myself who wants the 30 percent number to be real. The memos are how I win that argument in advance. What I have after six phases is a narrower, testable hypothesis about sparse, top-K-routed separable memory, a gate that catches tie-ordering bugs before they become results, and a program in which a negative answer is as usable as a positive one. That was the design goal, and it is the one thing I can say worked.</p>
+            </article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal"><h2 class="project-section-title">Key takeaways</h2><ul><li>Writing the decision rules before looking at results is the only reliable defense against my own optimism.</li><li>A validity gate that blocks interpretation is worth more than a significance test, because most of what it caught was not science but plumbing.</li><li>Six phases produced no general advantage, but one surviving signal narrowed the hypothesis into something sharper and cheaper to test.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="stack-links"><a class="related-link" href="../projects/kernel-adaptive-memory.html"><strong>Kernel Adaptive Memory: testing persistent kernel memory for sequence models</strong><span>Six phases of preregistered experiments asking whether a kernel-routed persistent memory helps sequence models: no general advantage yet, but the hypothesis has narrowed from dense radial attention to sparse, top-K-routed separable memory.</span></a></div></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

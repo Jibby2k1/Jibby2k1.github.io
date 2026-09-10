@@ -1,64 +1,50 @@
-<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .tag{ font-family: var(--mono, monospace); font-size:9px; letter-spacing:1.5px; fill: var(--section-accent); }
-    .ttl{ font-family: var(--mono, monospace); font-size:11px; font-weight:700; fill: currentColor; }
-    .sub{ font-family: var(--mono, monospace); font-size:9.5px; fill: currentColor; opacity:0.62; }
-    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.4; }
-    .swap{ fill: var(--surface, rgba(255,255,255,0.4)); stroke: currentColor; stroke-width:1.2; }
-    .arw{ stroke: currentColor; stroke-width:1.4; fill:none; }
-    .acf{ fill: var(--section-accent); }
-    .loop{ stroke: var(--section-accent); stroke-width:1.4; fill:none; stroke-dasharray:5 4; }
-  </style>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="neurevpipeline-title neurevpipeline-desc">
+  <title id="neurevpipeline-title">Grid-search detection pipeline with a human review loop</title>
+  <desc id="neurevpipeline-desc">Imaging video passes through an interchangeable pre-processing filter (Gamma ST or Kalman–MCC) and then a CFAR detector that surfaces candidate events; a parallel grid search spans the filter and detector parameters. The detector output goes to evaluation and model selection by FROC and truncated AUC, and then to a report of figures and diagnostics. Candidate events also go down to a human review workbench, where ROIs and events are accepted, rejected, or marked unsure, and those labels feed back into the grid search.</desc>
+  <defs>
+    <marker id="neurevpipeline-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
 
-  <!-- stage 1: video -->
-  <rect class="box" x="16" y="60" width="120" height="70" rx="2"/>
-  <text class="tag" x="28" y="80">INPUT</text>
-  <text class="ttl" x="28" y="100">Imaging video</text>
-  <text class="sub" x="28" y="117">voltage / calcium</text>
+  <!-- grid-search group spanning filter + detector -->
+  <rect class="d-soft" x="256" y="48" width="488" height="146" rx="1"/>
+  <text class="d-label" x="500" y="84" text-anchor="middle">parallel grid search</text>
 
-  <!-- stage 2: filter (interchangeable) -->
-  <rect class="box" x="176" y="48" width="150" height="94" rx="2"/>
-  <text class="tag" x="188" y="68">PRE-PROCESS (swap)</text>
-  <rect class="swap" x="188" y="78" width="126" height="24"/>
-  <text class="sub" x="196" y="94">Gamma ST filter</text>
-  <rect class="swap" x="188" y="108" width="126" height="24"/>
-  <text class="sub" x="196" y="124">Kalman–MCC</text>
+  <!-- row 1: input, filter, detector -->
+  <rect class="d-box" x="40" y="108" width="200" height="72" rx="1"/>
+  <text class="d-label" x="140" y="141" text-anchor="middle">Imaging video</text>
+  <text class="d-sub" x="140" y="165" text-anchor="middle">voltage · calcium</text>
 
-  <!-- stage 3: CFAR detect -->
-  <rect class="box" x="366" y="60" width="120" height="70" rx="2"/>
-  <text class="tag" x="378" y="80">DETECT</text>
-  <text class="ttl" x="378" y="100">CFAR detector</text>
-  <text class="sub" x="378" y="117">candidate events</text>
+  <rect class="d-box" x="270" y="108" width="232" height="72" rx="1"/>
+  <text class="d-label" x="386" y="141" text-anchor="middle">Filter (swap)</text>
+  <text class="d-sub" x="386" y="165" text-anchor="middle">Gamma ST · Kalman–MCC</text>
 
-  <!-- stage 4: evaluate/select -->
-  <rect class="box" x="526" y="48" width="140" height="94" rx="2"/>
-  <text class="tag" x="538" y="68">EVALUATE + SELECT</text>
-  <text class="sub" x="538" y="90">FROC · truncated AUC</text>
-  <text class="sub" x="538" y="112">top-K model summary</text>
+  <rect class="d-accent" x="530" y="108" width="200" height="72" rx="1"/>
+  <text class="d-label" x="630" y="141" text-anchor="middle">CFAR detector</text>
+  <text class="d-sub" x="630" y="165" text-anchor="middle">candidate events</text>
 
-  <!-- stage 5: report -->
-  <rect class="box" x="696" y="60" width="72" height="70" rx="2"/>
-  <text class="tag" x="708" y="80">REPORT</text>
-  <text class="sub" x="708" y="100">figures</text>
-  <text class="sub" x="708" y="115">+ diagnostics</text>
+  <!-- right column: evaluate + select, report -->
+  <rect class="d-box" x="664" y="240" width="256" height="72" rx="1"/>
+  <text class="d-label" x="792" y="273" text-anchor="middle">Evaluate + select</text>
+  <text class="d-sub" x="792" y="297" text-anchor="middle">FROC · truncated AUC</text>
 
-  <!-- arrows -->
-  <g class="arw"><path d="M136 95 h34"/><path d="M326 95 h34"/><path d="M486 95 h34"/><path d="M666 95 h24"/></g>
-  <g class="acf">
-    <path d="M170 90 l8 5 -8 5 z"/><path d="M360 90 l8 5 -8 5 z"/><path d="M520 90 l8 5 -8 5 z"/><path d="M690 90 l8 5 -8 5 z"/>
-  </g>
+  <rect class="d-box" x="664" y="360" width="256" height="72" rx="1"/>
+  <text class="d-label" x="792" y="393" text-anchor="middle">Report</text>
+  <text class="d-sub" x="792" y="417" text-anchor="middle">figures + diagnostics</text>
 
-  <!-- parallel grid-search note across filter+detector -->
-  <path class="loop" d="M251 142 v34 h175 v-46" />
-  <path class="acf" d="M421 135 l5 -8 5 8 z" transform="translate(0,0)"/>
-  <text class="tag" x="266" y="170">PARALLEL GRID SEARCH OVER FILTER + DETECTOR PARAMS</text>
+  <!-- bottom-left: human review workbench -->
+  <rect class="d-box" x="40" y="360" width="500" height="72" rx="1"/>
+  <text class="d-label" x="290" y="393" text-anchor="middle">Human review workbench</text>
+  <text class="d-sub" x="290" y="417" text-anchor="middle">ROI + event accept / reject / unsure</text>
+
+  <!-- main flow -->
+  <path class="d-line" d="M240,144 H268" marker-end="url(#neurevpipeline-arr)"/>
+  <path class="d-line" d="M502,144 H528" marker-end="url(#neurevpipeline-arr)"/>
+  <path class="d-line" d="M730,144 H792 V238" marker-end="url(#neurevpipeline-arr)"/>
+  <path class="d-line" d="M792,312 V358" marker-end="url(#neurevpipeline-arr)"/>
 
   <!-- human review loop -->
-  <rect class="box" x="176" y="222" width="310" height="56" rx="2"/>
-  <text class="tag" x="188" y="242">HUMAN REVIEW WORKBENCH</text>
-  <text class="sub" x="188" y="260">ROI + event accept / reject / unsure · trace denoising</text>
-  <text class="sub" x="188" y="273">autosave + TSV export for downstream analysis</text>
-  <path class="loop" d="M426 130 v92 M331 222 v-92" />
-  <path class="acf" d="M426 216 l-5 8 10 0 z"/>
-  <path class="acf" d="M331 138 l-5 -8 10 0 z"/>
+  <path class="d-line d-dash" d="M630,180 V396 H542" marker-end="url(#neurevpipeline-arr)"/>
+  <text class="d-sub" x="612" y="285" text-anchor="end">candidates</text>
+  <path class="d-line d-dash" d="M386,360 V196" marker-end="url(#neurevpipeline-arr)"/>
+  <text class="d-sub" x="368" y="285" text-anchor="end">labels feed back</text>
 </svg>

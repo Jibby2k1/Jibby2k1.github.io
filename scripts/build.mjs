@@ -23,6 +23,81 @@ function imageSize(src) {
   return size;
 }
 
+// Deterministic "streamlines and events" motif: thin flow lines (physics) crossed
+// by a few event dots (neural). Seeded so every build produces identical bytes,
+// which the CI reproducibility gate requires.
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = a;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function hashSeed(text) {
+  let h = 2166136261;
+  for (const ch of String(text)) {
+    h ^= ch.charCodeAt(0);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  return h;
+}
+
+function motifSvg({ width = 960, height = 480, lines = 9, dots = 11, seed = 7, className = 'motif' } = {}) {
+  const rand = mulberry32(seed);
+  const paths = [];
+  for (let i = 0; i < lines; i += 1) {
+    const baseY = height * ((i + 0.6) / (lines + 0.2));
+    const amp = height * (0.05 + rand() * 0.08);
+    const freq = 1.2 + rand() * 1.6;
+    const phase = rand() * Math.PI * 2;
+    const drift = (rand() - 0.5) * height * 0.18;
+    const points = [];
+    const steps = 24;
+    for (let s = 0; s <= steps; s += 1) {
+      const t = s / steps;
+      const x = t * width;
+      const y = baseY + drift * t + amp * Math.sin(t * Math.PI * freq + phase) * (0.35 + 0.65 * Math.sin(t * Math.PI));
+      points.push(`${x.toFixed(1)},${y.toFixed(1)}`);
+    }
+    paths.push(`<polyline points="${points.join(' ')}" />`);
+  }
+  const circles = [];
+  for (let i = 0; i < dots; i += 1) {
+    const x = width * (0.06 + rand() * 0.88);
+    const y = height * (0.1 + rand() * 0.8);
+    const r = 1.8 + rand() * 1.6;
+    circles.push(`<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" />`);
+  }
+  return `<svg class="${className}" viewBox="0 0 ${width} ${height}" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g class="motif-lines">${paths.join('')}</g><g class="motif-dots">${circles.join('')}</g></svg>`;
+}
+
+// Media well: inline SVG diagrams (so they pick up theme tokens) or a raster.
+function mediaHtml(src, { alt = '', prefix = '', cover = false, className = 'media' } = {}) {
+  if (!src) return '';
+  if (src.endsWith('.svg')) {
+    const svg = inlineSvg(src);
+    if (svg) return `<div class="${className}" role="img" aria-label="${escapeHtml(alt)}">${svg}</div>`;
+  }
+  return `<div class="${className}">${imgTag(src, { alt, prefix, className: cover ? 'fit-cover' : '' })}</div>`;
+}
+
+// Logos and app icons are "marks": shown as a small badge, never as hero media.
+function isMark(src = '') {
+  return !src.endsWith('.svg') && /icon|logo|mark|nobg|PlatoCave|Nano\.webp|Ora\.webp/i.test(src);
+}
+
+function sectionHead({ eyebrow = '', title, subtitle = '', track = '' }) {
+  return `<div class="section-head reveal"${track ? ` data-track="${track}"` : ''}>
+      ${eyebrow ? `<span class="eyebrow">${escapeHtml(eyebrow)}</span>` : ''}
+      <h2 class="section-title">${escapeHtml(title)}</h2>
+      ${subtitle ? `<p class="section-subtitle">${escapeHtml(subtitle)}</p>` : ''}
+    </div>`;
+}
+
 function imgTag(src, { alt = '', className = '', prefix = '', eager = false } = {}) {
   const size = imageSize(src);
   const dims = size ? ` width="${size.width}" height="${size.height}"` : '';
@@ -54,9 +129,9 @@ const trackMeta = {
   sps: {
     slug: 'research-sps.html',
     label: 'IEEE SPS @ UF',
-    name: 'IEEE SPS projects',
-    kicker: 'IEEE Signal Processing Society at UF',
-    description: 'Student-facing research engineering, workshops, neurotechnology prototypes, robotics, and open-source systems through IEEE SPS at UF.'
+    name: 'IEEE SPS & independent projects',
+    kicker: 'IEEE Signal Processing Society at UF · independent work',
+    description: 'Workshops, student research projects, and open-source systems through IEEE SPS at UF, alongside the apps and tools I build independently: Ora, Gradus, and Media Cull Suite.'
   }
 };
 
@@ -109,10 +184,9 @@ function nav(outputPath) {
   return `<header class="site-header">
   <a class="skip-link" href="#main">Skip to content</a>
   <div class="container navbar" role="navigation" aria-label="Primary">
-    <a class="brand" href="${prefix}index.html">
+    <a class="brand" href="${prefix}index.html" aria-label="${site.name} — home">
       <span class="brand-copy">
         <span class="brand-name">${site.name}</span>
-        <span class="brand-eyebrow">${escapeHtml(site.tagline)}</span>
       </span>
     </a>
 
@@ -276,8 +350,8 @@ function pageShell({
   <meta name="description" content="${escapeHtml(description)}" />
   <meta name="author" content="${site.name}" />
   <meta name="robots" content="index, follow, max-image-preview:large" />
-  <meta name="theme-color" content="#fbf7ef" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#161210" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:type" content="${type}" />
   <meta property="og:title" content="${escapeHtml(title)}" />
@@ -297,6 +371,8 @@ function pageShell({
   <link rel="icon" href="${prefix}assets/img/favicon-48.png" type="image/png" sizes="48x48" />
   <link rel="apple-touch-icon" href="${prefix}assets/img/apple-touch-icon.png" />
   <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="${prefix}assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="${prefix}assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="${prefix}assets/css/styles.css" />
   <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}</script>
 </head>
@@ -380,8 +456,9 @@ function renderMarkdown(markdown) {
 
 function inlineMarkdown(value) {
   return escapeHtml(value)
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/(^|[^*\w])\*([^*\n]+?)\*(?!\w)/g, '$1<em>$2</em>')
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
 }
 
@@ -418,6 +495,9 @@ async function loadWriting() {
     if (!entry.endsWith('.md')) continue;
     const text = await fs.readFile(path.join(dir, entry), 'utf8');
     const { meta, body } = parseFrontmatter(text);
+    // `draft: true` keeps a staged post out of the build entirely (no page,
+    // no index card, no RSS/sitemap entry) until the flag is removed.
+    if (String(meta.draft).toLowerCase() === 'true') continue;
     posts.push({
       ...meta,
       topics: Array.isArray(meta.topics) ? meta.topics : [],
@@ -431,33 +511,69 @@ async function loadWriting() {
   return posts.sort((a, b) => b.date.localeCompare(a.date));
 }
 
+// The meta line reads "Track · topic · topic"; the first segment is coloured
+// with the track accent so the research taxonomy is visible on every card.
+function metaHtml(meta) {
+  const parts = String(meta || '').split(' · ').map((part) => part.trim()).filter(Boolean);
+  if (!parts.length) return '';
+  const [first, ...rest] = parts;
+  return `<div class="meta"><span class="track">${escapeHtml(first)}</span>${rest.map((part) => ` · ${escapeHtml(part)}`).join('')}</div>`;
+}
+
 function cardProject(project, prefix = '', extraClass = '') {
   const href = `${prefix}projects/${project.slug}.html`;
-  return `<article class="card record-card reveal filter-card ${extraClass}" data-filter-item data-tags="${escapeHtml((project.tags || []).join(','))}" data-search="${escapeHtml(searchText([project.title, project.subtitle, project.desc, ...(project.tags || []), ...(project.pills || [])]))}">
-  ${imgTag(project.img, { className: 'card-img', alt: project.imgAlt || project.title, prefix })}
-  <div class="meta">${escapeHtml(project.meta || '')}</div>
-  <h3>${escapeHtml(project.title)}</h3>
+  const cover = !project.img.endsWith('.svg') && /cover|photo/.test(project.imgFit || '');
+  const mediaClass = isMark(project.img) ? 'media media-mark' : 'media';
+  return `<article class="card record-card reveal filter-card ${extraClass}" data-track="${escapeHtml(project.track || '')}" data-filter-item data-tags="${escapeHtml((project.tags || []).join(','))}" data-search="${escapeHtml(searchText([project.title, project.subtitle, project.desc, ...(project.tags || []), ...(project.pills || [])]))}">
+  ${mediaHtml(project.img, { alt: project.imgAlt || project.title, prefix, cover, className: mediaClass })}
+  ${metaHtml(project.meta)}
+  <h3><a href="${href}">${escapeHtml(project.title)}</a></h3>
   <p>${escapeHtml(project.desc || project.subtitle || '')}</p>
   <div class="pill-row">${(project.pills || []).map((pill) => `<span class="pill">${escapeHtml(pill)}</span>`).join('')}</div>
+  <span class="read" aria-hidden="true">Read the project →</span>
+</article>`;
+}
+
+function markCard(project, prefix = '') {
+  const badge = project.icon
+    ? imgTag(project.icon, { alt: '', prefix })
+    : `<span aria-hidden="true">${escapeHtml(project.name.charAt(0))}</span>`;
+  return `<article class="card mark-card reveal" data-track="${escapeHtml(project.track || 'sps')}">
+  <div class="mark-row">
+    <div class="mark">${badge}</div>
+    <div>
+      <div class="meta"><span class="track">${escapeHtml(project.label)}</span></div>
+      <h3>${escapeHtml(project.name)}</h3>
+    </div>
+  </div>
+  <p>${escapeHtml(project.description)}</p>
   <div class="cta-row">
-    <a class="btn primary" href="${href}">Open project</a>
+    ${project.url ? `<a class="btn small primary" href="${project.url}" target="_blank" rel="me noreferrer">Open ${escapeHtml(project.name)}</a>` : ''}
+    <a class="btn small${project.url ? '' : ' primary'}" href="${prefix}projects/${project.slug}.html">Project page</a>
   </div>
 </article>`;
 }
 
+// Writing covers: a real figure (raster) is shown contain-fit; an SVG hero is
+// inlined; a post with `cover: generated` gets a typographic cover built from
+// the motif in the post's track colour.
+function writingCover(post, prefix = '', className = 'media') {
+  if (post.cover === 'generated' || !post.heroImage) {
+    const initial = (post.title || '?').trim().charAt(0).toUpperCase();
+    return `<div class="${className} cover" aria-hidden="true">${motifSvg({ width: 960, height: 480, lines: 7, dots: 8, seed: hashSeed(post.slug) })}<span class="cover-meta meta">${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</span><span class="cover-initial">${escapeHtml(initial)}</span></div>`;
+  }
+  return mediaHtml(post.heroImage, { alt: post.heroAlt || post.title, prefix, cover: post.heroFit === 'cover', className });
+}
+
 function cardWriting(post, prefix = '') {
   const href = `${prefix}${post.url}`;
-  return `<article class="card blog-card reveal filter-card" data-filter-item data-tags="${escapeHtml([post.kind, ...(post.topics || [])].join(','))}" data-search="${escapeHtml(searchText([post.title, post.summary, post.description, post.kind, ...(post.topics || [])]))}">
-  ${imgTag(post.heroImage, { className: 'blog-media', alt: post.heroAlt || post.title, prefix })}
-  <div class="blog-copy">
-    <div class="blog-meta">${formatDate(post.date)} · ${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</div>
-    <h3 class="blog-title">${escapeHtml(post.title)}</h3>
-    <p class="blog-summary">${escapeHtml(post.summary || post.description)}</p>
-  </div>
+  return `<article class="card blog-card reveal filter-card" data-track="${escapeHtml(post.track || '')}" data-filter-item data-tags="${escapeHtml([post.kind, ...(post.topics || [])].join(','))}" data-search="${escapeHtml(searchText([post.title, post.summary, post.description, post.kind, ...(post.topics || [])]))}">
+  ${writingCover(post, prefix)}
+  <div class="blog-meta">${formatDate(post.date)} · ${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</div>
+  <h3 class="blog-title"><a href="${href}">${escapeHtml(post.title)}</a></h3>
+  <p class="blog-summary">${escapeHtml(post.summary || post.description)}</p>
   <div class="pill-row">${(post.topics || []).map((topic) => `<span class="pill">${escapeHtml(topic)}</span>`).join('')}</div>
-  <div class="cta-row">
-    <a class="btn primary" href="${href}">Read entry</a>
-  </div>
+  <span class="read" aria-hidden="true">Read the entry →</span>
 </article>`;
 }
 
@@ -481,7 +597,7 @@ function outputsSection({ includeIntro = false } = {}) {
   return `<section class="accent-cool">
     <h2 class="section-title reveal">Publications, talks, and public proof</h2>
     ${includeIntro ? '<p class="section-subtitle reveal">Papers, talk recordings, and official University of Florida coverage connected to the projects above.</p>' : ''}
-    <div class="grid two" style="margin-top:14px; gap:14px;">
+    <div class="grid two">
       <article class="card reveal">
         <div class="archive-ledger-label">Preprint</div>
         <h3>Plato's Cave: A Human-Centered Research Verification System</h3>
@@ -531,7 +647,34 @@ const svgCache = new Map();
 function inlineSvg(file) {
   if (!svgCache.has(file)) {
     try {
-      svgCache.set(file, readFileSync(path.join(root, file), 'utf8').trim());
+      let svg = readFileSync(path.join(root, file), 'utf8').trim();
+      svg = svg.replace(/<\?xml[^>]*\?>\s*/i, '').replace(/<!DOCTYPE[^>]*>\s*/i, '');
+      const scopeId = `svg-${hashSeed(file).toString(36)}`;
+      if (file.includes('/diagrams/')) {
+        // House diagrams: the page stylesheet owns their styling (tokens for
+        // both themes), so drop any embedded <style>.
+        svg = svg.replace(/<style[\s\S]*?<\/style>/gi, '');
+      } else {
+        // Other inlined SVGs (writing illustrations) may carry their own
+        // <style>; scope every selector to this instance so rules cannot leak
+        // into other inlined SVGs on the same page.
+        svg = svg.replace(/<style([^>]*)>([\s\S]*?)<\/style>/gi, (m, attrs, css) => {
+          const scoped = css.replace(/([^{}]+)\{/g, (rule, selectors) => {
+            if (/^\s*@/.test(selectors)) return rule;
+            return `${selectors.split(',').map((s) => `#${scopeId} ${s.trim()}`).join(', ')}{`;
+          });
+          return `<style${attrs}>${scoped}</style>`;
+        });
+      }
+      svg = svg.replace(/<svg\b([^>]*)>/i, (match, attrs) => {
+        let a = attrs.replace(/\s(width|height)="[^"]*"/gi, '');
+        if (/\bclass="/.test(a)) a = a.replace(/class="([^"]*)"/, (m, c) => (c.split(/\s+/).includes('diagram') ? m : `class="diagram ${c}"`));
+        else a += ' class="diagram"';
+        if (!/\sid="/.test(a)) a += ` id="${scopeId}"`;
+        else a = a.replace(/\sid="[^"]*"/, ` id="${scopeId}"`);
+        return `<svg${a}>`;
+      });
+      svgCache.set(file, svg);
     } catch {
       console.warn(`[build] missing svg diagram: ${file}`);
       svgCache.set(file, '');
@@ -617,18 +760,33 @@ async function main() {
     ...spsData.items.map((item) => ({ ...item, track: 'sps' }))
   ];
   const featuredProjects = projects.filter((item) => item.featured).slice(0, 4);
+  const trackBySlug = new Map(projects.map((item) => [item.slug, item.track]));
+  for (const post of writing) {
+    post.track = (post.relatedProjects || []).map((slug) => trackBySlug.get(slug)).find(Boolean) || '';
+  }
   const personalProjects = [
     {
       name: 'Ora',
-      url: 'https://ora.raulv.dev/',
-      label: 'Personal app',
-      description: 'A training console for athletes and coaches: programs, diet tracking, progress reports, and coach review in one place.'
+      slug: 'ora',
+      icon: 'assets/img/projects/ora-mark.webp',
+      url: 'https://oracoach.app/',
+      label: 'Co-founded app',
+      description: 'A local-first training and progress app for lifters: fast set logging, a coach that drafts one change with its confidence, and a biomechanics research spine beside the app.'
     },
     {
       name: 'Gradus',
+      slug: 'gradus',
+      icon: 'assets/img/projects/gradus-icon.webp',
       url: 'https://gradus.raulv.dev/',
-      label: 'Personal app',
-      description: 'A practice platform for STEM students built to find the exact idea you missed: attempt a problem, get targeted feedback, repair the gap, and prove it in a new context.'
+      label: 'Independent app',
+      description: 'A reasoning-mastery platform for rigorous STEM courses: attempt a problem, get a deterministic diagnosis of the exact idea you missed, repair the gap, and prove it in a new context.'
+    },
+    {
+      name: 'Media Cull Suite',
+      slug: 'media-cull-suite',
+      url: null,
+      label: 'Photography tooling',
+      description: 'Local-first photo and video culling that ranks a shoot, learns my taste, and feeds a capture recipe back to the camera.'
     }
   ];
 
@@ -697,66 +855,49 @@ async function main() {
     description: 'Research site for Raul Valle, a UF Ph.D. student building CFD surrogate models in the SmartDATA Lab and machine-learning systems for neural imaging.',
     image: `${site.siteUrl}/assets/img/me/Raul_me.webp`,
     main: `<div class="container">
-      <section class="page-hero archive-hero reveal accent-cool">
+      <section class="page-hero archive-hero reveal" data-track="physics">
+        <div class="hero-motif" aria-hidden="true">${motifSvg({ width: 1160, height: 520, lines: 9, dots: 11, seed: 20260907 })}</div>
         <div class="archive-hero-main">
-          <div class="kicker">Raul Valle · University of Florida · Gainesville, Florida</div>
-          <h1 class="h1">Machine Learning for Physical and Neural Systems.</h1>
+          <div class="kicker">Raul Valle · University of Florida</div>
+          <h1 class="h1">Machine learning for <em>physical</em> and <em>neural</em> systems.</h1>
           <p class="lead">I build machine-learning systems for hard physical and biological data: surrogate models for computational fluid dynamics in the SmartDATA Lab, event detection and source separation for neural imaging, and the research software that keeps experiments honest. I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida.</p>
           <div class="cta-row">
             <a class="btn primary" href="research.html">Research and publications</a>
-            <a class="btn" href="cv.html">CV</a>
-            <a class="btn" href="contact.html">Contact</a>
+            <a class="btn" href="cv.html">Curriculum vitae</a>
+            <a class="btn text" href="contact.html">Get in touch</a>
           </div>
         </div>
-        <div class="hero-portrait reveal">
+        <figure class="hero-portrait reveal">
           ${imgTag('assets/img/me/portrait-680.webp', { alt: 'Portrait of Raul Valle', eager: true })}
-        </div>
+        </figure>
       </section>
 
-      <section class="accent-mint">
-        <h2 class="section-title reveal">Featured projects</h2>
-        <p class="section-subtitle reveal">The highest-signal project pages that explain what I am building and why it matters.</p>
-        <div class="grid two" style="margin-top:14px; gap:14px;">
-          ${featuredProjects.map((project) => cardProject(project)).join('')}
-        </div>
-      </section>
+      ${sectionHead({ eyebrow: 'Research', title: 'Featured projects', subtitle: 'The highest-signal project pages that explain what I am building and why it matters.' })}
+      <div class="grid two">
+        ${featuredProjects.map((project) => cardProject(project)).join('')}
+      </div>
 
-      <section class="accent-cool">
-        <h2 class="section-title reveal">Personal projects</h2>
-        <p class="section-subtitle reveal">Standalone projects with their own public homes, separate from the research archive.</p>
-        <div class="grid two" style="margin-top:14px; gap:14px;">
-          ${personalProjects.map((project) => `<article class="card reveal">
-            <div class="archive-ledger-label">${escapeHtml(project.label)}</div>
-            <h3>${escapeHtml(project.name)}</h3>
-            <p>${escapeHtml(project.description)}</p>
-            <div class="cta-row">
-              <a class="btn primary" href="${project.url}" target="_blank" rel="me noreferrer">Open ${escapeHtml(project.name)}</a>
-            </div>
-          </article>`).join('')}
-        </div>
-      </section>
+      ${sectionHead({ eyebrow: 'Elsewhere', title: 'Personal projects', subtitle: 'Software I build outside the lab: apps with their own public homes and tools for my own work.', track: 'sps' })}
+      <div class="grid three">
+        ${personalProjects.map((project) => markCard(project)).join('')}
+      </div>
 
-      <section class="accent-amber">
-        <h2 class="section-title reveal">Latest writing and elsewhere</h2>
-        <div class="grid two" style="margin-top:14px; gap:14px;">
-          ${writing.length ? cardWriting(writing[0]) : ''}
-          <article class="card reveal">
-            <div class="archive-ledger-label">Elsewhere</div>
-            <h3>Profiles and coverage</h3>
-            <p>Papers, citations, code, and the official University of Florida references for this work.</p>
-            <div class="cta-row">
-              <a class="btn primary" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a>
-              <a class="btn" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a>
-              <a class="btn" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
-            </div>
-            <div class="cta-row">
-              <a class="btn" href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a>
-              <a class="btn" href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a>
-              <a class="btn" href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">Talk video</a>
-            </div>
-          </article>
-        </div>
-      </section>
+      ${sectionHead({ eyebrow: 'Writing', title: 'Latest entry and profiles' })}
+      <div class="grid two">
+        ${writing.length ? cardWriting(writing[0]) : ''}
+        <article class="card reveal">
+          <div class="archive-ledger-label">Elsewhere</div>
+          <h3>Papers, code, and coverage</h3>
+          <p>Citations, code, and the official University of Florida references for this work.</p>
+          <dl class="kv kv-links">
+            <div class="kv-row"><dt class="kv-key">Citations</dt><dd class="kv-val"><a href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a> · <a href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a></dd></div>
+            <div class="kv-row"><dt class="kv-key">Code</dt><dd class="kv-val"><a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a></dd></div>
+            <div class="kv-row"><dt class="kv-key">University</dt><dd class="kv-val"><a href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a> · <a href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a></dd></div>
+            <div class="kv-row"><dt class="kv-key">Talks</dt><dd class="kv-val"><a href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">Foundations of Signal Processing (video)</a></dd></div>
+            <div class="kv-row"><dt class="kv-key">Chapter</dt><dd class="kv-val"><a href="https://ieee-sps-uf.raulv.dev/" target="_blank" rel="noreferrer">IEEE SPS @ UF</a></dd></div>
+          </dl>
+        </article>
+      </div>
     </div>`,
     schemaExtras: [{
       '@type': 'ItemList',
@@ -780,7 +921,7 @@ async function main() {
         item: {
           '@type': 'CreativeWork',
           name: item.name,
-          url: item.url,
+          url: item.url || `${site.siteUrl}/projects/${item.slug}.html`,
           description: item.description
         }
       }))
@@ -801,21 +942,19 @@ async function main() {
         <p class="lead">My current research builds machine-learning surrogates for physics simulation in the SmartDATA Lab, alongside neuroengineering work in CNEL and engineering, workshop, and prototype work through IEEE SPS at UF. The common thread is modeling that remains useful when the data is noisy, the physics is unforgiving, and the deployment constraints are real.</p>
       </section>
 
-      <div class="grid two accent-mint" style="margin-top:18px; gap:14px;">
-        ${Object.entries(trackMeta).map(([key, track]) => `<article class="card reveal">
-          <div class="archive-ledger-label">${track.label}</div>
-          <h3>${track.name}</h3>
+      <div class="grid three grid-gap">
+        ${Object.entries(trackMeta).map(([key, track]) => `<article class="card track-card reveal" data-track="${key}">
+          <div class="meta"><span class="track">${track.label}</span></div>
+          <h3><a href="${track.slug}">${track.name}</a></h3>
           <p>${track.description}</p>
-          <div class="cta-row">
-            <a class="btn primary" href="${track.slug}">Open track</a>
-          </div>
+          <span class="read" aria-hidden="true">Open the track →</span>
         </article>`).join('')}
       </div>
 
       <section class="accent-amber">
         <h2 class="section-title reveal">Featured project pages</h2>
         <p class="section-subtitle reveal">Canonical project pages with collaborators, scope, and related work.</p>
-        <div class="grid two" style="margin-top:14px; gap:14px;">
+        <div class="grid two">
           ${featuredProjects.map((project) => cardProject(project)).join('')}
         </div>
       </section>
@@ -825,7 +964,7 @@ async function main() {
       <section class="accent-cool">
         <h2 class="section-title reveal">Writing connected to the work</h2>
         <p class="section-subtitle reveal">Short public notes that explain what I care about, what I am learning, and where the research is moving.</p>
-        <div class="grid three" style="margin-top:14px; gap:14px;">
+        <div class="grid three">
           ${writing.slice(0, 3).map((post) => cardWriting(post)).join('')}
         </div>
         <div class="cta-row">
@@ -849,7 +988,7 @@ async function main() {
       image: `${site.siteUrl}/${items[0]?.img || 'assets/img/me/Raul_me.webp'}`,
       imageAlt: `${track.name} visual`,
       main: `<div class="container">
-        <section class="page-hero reveal accent-cool">
+        <section class="page-hero reveal" data-track="${key}">
           <div class="kicker">${track.kicker}</div>
           <h1 class="h1">${track.name}</h1>
           <p class="lead">${track.description}</p>
@@ -860,7 +999,7 @@ async function main() {
           emptyMessage: 'No projects match that filter yet.'
         })}
         <section class="accent-mint">
-          <div class="grid two filter-grid" style="margin-top:14px; gap:14px;" data-filter-grid>
+          <div class="grid two filter-grid" data-filter-grid>
             ${items.map((project) => cardProject(project)).join('')}
           </div>
         </section>
@@ -905,7 +1044,7 @@ async function main() {
         emptyMessage: 'No writing entries match that filter yet.'
       })}
       <section class="accent-mint">
-        <div class="grid three filter-grid" style="margin-top:14px; gap:14px;" data-filter-grid>
+        <div class="grid three filter-grid" data-filter-grid>
           ${writing.map((post) => cardWriting(post)).join('')}
         </div>
       </section>
@@ -951,20 +1090,18 @@ async function main() {
       image: `${site.siteUrl}/${project.img}`,
       imageAlt: project.imgAlt || project.title,
       main: `<div class="container">
-        <section class="page-hero reveal hero-split accent-cool">
-          <div>
-            <div class="kicker">${track.label}</div>
-            <h1 class="h1">${escapeHtml(project.title)}</h1>
-            <p class="lead">${escapeHtml(project.subtitle || project.desc)}</p>
-            <div class="breadcrumbs"><a href="../research.html">Research</a> / <a href="../${track.slug}">${track.name}</a> / <span>${escapeHtml(project.title)}</span></div>
-            <div class="cta-row">
-              <a class="btn" href="../${track.slug}">Back to ${track.name}</a>${(project.links || []).map((link, index) => `<a class="btn${index === 0 ? ' primary' : ''}" href="${link.href}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join('')}
-            </div>
-          </div>
-          ${imgTag(project.img, { className: 'card-img compact project-hero-img', alt: project.imgAlt || project.title, prefix: '../', eager: true })}
+        <section class="page-hero reveal" data-track="${project.track}">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../research.html">Research</a> / <a href="../${track.slug}">${track.name}</a></nav>
+          ${isMark(project.img) ? `<div class="hero-mark mark">${imgTag(project.img, { alt: project.imgAlt || '', prefix: '../', eager: true })}</div>` : ''}
+          <div class="kicker">${escapeHtml(project.kicker || track.label)}</div>
+          <h1 class="h1">${escapeHtml(project.title)}</h1>
+          <p class="lead">${escapeHtml(project.subtitle || project.desc)}</p>
+          ${details.status ? `<div class="meta hero-meta"><span class="track">Status</span> · ${escapeHtml(details.status)}</div>` : ''}
+          ${(project.links || []).length ? `<div class="cta-row">${(project.links || []).map((link, index) => `<a class="btn${index === 0 ? ' primary' : ''}" href="${link.href}" target="_blank" rel="noreferrer">${escapeHtml(link.label)}</a>`).join('')}</div>` : ''}
+          ${isMark(project.img) ? '' : mediaHtml(project.img, { alt: project.imgAlt || project.title, prefix: '../', cover: /cover|photo/.test(project.imgFit || ''), className: 'hero-media' })}
         </section>
 
-        <section class="project-detail reveal accent-mint">
+        <section class="project-detail reveal" data-track="${project.track}">
           <div class="project-main">
             <article class="card reveal">
               <h2 class="project-section-title">Overview</h2>
@@ -1034,18 +1171,16 @@ async function main() {
       image: `${site.siteUrl}/${post.heroImage}`,
       imageAlt: post.heroAlt || post.title,
       main: `<div class="container">
-        <section class="page-hero hero-split reveal accent-cool">
-          <div>
-            <div class="kicker">${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</div>
-            <h1 class="h1">${escapeHtml(post.title)}</h1>
-            <p class="lead">${escapeHtml(post.description)}</p>
-            <div class="breadcrumbs"><a href="../blog.html">Writing</a> / <span>${escapeHtml(post.title)}</span></div>
-            <div class="meta">${formatDate(post.date)} · ${(post.topics || []).map((topic) => escapeHtml(topic)).join(' · ')}</div>
-          </div>
-          ${imgTag(post.heroImage, { className: 'card-img compact project-hero-img', alt: post.heroAlt || post.title, prefix: '../', eager: true })}
+        <section class="page-hero reveal" data-track="${post.track || ''}">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">${escapeHtml(post.label || tagLabels[post.kind] || post.kind)}</div>
+          <h1 class="h1">${escapeHtml(post.title)}</h1>
+          <p class="lead">${escapeHtml(post.description)}</p>
+          <div class="meta hero-meta"><span class="track">${formatDate(post.date)}</span> · ${(post.topics || []).map((topic) => escapeHtml(topic)).join(' · ')}</div>
+          ${writingCover(post, '../', 'hero-media')}
         </section>
 
-        <section class="project-detail reveal accent-mint">
+        <section class="project-detail reveal" data-track="${post.track || ''}">
           <div class="project-main">
             <article class="card reveal prose-card">
               <h2 class="project-section-title">Entry</h2>
@@ -1097,7 +1232,7 @@ async function main() {
         <p class="lead">Selected awards tied to research, computing, and public-facing project work.</p>
       </section>
       <section class="accent-mint">
-        <div class="grid three" style="margin-top:14px; gap:14px;">
+        <div class="grid three">
           ${awardsData.items.map((award) => `<article class="card reveal">
             ${award.img && award.img !== 'assets/img/placeholder.svg' ? imgTag(award.img, { className: 'card-img', alt: award.imgAlt || award.title }) : ''}
             <div class="meta">${escapeHtml(award.meta || '')}</div>
@@ -1109,6 +1244,7 @@ async function main() {
     </div>`
   }));
 
+  const photoCollections = new Set(photographyData.items.map((item) => item.collection || 'Selected Work'));
   await writePage('photography.html', pageShell({
     outputPath: 'photography.html',
     title: 'Photography | Raul Valle',
@@ -1121,13 +1257,13 @@ async function main() {
         <p class="lead">Photography stays on the site as a secondary surface: a visual archive that complements the research work without competing with it.</p>
       </section>
       <section class="accent-mint">
-        <div class="photo-grid" style="margin-top:14px;">
+        <div class="photo-grid">
           ${photographyData.items.map((item, index) => `<figure class="photo-card reveal">
             <button class="photo-trigger" type="button" data-lightbox data-lightbox-index="${index}" data-full="${item.img}" data-title="${escapeHtml(item.title)}" data-caption="${escapeHtml(item.caption || '')}" aria-label="View ${escapeHtml(item.title)} at full size">
               ${imgTag(item.img.replace('-1600.webp', '-640.webp'), { className: 'photo-media', alt: item.imgAlt || item.title })}
             </button>
             <figcaption class="photo-copy">
-              <div class="photo-category">${escapeHtml(item.collection || 'Selected Work')}</div>
+              ${photoCollections.size > 1 ? `<div class="photo-category">${escapeHtml(item.collection || 'Selected Work')}</div>` : ''}
               <h3>${escapeHtml(item.title)}</h3>
               <p class="photo-caption">${escapeHtml(item.caption || '')}</p>
               <div class="photo-meta">${escapeHtml([item.location, item.year].filter((value) => value && !/TBD/i.test(value)).join(' · '))}</div>

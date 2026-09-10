@@ -2,170 +2,203 @@
   "items": [
     {
       "slug": "kernel-adaptive-memory",
-      "title": "Kernel Adaptive Memory: a transformer alternative for sequence modeling",
-      "subtitle": "Research prototype that replaces dot-product attention with radial kernel context attention, learned persistent supports, and an optional online adaptive readout.",
+      "title": "Kernel Adaptive Memory: testing persistent kernel memory for sequence models",
+      "subtitle": "A falsification-first research program asking whether a kernel-routed bank of persistent supports adds anything to a sequence model — first as radial attention, now as a sparse, top-K-routed memory branch inside a standard decoder.",
       "img": "assets/img/projects/diagrams/kam-architecture.svg",
-      "imgAlt": "Diagram of Kernel Adaptive Memory: a sequence feeds radial context attention and learned persistent supports before a residual readout and optional online NLMS adaptation.",
+      "imgAlt": "Diagram of the Phase I Kernel Adaptive Memory model: a sequence feeds radial context attention and a learned persistent support bank before a residual readout with optional online NLMS adaptation.",
       "tags": [
         "sequence-modeling",
         "kernel-methods",
-        "adaptive-memory"
+        "adaptive-memory",
+        "research-methodology"
       ],
       "pills": [
-        "Radial kernel attention",
-        "Persistent memory supports",
-        "Transformer comparison",
+        "Sparse top-K memory",
+        "Separable optimization",
+        "Preregistered experiments",
+        "Paired-seed statistics",
         "Online NLMS adaptation"
       ],
-      "meta": "Research · sequence modeling · adaptive memory",
-      "desc": "A proposal for a transformer alternative: use a learned radial geometry for local context, a finite bank of persistent supports for reusable structure, and a lightweight online readout for adaptation after distribution shift.",
+      "meta": "CNEL · sequence modeling · persistent memory",
+      "desc": "Six phases of preregistered experiments asking whether a kernel-routed persistent memory helps sequence models: no general advantage yet, but the hypothesis has narrowed from dense radial attention to sparse, top-K-routed separable memory.",
       "featured": true,
-      "links": [],
+      "links": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/Jibby2k1/KAM"
+        },
+        {
+          "label": "Research note (PDF)",
+          "href": "https://github.com/Jibby2k1/KAM/blob/main/Kernel_Adaptive_Memory_Research_Specification.pdf"
+        }
+      ],
       "details": {
-        "overview": "Kernel Adaptive Memory (KAM) is a compact reference implementation for testing whether kernel geometry and persistent supports can provide a useful alternative to standard dot-product attention. The project is deliberately framed as a falsifiable research program: it defines matched baselines, diagnostic outputs, and failure conditions instead of claiming a benchmark win before the grid is run.",
-        "what_i_built": [
-          "A PyTorch sequence model with radial context attention, learned persistent support keys and values, residual feed-forward blocks, and language/regression readouts.",
-          "Matched ablations: context-only kernel self-attention, memory-only, the full KAM hybrid, dot-product transformer attention, and a dot-product hybrid.",
-          "Four experiment families: exact copy retrieval, hidden-regime grammar, Mackey–Glass delayed dynamics, and character-level language modeling.",
-          "Benchmark and diagnostic tooling for parameter count, wall-clock timing, throughput, peak memory, attention maps, support utilization, and support-regime purity."
-        ],
-        "how_it_works": [
-          "Represent queries and keys in a normalized feature geometry and score them with a positive diagonal radial metric rather than a dot product.",
-          "Let each token retrieve from its causal context, optionally restricted to a local window, using the same generic attention calculation.",
-          "Let contextual tokens also retrieve from a finite learned bank of persistent support keys and values that can encode reusable prototypes across sequences.",
-          "For a Mackey–Glass parameter shift, freeze the learned feature geometry and adapt only the scalar readout with normalized least-mean-squares (NLMS)."
-        ],
+        "overview": "Kernel Adaptive Memory (KAM) started as a bridge between kernel least-mean-squares methods, which predict with localized basis functions and admit cheap online updates, and transformers, which learn context-dependent routing. The original question was whether a learned radial geometry plus a finite bank of persistent supports could replace dot-product attention. Six experiment phases later, that broad claim is not supported; what survived is a narrower hypothesis about a sparse, top-K-routed memory branch that complements attention, and a research process designed so that a negative result is as usable as a positive one.",
+        "status": "Active research program; six experiment phases through August 2026, Phases III–VI run on UF HiPerGator; no promotion decision yet.",
         "stack": [
           "Python",
           "PyTorch",
           "NumPy",
-          "Matplotlib",
-          "pytest"
+          "Optuna",
+          "PyYAML",
+          "pytest",
+          "Slurm on UF HiPerGator (NVIDIA L4)"
         ],
-        "status": "Research prototype / hypothesis-testing phase.",
+        "what_i_built": [
+          "The Phase I reference model: radial kernel context attention, a learned bank of persistent support keys and values, and an optional normalized-LMS readout, with seven matched command-line variants and four task generators (copy, hidden-regime grammar, Mackey–Glass, character text).",
+          "The Phase VI sparse separable memory layer: a standalone modern causal decoder (RMSNorm, SwiGLU) whose blocks can add a top-K kernel-routed memory branch of locally affine or low-rank experts behind a zero-initialized gate, plus widened-transformer, memory-token, mixture-of-experts, and product-key-memory controls at matched parameters.",
+          "A separable optimization surface: ridge and streaming recursive-least-squares solves for the expert values, alternating algebra/geometry schedules (8:1, 32:1, 128:1), trust-region rollback for geometry steps, and variable-projection test fixtures.",
+          "Manifest-driven, content-addressed, resumable Slurm array campaigns for HiPerGator, with dependency-gated aggregation and report jobs so a campaign can be rerun row by row without duplicating work.",
+          "Preregistered validity gates and locked decision memos that fix the estimand, paired-seed bootstrap intervals, sign-flip randomization tests, Holm correction, and equivalence margins (±1 percent in the current Stage 1 memo) before any result is inspected.",
+          "Independent audit scripts for output identity, task/optimizer dispatch, finite metrics, alternating-schedule coverage, freeze integrity, and matched key/expert permutation invariance."
+        ],
+        "how_it_works": [
+          "Inside each decoder block, the normalized residual stream is mapped to a routing coordinate z, and every one of the M support keys is scored with a radial kernel distance under a learned diagonal metric.",
+          "Only the top-K supports (K much smaller than M) are kept; their scores are softmax-normalized among themselves, so stored capacity grows with M while active expert compute grows only with K.",
+          "Each selected support owns a locally affine expert, A_i·u + b_i (or a low-rank version); the memory output is the routing-weighted sum of the selected expert outputs.",
+          "That output re-enters the residual stream through a zero-initialized gate, so an untrained memory branch reproduces the baseline transformer's outputs and has to earn its influence.",
+          "Parameters split into slow \"geometry\" (keys, query map, metric) and fast \"algebra\" (expert values). They can be trained jointly, alternated at fixed ratios, or with the geometry frozen for the last 20 percent of training.",
+          "Every configuration is compared against a plain transformer, a widened transformer, memory tokens, mixture-of-experts, and product-key memory at matched total or active parameters; a result that merely adds parameters does not count."
+        ],
         "writeup": {
-          "lead": "What if a sequence model could keep the useful parts of attention while giving memory a more explicit geometry and a path to fast online adaptation?",
+          "lead": "Can a sequence model keep the useful parts of attention while giving persistent memory an explicit kernel geometry and a fast path to adaptation? After six experiment phases the honest answer is: not in the general form I first proposed, but a narrower version of the idea is still open.",
           "sections": [
             {
-              "heading": "The question: can memory be more structured than a context window?",
+              "heading": "The question",
               "body": [
-                "Transformers are remarkably general, but their default memory is a sequence of pairwise dot-product comparisons. KAM asks whether a model can separate two jobs that are often mixed together: retrieving relevant recent context, and recalling reusable structure that should persist across examples.",
-                "The project is not presented as a finished replacement for transformers. It is a small, controlled testbed for a more specific hypothesis: a kernel-defined geometry plus a fixed bank of learned supports might make sequence representations more interpretable, more diagnostic, or quicker to adapt when the data-generating process changes."
+                "Kernel adaptive filters such as kernel least-mean-squares (KLMS) predict with a bank of localized basis functions centered on stored samples, and they adapt online with cheap coefficient updates. Transformers learn context-dependent query/key routing and are far more general, but their memory is a growing context window of pairwise comparisons. KAM asked whether the two could be combined: give a sequence model a finite bank of learned **persistent supports** with an explicit kernel geometry, and keep a fast linear path for adaptation after the data changes.",
+                "The July 2026 working note framed this as a falsifiable program rather than a result. It defined matched baselines, the diagnostics that would be reported, and the conditions under which the idea should be declared not worth pursuing. Most of what follows is the record of running that program and letting it narrow the claim."
               ]
             },
             {
-              "heading": "One kernel calculation, two kinds of memory",
+              "heading": "Phase I: one kernel calculation, two memories",
               "body": [
-                "KAM uses one generic attention primitive in two roles. In context attention, a token queries earlier tokens from its own sequence. In persistent-memory attention, a contextual token queries a finite bank of learned support keys and values. The architecture can therefore be ablated cleanly: remove the support bank, remove context attention, or replace the radial score with the familiar scaled dot product."
+                "The first implementation replaced scaled dot-product attention with a radial kernel score: similarity is a distance in a learned feature space under a positive diagonal metric, rather than a dot product. The same operator is used in two roles. In context attention a token queries earlier tokens from its own sequence. In persistent-memory attention a token queries a finite learned bank of M support keys and values that is shared across all sequences.",
+                "Because one primitive serves both roles, the model can be ablated cleanly: drop the support bank, drop context attention, or swap the radial score for the familiar dot product while keeping everything else fixed. Seven command-line variants (the full KAM, kernel-only context, memory-only, a dot-product transformer, a dot-product hybrid with supports, a GRU, and an MLP) and four tasks make up the original grid."
               ],
               "breakdown": [
                 {
                   "label": "Context attention",
-                  "text": "Causal retrieval from the current sequence; an optional local window W tests whether a bounded context is enough."
+                  "text": "Causal retrieval from the current sequence with a radial score; an optional local window W tests whether bounded context is enough."
                 },
                 {
                   "label": "Persistent supports",
-                  "text": "A learned bank of M key/value pairs that can act as reusable prototypes across sequences."
+                  "text": "A learned bank of M key/value pairs that any sequence can query, intended to hold reusable structure rather than another copy of the context."
                 },
                 {
-                  "label": "Readout",
-                  "text": "A standard prediction head, with an optional NLMS update applied only to the final scalar readout during shift evaluation."
+                  "label": "Adaptive readout",
+                  "text": "After a Mackey–Glass delay shift, the feature extractor is frozen and only the scalar readout is updated with normalized least-mean-squares (NLMS)."
                 }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/kam-architecture.svg",
-                "alt": "Kernel Adaptive Memory architecture: tokens flow through radial context attention and a learned persistent support bank into a residual readout, with an optional online NLMS update.",
-                "caption": "Figure 1 — KAM separates local context retrieval from persistent support retrieval, then keeps online adaptation confined to the readout."
+                "alt": "Phase I Kernel Adaptive Memory architecture: tokens flow through radial context attention and a learned persistent support bank into a residual readout, with an optional online NLMS update.",
+                "caption": "Figure 1 — The Phase I model: one radial attention primitive used for local context and for a persistent support bank, with online adaptation confined to the readout."
               }
             },
             {
-              "heading": "What is different from a standard transformer?",
+              "heading": "What the first matched grid showed",
               "body": [
-                "The attention score is a radial energy under a learned positive diagonal metric. That changes the inductive bias — similarity is expressed as distance in a learned feature geometry — while keeping the implementation close enough to a transformer that matched comparisons are meaningful.",
-                "This is not a claim of free asymptotic scaling. Full context still has quadratic sequence cost. The proposal instead exposes two knobs: a local context window W and a persistent support count M, with leading-order attention work of O(TWd) and O(TMd) for those two paths. The benchmark records measured latency and memory because the radial score adds norm and elementwise work that asymptotic notation does not capture."
+                "The first grid was 45 runs: five attention variants, three tasks (copy, hidden-regime grammar, Mackey–Glass), three seeds. It did not show a general advantage for the kernel geometry. Dot-product attention won or tied on copy and regime grammar. On Mackey–Glass the full KAM beat the dot-product transformer, but the dot-product hybrid, which adds the same support bank to ordinary attention, beat KAM; the useful ingredient there was the memory bank, not the radial score. On Tiny Shakespeare the dot-product transformer reached lower perplexity (6.96 versus 7.41) in about half the runtime, and a KAM model trained on copy length 16 fell to 16.1 percent accuracy at length 32. KAM also carried roughly 1.3 times the parameters, so the comparison was not even parameter-matched.",
+                "One signal survived. After a Mackey–Glass delay shift, adapting only the scalar readout with NLMS cut post-shift mean squared error by 44.5 percent relative to the frozen readout, and by 55.8 percent late in the stream. That is the KLMS-style property the project set out to keep, and it pointed the follow-up toward memory for nonstationary streams rather than toward a new attention score.",
+                "Phases II through V then hardened the method more than the architecture. A five-seed paired grid (50 runs) found no Holm-corrected comparison whose confidence interval excluded zero. A 1,728-row development search on switching dynamics moved the program onto HiPerGator. A bounded data-regime screen was filed as diagnostic only, and a learned-versus-fixed-feature campaign introduced active-parameter matching to within 1 percent and machine-checked validity gates that must pass before any result is read."
               ]
             },
             {
-              "heading": "A benchmark grid designed to falsify the idea",
+              "heading": "Narrowing to sparse separable memory",
               "body": [
-                "Each task isolates a different reason a structured memory mechanism might help. Every KAM variant is trained with the same width, depth, optimizer, token budget, and evaluation budget as its comparison models; the goal is to report parameter count and measured wall-clock cost alongside accuracy."
+                "The Phase VI brief opens by stating that the broad claim, that the dense KAM bank should replace transformer attention, is not supported. The remaining hypothesis is narrower: a transformer may benefit from a **sparse, support-derived memory** whose values can be solved or adapted quickly while its support geometry changes slowly. Attention keeps modeling context; the memory branch supplies selectively accessed local transformations.",
+                "Concretely, each decoder block maps its residual stream to a routing coordinate, scores all M support keys with a radial kernel distance, and keeps only the top K (with K much smaller than M). Each selected support owns a locally affine expert, and the routing-weighted sum of those experts re-enters the residual stream through a zero-initialized gate, so an untrained memory branch reproduces the baseline model exactly. Stored capacity scales with M; active expert compute scales with K. Routing cost is a separate question, which is why the router zoo includes exact, chunked, product-key, and approximate variants with recall measured against an exact reference.",
+                "\"Separable\" refers to two parameter classes on two timescales. The fast **algebra** (expert values) is linear given the routing and can be solved by ridge regression or streaming recursive least squares; the slow **geometry** (keys, query map, metric) is updated by gradient steps, alternated with the algebra at ratios such as 8:1 or 32:1, and in the registered lifecycle frozen for the last 20 percent of training so the final tuning happens against stable routing."
               ],
               "breakdown": [
                 {
-                  "label": "Copy language",
-                  "text": "Tests exact contextual retrieval and length generalization; success means matched accuracy with useful, sparse lag maps."
+                  "label": "T-KAM-F",
+                  "text": "Fixed or data-centered keys: is useful geometry available without learning key positions at all?"
                 },
                 {
-                  "label": "Hidden-regime grammar",
-                  "text": "Tests whether persistent supports discover and reuse one of several unobserved transition rules; support purity is measured against the hidden regime."
+                  "label": "T-KAM-L",
+                  "text": "Learned keys, optionally as a low-rank delta from initialization: does learned support placement help?"
                 },
                 {
-                  "label": "Mackey–Glass",
-                  "text": "Tests delayed dynamics and adaptation after a change in the delay parameter, against GRU, MLP, and budgeted KLMS baselines."
+                  "label": "T-KAM-ALT",
+                  "text": "Alternating algebra/geometry updates: does timescale separation improve optimization?"
                 },
                 {
-                  "label": "Character language",
-                  "text": "Tests whether the proposal remains competitive on realistic text at matched timing; a slowdown without an accuracy or interpretability gain is a failure."
+                  "label": "Controls",
+                  "text": "A plain decoder (T0), a widened decoder (T-WIDE), learned memory tokens, mixture-of-experts, and product-key memory at matched total or active parameters."
                 }
-              ]
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/kam-sparse-memory.svg",
+                "alt": "Phase VI sparse separable memory: the residual stream is routed to the top-K of M support keys by kernel distance, each selected support applies a local affine expert, and the weighted sum re-enters the block through a zero-initialized gate; slow geometry and fast algebra are trained on separate timescales.",
+                "caption": "Figure 2 — The Phase VI memory branch: kernel routing to K of M supports, local affine experts, a zero-initialized gate, and a slow-geometry / fast-algebra split."
+              }
             },
             {
-              "heading": "Online adaptation after a distribution shift",
+              "heading": "The falsification discipline",
               "body": [
-                "The most distinctive systems question is what happens after the stream changes. In the Mackey–Glass experiment, KAM first learns a feature geometry and readout on one delay regime. During shift evaluation, the feature extractor is frozen and only the scalar readout receives a normalized-LMS update. Frozen-versus-adapted error traces, early and late MSE, and integrated error ratio make the adaptation claim measurable rather than anecdotal."
+                "Running a single-person architecture idea for six phases invites wishful reading, so the process is built to resist it. From Phase IV on, every phase has an implementation brief, a handoff document that asks for critique of the next step, a decision memo with outcome-to-action rules written before results are inspected, and a reproducibility record; earlier phases have a subset of these. Campaigns are immutable JSONL manifests where one row is one independently rerunnable job, submitted as Slurm arrays on HiPerGator's NVIDIA L4 nodes, with aggregation and report jobs held behind dependency gates.",
+                "The training seed is the inferential unit. Comparisons are paired by exact seed identity and reported with bootstrap confidence intervals, sign-flip randomization tests, Holm correction within declared families, and two-one-sided equivalence tests with declared margins (±1 percent in the current Stage 1 decision memo), because a non-significant difference is not evidence of equivalence. Confirmation campaigns fix their sample size in advance from a planning effect deliberately smaller than the pilot effect, to protect against winner's curse, and forbid optional stopping or seed replacement.",
+                "Independent audits catch what the pipeline gets wrong, and they have. Phase VI Stage 1 was rerun after audits found a geometry-factor coverage gap and a task/optimizer dispatch defect; an overnight campaign's adaptation rows were reclassified when an audit showed the declared adapters were never dispatched; and the Phase 6.2 mechanism study, 168 rows at 50 million tokens each, completed training and then failed its own preregistered validity gate because CUDA top-K tie-breaking was not invariant to matched key/expert permutations. That defect was localized to late memory layers, reproduced on three L4 hosts and absent on CPU, fixed with an opt-in support-identity tie-breaker, checked with a locked 26-checkpoint replay and a 24-row pilot, and a fresh 168-row rerun was preregistered rather than patching the original campaign."
               ]
             },
             {
               "heading": "Where it stands",
               "body": [
-                "The minimal reference implementation, task generators, ablation factory, benchmark harness, and diagnostics are in place. The next research step is the matched multi-seed grid: copy, hidden regimes, Mackey–Glass, and character text, with deletion/perturbation tests to check whether high-weight tokens and supports causally matter.",
-                "The public claim is intentionally bounded: KAM is a proposed transformer alternative and an experimental framework, not a reported state-of-the-art result. Support birth/death, moving-geometry coefficient transport, compactly supported kernels, low-rank full metrics, and PDE loaders remain follow-on work."
+                "As of 2026-08-09 (the last commit), the repository holds the Phase I reference implementation, the Phase VI decoder, memory, and optimization packages, and the campaign infrastructure, with 109 tests across all phases. On HiPerGator, Phase VI's Stage 0 correctness gate passed 128/128 rows, the corrected Stage 1 mechanism screen completed 3,000/3,000 rows with passing audits, and bounded Stage 2 through 6 profiles completed and were audited as implementation and resource evidence only. In the Stage 3 router profile, exact, chunked, and product-key routers recovered the exact reference's top-K choices with recall of 0.993, 0.991, and 0.983; the approximate router managed 0.477.",
+                "The quality evidence is thin and honestly labeled. A three-seed overnight language-modeling pilot put the fixed-key variant's validation loss 30.4 percent below a widened transformer at the registered token checkpoint, but with n = 3 the paired permutation p-value was 0.25, and the corrected decision was to retain the result as diagnostic only. The 156-row confirmation that followed (30 TinyStories pairs and 24 Tiny Shakespeare pairs at 50 million tokens per row) is referred to in later planning documents as not having met its primary superiority gate; its full report is not in the repository, so I do not quote its numbers here. The Phase VI decision memo's standing verdict is that no promotion decision has been made.",
+                "The current thread is a mechanism study of what sparse memory actually learns, not another attempt to win a benchmark: whether learned keys beat fixed ones, whether freezing geometry late helps, and whether alternating updates matter, with checkpoint-reuse causal checks (support and layer deletion, permutation tests) required before any further scaling. The preregistered support-identity rerun is the next result; whether it launched and what it found is not recorded in the repository as of this writing."
               ]
             }
           ],
           "faq": [
             {
-              "q": "Is KAM a transformer?",
-              "a": "It is transformer-like in its residual sequence-modeling structure, but it replaces standard dot-product attention with radial kernel scores and adds a persistent support-memory path. The page uses “alternative” to describe the research direction, not a claim that it has already displaced transformers."
+              "q": "Does KAM beat a transformer?",
+              "a": "No general advantage has been established. The first matched grid favored dot-product attention on most tasks, and the one underpowered pilot that favored sparse KAM (three seeds, p = 0.25) was filed as diagnostic only. The follow-up confirmation is described in the repo's later documents as not meeting its primary gate. The program's decision memo still reads \"no promotion decision.\""
             },
             {
-              "q": "What is the kernel doing?",
-              "a": "The kernel defines a learned radial geometry for comparing query and key representations. A positive diagonal metric lets each feature dimension contribute a learned amount to the distance."
+              "q": "Why did the framing change from \"transformer alternative\"?",
+              "a": "Because the data said so. Replacing the attention score with a radial kernel did not help, but adding a persistent support bank did help on delayed dynamics, and the online-adapted readout recovered much faster after a shift. The current design keeps standard attention for context and adds a sparse memory branch beside it, which is a complement rather than a replacement."
             },
             {
-              "q": "Does KAM beat a transformer yet?",
-              "a": "Not claimed. The repository defines the comparisons and success/failure criteria; benchmark results should be reported only after the matched multi-seed grid is run."
+              "q": "What does \"separable\" mean here?",
+              "a": "The memory has two parameter classes. The expert values (the \"algebra\") are linear given the routing and can be solved exactly or adapted online. The keys, query map, and metric (the \"geometry\") are updated slowly, alternated with the algebra, and frozen for the last 20 percent of training so final tuning happens against stable routing."
             },
             {
-              "q": "What are persistent supports?",
-              "a": "A finite learned bank of key/value vectors that every sequence can query. They are intended to represent reusable global structure rather than another copy of the current context window."
+              "q": "Why so much process for a solo research project?",
+              "a": "Because a solo project has no reviewer to stop optimistic readings. Preregistered gates, decision memos written before results are seen, paired-seed statistics with multiplicity correction, and independent audits have already caught several defects that would otherwise have been reported as findings, including a CUDA top-K tie-ordering bug that invalidated a 168-row campaign."
             },
             {
-              "q": "What does online NLMS adaptation change?",
-              "a": "Only the final scalar readout is updated during the shift experiment. The KAM feature extractor stays frozen, making recovery speed and error reduction easy to measure."
+              "q": "Is the online adaptation result still part of the story?",
+              "a": "Yes. The 44.5 percent post-shift error reduction from NLMS readout adaptation in Phase I is the single result that has held up, and Phase VI keeps a dedicated online-adaptation lane: its brief compares frozen, SGD-readout, NLMS, recursive-least-squares, memory-value, and local-expert adapters on predict-score-reveal-update streams, and the bounded Stage 4 profile ran eight adapter choices as a descriptive screen."
             }
           ]
         },
         "glossary": [
           {
             "term": "KAM",
-            "definition": "Kernel Adaptive Memory: the proposed sequence architecture combining radial context attention, persistent supports, and an optional adaptive readout."
+            "definition": "Kernel Adaptive Memory: a research program on giving sequence models a kernel-routed bank of persistent supports; the name now refers to the sparse separable memory branch rather than the original radial-attention model."
           },
           {
             "term": "Persistent support",
-            "definition": "A learned key/value vector in a finite memory bank that can be queried by tokens from any sequence."
+            "definition": "A learned key (and its value or local expert) in a finite memory bank that any token from any sequence can be routed to."
           },
           {
-            "term": "Radial kernel score",
-            "definition": "A similarity score derived from a learned distance in feature space rather than a dot product."
+            "term": "Top-K routing",
+            "definition": "Scoring all M supports by kernel distance but keeping only the K best-scoring ones per token, so active compute grows with K while stored capacity grows with M."
+          },
+          {
+            "term": "Separable memory",
+            "definition": "A memory whose fast linear parameters (expert values) and slow nonlinear parameters (keys, metric, query map) are trained on different timescales or by different solvers."
           },
           {
             "term": "NLMS",
-            "definition": "Normalized least-mean-squares: an online update for a linear readout that scales its step by feature energy."
+            "definition": "Normalized least-mean-squares: an online update for a linear readout that scales its step by the input's energy; used here to adapt after a distribution shift with the feature extractor frozen."
           },
           {
-            "term": "Mackey–Glass",
-            "definition": "A delayed nonlinear dynamical system used here to test sequence prediction and recovery after a parameter shift."
+            "term": "Validity gate",
+            "definition": "A machine-checked precondition (all rows complete, outputs identical to reference, finite metrics, permutation invariance) that must pass before a campaign's results may be interpreted at all."
           }
         ]
       }
@@ -174,8 +207,8 @@
       "slug": "latent-signal-dynamical-classification",
       "title": "Latent-signal classification with hierarchical dynamical systems",
       "subtitle": "Reproducible pipeline that infers compact latent trajectories from multichannel time-series signals and evaluates them for downstream classification.",
-      "img": "assets/img/projects/HLDS_Inf.png",
-      "imgAlt": "Diagram of a hierarchical dynamical system: noisy observed signals generate compact latent trajectories used by a classifier.",
+      "img": "assets/img/projects/diagrams/latent-statespace.svg",
+      "imgAlt": "Diagram: hidden states evolve over time and generate the observed multichannel signal.",
       "tags": [
         "research",
         "latent-signals",
@@ -186,7 +219,7 @@
         "Latent-signal classification",
         "Temporal representation learning"
       ],
-      "meta": "Research · dynamical systems · classification",
+      "meta": "CNEL · dynamical systems · classification",
       "desc": "Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.",
       "featured": true,
       "links": [],
@@ -351,7 +384,7 @@
         "Source separation",
         "Statistical detection"
       ],
-      "meta": "Research · neural imaging · signal separation",
+      "meta": "CNEL · neural imaging · signal separation",
       "desc": "Research platform for zebrafish neural-imaging video: statistical event detection for voltage recordings and a calcium-imaging experiment program that separates activity from background, artifacts, and noise.",
       "featured": true,
       "links": [
@@ -399,10 +432,22 @@
                 "[Read the experiment note →](../notes/source-separation-for-zebrafish-calcium-imaging.html)"
               ],
               "breakdown": [
-                { "label": "Preserve", "text": "Keep an immutable activity carrier for scientific traces, timing, and downstream interpretation." },
-                { "label": "Separate", "text": "Use spatial, spectral, ICA, factorization, and dynamical channels as bounded auxiliary features." },
-                { "label": "Rank", "text": "Compare candidate ordering at fixed budgets instead of treating a larger candidate list as better precision." },
-                { "label": "Gate", "text": "Advance only when detection improves without unacceptable amplitude, area, timing, morphology, or stability loss." }
+                {
+                  "label": "Preserve",
+                  "text": "Keep an immutable activity carrier for scientific traces, timing, and downstream interpretation."
+                },
+                {
+                  "label": "Separate",
+                  "text": "Use spatial, spectral, ICA, factorization, and dynamical channels as bounded auxiliary features."
+                },
+                {
+                  "label": "Rank",
+                  "text": "Compare candidate ordering at fixed budgets instead of treating a larger candidate list as better precision."
+                },
+                {
+                  "label": "Gate",
+                  "text": "Advance only when detection improves without unacceptable amplitude, area, timing, morphology, or stability loss."
+                }
               ]
             },
             {
@@ -423,10 +468,22 @@
                 "Detection is built as a set of interchangeable stages so the pre-processing filter and the detector can be swapped and tuned independently. A parallel grid search runs across filter and detector parameters, and the best operating points are chosen by real detection-theory metrics rather than by eye."
               ],
               "breakdown": [
-                { "label": "Pre-process (swap)", "text": "A Gamma spatio-temporal filter for enhancement, or Kalman–MCC for robust background estimation via maximum correntropy — chosen per recording." },
-                { "label": "Detect", "text": "A CFAR detector scores each pixel/region over time and surfaces candidate events." },
-                { "label": "Evaluate + select", "text": "FROC (true-positive rate vs. false positives per image) and truncated AUC to compare detectors across the search, then top-K model summaries." },
-                { "label": "Report", "text": "Per-model diagnostics: event-duration histograms, FROC curves, sensitivity heatmaps, PSD comparisons, and qualitative montages." }
+                {
+                  "label": "Pre-process (swap)",
+                  "text": "A Gamma spatio-temporal filter for enhancement, or Kalman–MCC for robust background estimation via maximum correntropy — chosen per recording."
+                },
+                {
+                  "label": "Detect",
+                  "text": "A CFAR detector scores each pixel/region over time and surfaces candidate events."
+                },
+                {
+                  "label": "Evaluate + select",
+                  "text": "FROC (true-positive rate vs. false positives per image) and truncated AUC to compare detectors across the search, then top-K model summaries."
+                },
+                {
+                  "label": "Report",
+                  "text": "Per-model diagnostics: event-duration histograms, FROC curves, sensitivity heatmaps, PSD comparisons, and qualitative montages."
+                }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/neurev-pipeline.svg",
@@ -492,14 +549,15 @@
             "definition": "The fraction of known events recovered when every method is allowed the same number of ranked candidates."
           }
         ]
-      }
+      },
+      "imgFit": "cover"
     },
     {
       "slug": "time-series-ml-experiment-infra",
       "title": "Time-series ML experiment library",
       "subtitle": "Reusable infrastructure for running, tracking, and comparing time-series machine learning experiments with consistent reporting.",
-      "img": "assets/img/projects/Adap_Filt.png",
-      "imgAlt": "Plot representing adaptive filtering / time-series modeling.",
+      "img": "assets/img/projects/diagrams/timeseries-run.svg",
+      "imgAlt": "Diagram of one experiment run: a config and one command produce an auditable run folder with a config snapshot, metrics, logs, and plots.",
       "tags": [
         "tools",
         "research",
@@ -510,7 +568,7 @@
         "Experiment tracking",
         "GPU acceleration"
       ],
-      "meta": "Research tools · ML infra · reproducibility",
+      "meta": "CNEL · ML infra · reproducibility",
       "desc": "Reusable experiment scaffolding for time-series ML: standardized configs, runs, metrics, and plots so model comparisons are fair and repeatable.",
       "featured": true,
       "links": [],
@@ -561,9 +619,18 @@
                 "Because every model is invoked the same way, a kernel adaptive filter and a neural network are held to identical signals and identical metrics — which is the only way a comparison between them means anything."
               ],
               "breakdown": [
-                { "label": "Kernel adaptive filters", "text": "QKLMS, KRLS, KRR, and Gaussian-process regression for nonlinear prediction." },
-                { "label": "Functional / Wiener", "text": "Functional Wiener (FWF / FWFE), the Functional Kalman Filter (FKF), ASLM, and a Wiener-filter baseline." },
-                { "label": "Configurable NNs", "text": "A hyperparameter-search toolkit including an information-theoretic stacked auto-encoder, run on GPU / HiPerGator." }
+                {
+                  "label": "Kernel adaptive filters",
+                  "text": "QKLMS, KRLS, KRR, and Gaussian-process regression for nonlinear prediction."
+                },
+                {
+                  "label": "Functional / Wiener",
+                  "text": "Functional Wiener (FWF / FWFE), the Functional Kalman Filter (FKF), ASLM, and a Wiener-filter baseline."
+                },
+                {
+                  "label": "Configurable NNs",
+                  "text": "A hyperparameter-search toolkit including an information-theoretic stacked auto-encoder, run on GPU / HiPerGator."
+                }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/timeseries-modelzoo.svg",
@@ -621,8 +688,8 @@
       "slug": "spike-train-klms-decoder",
       "title": "Spike-train decoding with kernel least-mean-squares (KLMS)",
       "subtitle": "A from-scratch Python reproduction of a classic neural-decoding result: turning noisy spike trains into a continuous control signal with a kernel adaptive filter.",
-      "img": "assets/img/projects/SpikeTrain.png",
-      "imgAlt": "Diagram of spike trains feeding a KLMS decoder that reconstructs a micro-stimulation signal.",
+      "img": "assets/img/projects/diagrams/spike-nmse.svg",
+      "imgAlt": "Bar chart of normalised mean-squared error for the spike-KLMS decoder against binned KLMS and binned GLM baselines.",
       "tags": [
         "research",
         "neural-decoding",
@@ -633,7 +700,7 @@
         "Neural decoding",
         "Paper reproduction"
       ],
-      "meta": "Research · neural decoding · reproduction",
+      "meta": "CNEL · neural decoding · reproduction",
       "desc": "A faithful Python reproduction of Li et al. (IEEE MLSP 2011): a spike-time RKHS KLMS decoder that maps spike trains to micro-stimulation, benchmarked against binned KLMS and GLM baselines.",
       "featured": false,
       "links": [],
@@ -679,9 +746,18 @@
                 "The point of a reproduction is the numbers, so the synthetic benchmark from the paper is rebuilt and every model is scored the same way. The spike-time kernel decoder leads the binned baselines, matching the paper's reported targets:"
               ],
               "breakdown": [
-                { "label": "Spike-KLMS", "text": "NMSE ≈ 0.13 — the spike-time RKHS decoder, and the best of the three." },
-                { "label": "Binned-KLMS", "text": "NMSE ≈ 0.27 — a Gaussian-RBF KLMS on binned counts." },
-                { "label": "Binned-GLM", "text": "NMSE ≈ 0.35 — a Poisson GLM baseline." }
+                {
+                  "label": "Spike-KLMS",
+                  "text": "NMSE ≈ 0.13 — the spike-time RKHS decoder, and the best of the three."
+                },
+                {
+                  "label": "Binned-KLMS",
+                  "text": "NMSE ≈ 0.27 — a Gaussian-RBF KLMS on binned counts."
+                },
+                {
+                  "label": "Binned-GLM",
+                  "text": "NMSE ≈ 0.35 — a Poisson GLM baseline."
+                }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/spike-nmse.svg",

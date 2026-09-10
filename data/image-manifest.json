@@ -11,9 +11,33 @@
     "width": 1600,
     "height": 731
   },
+  "assets/img/blog/a-claim-wall-for-biomechanics.svg": {
+    "width": 1200,
+    "height": 750
+  },
+  "assets/img/blog/every-number-in-the-notebook-has-an-oracle.svg": {
+    "width": 1200,
+    "height": 750
+  },
+  "assets/img/blog/gradus-no-llm-grading-at-runtime.svg": {
+    "width": 1200,
+    "height": 750
+  },
+  "assets/img/blog/preregistering-against-yourself.svg": {
+    "width": 1200,
+    "height": 750
+  },
+  "assets/img/blog/the-camera-push-was-never-on-the-critical-path.svg": {
+    "width": 1200,
+    "height": 750
+  },
   "assets/img/favicon-48.png": {
     "width": 48,
     "height": 48
+  },
+  "assets/img/favicon.svg": {
+    "width": 64,
+    "height": 64
   },
   "assets/img/me/portrait-680.webp": {
     "width": 510,
@@ -147,6 +171,10 @@
     "width": 640,
     "height": 427
   },
+  "assets/img/placeholder.svg": {
+    "width": 1200,
+    "height": 675
+  },
   "assets/img/projects/Adap_Filt.png": {
     "width": 474,
     "height": 235
@@ -163,6 +191,70 @@
     "width": 1024,
     "height": 1024
   },
+  "assets/img/projects/diagrams/cfd-surrogates.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/gradus-loop.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/kam-architecture.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/kam-sparse-memory.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/latent-hlds-phases.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/latent-statespace.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/media-cull-loops.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/neurev-pipeline.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/ora-architecture.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/platos-architecture.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/platos-pipeline.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/spike-nmse.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/sps-curriculum-map.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/timeseries-modelzoo.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/timeseries-run.svg": {
+    "width": 960,
+    "height": 480
+  },
+  "assets/img/projects/diagrams/zebrafish-cfar.svg": {
+    "width": 960,
+    "height": 480
+  },
   "assets/img/projects/Ergo_Icon_nobg.webp": {
     "width": 714,
     "height": 714
@@ -174,6 +266,10 @@
   "assets/img/projects/GH05T.webp": {
     "width": 1069,
     "height": 636
+  },
+  "assets/img/projects/gradus-icon.webp": {
+    "width": 512,
+    "height": 512
   },
   "assets/img/projects/Guru.webp": {
     "width": 1024,
@@ -188,6 +284,10 @@
     "height": 1024
   },
   "assets/img/projects/Ora_Icon_nobg.png": {
+    "width": 500,
+    "height": 500
+  },
+  "assets/img/projects/ora-mark.webp": {
     "width": 500,
     "height": 500
   },
@@ -227,13 +327,9 @@
     "width": 1316,
     "height": 934
   },
-  "assets/img/projects/diagrams/cfd-surrogates.svg": {
-    "width": 960,
-    "height": 430
-  },
-  "assets/img/projects/diagrams/kam-architecture.svg": {
-    "width": 960,
-    "height": 430
+  "assets/img/research/source-separation/budget-recall-curves.svg": {
+    "width": 1600,
+    "height": 1000
   },
   "assets/img/research/source-separation/denoising-audit-frame212.webp": {
     "width": 1600,

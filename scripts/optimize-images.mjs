@@ -96,6 +96,14 @@ async function rewriteReferences() {
 async function writeManifest() {
   const manifest = {};
   for (const file of await walk(path.join(root, 'assets/img'))) {
+    if (/\.svg$/i.test(file)) {
+      // Inline-able diagrams: take intrinsic size from the viewBox so the
+      // build can still emit width/height (and avoid layout shift) for <img>.
+      const svg = await fs.readFile(file, 'utf8');
+      const viewBox = svg.match(/viewBox="\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)\s*"/i);
+      if (viewBox) manifest[rel(file)] = { width: Math.round(Number(viewBox[1])), height: Math.round(Number(viewBox[2])) };
+      continue;
+    }
     if (!/\.(png|jpe?g|webp|gif|avif)$/i.test(file)) continue;
     const meta = await sharp(file).metadata();
     manifest[rel(file)] = { width: meta.width, height: meta.height };

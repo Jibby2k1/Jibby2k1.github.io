@@ -1,38 +1,44 @@
-<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
-    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.62; }
-    .wave{ stroke: currentColor; stroke-width:1.4; fill:none; opacity:0.8; }
-    .state{ fill: var(--surface-strong, #fff); stroke: var(--section-accent); stroke-width:1.8; }
-    .stln{ stroke: var(--section-accent); stroke-width:1.8; fill:none; }
-    .up{ stroke: currentColor; stroke-width:1.2; fill:none; stroke-dasharray:3 4; opacity:0.55; }
-    .acf{ fill: var(--section-accent); }
-  </style>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="latentstatespace-title latentstatespace-desc">
+  <title id="latentstatespace-title">State-space view of a hierarchical linear dynamical system</title>
+  <desc id="latentstatespace-desc">Two rows: an observed row of three noisy signal channels, and a hidden row with a chain of latent states z(t−1), z(t), z(t+1) linked by transition arrows labelled evolves. Dashed arrows labelled generates rise from each hidden state to the observed channels.</desc>
+  <defs>
+    <marker id="latentstatespace-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
 
-  <text class="t" x="16" y="30">Observed signal — many noisy channels</text>
-  <!-- three wavy channels (clean sines at different wavelengths) -->
-  <path class="wave" d="M40 60 q18 -14 36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0 t36 0"/>
-  <path class="wave" d="M40 92 q16 12 32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0 t32 0" opacity="0.6"/>
-  <path class="wave" d="M40 122 q20 -12 40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0 t40 0" opacity="0.72"/>
+  <!-- observed row -->
+  <rect class="d-soft" x="40" y="40" width="880" height="180" rx="1"/>
+  <text class="d-label" x="60" y="124">Observed signal</text>
+  <text class="d-sub" x="60" y="150">many noisy channels</text>
+  <path class="d-line" d="M282,91.1 L288,92.2 L294,97.7 L300,95.1 L306,99.1 L312,98.0 L318,95.3 L324,97.2 L330,92.1 L336,92.6 L342,87.5 L348,84.9 L354,84.5 L360,84.8 L366,77.7 L372,76.6 L378,78.4 L384,80.1 L390,77.8 L396,77.4 L402,83.0 L408,78.6 L414,86.7 L420,85.4 L426,87.1 L432,89.6 L438,93.3 L444,98.8 L450,95.8 L456,99.4 L462,99.9 L468,97.5 L474,97.5 L480,92.3 L486,90.0 L492,88.4 L498,89.0 L504,84.5 L510,81.2 L516,80.9 L522,78.3 L528,76.1 L534,79.1 L540,78.6 L546,76.4 L552,80.2 L558,81.9 L564,86.8 L570,88.5 L576,88.1 L582,95.6 L588,92.0 L594,96.1 L600,99.9 L606,96.4 L612,98.9 L618,95.2 L624,98.3 L630,97.2 L636,93.6 L642,93.1 L648,86.4 L654,86.4 L660,83.1 L666,80.8 L672,78.3 L678,79.8 L684,80.1 L690,77.1 L696,79.3 L702,76.6 L708,83.2 L714,85.2 L720,90.3 L726,91.9 L732,90.8 L738,93.9 L744,97.8 L750,94.7 L756,98.6 L762,96.6 L768,95.7 L774,94.1 L780,97.2 L786,90.5 L792,88.7 L798,87.0 L804,87.6 L810,79.5 L816,79.9 L822,78.9 L828,80.1 L834,79.2 L840,79.8 L846,76.6 L852,79.1 L858,80.8 L864,86.9 L870,90.1 L876,87.2 L882,90.0 L888,92.8 L894,94.8"/>
+  <path class="d-line" d="M282,137.6 L288,136.2 L294,130.4 L300,124.8 L306,124.8 L312,121.8 L318,121.8 L324,124.7 L330,123.8 L336,124.7 L342,128.7 L348,132.6 L354,131.0 L360,140.4 L366,140.9 L372,141.9 L378,140.2 L384,134.6 L390,131.5 L396,125.6 L402,126.5 L408,119.3 L414,117.8 L420,118.8 L426,119.5 L432,123.3 L438,124.1 L444,127.2 L450,131.8 L456,134.0 L462,137.6 L468,135.1 L474,140.8 L480,136.4 L486,129.5 L492,126.8 L498,124.2 L504,121.7 L510,118.3 L516,123.9 L522,126.2 L528,124.3 L534,127.6 L540,127.9 L546,131.4 L552,135.9 L558,136.8 L564,141.5 L570,135.1 L576,131.6 L582,135.9 L588,129.0 L594,122.6 L600,123.2 L606,117.5 L612,121.3 L618,126.1 L624,127.5 L630,129.3 L636,129.3 L642,133.5 L648,134.5 L654,140.9 L660,139.2 L666,140.0 L672,134.1 L678,130.1 L684,131.3 L690,129.3 L696,125.7 L702,123.7 L708,123.6 L714,124.2 L720,122.4 L726,127.9 L732,130.1 L738,130.8 L744,133.4 L750,136.9 L756,137.0 L762,139.3 L768,139.1 L774,131.9 L780,132.3 L786,129.4 L792,126.5 L798,120.2 L804,118.8 L810,120.0 L816,122.1 L822,125.4 L828,132.2 L834,137.7 L840,139.9 L846,138.5 L852,140.1 L858,140.2 L864,132.1 L870,133.6 L876,132.1 L882,127.7 L888,124.8 L894,121.1"/>
+  <path class="d-line" d="M282,161.0 L288,163.4 L294,159.7 L300,162.0 L306,162.8 L312,159.6 L318,160.2 L324,164.4 L330,164.4 L336,162.6 L342,164.1 L348,166.3 L354,172.9 L360,174.4 L366,172.6 L372,178.7 L378,181.5 L384,181.3 L390,180.9 L396,183.1 L402,181.4 L408,181.0 L414,186.8 L420,184.4 L426,182.9 L432,184.3 L438,179.8 L444,180.8 L450,178.6 L456,172.9 L462,171.0 L468,169.1 L474,166.7 L480,166.8 L486,163.0 L492,162.4 L498,159.5 L504,163.2 L510,159.3 L516,159.7 L522,160.7 L528,163.2 L534,161.3 L540,165.5 L546,164.6 L552,166.6 L558,168.5 L564,167.6 L570,172.2 L576,172.8 L582,173.8 L588,180.5 L594,178.4 L600,181.6 L606,184.2 L612,183.9 L618,182.9 L624,184.1 L630,183.9 L636,184.5 L642,179.3 L648,180.6 L654,177.0 L660,175.3 L666,176.2 L672,172.5 L678,170.7 L684,169.8 L690,168.7 L696,164.1 L702,163.6 L708,161.7 L714,160.8 L720,161.3 L726,159.7 L732,160.4 L738,160.7 L744,164.4 L750,164.2 L756,166.8 L762,169.0 L768,166.9 L774,170.8 L780,175.3 L786,176.8 L792,174.6 L798,176.4 L804,180.0 L810,179.2 L816,181.3 L822,181.0 L828,185.0 L834,185.6 L840,185.9 L846,180.7 L852,183.0 L858,181.2 L864,176.4 L870,179.0 L876,177.4 L882,170.8 L888,173.0 L894,167.6"/>
 
-  <!-- vertical generative arrows -->
-  <g class="up">
-    <path d="M215 232 v-92"/><path d="M390 232 v-92"/><path d="M565 232 v-92"/>
-  </g>
-  <g class="acf">
-    <path d="M211 146 l4 -8 4 8 z"/><path d="M386 146 l4 -8 4 8 z"/><path d="M561 146 l4 -8 4 8 z"/>
-  </g>
+  <!-- emission: hidden state generates the observations -->
+  <path class="d-line d-dash" d="M333,332 V222" marker-end="url(#latentstatespace-arr)"/>
+  <path class="d-line d-dash" d="M580,332 V222" marker-end="url(#latentstatespace-arr)"/>
+  <path class="d-line d-dash" d="M827,332 V222" marker-end="url(#latentstatespace-arr)"/>
+  <text class="d-sub" x="596" y="282">generates</text>
 
-  <!-- hidden state chain -->
-  <path class="stln" d="M224 246 h158 M399 246 h158"/>
-  <g class="acf"><path d="M378 241 l8 5 -8 5 z"/><path d="M553 241 l8 5 -8 5 z"/></g>
-  <circle class="state" cx="215" cy="246" r="15"/>
-  <circle class="state" cx="390" cy="246" r="15"/>
-  <circle class="state" cx="565" cy="246" r="15"/>
-  <text class="t" x="200" y="251">z</text><text class="s" x="212" y="255">t-1</text>
-  <text class="t" x="378" y="251">z</text><text class="s" x="390" y="255">t</text>
-  <text class="t" x="550" y="251">z</text><text class="s" x="562" y="255">t+1</text>
+  <!-- hidden row -->
+  <rect class="d-soft" x="40" y="300" width="880" height="140" rx="1"/>
+  <text class="d-label" x="60" y="365">Hidden states</text>
+  <text class="d-sub" x="60" y="389">few latent variables</text>
 
-  <text class="t" x="610" y="251">hidden</text>
-  <text class="s" x="16" y="285">A few latent states evolve over time and generate the observed signal — compact, interpretable, data-efficient.</text>
+  <rect class="d-box" x="258" y="334" width="150" height="72" rx="1"/>
+  <text class="d-label" x="333" y="365" text-anchor="middle">z(t−1)</text>
+  <text class="d-sub" x="333" y="389" text-anchor="middle">previous state</text>
+
+  <path class="d-line" d="M408,370 H503" marker-end="url(#latentstatespace-arr)"/>
+  <text class="d-sub" x="456" y="348" text-anchor="middle">evolves</text>
+
+  <rect class="d-accent" x="505" y="334" width="150" height="72" rx="1"/>
+  <text class="d-label" x="580" y="365" text-anchor="middle">z(t)</text>
+  <text class="d-sub" x="580" y="389" text-anchor="middle">current state</text>
+
+  <path class="d-line" d="M655,370 H750" marker-end="url(#latentstatespace-arr)"/>
+  <text class="d-sub" x="703" y="348" text-anchor="middle">evolves</text>
+
+  <rect class="d-box" x="752" y="334" width="150" height="72" rx="1"/>
+  <text class="d-label" x="827" y="365" text-anchor="middle">z(t+1)</text>
+  <text class="d-sub" x="827" y="389" text-anchor="middle">next state</text>
 </svg>

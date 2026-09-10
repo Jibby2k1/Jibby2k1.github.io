@@ -1,39 +1,52 @@
-<svg viewBox="0 0 780 300" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .t{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
-    .s{ font-family: var(--mono, monospace); font-size:10.5px; fill: currentColor; opacity:0.62; }
-    .ac{ font-family: var(--mono, monospace); font-size:10.5px; fill: var(--section-accent); font-weight:700; }
-    .axis{ stroke: currentColor; stroke-width:1.2; opacity:0.5; }
-    .sig{ stroke: currentColor; stroke-width:1.5; fill:none; }
-    .band{ fill: currentColor; opacity:0.08; }
-    .thr{ stroke: var(--section-accent); stroke-width:1.6; fill:none; stroke-dasharray:6 4; }
-    .acf{ fill: var(--section-accent); }
-  </style>
-
-  <text class="t" x="16" y="28">One pixel's intensity over time</text>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="zebrafishcfar-title zebrafishcfar-desc">
+  <title id="zebrafishcfar-title">CFAR detection on one pixel's intensity trace</title>
+  <desc id="zebrafishcfar-desc">One pixel's intensity over time sits inside an estimated noise band. A dashed CFAR threshold runs k times the local noise estimate above the band and rises where the band widens. A narrow spike crosses the threshold and is marked as a detected event; a later bump of similar brightness stays under the raised local threshold and is labelled bright, not flagged. Below the time axis, a strip shows the sliding CFAR window: a reference window, guard cells, the accented cell under test aligned with the spike, guard cells, and a second reference window.</desc>
+  <defs>
+    <marker id="zebrafishcfar-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/>
+    </marker>
+  </defs>
 
   <!-- axes -->
-  <line class="axis" x1="50" y1="60" x2="50" y2="230"/>
-  <line class="axis" x1="50" y1="230" x2="748" y2="230"/>
-  <text class="s" x="700" y="248">time →</text>
+  <path class="d-line" d="M40,48 V252 H920"/>
+  <text class="d-sub" x="920" y="282" text-anchor="end">time →</text>
 
-  <!-- noise band (baseline ± noise) -->
-  <rect class="band" x="50" y="150" width="698" height="60"/>
-  <text class="s" x="56" y="205">estimated noise band</text>
+  <!-- estimated noise band (from the reference cells); widens to the right -->
+  <path class="d-fill" d="M40,174 H520 C600,174 620,162 700,162 H920 V240 H40 Z"/>
+  <text class="d-sub" x="58" y="232">estimated noise band</text>
 
-  <!-- adaptive CFAR threshold -->
-  <line class="thr" x1="50" y1="140" x2="748" y2="140"/>
-  <text class="ac" x="600" y="134">CFAR threshold</text>
+  <!-- adaptive CFAR threshold: follows the local noise level -->
+  <path class="d-line accent d-dash" d="M40,134 H520 C600,134 620,108 700,108 H920"/>
+  <text class="d-label" x="58" y="90">CFAR threshold</text>
+  <text class="d-sub" x="58" y="112">k × noise estimate from reference cells</text>
 
-  <!-- signal: wiggles in noise, one spike crosses -->
-  <path class="sig" d="M50 182 l24 -6 24 10 24 -8 24 6 24 -4 24 8 24 -6 24 4 l24 -2
-    l14 -96 l14 96
-    l24 6 24 -8 24 6 24 -4 24 8 24 -6 24 4 24 -6 24 6 24 -4 24 6 24 -4 24 4"/>
+  <!-- one pixel's intensity over time -->
+  <path class="d-line" d="M40,197 L62,191 L84,198 L106,190 L128,196 L150,192 L172,199 L194,190 L216,197 L238,191 L260,196 L282,189 L304,198 L326,192 L348,197 L370,190 L392,196 L414,192 L436,197 L458,193 L468,195 L480,68 L492,195 L502,193 L524,198 L546,190 L568,197 L590,191 L612,199 L634,190 L656,198 L678,189 L700,200 L722,187 L744,201 L766,186 L788,202 L810,187 L832,200 L840,194 L850,118 L860,194 L868,200 L890,186 L912,201 L920,196"/>
 
-  <!-- detected event marker -->
-  <circle class="acf" cx="298" cy="86" r="5"/>
-  <path class="thr" d="M298 92 v40" stroke-dasharray="2 3"/>
-  <text class="ac" x="312" y="86">detected event</text>
+  <!-- detected event -->
+  <circle class="d-dot" cx="480" cy="68" r="6"/>
+  <text class="d-label" x="500" y="74">detected event</text>
 
-  <text class="s" x="16" y="284">Radar-style detection: flag frames whose change is unlikely under the local noise model, not just "bright" ones.</text>
+  <!-- similar brightness under a higher local threshold: not flagged -->
+  <text class="d-sub" x="826" y="142" text-anchor="end">bright, not flagged</text>
+
+  <!-- event frame maps to the cell under test -->
+  <path class="d-line accent d-dash" d="M480,216 V294" marker-end="url(#zebrafishcfar-arr)"/>
+
+  <!-- CFAR window strip: reference | guard | CUT | guard | reference -->
+  <rect class="d-fill" x="108" y="296" width="240" height="68" rx="1"/>
+  <rect class="d-box" x="108" y="296" width="240" height="68" rx="1"/>
+  <rect class="d-box d-dash" x="348" y="296" width="96" height="68" rx="1"/>
+  <rect class="d-accent" x="444" y="296" width="72" height="68" rx="1"/>
+  <rect class="d-box d-dash" x="516" y="296" width="96" height="68" rx="1"/>
+  <rect class="d-fill" x="612" y="296" width="240" height="68" rx="1"/>
+  <rect class="d-box" x="612" y="296" width="240" height="68" rx="1"/>
+
+  <text class="d-sub" x="228" y="335" text-anchor="middle">reference window</text>
+  <text class="d-sub" x="396" y="335" text-anchor="middle">guard</text>
+  <text class="d-sub" x="480" y="335" text-anchor="middle">CUT</text>
+  <text class="d-sub" x="564" y="335" text-anchor="middle">guard</text>
+  <text class="d-sub" x="732" y="335" text-anchor="middle">reference window</text>
+
+  <text class="d-label" x="480" y="400" text-anchor="middle">cell under test</text>
 </svg>

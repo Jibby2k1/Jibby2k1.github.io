@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Gradus: reasoning practice for rigorous STEM courses | Raul Valle Research Project</title>
+  <meta name="description" content="Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Gradus: reasoning practice for rigorous STEM courses | Raul Valle Research Project" />
+  <meta property="og:description" content="Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on." />
+  <meta property="og:url" content="https://www.raulv.dev/projects/gradus.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/gradus-icon.webp" />
+  <meta property="og:image:alt" content="Gradus app icon." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Gradus: reasoning practice for rigorous STEM courses | Raul Valle Research Project" />
+  <meta name="twitter:description" content="Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/gradus-icon.webp" />
+  <meta name="twitter:image:alt" content="Gradus app icon." />
+  <link rel="canonical" href="https://www.raulv.dev/projects/gradus.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/projects/gradus.html#webpage","url":"https://www.raulv.dev/projects/gradus.html","name":"Gradus: reasoning practice for rigorous STEM courses | Raul Valle Research Project","description":"Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"CreativeWork","@id":"https://www.raulv.dev/projects/gradus.html#project","url":"https://www.raulv.dev/projects/gradus.html","name":"Gradus: reasoning practice for rigorous STEM courses","headline":"Gradus: reasoning practice for rigorous STEM courses","description":"Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on.","image":"https://www.raulv.dev/assets/img/projects/gradus-icon.webp","creator":{"@id":"https://www.raulv.dev/#person"},"keywords":["adaptive-learning","concept-graphs","app-systems","education","Concept-graph courses","Deterministic diagnosis","Prerequisite repair","Transfer checks","Flutter web + mobile"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://www.raulv.dev/research.html"},{"@type":"ListItem","position":3,"name":"IEEE SPS & independent projects","item":"https://www.raulv.dev/research-sps.html"},{"@type":"ListItem","position":4,"name":"Gradus: reasoning practice for rigorous STEM courses","item":"https://www.raulv.dev/projects/gradus.html"}]},{"@type":"FAQPage","@id":"https://www.raulv.dev/projects/gradus.html#faq","mainEntity":[{"@type":"Question","name":"Is Gradus an AI tutor?","acceptedAnswer":{"@type":"Answer","text":"No. It does not chat, and it does not explain on demand. It grades with rules, diagnoses a miss with author-defined fail points, and routes the learner to a prerequisite repair and a transfer check. AI is used offline to draft course packages, which are then validated and human-readable."}},{"@type":"Question","name":"Does a language model grade my answers?","acceptedAnswer":{"@type":"Answer","text":"No. ADR 0001 (2026-03-07) fixed the runtime as deterministic: exact match, regex, choice, and sequential fill grading with LaTeX-aware normalization. The trade-off is less flexibility for free-form written answers."}},{"@type":"Question","name":"How is the repair target chosen?","acceptedAnswer":{"@type":"Answer","text":"For a prerequisite-gap error, a backward breadth-first search from the missed concept walks the prerequisite edges and picks the nearest concept whose mastery is below a weakness threshold. Confusion, wrong-application, and scope errors rank the concept's neighbors first instead, and reasoning-type errors search prerequisites only."}},{"@type":"Question","name":"Can I try it?","acceptedAnswer":{"@type":"Answer","text":"The public demo at gradus.raulv.dev/demo needs no sign-in or email and keeps progress only in your browser. The full app at /app is a closed beta."}},{"@type":"Question","name":"Does it work?","acceptedAnswer":{"@type":"Answer","text":"Unknown in the measured sense. The engine, content, and dashboards are built and deployed, and a pilot protocol is written, but no pilot has run and there are no learning-outcome results."}}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="sps">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../research.html">Research</a> / <a href="../research-sps.html">IEEE SPS & independent projects</a></nav>
+          <div class="hero-mark mark"><img src="../assets/img/projects/gradus-icon.webp" alt="Gradus app icon." width="512" height="512" decoding="async" /></div>
+          <div class="kicker">Independent project</div>
+          <h1 class="h1">Gradus: reasoning practice for rigorous STEM courses</h1>
+          <p class="lead">A Flutter app that models a course as a concept graph, grades answers deterministically, diagnoses why a miss happened, and routes the learner to the smallest useful prerequisite repair.</p>
+          <div class="meta hero-meta"><span class="track">Status</span> · Closed beta plus public demo. Solo project since March 2026; last verified closed-beta deploy May 8, 2026; last commit May 30, 2026. No pilot outcome data yet.</div>
+          <div class="cta-row"><a class="btn primary" href="https://gradus.raulv.dev/" target="_blank" rel="noreferrer">Open Gradus</a><a class="btn" href="https://gradus.raulv.dev/demo" target="_blank" rel="noreferrer">Try the demo</a></div>
+          
+        </section>
+
+        <section class="project-detail reveal" data-track="sps">
+          <div class="project-main">
+            <article class="card reveal">
+              <h2 class="project-section-title">Overview</h2>
+              <p>Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on.</p>
+              <p>Gradus is a learning app for courses where the hard part is the reasoning, not the recall: real analysis, topology, convex optimization, algorithms, automata. Instead of tracking flashcards, it tracks mastery per concept in a graph with prerequisites and author-defined fail points, grades every answer with rules rather than a language model, and turns each miss into a specific diagnosis and a specific repair. It runs on web, Android, and iOS from one Flutter codebase, with a public no-sign-in demo and a closed beta.</p>
+            </article>
+            <article class="card reveal prose-card writeup"><p class="writeup-lead">Students in proof-based and systems courses rarely lack explanations; what they lack is a precise account of where their reasoning broke and which earlier idea caused it.</p><h2 class="project-section-title">The idea: make the miss legible</h2><p>Gradus started in March 2026 as an adaptive course engine for proof-based mathematics, piloted on a chapter of Rudin's <em>Principles of Mathematical Analysis</em>, and grew into what its docs call a reasoning mastery platform for rigorous courses. The framing I settled on is that the product is not an answer machine. A chat model can already explain any theorem on demand. The durable problem is that a student, and their instructor, usually cannot see which step failed, which prerequisite was missing, or whether the idea would transfer to a differently worded problem.</p><p>The whole app is organized around one loop: <strong>Predict → Attempt → Explain → Diagnose → Repair → Transfer → Reflect</strong>. The learner states an expectation before answering, answers, gives a short justification, gets a structured diagnosis rather than just right/wrong, is sent to the smallest useful repair target, is asked a transfer item that needs the same underlying idea, and finally names what changed. Product copy, the demo, Progress Review, and the teacher views are all supposed to make that loop visible; features that do not strengthen one of its stages are treated as secondary.</p>
+<h2 class="project-section-title">The concept graph</h2><p>A course is a package of JSON documents, not a deck of cards. The hierarchy is course → chapter → lesson → concept → item family → question instance. A concept is the atomic unit: a definition, theorem, technique, or proof pattern. Each one lists its prerequisites and neighbors and carries author-defined <strong>fail points</strong>, which are the specific wrong moves a learner is expected to make on that concept.</p><p>Each concept has item families at four cognitive stages: <strong>A</strong> recognition, <strong>B</strong> recall, <strong>C</strong> structured completion, and <strong>D</strong> reasoning. An item family is a reusable question template tied to one concept; a question instance is one rendered prompt from it. Stage unlocks are threshold-based on the concept's mastery scores, so a learner does not see a stage-D proof-reasoning item until the recall and completion evidence supports it. Transfer prompts attach to stage-D items.</p><dl class="breakdown"><div class="breakdown-row"><dt>Concept</dt><dd>Atomic unit with prerequisites, neighbors, difficulty and importance weights, and a list of expected fail points.</dd></div><div class="breakdown-row"><dt>Item family</dt><dd>A question template with an answer spec (mode, canonical answer, aliases) and a stage from A to D.</dd></div><div class="breakdown-row"><dt>Mastery vector</dt><dd>Per-concept recall, reasoning, stability, and overall scores, updated by fixed increments per stage.</dd></div></dl>
+<h2 class="project-section-title">Deterministic grading and diagnosis</h2><p>The first architecture decision, recorded in the project's ADR 0001 on 2026-03-07, was that the runtime would not use a language model to grade anything. Grading is rule-based: exact match, regex, multiple- and few-choice, and sequential fill-in-the-blank, with LaTeX-aware normalization so that equivalent notation is treated as equal. Language models are allowed only offline, for drafting content. The reasons were reproducibility, easier A/B testing of scheduling policies, and simpler debugging; the accepted cost is less flexibility for free-form responses.</p><p>Diagnosis is also deterministic. A miss is matched against the concept's fail points and assigned one of twelve error types: eight general ones (prerequisite gap, recall miss, reasoning miss, confusion, missing step, wrong application, scope error, careless miss), three proof-specific ones (quantifier error, theorem-condition error, counterexample gap), and a no-error value. The error type decides what happens next. A prerequisite gap triggers a <strong>backward breadth-first search</strong> from the missed concept along prerequisite and neighbor edges; candidates are ordered by graph distance and then by mastery, and any concept below a weakness threshold is preferred as the repair target. Confusion and scope errors look at neighboring concepts first, since the learner mixed up two nearby ideas rather than missing an earlier one. After repair, a transfer check asks for the same idea in a different form before the concept is treated as recovered.</p><figure class="writeup-figure"><div class="figure-svg" role="img" aria-label="The Gradus loop from Predict through Reflect, with the Diagnose step expanded to show a backward breadth-first search over a prerequisite graph selecting a repair target before a transfer check."><svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="gl-title gl-desc" id="svg-a5jxuc">
+  <title id="gl-title">Gradus learning loop with prerequisite repair expanded</title>
+  <desc id="gl-desc">A seven-stage loop: predict, attempt, explain, diagnose, repair, transfer, reflect, with a return arrow from reflect back to predict. Diagnose and repair are highlighted and expanded below. For a prerequisite-gap error, a backward breadth-first search starts at the missed concept and walks prerequisite and neighbor edges, ordering candidates by distance and then mastery; the nearest prerequisite whose mastery is below threshold becomes the repair target. A transfer check (same idea, new form) feeds the transfer stage.</desc>
+  <defs>
+    <marker id="gl-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
+
+  <!-- loop row: return arrow, highlighted diagnose/repair band, stations -->
+  <path class="d-line" d="M864 104 H904 Q916 104 916 92 V56 Q916 44 904 44 H56 Q44 44 44 56 V92 Q44 104 56 104 H93" marker-end="url(#gl-arr)"/>
+  <rect class="d-accent" x="411" y="56" width="247" height="64" rx="1"/>
+
+  <path class="d-line" d="M114 104 H216" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M237 104 H339" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M360 104 H467.5" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M488.5 104 H592" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M613 104 H714.5" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M735.5 104 H844" marker-end="url(#gl-arr)"/>
+
+  <circle class="d-soft" cx="104" cy="104" r="9"/>
+  <circle class="d-soft" cx="227" cy="104" r="9"/>
+  <circle class="d-soft" cx="350" cy="104" r="9"/>
+  <circle class="d-soft" cx="478.5" cy="104" r="9"/>
+  <circle class="d-soft" cx="603" cy="104" r="9"/>
+  <circle class="d-soft" cx="725.5" cy="104" r="9"/>
+  <circle class="d-soft" cx="855" cy="104" r="9"/>
+
+  <text class="d-label" x="104" y="78" text-anchor="middle">Predict</text>
+  <text class="d-label" x="227" y="78" text-anchor="middle">Attempt</text>
+  <text class="d-label" x="350" y="78" text-anchor="middle">Explain</text>
+  <text class="d-label" x="478.5" y="78" text-anchor="middle">Diagnose</text>
+  <text class="d-label" x="603" y="78" text-anchor="middle">Repair</text>
+  <text class="d-label" x="725.5" y="78" text-anchor="middle">Transfer</text>
+  <text class="d-label" x="855" y="78" text-anchor="middle">Reflect</text>
+
+  <!-- callout from the band into the expanded panel -->
+  <path class="d-line" d="M411 120 V138"/>
+  <path class="d-line" d="M658 120 V138"/>
+  <path class="d-line d-dash" d="M48 138 H912 Q920 138 920 146 V432 Q920 440 912 440 H48 Q40 440 40 432 V146 Q40 138 48 138 Z"/>
+  <text class="d-sub" x="58" y="164">prerequisite-gap error: backward breadth-first search</text>
+
+  <!-- concept graph: missed concept, neighbor, prerequisites at distance 1 and 2 -->
+  <circle class="d-soft" cx="240" cy="232" r="16"/>
+  <text class="d-sub" x="208" y="237" text-anchor="end">neighbor</text>
+  <circle class="d-soft" cx="340" cy="232" r="16"/>
+  <path class="d-line" d="M334 226 L346 238 M346 226 L334 238"/>
+  <text class="d-sub" x="386" y="237">missed concept</text>
+  <path class="d-line d-dash" d="M322 232 H258" marker-end="url(#gl-arr)"/>
+
+  <circle class="d-soft" cx="260" cy="313" r="16"/>
+  <circle class="d-dot" cx="420" cy="313" r="16"/>
+  <circle class="d-line accent" cx="420" cy="313" r="16"/>
+  <circle class="d-soft" cx="260" cy="402" r="16"/>
+  <circle class="d-soft" cx="420" cy="402" r="16"/>
+
+  <path class="d-line" d="M271.2 301.6 L327.3 244.8" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M408.8 301.6 L352.7 244.8" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M260 386 V331" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M420 386 V331" marker-end="url(#gl-arr)"/>
+
+  <path class="d-line d-dash" d="M357.4 232.5 L419.6 295.7" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="410" y="269">distance, then mastery</text>
+
+  <text class="d-sub" x="228" y="318" text-anchor="end">distance 1</text>
+  <text class="d-sub" x="228" y="407" text-anchor="end">distance 2</text>
+  <text class="d-sub" x="438" y="351">repair target</text>
+  <text class="d-sub" x="438" y="369">mastery &lt; threshold</text>
+
+  <!-- repair target feeds a transfer check, which feeds the transfer stage -->
+  <path class="d-line accent" d="M436 313 H623.5" marker-end="url(#gl-arr)"/>
+  <rect class="d-box" x="625.5" y="281" width="200" height="64" rx="1"/>
+  <text class="d-label" x="725.5" y="309" text-anchor="middle">transfer check</text>
+  <text class="d-sub" x="725.5" y="332" text-anchor="middle">same idea, new form</text>
+  <path class="d-line accent" d="M725.5 281 V115" marker-end="url(#gl-arr)"/>
+
+  <!-- legend -->
+  <path class="d-line" d="M700 379 H722" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="740" y="384">prerequisite edge</text>
+  <path class="d-line d-dash" d="M700 401 H722" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="740" y="406">BFS traversal</text>
+  <circle class="d-dot" cx="712" cy="423" r="6"/>
+  <circle class="d-line accent" cx="712" cy="423" r="6"/>
+  <text class="d-sub" x="740" y="428">repair target</text>
+</svg></div><figcaption>Figure 1 — The seven-stage loop, with the Diagnose → Repair path expanded: a prerequisite-gap error type walks backward through the concept graph to the nearest weak prerequisite.</figcaption></figure>
+<h2 class="project-section-title">The content pipeline</h2><p>Writing concept graphs with fail points by hand is slow, so most course packages come from a generation pipeline. This is infrastructure, not the product: the learner-facing promise is the diagnosis and repair, and the packages are plain JSON that a human can read and edit. The generator runs in a manual-chat mode where a coding agent reads a prompt file and writes a JSON response file; there is also a direct API path for unattended runs. Generation is checkpointed and resumable, and chapters can be produced in parallel and merged.</p><p>Nothing generated is trusted by default. A validate-and-repair tool maps every failure back to a concept or item family, applies coercion fixes for issues that can be repaired mechanically, and flags the rest for regeneration. A strict LaTeX gate and JSON schema checks block publishing. A separate readiness rubric scores whether a package can support an instructor-facing pilot rather than whether its JSON parses, covering graph quality, prerequisite links, diagnosis coverage, repair paths, transfer practice, and accessibility. Publishing uploads an immutable versioned snapshot plus a <code>current</code> pointer to Firebase Storage, with a Firestore catalog entry that the app reads at runtime, so a bad package can be rolled back.</p>
+<h2 class="project-section-title">The product surfaces</h2><p>One Flutter codebase builds the web, Android, and iOS apps. Progress lives in SQLite on device and in Cloud Firestore when the learner signs in; a sync service merges guest progress into the account on first sign-in. Firebase Hosting serves three routes: a static landing page at <code>/</code>, a public demo at <code>/demo</code> that needs no sign-in or email and stores progress only in the visitor's browser, and the closed-beta app at <code>/app</code>, gated by per-account access records. TypeScript Cloud Functions handle waitlist notifications, demo telemetry, and short-lived signed URLs for course assets.</p><p>Around the practice loop there is a Learning Mode reader that shows generated text for each concept, with optional narration rendered ahead of time by a local Kokoro model or OpenAI text-to-speech; a Progress Review area for historical diagnoses, coverage, weak patterns, and repair actions; and role-gated Teacher Hub and Organization Dashboard views that surface class-level fail-point patterns and transfer results. Math renders through a KaTeX-subset Flutter package.</p>
+<h2 class="project-section-title">Where it stands</h2><p>Gradus is a closed beta with a public demo. The README's catalog table lists 13 published remote courses: proof-based mathematics (topology, complex analysis, probability), an ML-readiness wave (linear algebra, convex optimization, statistical inference), a computer-science foundations wave (programming concepts, algorithms, operating systems, automata, AI/ML systems, cybersecurity), and a business-analytics slice used by the demo. The original real-analysis (Rudin) course is published alongside them as a remote-first library entry. The last verified closed-beta deploy is from 2026-05-08 and the last commit from 2026-05-30. It has been a solo project since the first commit on 2026-03-07.</p><p>What is not established: any learning outcome. A pilot protocol and a readiness rubric exist, but no school pilot has run and no efficacy numbers exist, so the page makes no such claim. Near-term work is filling learning-text and narration gaps across the published catalog, continuing the machine-learning course sequence, and an in-progress audit that flags template-stamped item families in generated courses so they can be regenerated.</p></article>
+<article class="card reveal"><h2 class="project-section-title">FAQ</h2><div class="faq"><details class="faq-item"><summary>Is Gradus an AI tutor?</summary><div class="faq-body"><p>No. It does not chat, and it does not explain on demand. It grades with rules, diagnoses a miss with author-defined fail points, and routes the learner to a prerequisite repair and a transfer check. AI is used offline to draft course packages, which are then validated and human-readable.</p></div></details><details class="faq-item"><summary>Does a language model grade my answers?</summary><div class="faq-body"><p>No. ADR 0001 (2026-03-07) fixed the runtime as deterministic: exact match, regex, choice, and sequential fill grading with LaTeX-aware normalization. The trade-off is less flexibility for free-form written answers.</p></div></details><details class="faq-item"><summary>How is the repair target chosen?</summary><div class="faq-body"><p>For a prerequisite-gap error, a backward breadth-first search from the missed concept walks the prerequisite edges and picks the nearest concept whose mastery is below a weakness threshold. Confusion, wrong-application, and scope errors rank the concept's neighbors first instead, and reasoning-type errors search prerequisites only.</p></div></details><details class="faq-item"><summary>Can I try it?</summary><div class="faq-body"><p>The public demo at gradus.raulv.dev/demo needs no sign-in or email and keeps progress only in your browser. The full app at /app is a closed beta.</p></div></details><details class="faq-item"><summary>Does it work?</summary><div class="faq-body"><p>Unknown in the measured sense. The engine, content, and dashboards are built and deployed, and a pilot protocol is written, but no pilot has run and there are no learning-outcome results.</p></div></details></div></article>
+            <article class="card reveal"><h2 class="project-section-title">What I built</h2><ul><li>A course data model — course, chapter, lesson, concept, item family, question instance — where each concept carries prerequisites, neighbors, expected fail points, and staged item families from recognition through reasoning.</li><li>A deterministic session engine: rule-based grading (exact match, regex, choice, sequential fill-in-the-blank) with LaTeX-aware normalization, a per-concept mastery vector, and a scheduler for lesson-only, review-only, and mixed sessions.</li><li>A diagnosis and repair path that maps a miss to one of twelve error types, then runs a backward breadth-first search over the prerequisite graph to pick the repair target, followed by a transfer check.</li><li>A content pipeline where a coding agent drafts course packages through prompt and response files, with checkpoints, auto-repair of coercible issues, strict LaTeX and schema gates, a readiness rubric, and versioned publishing to Firebase Storage.</li><li>The app surfaces: a Learning Mode reader with generated text and optional narration, Progress Review, role-gated teacher and organization dashboards, and a public demo that stores progress only in the browser.</li><li>Persistence and sync: SQLite on device, Cloud Firestore when signed in, and a merge of guest progress on first sign-in, plus TypeScript Cloud Functions for waitlist notifications, demo telemetry, and signed course-asset URLs.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">How it works</h2><ul><li>The learner predicts, attempts, and briefly explains; the engine grades the attempt with a rule, never a model call.</li><li>A miss is matched against the concept's author-defined fail points and labeled with an error type such as prerequisite gap, quantifier error, or theorem-condition error.</li><li>For a prerequisite gap, a backward breadth-first search from the missed concept walks the prerequisite edges, orders candidates by distance and then mastery, and prefers a concept below a weakness threshold as the repair target; confusion and scope errors check neighboring concepts first.</li><li>After repair, a transfer check asks a different-looking item that depends on the same idea, and the learner reflects on what changed.</li><li>Mastery is a small per-concept vector (recall, reasoning, stability, overall) updated by stage; the scheduler picks the next concept and operation from those scores and the session budget.</li></ul></article>
+            
+            <article class="card reveal"><h2 class="project-section-title">Related writing</h2><div class="grid two"><a class="related-link" href="../notes/gradus-no-llm-grading-at-runtime.html"><strong>Why Gradus refuses to let a language model grade anything at runtime</strong><span>Gradus grades and diagnoses with rules, not a model, so every outcome is reproducible; the price is a heavy authoring contract and an audit for hollow content.</span></a></div></article>
+            
+            <nav class="project-pager reveal" aria-label="More IEEE SPS & independent projects">
+              <a class="pager-link pager-prev" href="ora.html"><span class="pager-label">← Previous</span><strong>Ora — a local-first training and progress app for lifters</strong></a>
+              <a class="pager-link pager-next" href="media-cull-suite.html"><span class="pager-label">Next →</span><strong>Media Cull Suite: local-first photo and video culling that learns your taste</strong></a>
+            </nav>
+          </div>
+          <div class="project-side">
+            <article class="card reveal">
+              <h2 class="project-section-title">Snapshot</h2>
+              <div class="kv">
+                <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">Independent project · adaptive learning · app systems</div></div>
+                <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Closed beta plus public demo. Solo project since March 2026; last verified closed-beta deploy May 8, 2026; last commit May 30, 2026. No pilot outcome data yet.</div></div>
+                <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">Concept-graph courses</span><span class="pill">Deterministic diagnosis</span><span class="pill">Prerequisite repair</span><span class="pill">Transfer checks</span><span class="pill">Flutter web + mobile</span></div></div>
+              </div>
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>Flutter</li><li>Dart</li><li>SQLite</li><li>Cloud Firestore</li><li>Firebase Auth / Hosting / Storage</li><li>TypeScript Cloud Functions</li><li>KaTeX subset (flutter_math_fork)</li><li>Kokoro / OpenAI TTS</li></ul></article>
+            
+            <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>Concept graph</dt><dd>The course model: concepts linked by prerequisite and neighbor edges, each with staged item families and expected fail points.</dd><dt>Fail point</dt><dd>An author-labeled expected error pattern on a concept, used to turn a miss into a specific diagnosis.</dd><dt>Item family</dt><dd>A reusable question template tied to one concept; each rendered prompt from it is a question instance.</dd><dt>Stage</dt><dd>The cognitive level of an item family: A recognition, B recall, C structured completion, D reasoning.</dd><dt>Repair target</dt><dd>The concept selected to remediate a diagnosed weakness, chosen by a backward search over prerequisites.</dd><dt>Transfer check</dt><dd>A different-looking item that requires the same underlying idea, asked after repair to confirm the idea generalizes.</dd></dl></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="kam-prereg-title kam-prereg-desc" style="font-family:var(--mono, ui-monospace, monospace);fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round">
+  <title id="kam-prereg-title">Preregistration timeline with validity gates</title>
+  <desc id="kam-prereg-desc">Six research phases along a timeline. Each phase has a locked decision memo written before results, a validity gate that must pass before interpretation, and a recorded outcome. Phase V and Phase VI gates are marked failed; under Phase VI the 156-row confirmation failed its superiority gate and the separate 168-row atlas failed on top-k tie ordering, then was fixed and rerun under preregistration. Behind the timeline a wedge narrows from the dense radial attention hypothesis to sparse separable memory.</desc>
+
+  <!-- narrowing hypothesis wedge -->
+  <path d="M80 200 L1120 330 L1120 440 L80 600 Z" fill="var(--section-accent, currentColor)" opacity="0.07" stroke="none"/>
+  <text x="90" y="172" font-size="24" fill="currentColor" stroke="none" opacity="0.8">hypothesis: dense radial attention replaces dot-product attention</text>
+  <text x="1120" y="206" font-size="22" fill="currentColor" stroke="none" opacity="0.8" text-anchor="end">narrowed to: sparse, top-K separable memory</text>
+
+  <!-- main timeline -->
+  <line x1="80" y1="400" x2="1120" y2="400" stroke="currentColor" stroke-width="3"/>
+  <path d="M1108 390 L1122 400 L1108 410" stroke="currentColor" stroke-width="3"/>
+
+  <!-- phase groups: memo above, gate on line, outcome below (alternating bands) -->
+  <g>
+    <g transform="translate(130 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">I</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">45 runs</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">no advantage</text>
+    <text x="0" y="520" font-size="22" fill="var(--section-accent, currentColor)" stroke="none" text-anchor="middle">shift: -44.5%</text>
+    </g>
+    <g transform="translate(300 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">II</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">50 runs, 5 seeds</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">Holm: inconclusive</text>
+    </g>
+    <g transform="translate(465 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">III</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">1,728-row manifest</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">development only</text>
+    </g>
+    <g transform="translate(625 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">IV</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">data-regime screen</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">diagnostic only</text>
+    </g>
+    <g transform="translate(790 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="-12" y1="388" x2="12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="12" y1="388" x2="-12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="0" y1="422" x2="0" y2="430" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">V</text>
+    <text x="0" y="460" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">validity gate</text>
+    <text x="0" y="490" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">pilot 144/144</text>
+    <text x="0" y="520" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">Stage 2 blocked</text>
+    </g>
+    <g transform="translate(1000 0)">
+    <rect x="-40" y="240" width="80" height="52" rx="6" stroke="currentColor" opacity="0.85"/>
+    <rect x="-9" y="256" width="18" height="16" rx="3" fill="currentColor" opacity="0.6" stroke="none"/>
+    <path d="M-6 256 V250 a6 6 0 0 1 12 0 V256" stroke="currentColor"/>
+    <line x1="0" y1="292" x2="0" y2="378" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M0 378 L22 400 L0 422 L-22 400 Z" stroke="currentColor"/>
+    <line x1="-12" y1="388" x2="12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="12" y1="388" x2="-12" y2="412" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="0" y1="422" x2="0" y2="530" stroke="currentColor" stroke-dasharray="6 6" opacity="0.6"/>
+    <text x="0" y="230" font-size="26" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">VI</text>
+    <text x="0" y="560" font-size="22" fill="currentColor" stroke="none" text-anchor="middle">156-row confirmation:</text>
+    <text x="0" y="590" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">superiority gate failed</text>
+    <text x="0" y="620" font-size="22" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">168-row atlas: top-k ties</text>
+    <text x="0" y="650" font-size="22" fill="var(--section-accent, currentColor)" stroke="none" text-anchor="middle">fix, rerun preregistered</text>
+    </g>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(80 705)">
+    <rect x="0" y="-14" width="34" height="24" rx="4" stroke="currentColor" opacity="0.85"/>
+    <rect x="12" y="-8" width="10" height="10" rx="2" fill="currentColor" opacity="0.6" stroke="none"/>
+    <text x="48" y="4" font-size="22" fill="currentColor" stroke="none">memo locked before results</text>
+    <path d="M440 -14 L454 -2 L440 10 L426 -2 Z" fill="currentColor" opacity="0.15"/>
+    <path d="M440 -14 L454 -2 L440 10 L426 -2 Z" stroke="currentColor"/>
+    <text x="468" y="4" font-size="22" fill="currentColor" stroke="none">validity gate</text>
+    <line x1="690" y1="-10" x2="706" y2="6" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <line x1="706" y1="-10" x2="690" y2="6" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+    <text x="720" y="4" font-size="22" fill="currentColor" stroke="none">gate failed</text>
+  </g>
+
+  <text x="600" y="90" font-size="30" fill="currentColor" stroke="none" text-anchor="middle" font-weight="bold">Kernel Adaptive Memory, Phases I to VI</text>
+  <text x="600" y="128" font-size="24" fill="currentColor" stroke="none" text-anchor="middle" opacity="0.75">outcome after six phases: no general advantage established yet</text>
+</svg>

@@ -12,6 +12,7 @@ topics:
 heroImage: assets/img/projects/HLDS_Inf.png
 heroAlt: Diagram representing a state-space modeling pipeline for EEG.
 summary: EEG work gets more informative when temporal structure is part of the model instead of something the pipeline averages away.
+cover: generated
 relatedProjects:
   - time-series-ml-experiment-infra
 takeaways:

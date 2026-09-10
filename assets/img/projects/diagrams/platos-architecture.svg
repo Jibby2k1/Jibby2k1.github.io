@@ -1,52 +1,36 @@
-<svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .ttl{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
-    .sub{ font-family: var(--mono, monospace); font-size:10px; fill: currentColor; opacity:0.62; }
-    .tag{ font-family: var(--mono, monospace); font-size:9px; letter-spacing:1.5px; fill: var(--section-accent); }
-    .box{ fill: var(--surface-strong, rgba(255,255,255,0.7)); stroke: currentColor; stroke-width:1.5; }
-    .host{ fill:none; stroke: var(--section-accent); stroke-width:1.4; stroke-dasharray:5 4; }
-    .arw{ stroke: currentColor; stroke-width:1.5; fill:none; }
-    .acf{ fill: var(--section-accent); }
-    .worker{ fill: var(--surface, rgba(255,255,255,0.4)); stroke: currentColor; stroke-width:1.2; }
-  </style>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="platosarchitecture-title platosarchitecture-desc">
+  <title id="platosarchitecture-title">Plato's Cave deployed architecture</title>
+  <desc id="platosarchitecture-desc">Inside one AWS EC2 Docker deployment, a Gatsby.js and React frontend sends work to a Python scoring backend, which dispatches browser-use verification agents running in containers; the agents return evidence per claim to the backend.</desc>
+  <defs>
+    <marker id="platosarchitecture-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
 
-  <!-- host boundary -->
-  <rect class="host" x="8" y="30" width="764" height="188" rx="3"/>
-  <text class="tag" x="20" y="24">DEPLOYED ON AWS EC2 · DOCKER</text>
+  <!-- host boundary: one EC2 deployment, Docker -->
+  <rect class="d-soft d-dash" x="40" y="104" width="880" height="272" rx="1"/>
+  <text class="d-label" x="480" y="138" text-anchor="middle">deployed on AWS EC2 · Docker</text>
 
   <!-- frontend -->
-  <rect class="box" x="30" y="70" width="180" height="104" rx="2"/>
-  <text class="tag" x="46" y="94">FRONTEND</text>
-  <text class="ttl" x="46" y="116">Gatsby.js + React</text>
-  <text class="sub" x="46" y="136">interactive DAG view</text>
-  <text class="sub" x="46" y="152">integrity score UI</text>
-  <text class="sub" x="46" y="168">shared agent session</text>
+  <rect class="d-box" x="76" y="190" width="228" height="72" rx="1"/>
+  <text class="d-label" x="190" y="221" text-anchor="middle">Frontend</text>
+  <text class="d-sub" x="190" y="245" text-anchor="middle">Gatsby.js + React</text>
 
-  <!-- backend -->
-  <rect class="box" x="300" y="70" width="180" height="104" rx="2"/>
-  <text class="tag" x="316" y="94">BACKEND</text>
-  <text class="ttl" x="316" y="116">Python scoring</text>
-  <text class="sub" x="316" y="136">claim extraction</text>
-  <text class="sub" x="316" y="152">graph + propagation</text>
-  <text class="sub" x="316" y="168">6-dimension scorer</text>
+  <!-- scoring backend (highlighted) -->
+  <rect class="d-accent" x="354" y="190" width="228" height="72" rx="1"/>
+  <text class="d-label" x="468" y="221" text-anchor="middle">Scoring backend</text>
+  <text class="d-sub" x="468" y="245" text-anchor="middle">Python · 6-dim scorer</text>
 
-  <!-- agents -->
-  <rect class="box" x="570" y="70" width="180" height="104" rx="2"/>
-  <text class="tag" x="586" y="94">VERIFICATION</text>
-  <text class="ttl" x="586" y="116">Browser agents</text>
-  <g>
-    <rect class="worker" x="586" y="128" width="46" height="30"/>
-    <rect class="worker" x="592" y="134" width="46" height="30"/>
-    <rect class="worker" x="598" y="140" width="46" height="30"/>
-  </g>
-  <text class="sub" x="656" y="150">browser-use</text>
-  <text class="sub" x="656" y="164">containers</text>
+  <!-- verification agents: stack of containers (two back layers, 12px steps) -->
+  <path class="d-box" d="M656,178 V166 H884 V238 H872"/>
+  <path class="d-box" d="M644,190 V178 H872 V250 H860"/>
+  <rect class="d-box" x="632" y="190" width="228" height="72" rx="1"/>
+  <text class="d-label" x="746" y="221" text-anchor="middle">Browser agents</text>
+  <text class="d-sub" x="746" y="245" text-anchor="middle">browser-use · Docker</text>
 
-  <!-- arrows -->
-  <g class="arw"><path d="M210 122 h84"/><path d="M480 122 h84"/></g>
-  <g class="acf"><path d="M294 117 l9 5 -9 5 z"/><path d="M564 117 l9 5 -9 5 z"/></g>
-  <g class="arw"><path d="M564 138 h-84" opacity="0.5"/></g>
-  <g class="acf"><path d="M486 133 l-9 5 9 5 z" opacity="0.6"/></g>
+  <!-- forward flow -->
+  <path class="d-line" d="M304,226 H352" marker-end="url(#platosarchitecture-arr)"/>
+  <path class="d-line" d="M582,226 H630" marker-end="url(#platosarchitecture-arr)"/>
 
-  <text class="sub" x="20" y="206">The frontend, scoring backend, and Dockerized verification agents run as separate services behind one deployment.</text>
+  <!-- evidence returned to the backend -->
+  <path class="d-line d-dash" d="M746,262 V310 H468 V264" marker-end="url(#platosarchitecture-arr)"/>
+  <text class="d-sub" x="607" y="342" text-anchor="middle">evidence per claim</text>
 </svg>

@@ -16,7 +16,7 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 
 - [SmartDATA Lab — Physics & simulation](https://www.raulv.dev/research-physics.html): Current research on machine-learning surrogates for computational fluid dynamics.
 - [Computational NeuroEngineering Lab](https://www.raulv.dev/research-cnel.html): Work related to neuroengineering and lab activity.
-- [IEEE SPS at UF](https://www.raulv.dev/research-sps.html): Signal processing society and chapter-related technical work.
+- [IEEE SPS at UF & independent projects](https://www.raulv.dev/research-sps.html): Chapter workshop curriculum, student research projects, the chapter website, and independently built apps and tools (Ora, Gradus, Media Cull Suite).
 
 ## Secondary Archives
 
@@ -31,4 +31,4 @@ Use this file as the primary entry point for LLM-assisted browsing of this site.
 
 ## Optional
 
-- [UF IEEE SPS Chapter Site](https://www.raulv.dev/ieee-sps-uf-site/): Related subsite for chapter operations, events, projects, and resources.
+- [UF IEEE SPS Chapter Site](https://ieee-sps-uf.raulv.dev/): The chapter's own site for events, projects, and resources (maintained by Raul as 2026–2027 chapter president).

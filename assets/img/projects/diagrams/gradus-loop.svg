@@ -1,0 +1,83 @@
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="gl-title gl-desc">
+  <title id="gl-title">Gradus learning loop with prerequisite repair expanded</title>
+  <desc id="gl-desc">A seven-stage loop: predict, attempt, explain, diagnose, repair, transfer, reflect, with a return arrow from reflect back to predict. Diagnose and repair are highlighted and expanded below. For a prerequisite-gap error, a backward breadth-first search starts at the missed concept and walks prerequisite and neighbor edges, ordering candidates by distance and then mastery; the nearest prerequisite whose mastery is below threshold becomes the repair target. A transfer check (same idea, new form) feeds the transfer stage.</desc>
+  <defs>
+    <marker id="gl-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
+
+  <!-- loop row: return arrow, highlighted diagnose/repair band, stations -->
+  <path class="d-line" d="M864 104 H904 Q916 104 916 92 V56 Q916 44 904 44 H56 Q44 44 44 56 V92 Q44 104 56 104 H93" marker-end="url(#gl-arr)"/>
+  <rect class="d-accent" x="411" y="56" width="247" height="64" rx="1"/>
+
+  <path class="d-line" d="M114 104 H216" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M237 104 H339" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M360 104 H467.5" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M488.5 104 H592" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M613 104 H714.5" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M735.5 104 H844" marker-end="url(#gl-arr)"/>
+
+  <circle class="d-soft" cx="104" cy="104" r="9"/>
+  <circle class="d-soft" cx="227" cy="104" r="9"/>
+  <circle class="d-soft" cx="350" cy="104" r="9"/>
+  <circle class="d-soft" cx="478.5" cy="104" r="9"/>
+  <circle class="d-soft" cx="603" cy="104" r="9"/>
+  <circle class="d-soft" cx="725.5" cy="104" r="9"/>
+  <circle class="d-soft" cx="855" cy="104" r="9"/>
+
+  <text class="d-label" x="104" y="78" text-anchor="middle">Predict</text>
+  <text class="d-label" x="227" y="78" text-anchor="middle">Attempt</text>
+  <text class="d-label" x="350" y="78" text-anchor="middle">Explain</text>
+  <text class="d-label" x="478.5" y="78" text-anchor="middle">Diagnose</text>
+  <text class="d-label" x="603" y="78" text-anchor="middle">Repair</text>
+  <text class="d-label" x="725.5" y="78" text-anchor="middle">Transfer</text>
+  <text class="d-label" x="855" y="78" text-anchor="middle">Reflect</text>
+
+  <!-- callout from the band into the expanded panel -->
+  <path class="d-line" d="M411 120 V138"/>
+  <path class="d-line" d="M658 120 V138"/>
+  <path class="d-line d-dash" d="M48 138 H912 Q920 138 920 146 V432 Q920 440 912 440 H48 Q40 440 40 432 V146 Q40 138 48 138 Z"/>
+  <text class="d-sub" x="58" y="164">prerequisite-gap error: backward breadth-first search</text>
+
+  <!-- concept graph: missed concept, neighbor, prerequisites at distance 1 and 2 -->
+  <circle class="d-soft" cx="240" cy="232" r="16"/>
+  <text class="d-sub" x="208" y="237" text-anchor="end">neighbor</text>
+  <circle class="d-soft" cx="340" cy="232" r="16"/>
+  <path class="d-line" d="M334 226 L346 238 M346 226 L334 238"/>
+  <text class="d-sub" x="386" y="237">missed concept</text>
+  <path class="d-line d-dash" d="M322 232 H258" marker-end="url(#gl-arr)"/>
+
+  <circle class="d-soft" cx="260" cy="313" r="16"/>
+  <circle class="d-dot" cx="420" cy="313" r="16"/>
+  <circle class="d-line accent" cx="420" cy="313" r="16"/>
+  <circle class="d-soft" cx="260" cy="402" r="16"/>
+  <circle class="d-soft" cx="420" cy="402" r="16"/>
+
+  <path class="d-line" d="M271.2 301.6 L327.3 244.8" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M408.8 301.6 L352.7 244.8" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M260 386 V331" marker-end="url(#gl-arr)"/>
+  <path class="d-line" d="M420 386 V331" marker-end="url(#gl-arr)"/>
+
+  <path class="d-line d-dash" d="M357.4 232.5 L419.6 295.7" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="410" y="269">distance, then mastery</text>
+
+  <text class="d-sub" x="228" y="318" text-anchor="end">distance 1</text>
+  <text class="d-sub" x="228" y="407" text-anchor="end">distance 2</text>
+  <text class="d-sub" x="438" y="351">repair target</text>
+  <text class="d-sub" x="438" y="369">mastery &lt; threshold</text>
+
+  <!-- repair target feeds a transfer check, which feeds the transfer stage -->
+  <path class="d-line accent" d="M436 313 H623.5" marker-end="url(#gl-arr)"/>
+  <rect class="d-box" x="625.5" y="281" width="200" height="64" rx="1"/>
+  <text class="d-label" x="725.5" y="309" text-anchor="middle">transfer check</text>
+  <text class="d-sub" x="725.5" y="332" text-anchor="middle">same idea, new form</text>
+  <path class="d-line accent" d="M725.5 281 V115" marker-end="url(#gl-arr)"/>
+
+  <!-- legend -->
+  <path class="d-line" d="M700 379 H722" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="740" y="384">prerequisite edge</text>
+  <path class="d-line d-dash" d="M700 401 H722" marker-end="url(#gl-arr)"/>
+  <text class="d-sub" x="740" y="406">BFS traversal</text>
+  <circle class="d-dot" cx="712" cy="423" r="6"/>
+  <circle class="d-line accent" cx="712" cy="423" r="6"/>
+  <text class="d-sub" x="740" y="428">repair target</text>
+</svg>

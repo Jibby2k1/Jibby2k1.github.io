@@ -18,7 +18,7 @@ export function aboutPage({ imgTag }) {
       </div>
     </section>
 
-    <div class="grid two accent-mint" style="margin-top:18px;">
+    <div class="grid two accent-mint">
       <article class="card reveal">
         <h3>Education</h3>
         <p><strong>University of Florida</strong> — Ph.D., Electrical &amp; Computer Engineering (expected 2030)</p>
@@ -29,11 +29,12 @@ export function aboutPage({ imgTag }) {
 
       <article class="card reveal">
         <h3>Affiliations and profiles</h3>
-        <p>My current work is connected to UF ECE, the SmartDATA Lab, the Computational NeuroEngineering Lab, and IEEE Signal Processing Society activities at UF.</p>
+        <p>My current work is connected to UF ECE, the SmartDATA Lab, and the Computational NeuroEngineering Lab. I am the 2026–2027 president of the IEEE Signal Processing Society student chapter at UF, where I built the chapter's workshop curriculum and maintain its website.</p>
         <div class="pill-row">
           <a class="pill" href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
           <a class="pill" href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>
           <a class="pill" href="https://smartdata.ece.ufl.edu/" target="_blank" rel="noreferrer">SmartDATA Lab</a>
+          <a class="pill" href="https://ieee-sps-uf.raulv.dev/" target="_blank" rel="noreferrer">IEEE SPS @ UF</a>
           <a class="pill" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a>
           <a class="pill" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer">LinkedIn</a>
           <a class="pill" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer">X</a>
@@ -49,7 +50,7 @@ export function aboutPage({ imgTag }) {
         <p>That mindset carries into teaching and community work too. If a concept cannot survive being explained clearly, tested, and reused by someone else, the pipeline is probably not rigorous enough yet.</p>
       </article>
 
-      <div class="grid three" style="margin-top:14px; gap:14px;">
+      <div class="grid three">
         <article class="card reveal">
           <h3>Primary topics</h3>
           <div class="pill-row">
@@ -71,14 +72,14 @@ export function aboutPage({ imgTag }) {
         </article>
         <article class="card reveal">
           <h3>Outside the lab</h3>
-          <p>Photography, music, and training matter to me for the same reason research does: they reward discipline, iteration, and attention to detail.</p>
+          <p>Photography, music, and training matter to me for the same reason research does: they reward discipline, iteration, and attention to detail. They also turn into software: a local-first <a href="projects/media-cull-suite.html">photo-culling suite</a> for my own shoots and <a href="projects/ora.html">Ora</a>, a training app I co-founded.</p>
         </article>
       </div>
     </div>
 
     <section class="accent-cool">
       <h2 class="section-title reveal">Writing, recognition, and visual work</h2>
-      <div class="grid three" style="margin-top:14px; gap:14px;">
+      <div class="grid three">
         <article class="card reveal">
           <div class="archive-ledger-label">Writing</div>
           <h3>Research notes and commentary</h3>
@@ -153,11 +154,24 @@ export function cvPage({ escapeHtml, awards }) {
       </article>
       <article class="card reveal">
         <h3>IEEE Signal Processing Society at UF</h3>
-        <div class="meta">Workshops, prototypes, and open-source systems</div>
+        <div class="meta">Chapter President, 2026–2027 · workshops, prototypes, and open-source systems · since 2024</div>
         <ul class="cv-list">
+          <li>Built and taught the chapter's public workshop curriculum: 87 Jupyter workshops (258 half-hour sessions) across 12 topics from real analysis and DSP to machine learning, GPU and FPGA systems, and a full-system capstone; every notebook opens in Google Colab. <a href="https://github.com/Jibby2k1/SPS_Curriculum" target="_blank" rel="noreferrer">github.com/Jibby2k1/SPS_Curriculum</a></li>
           <li>Designed and taught the "Foundations of Signal Processing" workshop series connecting analysis, probability, and machine learning to applied signal-processing case studies (recorded at the DSI Spring Symposium 2025).</li>
-          <li>Led student-facing research engineering projects including Aude (end-to-end audio research workflow: synchronized microphone-array data, benchmark state-of-the-art baselines, source separation and localization models).</li>
-          <li>Taught analysis and machine learning with Jupyter to UF students, pairing theory with runnable notebooks.</li>
+          <li>Chartered and advised student research projects including Aude (audio scene analysis), Vie (video scene analysis), and Ergo (EMG/EEG acquisition), each run with a charter, issue-driven workflow, and review-gated merges.</li>
+          <li>Redesigned and maintain the chapter website (React, TypeScript, Vite; GitHub Pages) with content kept as typed data so future boards can edit without touching components. <a href="https://ieee-sps-uf.raulv.dev/" target="_blank" rel="noreferrer">ieee-sps-uf.raulv.dev</a></li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="accent-mint">
+      <h2 class="section-title reveal">Selected software</h2>
+      <article class="card reveal">
+        <ul class="cv-list">
+          <li><strong>Gradus</strong> — a reasoning-mastery platform for rigorous STEM courses (Flutter; web, Android, iOS). Concept-graph courses with author-defined fail points, deterministic grading with no runtime language-model grading, prerequisite repair, and transfer checks. Closed beta with a public demo. <a href="https://gradus.raulv.dev/" target="_blank" rel="noreferrer">gradus.raulv.dev</a></li>
+          <li><strong>Ora</strong> — a local-first training and progress app for lifters, co-founded with a small student team. My work: the machine-learning and coach-experience layers and the biomechanics research packages beside the app. <a href="https://oracoach.app/" target="_blank" rel="noreferrer">oracoach.app</a></li>
+          <li><strong>Media Cull Suite</strong> — local-first photo and video culling tools (Python, FastAPI, React) that rank a shoot, learn the photographer's taste, and feed a capture recipe back to the camera over the Sony Camera Remote SDK.</li>
+          <li><strong>Kernel Adaptive Memory</strong> — public research code and experiment infrastructure for a six-phase, preregistered study of persistent kernel memory in sequence models, run on UF HiPerGator. <a href="https://github.com/Jibby2k1/KAM" target="_blank" rel="noreferrer">github.com/Jibby2k1/KAM</a></li>
         </ul>
       </article>
     </section>
@@ -183,7 +197,7 @@ export function cvPage({ escapeHtml, awards }) {
 
     <section class="accent-amber">
       <h2 class="section-title reveal">Skills</h2>
-      <div class="grid two" style="margin-top:14px; gap:14px;">
+      <div class="grid two">
         <article class="card reveal">
           <h3>Methods</h3>
           <div class="pill-row">
@@ -211,7 +225,7 @@ export function cvPage({ escapeHtml, awards }) {
 
     <section class="accent-cool">
       <h2 class="section-title reveal">Affiliations and identifiers</h2>
-      <div class="grid two" style="margin-top:14px; gap:14px;">
+      <div class="grid two">
         <article class="card reveal">
           <h3>Affiliations</h3>
           <ul class="cv-list">
@@ -232,7 +246,7 @@ export function cvPage({ escapeHtml, awards }) {
           </ul>
         </article>
       </div>
-      <article class="card reveal" style="margin-top:14px;">
+      <article class="card reveal">
         <h3>Official UF mentions</h3>
         <ul class="cv-list">
           <li><a href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI biography</a> — HiPerGator Early Career Award profile.</li>
@@ -240,7 +254,7 @@ export function cvPage({ escapeHtml, awards }) {
           <li><a href="https://www.ufdsi.com/symposium" target="_blank" rel="noreferrer">DSI Spring Symposium 2025</a> — workshop talk context.</li>
         </ul>
       </article>
-      <div class="cta-row no-print" style="margin-top:14px;">
+      <div class="cta-row no-print">
         <a class="btn primary" href="research.html">Research and publications</a>
         <a class="btn" href="blog.html">Notes and writing</a>
       </div>
@@ -261,7 +275,7 @@ export function contactPage({ site, escapeHtml }) {
       </section>
       <section class="accent-mint">
         <h2 class="section-title reveal">Profiles</h2>
-        <div class="grid two" style="gap:14px; margin-top:14px;">
+        <div class="grid two">
           <article class="card reveal">
   <h3>ORCID</h3>
   <p>Persistent research identifier.</p>
@@ -304,7 +318,7 @@ export function contactPage({ site, escapeHtml }) {
       <section class="accent-amber">
         <h2 class="section-title reveal">Verification</h2>
         <p class="section-subtitle reveal">If you need to confirm you are looking at the right Raul Valle, these official University of Florida references are the shortest path.</p>
-        <div class="grid two" style="gap:14px; margin-top:14px;">
+        <div class="grid two">
           <article class="card reveal">
   <h3>UF AI biography</h3>
   <p>Official University of Florida profile for the HiPerGator Early Career Award.</p>
@@ -331,7 +345,7 @@ export function contactPage({ site, escapeHtml }) {
   </div>
 </article>
         </div>
-        <article class="card reveal" style="margin-top:14px;">
+        <article class="card reveal">
           <h3>Research outputs</h3>
           <p>Papers, talk videos, and official mentions are collected with the research overview.</p>
           <div class="cta-row">

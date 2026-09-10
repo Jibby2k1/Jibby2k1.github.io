@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="t d">
+  <title id="t">A claim checked against an oracle, with a narrate-the-failure branch</title>
+  <desc id="d">A numerical claim from a notebook cell flows into an independent oracle such as a closed form, LAPACK, brute force, or a planted truth. If they agree the result ships with a debrief; if they disagree the notebook narrates the failure, says why, and only then fixes the experiment, re-runs it, and re-checks.</desc>
+  <g font-family="var(--mono, ui-monospace, monospace)" fill="currentColor" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+
+    <!-- Heading -->
+    <text x="60" y="70" stroke="none" font-size="30" font-weight="700">every number has an oracle</text>
+    <text x="60" y="106" stroke="none" font-size="22" opacity="0.6">a cell is not done until something the author did not derive agrees with it</text>
+
+    <!-- Claim box -->
+    <rect x="60" y="290" width="270" height="180" rx="14" fill="currentColor" fill-opacity="0.06"/>
+    <text x="195" y="338" text-anchor="middle" stroke="none" font-size="26" font-weight="700">CLAIM</text>
+    <text x="195" y="380" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">final RQ 0.5015</text>
+    <text x="195" y="412" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">"reaches λ_min"</text>
+    <text x="195" y="448" text-anchor="middle" stroke="none" font-size="22" opacity="0.6">(the notebook says)</text>
+
+    <!-- Arrow claim -> oracle -->
+    <line x1="330" y1="380" x2="374" y2="380"/>
+    <polyline points="362,370 376,380 362,390" fill="none"/>
+
+    <!-- Oracle box (accent) -->
+    <rect x="380" y="270" width="280" height="220" rx="14" stroke="var(--section-accent, currentColor)" fill="var(--section-accent, currentColor)" fill-opacity="0.10" stroke-width="3"/>
+    <text x="520" y="318" text-anchor="middle" stroke="none" font-size="26" font-weight="700" fill="var(--section-accent, currentColor)">ORACLE</text>
+    <text x="520" y="360" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">closed form</text>
+    <text x="520" y="392" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">LAPACK · eigh</text>
+    <text x="520" y="424" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">brute force</text>
+    <text x="520" y="456" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">planted truth</text>
+    <text x="520" y="520" text-anchor="middle" stroke="none" font-size="22" opacity="0.6">not hand-derived</text>
+
+    <!-- Fork: up to SHIP, down to NARRATE -->
+    <path d="M660 380 H730 V230 H866" fill="none"/>
+    <polyline points="854,220 868,230 854,240" fill="none"/>
+    <path d="M660 380 H730 V570 H866" fill="none"/>
+    <polyline points="854,560 868,570 854,580" fill="none"/>
+
+    <!-- Branch labels, beside the stubs -->
+    <text x="744" y="218" stroke="none" font-size="22" opacity="0.7">agree</text>
+    <text x="744" y="558" stroke="none" font-size="22" opacity="0.7">disagree</text>
+    <text x="744" y="602" stroke="none" font-size="22" opacity="0.7">52× off</text>
+
+    <!-- Ship box -->
+    <rect x="872" y="150" width="270" height="160" rx="14" fill="currentColor" fill-opacity="0.06"/>
+    <text x="1007" y="200" text-anchor="middle" stroke="none" font-size="26" font-weight="700">SHIP</text>
+    <text x="1007" y="240" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">with a debrief:</text>
+    <text x="1007" y="272" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">name the number</text>
+
+    <!-- Narrate the failure box (dashed, accent) -->
+    <rect x="872" y="470" width="270" height="200" rx="14" stroke="var(--section-accent, currentColor)" stroke-dasharray="10 8" fill="none" stroke-width="3"/>
+    <text x="1007" y="518" text-anchor="middle" stroke="none" font-size="26" font-weight="700" fill="var(--section-accent, currentColor)">NARRATE</text>
+    <text x="1007" y="550" text-anchor="middle" stroke="none" font-size="26" font-weight="700" fill="var(--section-accent, currentColor)">THE FAILURE</text>
+    <text x="1007" y="590" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">say why (the gap)</text>
+    <text x="1007" y="622" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">then fix, re-run,</text>
+    <text x="1007" y="654" text-anchor="middle" stroke="none" font-size="22" opacity="0.85">re-check</text>
+
+    <!-- Loop from narrate back to claim -->
+    <path d="M1007 670 V712 H195 V476" fill="none" stroke-dasharray="6 8" opacity="0.6"/>
+    <polyline points="185,488 195,474 205,488" fill="none" opacity="0.6"/>
+    <text x="600" y="702" text-anchor="middle" stroke="none" font-size="22" opacity="0.6">never ship prose and numbers that disagree</text>
+  </g>
+</svg>

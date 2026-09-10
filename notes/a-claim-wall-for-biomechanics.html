@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>A claim wall for biomechanics | Raul Valle Writing</title>
+  <meta name="description" content="How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="A claim wall for biomechanics | Raul Valle Writing" />
+  <meta property="og:description" content="How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change." />
+  <meta property="og:url" content="https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta property="og:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="A claim wall for biomechanics | Raul Valle Writing" />
+  <meta name="twitter:description" content="How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta name="twitter:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <link rel="canonical" href="https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html#webpage","url":"https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html","name":"A claim wall for biomechanics | Raul Valle Writing","description":"How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"BlogPosting","@id":"https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html#post","headline":"A claim wall for biomechanics","description":"How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change.","datePublished":"2026-09-08","dateModified":"2026-09-08","author":{"@id":"https://www.raulv.dev/#person"},"publisher":{"@id":"https://www.raulv.dev/#person"},"image":"https://www.raulv.dev/assets/img/blog/a-claim-wall-for-biomechanics.svg","mainEntityOfPage":"https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html","articleSection":"Research log","keywords":["biomechanics","software design","verification","digital twins"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://www.raulv.dev/blog.html"},{"@type":"ListItem","position":3,"name":"A claim wall for biomechanics","item":"https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="sps">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">Research log</div>
+          <h1 class="h1">A claim wall for biomechanics</h1>
+          <p class="lead">How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change.</p>
+          <div class="meta hero-meta"><span class="track">Sep 8, 2026</span> · biomechanics · software design · verification · digital twins</div>
+          <div class="hero-media" role="img" aria-label="Diagram of a brick wall separating allowed mechanics outputs from barred outputs, with a single gated door labeled reviewed decision."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="cw-title cw-desc" style="font-family: var(--mono, ui-monospace, monospace); color: inherit;" class="diagram" id="svg-atcwa5">
+  <title id="cw-title">The claim wall</title>
+  <desc id="cw-desc">A brick wall separates nine allowed mechanics outputs on the left from nine barred outputs on the right. The only opening is a gated door labeled reviewed decision, with a named validation bar beneath it.</desc>
+  <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <text x="280" y="86" text-anchor="middle" fill="currentColor" stroke="none" font-size="30" font-weight="bold">allowed outputs</text>
+    <text x="280" y="118" text-anchor="middle" fill="currentColor" stroke="none" font-size="22" opacity="0.65">AllowedMechanicsOutputV1</text>
+    <text x="920" y="86" text-anchor="middle" fill="currentColor" stroke="none" font-size="30" font-weight="bold">barred outputs</text>
+    <text x="920" y="118" text-anchor="middle" fill="currentColor" stroke="none" font-size="22" opacity="0.65">UnavailableMechanicsOutputV1</text>
+
+    <rect x="70" y="150" width="420" height="500" rx="14" fill="currentColor" fill-opacity="0.05"/>
+    <g font-size="24" fill="currentColor" stroke="none">
+      <text x="110" y="200">modeled position</text>
+      <text x="110" y="250">external force</text>
+      <text x="110" y="300">moment arm</text>
+      <text x="110" y="350">external joint moment</text>
+      <text x="110" y="400">balancing joint moment</text>
+      <text x="110" y="450">moment summary</text>
+      <text x="110" y="500">setup A vs B difference</text>
+      <text x="110" y="550">sensitivity</text>
+      <text x="110" y="600">bounded uncertainty</text>
+    </g>
+    <g stroke="var(--section-accent, currentColor)" stroke-width="3">
+      <path d="M84 195 l8 8 l14 -16"/>
+      <path d="M84 245 l8 8 l14 -16"/>
+      <path d="M84 295 l8 8 l14 -16"/>
+      <path d="M84 345 l8 8 l14 -16"/>
+      <path d="M84 395 l8 8 l14 -16"/>
+      <path d="M84 445 l8 8 l14 -16"/>
+      <path d="M84 495 l8 8 l14 -16"/>
+      <path d="M84 545 l8 8 l14 -16"/>
+      <path d="M84 595 l8 8 l14 -16"/>
+    </g>
+
+    <rect x="710" y="150" width="420" height="500" rx="14" stroke-dasharray="8 8" opacity="0.7"/>
+    <g font-size="24" fill="currentColor" stroke="none" opacity="0.8">
+      <text x="750" y="200">muscle activation</text>
+      <text x="750" y="250">individual muscle force</text>
+      <text x="750" y="300">joint contact force</text>
+      <text x="750" y="350">tendon force</text>
+      <text x="750" y="400">ligament stress</text>
+      <text x="750" y="450">tissue stress</text>
+      <text x="750" y="500">injury probability</text>
+      <text x="750" y="550">medical interpretation</text>
+      <text x="750" y="600">3D dynamics</text>
+    </g>
+    <g opacity="0.7" stroke-width="2.5">
+      <path d="M724 190 l16 16 M740 190 l-16 16"/>
+      <path d="M724 240 l16 16 M740 240 l-16 16"/>
+      <path d="M724 290 l16 16 M740 290 l-16 16"/>
+      <path d="M724 340 l16 16 M740 340 l-16 16"/>
+      <path d="M724 390 l16 16 M740 390 l-16 16"/>
+      <path d="M724 440 l16 16 M740 440 l-16 16"/>
+      <path d="M724 490 l16 16 M740 490 l-16 16"/>
+      <path d="M724 540 l16 16 M740 540 l-16 16"/>
+      <path d="M724 590 l16 16 M740 590 l-16 16"/>
+    </g>
+
+    <g fill="currentColor" fill-opacity="0.12">
+      <rect x="560" y="150" width="80" height="34"/>
+      <rect x="560" y="184" width="40" height="34"/><rect x="600" y="184" width="40" height="34"/>
+      <rect x="560" y="218" width="80" height="34"/>
+      <rect x="560" y="252" width="40" height="34"/><rect x="600" y="252" width="40" height="34"/>
+      <rect x="560" y="286" width="80" height="34"/>
+      <rect x="560" y="320" width="40" height="34"/><rect x="600" y="320" width="40" height="34"/>
+      <rect x="560" y="520" width="40" height="34"/><rect x="600" y="520" width="40" height="34"/>
+      <rect x="560" y="554" width="80" height="34"/>
+      <rect x="560" y="588" width="40" height="34"/><rect x="600" y="588" width="40" height="34"/>
+      <rect x="560" y="622" width="80" height="28"/>
+    </g>
+
+    <path d="M600 150 V354" stroke="var(--section-accent, currentColor)" stroke-width="2.5" stroke-dasharray="6 6"/>
+    <g stroke="var(--section-accent, currentColor)" stroke-width="3">
+      <path d="M560 520 V394 a40 40 0 0 1 80 0 V520 Z" fill="var(--section-accent, currentColor)" fill-opacity="0.12"/>
+      <path d="M580 370 V520 M600 355 V520 M620 370 V520" opacity="0.75"/>
+      <path d="M560 440 H640 M560 480 H640" opacity="0.75"/>
+      <rect x="588" y="455" width="24" height="18" rx="3" fill="var(--section-accent, currentColor)" fill-opacity="0.35"/>
+      <path d="M593 455 v-7 a7 7 0 0 1 14 0 v7"/>
+    </g>
+
+    <path d="M710 437 H652" opacity="0.7" stroke-dasharray="6 6"/>
+    <path d="M660 429 l-8 8 l8 8" opacity="0.7"/>
+
+    <text x="600" y="72" text-anchor="middle" fill="var(--section-accent, currentColor)" stroke="none" font-size="24" font-weight="bold">reviewed decision</text>
+    <text x="600" y="102" text-anchor="middle" fill="currentColor" stroke="none" font-size="22" opacity="0.7">named validation bar</text>
+    <path d="M600 116 V150" stroke="var(--section-accent, currentColor)" stroke-width="2.5"/>
+    <path d="M592 142 l8 8 l8 -8" stroke="var(--section-accent, currentColor)" stroke-width="2.5"/>
+
+    <text x="600" y="712" text-anchor="middle" fill="currentColor" stroke="none" font-size="22" opacity="0.6">a packet must list all nine barred outputs or the validator rejects it</text>
+  </g>
+</svg></div>
+        </section>
+
+        <section class="project-detail reveal" data-track="sps">
+          <div class="project-main">
+            <article class="card reveal prose-card">
+              <h2 class="project-section-title">Entry</h2>
+              <p>The mechanics engine inside Ora, the training app I co-founded with a small student team, answers one narrow question: given two exercise setups, how does the joint moment differ across the range of motion? It is a deterministic, planar, quasi-static solver: not a muscle model, not an injury model, not a clinician. The design problem I care about most is making that sentence true in code, not only in a README.</p>
+<h2>Two enums, one wall</h2>
+<p>What a comparison packet may say is encoded in two enumerations in the contracts module. <code>AllowedMechanicsOutputV1</code> has nine members: modeled point positions, external forces, moment arms, external and balancing joint moments, a balancing-moment summary, the difference between two setups, finite-difference sensitivities, and bounded uncertainty. <code>UnavailableMechanicsOutputV1</code> has nine members too: muscle activation, individual muscle force, joint contact force, tendon force, ligament stress, tissue stress, injury probability, medical interpretation, and three-dimensional dynamics.</p>
+<p>The second list is not a comment. Every packet carries an <code>unavailable_outputs</code> field, and the validator rejects any packet whose set does not equal the full required tuple. A packet cannot quietly drop &quot;injury probability&quot; from the list of things it refuses to say, and there is no field where a muscle force could go, so the Dart app that reads the released response surface has nothing to read.</p>
+<p>I call this the claim wall, and the project's working agreement names it the principal asset.</p>
+<h2>Promotion is a decision, not a diff</h2>
+<p>The rule that goes with the enums is short. Promoting anything from unavailable to allowed is a separate, explicit, reviewed decision with a named validation bar, never a side effect of another change. A named bar means writing down what the output is checked against, how closely it must agree, and who reviewed that.</p>
+<p>Once the decision to pursue muscle-level outputs had been taken, and before anyone set a bar, I audited what promoting each of the nine would cost. The flat enum hides that they are three different kinds of barred.</p>
+<ul><li>One is barred only because it is unfinished as a packet output. Three-dimensional dynamics is missing the time dimension, not a concept, and its gate is a reduction test we already know how to write: a dynamic solve must reproduce the quasi-static result exactly at zero acceleration.</li><li>Four are model-dependent. More muscles cross a joint than there are equilibrium equations, so a muscle force is a consequence of a cost function, not a measurement. Checking one ranges from a consumer surface EMG sensor to an instrumented surgical implant.</li><li>Two are not mechanics claims at all. Injury probability is epidemiology; medical interpretation is a regulated act.</li></ul>
+<p>The remaining two, ligament stress and tissue stress, sit between the second and third kinds, model-dependent to compute and clinical in use, and the audit left them unresolved.</p>
+<p>The audit set no bar. It filled in the &quot;against what measurement&quot; column, proposed an agreement figure only for the reduction test, and left &quot;who reviewed&quot; blank in every row, because that is a human decision. The proposal that came out of it was a research tier for the model-dependent quantities, barred from user-facing packets by the same mechanism, with the assumption behind each number carried as a required field.</p>
+<h2>The wall does not make the allowed side correct</h2>
+<p>A boundary on what you may say does nothing for the accuracy of what you do say. One bug in August is my clearest example of an oracle passing while wrong.</p>
+<p>The task runner supplied the implement, a dumbbell in three of the four shipped movement tasks, as a point force at the distal end, which contributes to the external load and nothing else. So the dumbbell had weight but no inertia, and since it outweighed the limb segments, most of the moving mass accelerated for free. The kernel's own docstring warned that a body with weight has inertia. The runner ignored it.</p>
+<p>The work-energy check at the time compared net joint work to the change in kinetic plus potential energy over the whole movement. A movement that starts and ends at rest has zero kinetic energy at both endpoints, so the missing inertia contributed nothing there and the check passed. Over sub-intervals, the gap at mid-movement was the dumbbell's kinetic energy to three figures.</p>
+<p>The fix was four lines. Landing it moved most of the dynamic figures the project had recorded: every peak moment fell, because the implement's inertia now helps at the top of the range where the movement decelerates. Two comparative headlines reversed direction, one claim split into a true half and a false half, and the findings that survived best were stated as ratios rather than magnitudes. A second copy of the defect turned up in a test fixture that never called the runner, found because one figure did not move when everything comparable did. The sub-interval check is now permanent in the suite.</p>
+<p>The lesson I wrote down: ask of any conservation check whether it vanishes exactly where the thing you are checking vanishes.</p>
+<h2>Carrying the discipline into the twin</h2>
+<p>Since mid-August my time has gone into canonical-msk-twin, a pure-standard-library finite-element muscle-tendon-bone research demonstrator beside the mechanics engine. It is headed toward a human-scale frame with a viewer; its honesty statement calls every result a structural benchmark: not subject-specific, not biologically validated, no medical interpretation.</p>
+<p>The same wall is there, expressed differently. Validation status is a field with two values, and the validated one is accepted only when a covering validation record is attached; no result so far carries one. A claim guard scans every claim-bearing text field for &quot;validated&quot;, &quot;subject-specific&quot;, &quot;injury risk&quot;, and &quot;diagnosis&quot;, and raises without such a record. It understands negation, so &quot;unvalidated&quot; passes and &quot;validated&quot; alone does not.</p>
+<p>A design contract, at section 82 as I write this, pins interfaces before any increment is implemented; a decision log with 97 entries records each choice and reverses one only by adding a new entry. The loop protocol that drives the work lists refusals it must make: never promote anything out of unvalidated, never soften a claim to make a milestone reachable, never fabricate a mechanism to fill a gap. Scaling the model up buys geometry and composition, never validity.</p>
+<h2>What I would keep</h2>
+<p>The enums cost almost nothing to write and have paid for themselves by turning &quot;should we say this?&quot; from a judgment call at review time into a question with a documented answer. The harder lesson is that the allowed side needs oracles that test where the terms do not vanish. I intend to keep both habits.</p>
+            </article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal"><h2 class="project-section-title">Key takeaways</h2><ul><li>Encoding forbidden outputs as a typed enum that every packet must list makes the boundary a compile-time fact instead of a documentation promise.</li><li>Moving a quantity across the wall is a reviewed decision with a named validation bar, and an audit showed the nine barred outputs need at least three different bars.</li><li>A conservation check that only tests where a term vanishes cannot see that term; a sub-interval work-energy check caught a bug the endpoint check had passed.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="stack-links"><a class="related-link" href="../projects/ora.html"><strong>Ora — a local-first training and progress app for lifters</strong><span>A co-founded, local-first training and progress app for lifters: on-device logging, optional cloud or on-device language models under strict contracts, and a biomechanics research spine that says what it will not claim.</span></a></div></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

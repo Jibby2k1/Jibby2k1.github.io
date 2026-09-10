@@ -38,7 +38,8 @@
     },
     {
       "type": "Organization",
-      "name": "IEEE Signal Processing Society at the University of Florida"
+      "name": "IEEE Signal Processing Society at the University of Florida",
+      "url": "https://ieee-sps-uf.raulv.dev/"
     }
   ],
   "profiles": [

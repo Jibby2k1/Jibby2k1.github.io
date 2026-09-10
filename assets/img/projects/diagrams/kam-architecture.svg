@@ -1,45 +1,49 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 430" role="img" aria-labelledby="title desc">
-  <title id="title">Kernel Adaptive Memory architecture</title>
-  <desc id="desc">A sequence enters radial kernel context attention and then a learned persistent support bank. Their updates pass through a feed-forward block and readout, with an optional normalized least-mean-squares update for online adaptation.</desc>
-  <style>
-    .box { fill: rgba(255,255,255,.08); stroke: currentColor; stroke-width: 1.5; }
-    .accent { fill: var(--section-accent, currentColor); opacity: .18; stroke: var(--section-accent, currentColor); stroke-width: 2; }
-    .line { fill: none; stroke: currentColor; stroke-width: 2; marker-end: url(#arrow); opacity: .72; }
-    .label { font-family: var(--mono, ui-monospace, monospace); font-size: 15px; fill: currentColor; }
-    .small { font-family: var(--mono, ui-monospace, monospace); font-size: 12px; fill: currentColor; opacity: .68; }
-    .title { font-family: var(--mono, ui-monospace, monospace); font-size: 16px; font-weight: 700; fill: currentColor; }
-  </style>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="kamarchitecture-title kamarchitecture-desc">
+  <title id="kamarchitecture-title">Kernel Adaptive Memory architecture</title>
+  <desc id="kamarchitecture-desc">A sequence of tokens forks into two branches: causal radial-kernel context attention over a local window, and a learned bank of persistent key/value supports. Both feed a residual block whose output goes to the readout. An optional online NLMS update adapts only the readout.</desc>
   <defs>
-    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 Z" fill="currentColor"/>
+    <marker id="kamarchitecture-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/>
     </marker>
   </defs>
-  <text class="title" x="30" y="34">Kernel Adaptive Memory (KAM)</text>
-  <text class="small" x="30" y="55">same radial attention primitive, used for local context and learned persistent supports</text>
-  <rect class="box" x="30" y="150" width="145" height="82" rx="12"/>
-  <text class="label" x="102" y="184" text-anchor="middle">sequence</text>
-  <text class="small" x="102" y="207" text-anchor="middle">tokens / lags</text>
-  <rect class="accent" x="235" y="105" width="210" height="90" rx="12"/>
-  <text class="label" x="340" y="142" text-anchor="middle">context attention</text>
-  <text class="small" x="340" y="165" text-anchor="middle">causal, radial score</text>
-  <text class="small" x="340" y="184" text-anchor="middle">optional local window W</text>
-  <rect class="accent" x="235" y="250" width="210" height="90" rx="12"/>
-  <text class="label" x="340" y="287" text-anchor="middle">persistent supports</text>
-  <text class="small" x="340" y="310" text-anchor="middle">learned keys + values</text>
-  <text class="small" x="340" y="329" text-anchor="middle">support bank M</text>
-  <rect class="box" x="510" y="150" width="170" height="82" rx="12"/>
-  <text class="label" x="595" y="184" text-anchor="middle">residual block</text>
-  <text class="small" x="595" y="207" text-anchor="middle">FFN + normalization</text>
-  <rect class="box" x="750" y="150" width="150" height="82" rx="12"/>
-  <text class="label" x="825" y="184" text-anchor="middle">readout</text>
-  <text class="small" x="825" y="207" text-anchor="middle">prediction</text>
-  <path class="line" d="M175 191 H235"/>
-  <path class="line" d="M445 150 H510"/>
-  <path class="line" d="M445 295 C480 295 475 210 510 210"/>
-  <path class="line" d="M680 191 H750"/>
-  <rect class="box" x="590" y="300" width="260" height="62" rx="12"/>
-  <text class="label" x="720" y="326" text-anchor="middle">optional online NLMS</text>
-  <text class="small" x="720" y="347" text-anchor="middle">frozen features → adaptive readout</text>
-  <path class="line" d="M825 232 V300"/>
-  <text class="small" x="30" y="398">KAM is a proposal: the benchmark grid tests accuracy, scaling, support use, and recovery after distribution shift.</text>
+
+  <!-- connectors -->
+  <path class="d-line" d="M250 240 H275"/>
+  <path class="d-line" marker-end="url(#kamarchitecture-arr)" d="M275 240 V92 Q275 84 283 84 H298"/>
+  <path class="d-line" marker-end="url(#kamarchitecture-arr)" d="M275 240 V388 Q275 396 283 396 H298"/>
+  <path class="d-line" marker-end="url(#kamarchitecture-arr)" d="M590 84 H638"/>
+  <path class="d-line accent" marker-end="url(#kamarchitecture-arr)" d="M590 396 H609 Q615 396 615 390 V112 Q615 106 621 106 H638"/>
+  <path class="d-line" marker-end="url(#kamarchitecture-arr)" d="M780 120 V202"/>
+  <path class="d-line d-dash" marker-end="url(#kamarchitecture-arr)" d="M780 360 V278"/>
+  <circle class="d-dot" cx="275" cy="240" r="5"/>
+
+  <!-- sequence (input, centred on the whole) -->
+  <rect class="d-box" x="40" y="204" width="210" height="72" rx="1"/>
+  <text class="d-label" x="145" y="235" text-anchor="middle">sequence</text>
+  <text class="d-sub" x="145" y="259" text-anchor="middle">tokens / lags</text>
+
+  <!-- context attention (top branch) -->
+  <rect class="d-box" x="300" y="48" width="290" height="72" rx="1"/>
+  <text class="d-label" x="445" y="79" text-anchor="middle">context attention</text>
+  <text class="d-sub" x="445" y="103" text-anchor="middle">radial score · window W</text>
+
+  <!-- persistent supports (bottom branch, accent) -->
+  <rect class="d-accent" x="300" y="360" width="290" height="72" rx="1"/>
+  <text class="d-label" x="445" y="391" text-anchor="middle">persistent supports</text>
+  <text class="d-sub" x="445" y="415" text-anchor="middle">learned key/value bank M</text>
+
+  <!-- residual block -->
+  <rect class="d-box" x="640" y="48" width="280" height="72" rx="1"/>
+  <text class="d-label" x="780" y="79" text-anchor="middle">residual block</text>
+  <text class="d-sub" x="780" y="103" text-anchor="middle">FFN + normalization</text>
+
+  <!-- readout -->
+  <rect class="d-box" x="640" y="204" width="280" height="72" rx="1"/>
+  <text class="d-label" x="780" y="235" text-anchor="middle">readout</text>
+  <text class="d-sub" x="780" y="259" text-anchor="middle">prediction</text>
+
+  <!-- optional online NLMS (adapts the readout only) -->
+  <rect class="d-box d-dash" x="640" y="360" width="280" height="72" rx="1"/>
+  <text class="d-label" x="780" y="391" text-anchor="middle">online NLMS update</text>
+  <text class="d-sub" x="780" y="415" text-anchor="middle">optional · readout only</text>
 </svg>

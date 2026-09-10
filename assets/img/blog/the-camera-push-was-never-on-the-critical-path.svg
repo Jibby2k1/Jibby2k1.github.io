@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="t d" font-family="var(--mono, ui-monospace, monospace)">
+  <title id="t">Four loops, with the capture loop's backward feedback arrow highlighted</title>
+  <desc id="d">Four circular loops labeled Capture, Cull, Deliver, and Memory, each with the same five beats: observe, diagnose, propose, approve, learn. The Capture loop is drawn large. Its highlighted arc runs from the learn beat, a capture log file, back to observe on the next shoot, labeled "did it work?". A dashed arrow at the approve beat notes that the recipe reaches the camera by hand or by an optional push.</desc>
+  <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="460" cy="340" r="190" opacity="0.22" stroke-dasharray="4 10"/>
+    <path d="M 460.0 150.0 A 190 190 0 1 1 279.3 281.3" opacity="0.6"/>
+    <path d="M 279.3 281.3 A 190 190 0 0 1 460.0 150.0" stroke="var(--section-accent, currentColor)" stroke-width="5"/>
+    <path d="M 442.0 137.0 L 460.0 150.0 L 442.0 163.0" stroke="var(--section-accent, currentColor)" stroke-width="5"/>
+    <path d="M 348.3 493.7 C 318.3 523.7 298.3 543.7 288.3 573.7" stroke-dasharray="9 9" opacity="0.5"/>
+    <path d="M 276.3 561.7 L 288.3 573.7 L 300.3 563.7" opacity="0.5"/>
+    <g fill="currentColor" stroke="none">
+      <circle cx="640.7" cy="281.3" r="7"/>
+      <circle cx="571.7" cy="493.7" r="7"/>
+      <circle cx="348.3" cy="493.7" r="7"/>
+    </g>
+    <circle cx="460.0" cy="150.0" r="12" fill="var(--section-accent, currentColor)" stroke="none"/>
+    <circle cx="279.3" cy="281.3" r="12" fill="var(--section-accent, currentColor)" stroke="none"/>
+    <g transform="translate(900 205)">
+      <circle r="85" opacity="0.28" stroke-dasharray="4 10"/>
+      <path d="M 0 -85 A 85 85 0 1 1 -80.8 -26.3" opacity="0.55"/>
+      <path d="M -13 -95 L 0 -85 L -13 -75" opacity="0.55"/>
+      <g fill="currentColor" stroke="none" opacity="0.7"><circle cx="0.0" cy="-85.0" r="5"/><circle cx="80.8" cy="-26.3" r="5"/><circle cx="50.0" cy="68.8" r="5"/><circle cx="-50.0" cy="68.8" r="5"/><circle cx="-80.8" cy="-26.3" r="5"/></g>
+    </g>
+    <g transform="translate(1080 385)">
+      <circle r="85" opacity="0.28" stroke-dasharray="4 10"/>
+      <path d="M 0 -85 A 85 85 0 1 1 -80.8 -26.3" opacity="0.55"/>
+      <path d="M -13 -95 L 0 -85 L -13 -75" opacity="0.55"/>
+      <g fill="currentColor" stroke="none" opacity="0.7"><circle cx="0.0" cy="-85.0" r="5"/><circle cx="80.8" cy="-26.3" r="5"/><circle cx="50.0" cy="68.8" r="5"/><circle cx="-50.0" cy="68.8" r="5"/><circle cx="-80.8" cy="-26.3" r="5"/></g>
+    </g>
+    <g transform="translate(900 565)">
+      <circle r="85" opacity="0.28" stroke-dasharray="4 10"/>
+      <path d="M 0 -85 A 85 85 0 1 1 -80.8 -26.3" opacity="0.55"/>
+      <path d="M -13 -95 L 0 -85 L -13 -75" opacity="0.55"/>
+      <g fill="currentColor" stroke="none" opacity="0.7"><circle cx="0.0" cy="-85.0" r="5"/><circle cx="80.8" cy="-26.3" r="5"/><circle cx="50.0" cy="68.8" r="5"/><circle cx="-50.0" cy="68.8" r="5"/><circle cx="-80.8" cy="-26.3" r="5"/></g>
+    </g>
+    <path d="M 120 668 H 1080" opacity="0.2"/>
+  </g>
+  <g fill="currentColor" font-size="26">
+    <text x="460" y="336" text-anchor="middle" font-size="36" font-weight="bold">Capture</text>
+    <text x="460" y="370" text-anchor="middle" opacity="0.7" font-size="22">closes first</text>
+    <text x="478.0" y="108.0" text-anchor="start" opacity="0.85">observe</text>
+    <text x="478.0" y="134.0" text-anchor="start" opacity="0.6" font-size="22">the next shoot</text>
+    <text x="660.7" y="290.3" text-anchor="start" opacity="0.85">diagnose</text>
+    <text x="587.7" y="529.7" text-anchor="start" opacity="0.85">propose</text>
+    <text x="332.3" y="529.7" text-anchor="end" opacity="0.85">approve</text>
+    <text x="259.3" y="290.3" text-anchor="end" fill="var(--section-accent, currentColor)" font-weight="bold">log</text>
+    <text x="259.3" y="318.3" text-anchor="end" fill="var(--section-accent, currentColor)" opacity="0.85" font-size="22">capture_log.json</text>
+    <text x="310" y="118" text-anchor="end" fill="var(--section-accent, currentColor)" font-weight="bold">did it work?</text>
+    <text x="310" y="146" text-anchor="end" fill="var(--section-accent, currentColor)" opacity="0.85" font-size="22">the backward axis</text>
+    <text x="288.3" y="605.7" text-anchor="middle" opacity="0.7" font-size="22">recipe applied by hand,</text>
+    <text x="288.3" y="633.7" text-anchor="middle" opacity="0.7" font-size="22">or pushed (optional)</text>
+    <text x="900" y="215" text-anchor="middle" font-size="30" font-weight="bold">Cull</text>
+    <text x="1080" y="395" text-anchor="middle" font-size="30" font-weight="bold">Deliver</text>
+    <text x="900" y="575" text-anchor="middle" font-size="30" font-weight="bold">Memory</text>
+    <text x="600" y="700" text-anchor="middle" opacity="0.75" font-size="22">same five beats in every loop: observe → diagnose → propose → approve → learn</text>
+    <text x="600" y="730" text-anchor="middle" opacity="0.75" font-size="22">highlighted: the arc that closes the loop · dashed: how the recipe reaches the camera</text>
+  </g>
+</svg>

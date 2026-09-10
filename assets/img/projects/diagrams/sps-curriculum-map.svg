@@ -1,0 +1,67 @@
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="spscm-title spscm-desc">
+  <title id="spscm-title">SPS Curriculum: 12 topics, 87 workshops, 258 sessions</title>
+  <desc id="spscm-desc">Layered prerequisite map read bottom to top. Foundations: Mathematics (18 workshops, 57 sessions) and Programming (8 workshops, 22 sessions, core plus host programming). Core: Machine Learning (19 workshops, 54 sessions) and DSP (19 workshops, 65 sessions), each fed by both foundations. Systems: Time Series (8 workshops, 20 sessions) fed by Machine Learning and DSP; FPGA and SDR (3 draft workshops, 9 sessions) fed by DSP and Programming; GPU Systems (7 workshops, 18 sessions) fed by Programming. Applications at the top (DL for Physics, Quantum, Capstone: 5 workshops, 13 sessions) fed by Time Series, FPGA/SDR, and GPU Systems. The highlighted route runs DSP and Machine Learning into Time Series and on to Applications.</desc>
+  <defs>
+    <marker id="spscm-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse">
+      <path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/>
+    </marker>
+  </defs>
+
+  <!-- band 1: foundations -->
+  <rect class="d-box" x="40" y="376" width="260" height="64" rx="1"/>
+  <text class="d-label" x="170" y="403" text-anchor="middle">Mathematics (18)</text>
+  <text class="d-sub" x="170" y="426" text-anchor="middle">57 sessions</text>
+
+  <rect class="d-box" x="330" y="376" width="320" height="64" rx="1"/>
+  <text class="d-label" x="490" y="403" text-anchor="middle">Programming (8)</text>
+  <text class="d-sub" x="490" y="426" text-anchor="middle">22 sessions · core + host</text>
+
+  <!-- band 2: core -->
+  <rect class="d-box" x="40" y="264" width="300" height="64" rx="1"/>
+  <text class="d-label" x="190" y="291" text-anchor="middle">Machine Learning (19)</text>
+  <text class="d-sub" x="190" y="314" text-anchor="middle">54 sessions</text>
+
+  <rect class="d-box" x="380" y="264" width="200" height="64" rx="1"/>
+  <text class="d-label" x="480" y="291" text-anchor="middle">DSP (19)</text>
+  <text class="d-sub" x="480" y="314" text-anchor="middle">65 sessions</text>
+
+  <!-- band 3: systems and sequence -->
+  <rect class="d-box" x="210" y="152" width="220" height="64" rx="1"/>
+  <text class="d-label" x="320" y="179" text-anchor="middle">Time Series (8)</text>
+  <text class="d-sub" x="320" y="202" text-anchor="middle">20 sessions</text>
+
+  <rect class="d-box d-dash" x="460" y="152" width="210" height="64" rx="1"/>
+  <text class="d-label" x="565" y="179" text-anchor="middle">FPGA · SDR (3)</text>
+  <text class="d-sub" x="565" y="202" text-anchor="middle">9 sessions · draft</text>
+
+  <rect class="d-box" x="700" y="152" width="220" height="64" rx="1"/>
+  <text class="d-label" x="810" y="179" text-anchor="middle">GPU Systems (7)</text>
+  <text class="d-sub" x="810" y="202" text-anchor="middle">18 sessions</text>
+
+  <!-- band 4: applications -->
+  <rect class="d-accent" x="340" y="40" width="440" height="64" rx="1"/>
+  <text class="d-label" x="560" y="67" text-anchor="middle">Applications (5)</text>
+  <text class="d-sub" x="560" y="90" text-anchor="middle">13 sessions · physics · quantum · capstone</text>
+
+  <!-- foundations -> core -->
+  <path class="d-line" d="M170,376 V330" marker-end="url(#spscm-arr)"/>
+  <path class="d-line" d="M280,376 L400,330" marker-end="url(#spscm-arr)"/>
+  <path class="d-line" d="M350,376 L320,330" marker-end="url(#spscm-arr)"/>
+  <path class="d-line" d="M480,376 V330" marker-end="url(#spscm-arr)"/>
+
+  <!-- core -> systems -->
+  <path class="d-line" d="M520,264 V218" marker-end="url(#spscm-arr)"/>
+
+  <!-- foundations -> systems (skips the core band on the right) -->
+  <path class="d-line" d="M625,376 V218" marker-end="url(#spscm-arr)"/>
+  <path class="d-line" d="M650,408 H810 V218" marker-end="url(#spscm-arr)"/>
+
+  <!-- systems -> applications -->
+  <path class="d-line" d="M565,152 V106" marker-end="url(#spscm-arr)"/>
+  <path class="d-line" d="M770,152 L740,106" marker-end="url(#spscm-arr)"/>
+
+  <!-- highlighted route: DSP and ML -> Time Series -> Applications -->
+  <path class="d-line accent" d="M275,264 V218" marker-end="url(#spscm-arr)"/>
+  <path class="d-line accent" d="M405,264 V218" marker-end="url(#spscm-arr)"/>
+  <path class="d-line accent" d="M350,152 L380,106" marker-end="url(#spscm-arr)"/>
+</svg>

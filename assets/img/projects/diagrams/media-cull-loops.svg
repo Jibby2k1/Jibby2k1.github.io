@@ -1,0 +1,48 @@
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="mcl-title mcl-desc">
+  <title id="mcl-title">Media Cull Suite loops</title>
+  <desc id="mcl-desc">A Sony α6700 sends a new shoot into the cull loop, which hands a ranked set to the deliver loop. The final cull flows into the memory loop, which returns a taste preset to the cull loop. The cull loop's EXIF and technical scores feed the capture loop, which pushes a corrective capture recipe (exposure, ISO, shutter) back to the camera before the next shoot.</desc>
+  <defs>
+    <marker id="mcl-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
+
+  <!-- connectors -->
+  <path class="d-line" marker-end="url(#mcl-arr)" d="M250,123 H373"/>
+  <text class="d-sub" x="311" y="107" text-anchor="middle">new shoot</text>
+
+  <path class="d-line" marker-end="url(#mcl-arr)" d="M585,123 H708"/>
+  <text class="d-sub" x="647" y="107" text-anchor="middle">ranked set</text>
+
+  <path class="d-line" marker-end="url(#mcl-arr)" d="M430,165 V313"/>
+  <text class="d-sub" x="446" y="290">EXIF + scores</text>
+
+  <path class="d-line" marker-end="url(#mcl-arr)" d="M815,165 V313"/>
+  <text class="d-sub" x="799" y="200" text-anchor="end">final cull</text>
+
+  <path class="d-line" marker-end="url(#mcl-arr)" d="M760,315 V240 H530 V167"/>
+  <text class="d-sub" x="645" y="267" text-anchor="middle">taste preset</text>
+
+  <path class="d-line accent" marker-end="url(#mcl-arr)" d="M375,357 H145 V167"/>
+  <text class="d-sub" x="161" y="245">capture recipe</text>
+  <text class="d-sub" x="161" y="267">exposure · ISO · shutter</text>
+
+  <!-- nodes -->
+  <rect class="d-box" x="40" y="81" width="210" height="84" rx="1"/>
+  <text class="d-label" x="145" y="118" text-anchor="middle">Sony α6700</text>
+  <text class="d-sub" x="145" y="146" text-anchor="middle">in the field</text>
+
+  <rect class="d-box" x="375" y="81" width="210" height="84" rx="1"/>
+  <text class="d-label" x="480" y="118" text-anchor="middle">Cull loop</text>
+  <text class="d-sub" x="480" y="146" text-anchor="middle">keep · maybe · reject</text>
+
+  <rect class="d-box" x="710" y="81" width="210" height="84" rx="1"/>
+  <text class="d-label" x="815" y="118" text-anchor="middle">Deliver loop</text>
+  <text class="d-sub" x="815" y="146" text-anchor="middle">look · export</text>
+
+  <rect class="d-accent" x="375" y="315" width="210" height="84" rx="1"/>
+  <text class="d-label" x="480" y="352" text-anchor="middle">Capture loop</text>
+  <text class="d-sub" x="480" y="380" text-anchor="middle">signature → recipe</text>
+
+  <rect class="d-box" x="710" y="315" width="210" height="84" rx="1"/>
+  <text class="d-label" x="815" y="352" text-anchor="middle">Memory loop</text>
+  <text class="d-sub" x="815" y="380" text-anchor="middle">taste preset · index</text>
+</svg>

@@ -7,6 +7,41 @@
     <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering building machine learning for physical and neural systems: surrogate models for computational fluid dynamics, neural-imaging analysis, and research software.</description>
     
     <item>
+      <title>A claim wall for biomechanics</title>
+      <link>https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html</link>
+      <guid>https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>How the Ora mechanics engine encodes what a result may and may not say as two enums, and why crossing that line is a reviewed decision rather than a code change.</description>
+    </item>
+    <item>
+      <title>Every number in the notebook has an oracle</title>
+      <link>https://www.raulv.dev/notes/every-number-in-the-notebook-has-an-oracle.html</link>
+      <guid>https://www.raulv.dev/notes/every-number-in-the-notebook-has-an-oracle.html</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The verification rule behind the SPS curriculum, and what happened when a manifold optimization demo failed its own plot title.</description>
+    </item>
+    <item>
+      <title>Why Gradus refuses to let a language model grade anything at runtime</title>
+      <link>https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html</link>
+      <guid>https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs.</description>
+    </item>
+    <item>
+      <title>Preregistering against yourself: six phases of trying to falsify a memory architecture</title>
+      <link>https://www.raulv.dev/notes/preregistering-against-yourself.html</link>
+      <guid>https://www.raulv.dev/notes/preregistering-against-yourself.html</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>A research log on running a solo architecture idea like a clinical trial, and what it is like when six phases of honest testing return &quot;no advantage established yet.&quot;</description>
+    </item>
+    <item>
+      <title>The camera push was never on the critical path</title>
+      <link>https://www.raulv.dev/notes/the-camera-push-was-never-on-the-critical-path.html</link>
+      <guid>https://www.raulv.dev/notes/the-camera-push-was-never-on-the-critical-path.html</guid>
+      <pubDate>Tue, 08 Sep 2026 00:00:00 GMT</pubDate>
+      <description>How the capture feedback loop in Media Cull Suite closed with hand-dialed recipes and a log before any camera code worked, and why the live push ended up narrower than &quot;control the camera.&quot;</description>
+    </item>
+    <item>
       <title>Source separation for zebrafish calcium imaging</title>
       <link>https://www.raulv.dev/notes/source-separation-for-zebrafish-calcium-imaging.html</link>
       <guid>https://www.raulv.dev/notes/source-separation-for-zebrafish-calcium-imaging.html</guid>

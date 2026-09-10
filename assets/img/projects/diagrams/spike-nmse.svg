@@ -1,36 +1,35 @@
-<svg viewBox="0 0 780 250" xmlns="http://www.w3.org/2000/svg">
-  <style>
-    .ttl{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
-    .lbl{ font-family: var(--mono, monospace); font-size:11.5px; fill: currentColor; }
-    .val{ font-family: var(--mono, monospace); font-size:12px; font-weight:700; fill: currentColor; }
-    .sub{ font-family: var(--mono, monospace); font-size:10px; fill: currentColor; opacity:0.6; }
-    .bar{ fill: currentColor; opacity:0.28; }
-    .bar-best{ fill: var(--section-accent); }
-    .axis{ stroke: currentColor; stroke-width:1; opacity:0.4; }
-  </style>
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="spikenmse-title spikenmse-desc">
+  <title id="spikenmse-title">Reproduced synthetic NMSE by decoder</title>
+  <desc id="spikenmse-desc">Bar chart of normalised mean-squared error on the synthetic benchmark: Spike-KLMS about 0.13, Binned-KLMS about 0.27, Binned-GLM about 0.35. Lower is better, so the spike-time kernel decoder wins.</desc>
 
-  <text class="ttl" x="16" y="28">Synthetic reconstruction error — NMSE (lower is better)</text>
+  <!-- axes: 0.0 at x=300, 0.4 at x=860 (1400px per unit) -->
+  <line class="d-line" x1="300" y1="60" x2="300" y2="374"/>
+  <line class="d-line" x1="300" y1="374" x2="860" y2="374"/>
 
-  <!-- baseline axis -->
-  <line class="axis" x1="212" y1="52" x2="212" y2="196"/>
-
-  <!-- Spike-KLMS 0.13 (best) -->
-  <text class="lbl" x="200" y="79" text-anchor="end">Spike-KLMS</text>
-  <rect class="bar-best" x="212" y="64" width="156" height="24"/>
-  <text class="val" x="378" y="81">0.13</text>
+  <!-- Spike-KLMS 0.13 (accent, best) -->
+  <text class="d-label" x="272" y="104" text-anchor="end">Spike-KLMS</text>
+  <text class="d-sub" x="272" y="126" text-anchor="end">spike-time kernel</text>
+  <rect class="d-fill accent" x="300" y="78" width="182" height="56"/>
+  <text class="d-label" x="496" y="113">0.13</text>
 
   <!-- Binned-KLMS 0.27 -->
-  <text class="lbl" x="200" y="129" text-anchor="end">Binned-KLMS</text>
-  <rect class="bar" x="212" y="114" width="324" height="24"/>
-  <text class="val" x="546" y="131">0.27</text>
+  <text class="d-label" x="272" y="212" text-anchor="end">Binned-KLMS</text>
+  <text class="d-sub" x="272" y="234" text-anchor="end">binned counts</text>
+  <rect class="d-fill" x="300" y="186" width="378" height="56"/>
+  <text class="d-label" x="692" y="221">0.27</text>
 
   <!-- Binned-GLM 0.35 (baseline) -->
-  <text class="lbl" x="200" y="179" text-anchor="end">Binned-GLM</text>
-  <rect class="bar" x="212" y="164" width="420" height="24"/>
-  <text class="val" x="642" y="181">0.35</text>
+  <text class="d-label" x="272" y="320" text-anchor="end">Binned-GLM</text>
+  <text class="d-sub" x="272" y="342" text-anchor="end">Poisson baseline</text>
+  <rect class="d-fill" x="300" y="294" width="490" height="56"/>
+  <text class="d-label" x="804" y="329">0.35</text>
 
-  <text class="sub" x="212" y="214">0.0</text>
-  <text class="sub" x="430" y="214">0.2</text>
-  <text class="sub" x="632" y="214">0.4</text>
-  <text class="sub" x="16" y="240">Paper-reported synthetic targets (Li et al., 2011) reproduced in Python — the spike-time kernel decoder leads the binned baselines.</text>
+  <!-- ticks -->
+  <line class="d-line" x1="300" y1="374" x2="300" y2="382"/>
+  <line class="d-line" x1="580" y1="374" x2="580" y2="382"/>
+  <line class="d-line" x1="860" y1="374" x2="860" y2="382"/>
+  <text class="d-sub" x="300" y="412" text-anchor="middle">0.0</text>
+  <text class="d-sub" x="580" y="412" text-anchor="middle">0.2</text>
+  <text class="d-sub" x="860" y="412" text-anchor="middle">0.4</text>
+  <text class="d-sub" x="580" y="434" text-anchor="middle">NMSE — lower is better</text>
 </svg>

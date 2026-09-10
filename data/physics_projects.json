@@ -17,7 +17,7 @@
         "Physics-informed training",
         "Latent dynamics"
       ],
-      "meta": "Research · scientific ML · SmartDATA Lab",
+      "meta": "SmartDATA Lab · scientific ML · surrogate modeling",
       "desc": "Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.",
       "featured": true,
       "links": [],

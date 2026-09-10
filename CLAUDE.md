@@ -24,6 +24,11 @@ Static site for www.raulv.dev, served by GitHub Pages from the repo root (`main`
 ## Conventions
 
 - Light/dark themes via CSS custom properties in `:root` / `[data-theme="dark"]` at the top of `assets/css/styles.css`. Use the existing tokens (`--surface`, `--raised`, `--menu-bg`, …) — no hardcoded colors in rules.
+- Accent system: `--accent` / `--accent-ink` (verdigris) plus one colour per research track (`--track-physics`, `--track-cnel`, `--track-sps`). A `data-track="physics|cnel|sps"` attribute on a card, hero, or section rebinds `--section-accent`; it is set automatically from the project's data file (writing posts inherit the track of their first `relatedProjects` entry).
+- Fonts are self-hosted woff2 under `assets/fonts/` (Fraunces for display, Source Serif 4 for body, IBM Plex Mono for labels; OFL licences alongside). No runtime font CDN.
+- Diagrams are inline SVG: `build.mjs` inlines any `.svg` used as a project `img`, a writeup `figure.svgFile`, or a post `heroImage`, so they pick up theme tokens. House diagrams under `assets/img/projects/diagrams/` use only the `d-*` classes styled in `styles.css` (`d-box`, `d-accent`, `d-line`, `d-label`, `d-sub`, …), a 960×480 viewBox, no `<style>` block, no hardcoded colours. Other inlined SVGs may carry a `<style>`; the build scopes its selectors to that instance.
+- Project items may set `kicker` (overrides the track label above the title on the project page). Writing posts may set `cover: generated` (typographic motif cover instead of `heroImage`) and `draft: true` (excluded from the build entirely).
+- `npm run brand` fetches the matching TTFs into `.cache/fonts/` (gitignored) so the OG card renders in the site's typefaces; it needs network access.
 - `.reveal` scroll animations are scoped to `.js` (no-JS users see everything) and have a 5s post-load fallback; don't remove either safety net.
 - `publications.html` and `project.html` are intentional noindex "moved" stubs.
 - The `ieee-sps-uf-site/` subsite and `CNAME` are managed separately — leave them alone.

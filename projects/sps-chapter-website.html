@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>IEEE SPS @ UF — chapter website | Raul Valle Research Project</title>
+  <meta name="description" content="The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="IEEE SPS @ UF — chapter website | Raul Valle Research Project" />
+  <meta property="og:description" content="The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline." />
+  <meta property="og:url" content="https://www.raulv.dev/projects/sps-chapter-website.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/projects/SPS_Logo.webp" />
+  <meta property="og:image:alt" content="IEEE Signal Processing Society at UF logo." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="IEEE SPS @ UF — chapter website | Raul Valle Research Project" />
+  <meta name="twitter:description" content="The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/projects/SPS_Logo.webp" />
+  <meta name="twitter:image:alt" content="IEEE Signal Processing Society at UF logo." />
+  <link rel="canonical" href="https://www.raulv.dev/projects/sps-chapter-website.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/projects/sps-chapter-website.html#webpage","url":"https://www.raulv.dev/projects/sps-chapter-website.html","name":"IEEE SPS @ UF — chapter website | Raul Valle Research Project","description":"The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"CreativeWork","@id":"https://www.raulv.dev/projects/sps-chapter-website.html#project","url":"https://www.raulv.dev/projects/sps-chapter-website.html","name":"IEEE SPS @ UF — chapter website","headline":"IEEE SPS @ UF — chapter website","description":"The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline.","image":"https://www.raulv.dev/assets/img/projects/SPS_Logo.webp","creator":{"@id":"https://www.raulv.dev/#person"},"keywords":["web","community","tools","React + TypeScript","Content as data","Research status page","GitHub Pages deploy"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Research","item":"https://www.raulv.dev/research.html"},{"@type":"ListItem","position":3,"name":"IEEE SPS & independent projects","item":"https://www.raulv.dev/research-sps.html"},{"@type":"ListItem","position":4,"name":"IEEE SPS @ UF — chapter website","item":"https://www.raulv.dev/projects/sps-chapter-website.html"}]},{"@type":"FAQPage","@id":"https://www.raulv.dev/projects/sps-chapter-website.html#faq","mainEntity":[{"@type":"Question","name":"Did you build the whole site?","acceptedAnswer":{"@type":"Answer","text":"No. Chapter members built the original scaffold and the original three.js model. I set up deployment, added the events and engagement data model and most of the current pages, led the August 2026 redesign, and wrote the handoff documentation."}},{"@type":"Question","name":"Why keep content in TypeScript modules instead of a CMS?","acceptedAnswer":{"@type":"Answer","text":"A student chapter turns over every year. Typed data files in a public repository need no accounts or hosting, the types tell the next editor what fields exist, and every change is recorded in the public git history where it can be reviewed."}},{"@type":"Question","name":"How do deep links work on GitHub Pages?","acceptedAnswer":{"@type":"Answer","text":"GitHub Pages cannot route a single-page app on its own, so the build copies `index.html` to `404.html`. A direct visit to a route like `/research/status` is answered with the app (technically with a 404 status code), which then renders the right page."}}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="sps">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../research.html">Research</a> / <a href="../research-sps.html">IEEE SPS & independent projects</a></nav>
+          <div class="hero-mark mark"><img src="../assets/img/projects/SPS_Logo.webp" alt="IEEE Signal Processing Society at UF logo." width="1500" height="1425" decoding="async" /></div>
+          <div class="kicker">IEEE SPS @ UF</div>
+          <h1 class="h1">IEEE SPS @ UF — chapter website</h1>
+          <p class="lead">The public site for the IEEE Signal Processing Society student chapter at the University of Florida: a React/TypeScript single-page app whose content lives in typed data modules, deployed to a raulv.dev subdomain.</p>
+          <div class="meta hero-meta"><span class="track">Status</span> · Live and maintained; last update 2026-08-21. I serve as chapter President for the 2026–2027 term.</div>
+          <div class="cta-row"><a class="btn primary" href="https://ieee-sps-uf.raulv.dev/" target="_blank" rel="noreferrer">Chapter website</a><a class="btn" href="https://github.com/UFSPS/UFSPS-Website" target="_blank" rel="noreferrer">GitHub</a></div>
+          
+        </section>
+
+        <section class="project-detail reveal" data-track="sps">
+          <div class="project-main">
+            <article class="card reveal">
+              <h2 class="project-section-title">Overview</h2>
+              <p>The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline.</p>
+              <p>The chapter website is where the IEEE SPS @ UF student chapter publishes its board, events, research projects, and ways to join or collaborate. It is a React 19 + TypeScript single-page app built with Vite and served by GitHub Pages at ieee-sps-uf.raulv.dev. Almost all of the content sits in six typed data modules, so a future board can update the site by editing data rather than components.</p>
+            </article>
+            <article class="card reveal prose-card writeup"><p class="writeup-lead">A student-chapter website built so that the next board can keep it current by editing data files instead of learning a codebase.</p><h2 class="project-section-title">What it is</h2><p>The IEEE Signal Processing Society (SPS) student chapter at the University of Florida needed a public home for its board, events, workshop materials, and research projects. The site is a single-page application (SPA) built with React, TypeScript, and Vite, with a small three.js scene on the front page — a signal-globe reinterpretation of the SPS logo mark. It deploys automatically through GitHub Actions to GitHub Pages and is served from a raulv.dev subdomain.</p><p>The design decision I care most about is that content lives in typed data modules rather than in components: chapter info, the executive board, events, projects, engagement paths, and the research philosophy pillars. Adding an event or refreshing a project's status is a data edit, and the TypeScript types document the expected shape.</p><ul class="writeup-list"><li><strong>Events with RSVP</strong> — each event carries a type, a scheduled/tentative/cancelled status, time-zone-aware start and end, a location, links, and an RSVP provider (for example, a Google Form or Discord).</li><li><strong>Research status page</strong> — every chapter project reports a phase, a health flag (on track, watch, or blocked), a progress value, and a next milestone.</li><li><strong>Project hubs</strong> — one page per chapter project with an overview, problem statement, current focus, roadmap, stack, and links.</li></ul>
+<h2 class="project-section-title">Deploying a single-page app on GitHub Pages</h2><p>GitHub Pages serves static files and has no server-side routing, so a direct visit to a route like <code>/events</code> would normally return GitHub's own 404 page. The build script copies the built <code>index.html</code> to <code>404.html</code>; Pages serves that file for any unknown path, the app boots, and the client-side router renders the requested page. The trade-off is that deep links are answered with a 404 status code even though the page renders correctly.</p><p>A GitHub Actions workflow builds the Vite bundle and publishes it on every push, and a <code>CNAME</code> file pins the site to ieee-sps-uf.raulv.dev. Setting this up took a handful of small commits at the end of April 2026, mostly to get the project path and custom domain right.</p>
+<h2 class="project-section-title">Content as data</h2><p>Six TypeScript modules under <code>src/data/</code> hold the site's content: chapter info, the executive board, events, projects, engagement paths, and the research philosophy pillars. Each module exports plain values checked against an interface, so an editor who adds an event with a missing field finds out at build time rather than in production.</p><p>The events module is the most structured. An event has a type and a status, a start time (and optional end) in a named time zone, a location, a set of links, and an RSVP block with a provider — Google Form, Discord, Luma, or a mailto link — that can be enabled or closed with a message once the event has passed. The project model was expanded in April 2026 with a health flag, a progress value, a phase, and a next milestone, which is what the research status page reads.</p>
+<h2 class="project-section-title">My role</h2><p>I am the chapter's President for the 2026–2027 term. Chapter members built the original scaffold and the original three.js model between December 2025 and April 2026; my work starts at the end of April 2026 with the deployment pipeline and custom domain, followed by the events and engagement data model, the expanded project status model, and the project hub, research status, research philosophy, events, join, network, and collaborate pages. In August 2026 I led a full visual redesign and wrote the deploy and handoff documentation so the site can outlive any one board.</p>
+<h2 class="project-section-title">The August 2026 redesign</h2><p>The redesign introduced a shared layout component, a design-token system in plain CSS custom properties, a proper 404 page, and sitemap and robots files, and reworked the styling of the navbar, footer, cards, and profiles to match. Alongside it I wrote the build and deploy section of the README, a contributing-content guide, and an open-items checklist in <code>docs/</code> that records everything still waiting on board input — from confirming tentative events to refreshing project statuses.</p>
+<h2 class="project-section-title">Where it stands</h2><p>The site is live and was last updated on 2026-08-21, when the Fall 2026 first general body meeting and its RSVP form were added and the globe animation was reworked. The open-items checklist in the repository is honest about what still needs board input, including a refresh of the project status entries, which still reflect the Spring 2026 snapshot.</p></article>
+<article class="card reveal"><h2 class="project-section-title">FAQ</h2><div class="faq"><details class="faq-item"><summary>Did you build the whole site?</summary><div class="faq-body"><p>No. Chapter members built the original scaffold and the original three.js model. I set up deployment, added the events and engagement data model and most of the current pages, led the August 2026 redesign, and wrote the handoff documentation.</p></div></details><details class="faq-item"><summary>Why keep content in TypeScript modules instead of a CMS?</summary><div class="faq-body"><p>A student chapter turns over every year. Typed data files in a public repository need no accounts or hosting, the types tell the next editor what fields exist, and every change is recorded in the public git history where it can be reviewed.</p></div></details><details class="faq-item"><summary>How do deep links work on GitHub Pages?</summary><div class="faq-body"><p>GitHub Pages cannot route a single-page app on its own, so the build copies <code>index.html</code> to <code>404.html</code>. A direct visit to a route like <code>/research/status</code> is answered with the app (technically with a 404 status code), which then renders the right page.</p></div></details></div></article>
+            <article class="card reveal"><h2 class="project-section-title">What I built</h2><ul><li>The GitHub Pages deployment and custom-domain setup: an Actions workflow that builds the Vite bundle and publishes it, a `CNAME` for the raulv.dev subdomain, and a post-build step that copies `index.html` to `404.html` so deep links into the single-page app resolve.</li><li>The content-as-data model: typed modules for events (with type, status, time zone, location, links, and an RSVP provider) and engagement paths, an expanded project model with status, health, progress, phase, and next milestone, plus the pages that render them — project hubs, events, join, network, and collaborate. The board and chapter-info modules predate my work.</li><li>The research status page, which shows each chapter project's phase, health, progress, and next milestone in one place.</li><li>The August 2026 redesign: a shared layout, a design-token system in plain CSS, a 404 page, and sitemap and robots files (the schema.org structured data dates from the April 2026 expansion).</li><li>Handoff documentation for officer turnover: build, deploy, and contributing instructions in the README, and an open-items checklist of everything that still needs board input.</li></ul></article>
+            
+            
+            
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="grid two"><a class="related-link" href="time-series-ml-experiment-infra.html"><strong>Time-series ML experiment library</strong><span>Reusable experiment scaffolding for time-series ML: standardized configs, runs, metrics, and plots so model comparisons are fair and repeatable.</span></a><a class="related-link" href="platos-cave.html"><strong>Plato’s Cave</strong><span>System that extracts structured nodes (claims, evidence, limitations, etc.) from papers and scores them to support literature review and comparison across a collection.</span></a></div></article>
+            <nav class="project-pager reveal" aria-label="More IEEE SPS & independent projects">
+              <a class="pager-link pager-prev" href="sps-curriculum-workshops.html"><span class="pager-label">← Previous</span><strong>SPS Curriculum: 87 workshops for IEEE SPS @ UF</strong></a>
+              <a class="pager-link pager-next" href="aude.html"><span class="pager-label">Next →</span><strong>Aude — biologically plausible audio scene analysis</strong></a>
+            </nav>
+          </div>
+          <div class="project-side">
+            <article class="card reveal">
+              <h2 class="project-section-title">Snapshot</h2>
+              <div class="kv">
+                <div class="kv-row"><div class="kv-key">Track</div><div class="kv-val">IEEE SPS @ UF · chapter website · web engineering</div></div>
+                <div class="kv-row"><div class="kv-key">Status</div><div class="kv-val">Live and maintained; last update 2026-08-21. I serve as chapter President for the 2026–2027 term.</div></div>
+                <div class="kv-row"><div class="kv-key">Focus</div><div class="kv-val pill-row"><span class="pill">React + TypeScript</span><span class="pill">Content as data</span><span class="pill">Research status page</span><span class="pill">GitHub Pages deploy</span></div></div>
+              </div>
+            </article>
+            <article class="card reveal"><h2 class="project-section-title">Stack</h2><ul><li>React</li><li>TypeScript</li><li>Vite</li><li>three.js</li><li>GitHub Actions</li><li>GitHub Pages</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Collaborators</h2><ul><li>Chapter members built the original scaffold and the original three.js front-page model (December 2025 – April 2026).</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Glossary</h2><dl class="glossary"><dt>SPA</dt><dd>Single-page application: a site that loads one HTML page and renders each route in the browser with JavaScript.</dd><dt>Typed data module</dt><dd>A TypeScript file that exports site content (events, projects, board members) as values checked against a declared interface.</dd><dt>GitHub Pages</dt><dd>GitHub's static-site hosting; here it serves the built Vite bundle under a custom domain.</dd></dl></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="ora-title ora-desc">
+  <title id="ora-title">Ora architecture: on-device core, optional cloud, research packages</title>
+  <desc id="ora-desc">Three column groups. Left, the on-device Flutter app (Training, Diet, Progress and Hub tabs): the Ora Orb input hub takes camera, upload, mic and text; Vosk speech runs through a deterministic NLU grammar into the command bus (Command, dispatcher, reducer with undo and redo), which writes SQLite records on the device. Optional on-device LLMs (llama.cpp GGUF, LiteRT-LM) sit in a dashed box and only phrase or draft, never issue commands. A dashed device boundary separates the app from the middle group, optional cloud: cloud parse via OpenAI or Gemini only when invoked with the user's own key, under a typed contract (data allowlist, token ceiling, cancellation, content-free receipt), and Firebase behind a build flag for opt-in, scoped, revocable coach sharing and portal. Right, Python research packages beside the app: ora-biomech (planar quasi-static mechanics, A/B setup compare, claim wall with 9 allowed and 9 barred outputs) feeds a released, digest-pinned response surface back into the app behind a feature flag that is off; canonical-msk-twin (nonlinear finite-element muscle-tendon-bone anatomy with contract, decision log, program graph and claim guard) is a structural benchmark, not validated, with no path into the app. Legend: solid border means always on-device, dashed border means optional.</desc>
+  <defs>
+    <marker id="ora-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
+  </defs>
+
+  <!-- column 1: on-device app -->
+  <rect class="d-soft" x="40" y="40" width="305" height="400" rx="1"/>
+  <text class="d-label" x="192" y="66" text-anchor="middle">On-device Flutter app</text>
+
+  <rect class="d-box" x="95" y="92" width="230" height="64" rx="1"/>
+  <text class="d-label" x="210" y="121" text-anchor="middle">Orb → Vosk NLU</text>
+  <text class="d-sub" x="210" y="141" text-anchor="middle">mic · camera · text</text>
+
+  <rect class="d-accent" x="95" y="182" width="230" height="64" rx="1"/>
+  <text class="d-label" x="210" y="211" text-anchor="middle">Command bus</text>
+  <text class="d-sub" x="210" y="231" text-anchor="middle">dispatcher → reducer</text>
+
+  <rect class="d-box" x="95" y="272" width="230" height="64" rx="1"/>
+  <text class="d-label" x="210" y="301" text-anchor="middle">SQLite</text>
+  <text class="d-sub" x="210" y="321" text-anchor="middle">on-device records</text>
+
+  <rect class="d-box d-dash" x="95" y="362" width="230" height="64" rx="1"/>
+  <text class="d-label" x="210" y="391" text-anchor="middle">Local LLMs</text>
+  <text class="d-sub" x="210" y="411" text-anchor="middle">phrase / draft only</text>
+
+  <!-- column 2: optional cloud -->
+  <rect class="d-soft d-dash" x="390" y="100" width="220" height="260" rx="1"/>
+  <text class="d-label" x="500" y="126" text-anchor="middle">Optional cloud</text>
+  <text class="d-sub" x="500" y="145" text-anchor="middle">own key or account</text>
+
+  <rect class="d-box d-dash" x="410" y="182" width="180" height="64" rx="1"/>
+  <text class="d-label" x="500" y="211" text-anchor="middle">Cloud parse</text>
+  <text class="d-sub" x="500" y="231" text-anchor="middle">OpenAI · Gemini</text>
+
+  <rect class="d-box d-dash" x="410" y="272" width="180" height="64" rx="1"/>
+  <text class="d-label" x="500" y="301" text-anchor="middle">Firebase</text>
+  <text class="d-sub" x="500" y="321" text-anchor="middle">opt-in, revocable</text>
+
+  <!-- column 3: research packages -->
+  <rect class="d-soft" x="640" y="40" width="280" height="242" rx="1"/>
+  <text class="d-label" x="780" y="66" text-anchor="middle">Research packages</text>
+  <text class="d-sub" x="780" y="85" text-anchor="middle">Python, beside the app</text>
+
+  <rect class="d-box" x="655" y="104" width="250" height="64" rx="1"/>
+  <text class="d-label" x="780" y="133" text-anchor="middle">ora-biomech</text>
+  <text class="d-sub" x="780" y="153" text-anchor="middle">quasi-static · claim wall</text>
+
+  <rect class="d-box" x="655" y="194" width="250" height="64" rx="1"/>
+  <text class="d-label" x="780" y="223" text-anchor="middle">canonical-msk-twin</text>
+  <text class="d-sub" x="780" y="243" text-anchor="middle">FE anatomy, not validated</text>
+
+  <!-- connectors -->
+  <path class="d-line" d="M210,156 V180" marker-end="url(#ora-arr)"/>
+  <path class="d-line" d="M210,246 V270" marker-end="url(#ora-arr)"/>
+  <path class="d-line d-dash" d="M95,142 H57 V406 H93" marker-end="url(#ora-arr)"/>
+  <path class="d-line d-dash" d="M95,382 H76 V236 H93" marker-end="url(#ora-arr)"/>
+  <path class="d-line d-dash" d="M325,214 H408" marker-end="url(#ora-arr)"/>
+  <path class="d-line d-dash" d="M325,304 H408" marker-end="url(#ora-arr)"/>
+  <path class="d-line" d="M655,136 H625 V80 H347" marker-end="url(#ora-arr)"/>
+  <text class="d-sub" x="500" y="60" text-anchor="middle">digest-pinned · flag off</text>
+
+  <!-- device boundary -->
+  <path class="d-line d-dash" d="M367,40 V440"/>
+  <text class="d-sub" x="383" y="424">device boundary</text>
+
+  <!-- legend -->
+  <rect class="d-box" x="655" y="412" width="24" height="14" rx="1"/>
+  <text class="d-sub" x="687" y="424">on-device</text>
+  <rect class="d-box d-dash" x="790" y="412" width="24" height="14" rx="1"/>
+  <text class="d-sub" x="822" y="424">optional</text>
+</svg>

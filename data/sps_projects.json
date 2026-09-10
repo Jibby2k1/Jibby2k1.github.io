@@ -2,101 +2,362 @@
   "items": [
     {
       "slug": "sps-curriculum-workshops",
-      "title": "IEEE SPS @ UF — curriculum & workshops",
-      "subtitle": "Hands-on workshops that bridge math fundamentals to real applications (audio, images, sensors) using clear notebooks and demos.",
+      "title": "SPS Curriculum: 87 workshops for IEEE SPS @ UF",
+      "subtitle": "A public, GPL-3.0 library of Jupyter workshops (258 sessions of 30-40 minutes across 12 topics) that runs from real analysis to DSP, machine learning, GPU and FPGA systems, quantum, and a full-system capstone, with every notebook opening in Colab. 70 are verified; 17 are drafts awaiting verification.",
       "img": "assets/img/projects/SPS_Icon_nobg.webp",
       "imgAlt": "IEEE Signal Processing Society logo.",
       "tags": [
         "teaching",
-        "community",
-        "tools"
+        "signal-processing",
+        "ml",
+        "open-source"
       ],
       "pills": [
-        "Education",
-        "Signal processing",
-        "Jupyter notebooks"
+        "87 workshops",
+        "258 sessions",
+        "70 verified / 17 drafts",
+        "Open in Colab",
+        "GPL-3.0"
       ],
-      "meta": "IEEE SPS @ UF · curriculum · workshops",
-      "desc": "Workshop series that connects analysis, probability, and machine learning to applied signal-processing case studies, with materials designed to be approachable for newcomers.",
+      "meta": "IEEE SPS @ UF · curriculum · 12 topics",
+      "desc": "The teaching library behind the IEEE Signal Processing Society chapter at UF: 87 Jupyter workshops in 12 topics, cut into 30-40 minute sessions, with key numerical claims in the 70 verified workshops checked against an independent oracle.",
       "featured": false,
       "links": [
         {
           "label": "GitHub",
           "href": "https://github.com/Jibby2k1/SPS_Curriculum"
+        },
+        {
+          "label": "Chapter website",
+          "href": "https://ieee-sps-uf.raulv.dev/"
         }
       ],
       "details": {
-        "overview": "The goal is to make rigorous material learnable in a student setting: clear explanations, minimal prerequisites, and practical demos. Each workshop is designed so participants can run experiments, modify parameters, and understand what changes and why.",
-        "what_i_built": [
-          "Workshop notebook templates with consistent structure (concept → intuition → demo → exercises).",
-          "Example datasets and evaluation scripts so results are reproducible.",
-          "A curriculum roadmap that connects fundamentals (linear algebra, probability) to real signal-processing tasks."
-        ],
-        "deliverables": [
-          "Notebook-based workshops and supporting code.",
-          "Reusable exercises for journal clubs and study groups."
+        "overview": "SPS Curriculum is the workshop repository I maintain for the IEEE Signal Processing Society (SPS) student chapter at the University of Florida. It started in August 2024 as a few uploaded notebooks and, in a concentrated build-out in July 2026, became a complete curriculum: 87 teaching notebooks in 12 topic directories, each partitioned into 30-40 minute sessions sized for a live meeting. The house rule that shapes everything is verification: a key number in a notebook has to match something I did not hand-derive, and a workshop that has not yet passed that bar says so in a banner.",
+        "status": "87 workshops / 258 sessions as of July 2026: 70 verified, 17 drafts pending verification; taught through IEEE SPS @ UF since 2024.",
+        "collaborators": [
+          "A chapter contributor wrote the PyTorch and Transformers workshops"
         ],
         "stack": [
           "Python",
           "Jupyter",
           "NumPy",
-          "Matplotlib"
+          "SciPy",
+          "Matplotlib",
+          "PyTorch",
+          "Google Colab",
+          "C and MATLAB",
+          "Mermaid"
         ],
-        "status": "Ongoing; continuously expanded.",
+        "what_i_built": [
+          "85 of the 87 teaching notebooks, from a six-notebook real-analysis track through DSP, time series, machine learning, GPU systems, quantum, and a capstone; the PyTorch and Transformers workshops are by a chapter contributor.",
+          "A style guide (STYLE_GUIDE.md) that fixes the skeleton of every notebook: Colab badge, pitch, motivation, prerequisites, numbered 30-40 minute sessions, an intuition cell before every proof, a debrief after every result, and a collapsed teacher-notes block per session.",
+          "A repository validator (tools/validate.py) that checks links, anchors, draft banners, Colab badges, and narration coverage, and can execute any notebook top to bottom on a fresh kernel against a pinned requirements.txt.",
+          "72 fill-in-the-blank student copies (68 of them for Fall 2026) whose prose is re-derived from the parent notebook by tools/sync_blanks.py, which currently reports zero blanks out of sync.",
+          "Guided learning paths (START_HERE.md), a roadmap (ROADMAP.md), a contributing guide, and a generated recording plan (VIDEO_PLAN.md) built from the session markers.",
+          "A narration pass in July 2026 that took teacher-note coverage from zero to 258 of 258 sessions and result-cell debriefs from roughly one in five to 300 of 300."
+        ],
+        "how_it_works": [
+          "Each workshop is one notebook, cut in place by session-marker cells (goal, builds-on, feeds-into) that match a session table in the topic README.",
+          "Notebooks are tagged Theory (proofs and derivations), Application (runnable code on real or synthetic data), or a hybrid that alternates the two; the README table shows 16, 28, and 43 of each.",
+          "Every result-producing code cell is followed by a debrief that names the actual number, says what it proves, and says where it breaks down.",
+          "Key numerical claims are checked in-notebook against an independent oracle: a closed form, a reference solver, a planted ground truth, or an exhaustive brute force.",
+          "A workshop that executes clean under the pinned environment is marked Available; one that needs hardware I lack (MATLAB, Docker, an FPGA toolchain, a GPU, an RTL-SDR dongle, a microcontroller) or an expert proof-read is marked Draft and carries a warning banner until an instructor signs off.",
+          "Every notebook's first cell is an Open-in-Colab badge pointing at its own path on main, so nothing requires a local install."
+        ],
         "writeup": {
-          "lead": "A public, notebook-based workshop series at UF that walks from math fundamentals to applied signal processing — running since 2024.",
+          "lead": "What does it take to make 87 teaching notebooks trustworthy enough that a student who missed the meeting can follow one alone, and an instructor who did not write it can teach it?",
           "sections": [
             {
               "heading": "What it is",
               "body": [
-                "The SPS curriculum is a series of educational workshops I have built and taught at the University of Florida since 2024, covering topics across signal processing and machine-learning systems. The aim is to make rigorous material genuinely learnable in a student setting: minimal prerequisites, clear explanations, and demos you can actually run and modify."
+                "SPS Curriculum is the teaching repository for the IEEE Signal Processing Society (SPS) student chapter at the University of Florida, where the workshops have been taught since 2024. As of July 2026 it holds 87 teaching notebooks organized into 12 topic directories and partitioned into 258 sessions of 30-40 minutes each, the length of one chapter meeting. The whole thing is GPL-3.0, and every notebook opens in Google Colab from a badge in its first cell, so a free browser session is the only requirement.",
+                "Of the 87 workshops, 70 are marked Available: they execute clean under a pinned environment and their key numbers have been checked. The other 17 are Drafts: complete, but carrying an in-notebook warning banner until an instructor verifies the mathematics or runs the code on hardware I do not have. Those 17 are unverified, and nothing on this page should be read as a claim that they work. The repository grew from a handful of uploaded notebooks in 2024 to its current shape in a concentrated build-out during July 2026, and it has been quiet since the last commit on 2026-07-28."
               ]
+            },
+            {
+              "heading": "The topic map",
+              "body": [
+                "The topics feed one another: Mathematics and Programming at the base, DSP and Machine Learning in the middle, Time Series and the GPU, FPGA, and radio systems tracks above, and a Capstone that composes the rest into one pipeline. START_HERE.md turns the graph into five guided paths (DSP, machine learning, making things fast, pure mathematics, and putting it all together), each a chain of specific workshops. Workshop counts per topic:"
+              ],
+              "breakdown": [
+                {
+                  "label": "Mathematics (18 workshops, 57 sessions)",
+                  "text": "A six-notebook real-analysis track (real numbers, topology, sequences and series, measure theory, random variables, independence), plus linear algebra for signals, optimization, estimation theory, Hilbert spaces and Fourier, information theory, complex analysis, numerical linear algebra, concentration and learning theory, stochastic processes, convex optimization II, random matrix theory, and manifold optimization."
+                },
+                {
+                  "label": "DSP (19 workshops, 65 sessions)",
+                  "text": "Foundations 1 and 2, filter design, statistical signal processing, arrays and beamforming, audio, images as 2-D DSP, compressed sensing, digital and MIMO communications, real-time DSP, graph signal processing, channel coding, sparse coding, ICA, time-frequency, cyclostationarity, radar, and sigma-delta quantization."
+                },
+                {
+                  "label": "Machine Learning (19 workshops, 54 sessions)",
+                  "text": "ANN to CNN to scaling, training dynamics, LLMs from the ground up, representation learning, diffusion (twice), kernel methods and RKHS, compression, uncertainty, reinforcement learning, optimal transport, causal inference, modern architectures, variational inference, interpretability, federated learning, and TinyML (draft)."
+                },
+                {
+                  "label": "Time Series (8 workshops, 20 sessions)",
+                  "text": "Adaptive filtering (affine projection and Kalman), RLS, beyond Kalman (EKF, UKF, particle filters), ARIMA, RNNs, state-space models from Kalman to S4 to Mamba, and online learning with regret bounds."
+                },
+                {
+                  "label": "GPU Systems (7 workshops, 18 sessions)",
+                  "text": "Numba and CuPy, performance engineering with the roofline model, distributed training with a live all-reduce, and four GPU-only drafts (RAPIDS, hardware-accelerated computing, CUDA in C++, Triton)."
+                },
+                {
+                  "label": "Programming (4, 11 sessions) and Host Programming (4, 11 sessions)",
+                  "text": "C, data structures in C, Python, MATLAB (draft); operating systems, databases, Git and collaboration, containers (draft)."
+                },
+                {
+                  "label": "DL for Physics (3, 6 sessions), FPGA (2, 6 sessions), SDR (1, 3), Quantum (1, 3), Capstone (1, 4)",
+                  "text": "PyTorch, Transformers, and physics-informed neural networks; FPGA and HLS (both drafts); software-defined radio (draft); quantum computing for signal processors; and the full-system capstone."
+                }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/sps-curriculum-map.svg",
+                "alt": "Curriculum map: twelve topic nodes arranged from foundations (Mathematics, Programming) through DSP, Machine Learning, Time Series, and the systems tracks to a Capstone, with five highlighted learning-path routes.",
+                "caption": "Figure 1 — The 12 topics arranged foundations → systems → applications, with the five START_HERE learning paths drawn as routes through them."
+              }
             },
             {
               "heading": "How a workshop is built",
               "body": [
-                "Every workshop follows the same shape, so a newcomer always knows what to expect and can go from idea to running code in one sitting:"
+                "Every notebook follows the same skeleton from STYLE_GUIDE.md, so a reader always knows where they are and an instructor can pick one up cold. The archetypes differ underneath (a theory notebook runs motivation → definitions → theorem and proof → payoff; an application notebook grows one working system across sessions and benchmarks it), but the shell is shared:"
               ],
               "breakdown": [
-                { "label": "Concept", "text": "The core idea stated plainly, with the minimum notation needed." },
-                { "label": "Intuition", "text": "Why it is true and when it matters, before any heavy machinery." },
-                { "label": "Demo", "text": "A runnable Jupyter notebook with example data, so parameters can be changed and consequences seen." },
-                { "label": "Exercises", "text": "Reusable problems for journal clubs and study groups." }
+                {
+                  "label": "Badge and pitch",
+                  "text": "An Open-in-Colab badge is the very first cell, followed by attribution to the chapter and a one-paragraph pitch: what you will be able to do afterward."
+                },
+                {
+                  "label": "Motivation, then prerequisites",
+                  "text": "Section 0 says why the topic exists before section 1 lists what to know and links the prerequisite workshops."
+                },
+                {
+                  "label": "Numbered sessions",
+                  "text": "A marker cell at each 30-40 minute boundary states the goal, what it builds on, and what it feeds into, matching the topic README's session table."
+                },
+                {
+                  "label": "Intuition before rigor",
+                  "text": "A short plain-language cell precedes every proof, derivation, or dense definition; the rigorous cell that follows stays rigorous."
+                },
+                {
+                  "label": "Debriefs",
+                  "text": "After every code cell that produces a result, a markdown cell reads the output back: the actual number, what it proves, where it breaks down."
+                },
+                {
+                  "label": "Teacher notes",
+                  "text": "A collapsed block per session, written for a colleague who knows the subject but has never taught it: timing, what to draw on the board first, the misconception students arrive with, a question to hand back to the room, and what to do if the demo misbehaves."
+                },
+                {
+                  "label": "Where next",
+                  "text": "The conclusion recaps and links to the workshops that pick up where this one stops."
+                }
               ]
             },
             {
-              "heading": "What it covers",
+              "heading": "Key numbers have an oracle",
               "body": [
-                "The material is deliberately sequenced from foundations up toward applied signal-processing and machine-learning case studies:"
-              ],
-              "bullets": [
-                "**Introduction to Mathematics** — real number systems, basic topology, sequences and series, measure theory, random variables, and independence.",
-                "**Introduction to Functional Programming** — Python, C, and MATLAB for people who need the tools, not just the theory.",
-                "**Applied signal processing** — connecting the analysis and probability foundations to real case studies."
+                "The rule I care about most is in CONTRIBUTING.md: key numerical claims are checked against an **independent oracle**, something the author did not hand-derive. That means a closed form, a reference solver, a planted ground truth, or an exhaustive brute force. Commit messages record these checks; the quantum Fourier transform circuit is compared to the DFT matrix, a Viterbi decoder is matched against brute-force maximum-likelihood decoding, and ADMM and FISTA are run to agreement on the same problem. This applies to the 70 verified workshops; the 17 drafts have not had that pass yet. If a demo's numbers contradict its prose, the experiment or the prose gets fixed; they never ship disagreeing.",
+                "The corollary is that failures get narrated rather than hidden. During the July 2026 narration pass I found that the Manifold Optimization workshop's first demo did not do what its plot title claimed: Riemannian descent toward the smallest eigenvector of a Wishart matrix had stalled roughly 52 times above its target, because the small eigenvalues of that matrix cluster together (the Marchenko-Pastur law from the Random Matrix Theory workshop) and the relative spectral gap that sets the convergence rate is near zero. On 2026-07-24 I flagged it as an honest failure with that diagnosis. On 2026-07-28 I fixed it properly by running the identical three-step recipe on two matrices, the original that stalls and one with a deliberately isolated eigenvalue that converges to machine precision, verified against NumPy's eigh. The lesson became the workshop's best one: Riemannian optimization fixes the constraint, not the conditioning."
               ]
             },
             {
-              "heading": "Why teach it this way",
+              "heading": "The advanced ring and the capstone",
               "body": [
-                "If a concept cannot survive being explained clearly, demoed, and reused by someone else, the underlying understanding probably is not solid yet. Teaching the material the same way I would want to consume it keeps the whole series honest — and the notebooks are public, so anyone can check the work."
+                "On 2026-07-22 a second ring of 32 advanced workshops landed on top of the foundations. The flagships are State-Space Models from Kalman to S4 to Mamba (modern sequence models as adaptive filtering rebranded), Reinforcement Learning, Graph Signal Processing with graph neural networks, Online Learning and Regret, and Channel Coding. Around them sit Random Matrix Theory, Optimal Transport, Mechanistic Interpretability, Federated Learning with differential privacy, Quantum for Signal Processors, and Performance Engineering with the roofline model, plus a distributed-training workshop that runs a live all-reduce.",
+                "The Capstone composes the whole curriculum into one system over four sessions: build a synthetic IQ world with planted ground truth, detect bursts with an STFT and median-CFAR detector (the notebook finds all 55 planted bursts), string the detections into a Kalman track that steers a downmixer, then classify with a CNN and write the verdicts to a queryable SQL ledger. Every stage is a workshop the student has already taken, and the synthetic capture can be swapped for an RTL-SDR recording."
+              ]
+            },
+            {
+              "heading": "Student blanks and the recording plan",
+              "body": [
+                "Workshops taught live ship a fill-in-the-blank student copy: the same notebook with code cells emptied where students write and the teacher notes removed. There are 72 of these, 68 generated for Fall 2026. A script re-derives each blank's prose from its parent so a student never reads last term's narration; it is run by hand (dry-run by default), and after the July revisions it reports zero blanks out of sync.",
+                "Recording is a plan, not a result. RECORDING.md fixes a format (one session = one video, one topic = one playlist, each video mirroring the notebook's hook, session card, intuition, rigor, demo payoff, and recap), and VIDEO_PLAN.md is generated from the session markers: 211 sessions are recordable now and 47 more unlock as draft banners clear. No video has been recorded yet."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "As of July 2026: 87 workshops, 258 sessions, 70 verified-executed and 17 unverified drafts. The validator reports a clean scan of 181 files with teacher notes on 258 of 258 sessions and debriefs on 300 of 300 result cells, and every one of the 159 notebooks (teaching plus blanks) carries a Colab badge. The Fall 2026 student blanks are generated.",
+                "The open work is verification, not writing. The 17 drafts need either an expert proof-read (measure theory, random variables, independence, Hilbert spaces, complex analysis, concentration, stochastic processes) or hardware I do not have (MATLAB, Docker for the containers workshop, an FPGA toolchain, a GPU for RAPIDS, hardware-accelerated computing, CUDA C++, and Triton, an RTL-SDR dongle, a microcontroller for TinyML). Clearing a banner is the first contribution CONTRIBUTING.md asks for. After that comes recording."
               ]
             }
           ],
           "faq": [
             {
               "q": "Who is it for?",
-              "a": "UF students and study groups, and anyone who wants a from-fundamentals path into signal processing and machine learning. The prerequisites are kept deliberately low."
+              "a": "Chapter meetings first: each session is sized for one 30-40 minute live meeting, with teacher notes so someone other than me can run it. Self-study second: every notebook opens in Colab, and START_HERE.md gives five guided paths. Contributors third: the drafts are explicitly open for verification."
             },
             {
               "q": "Is the material public?",
-              "a": "Yes — the notebooks are on GitHub and meant to be run, modified, and reused."
+              "a": "Yes. The repository is GPL-3.0 on GitHub, and every notebook's first cell is an Open-in-Colab badge, so there is nothing to install. Workshops that want a GPU note that Colab's free GPU runtime is enough."
+            },
+            {
+              "q": "What does Available versus Draft mean?",
+              "a": "Available means the notebook executed top to bottom on a fresh kernel under the pinned requirements and its key numbers were checked against an independent oracle. Draft means it is complete but unverified: it carries a warning banner until an instructor checks the proofs or runs it on hardware I lack. 70 are Available, 17 are Draft."
+            },
+            {
+              "q": "Did you write all of it?",
+              "a": "85 of the 87 teaching notebooks. The Introduction to PyTorch and Introduction to Transformers workshops, and their 2025 student blanks, were written by a chapter contributor."
+            },
+            {
+              "q": "Are there videos?",
+              "a": "Not yet. The format and a generated plan for 211 recordable sessions exist; recording has not started."
             }
           ]
         },
         "glossary": [
           {
-            "term": "Signal processing",
-            "definition": "Methods for analyzing and transforming signals like audio, images, and sensor streams."
+            "term": "Session",
+            "definition": "A 30-40 minute slice of a workshop notebook, marked in place and matched to a row in the topic README, sized for one live chapter meeting."
+          },
+          {
+            "term": "Independent oracle",
+            "definition": "Something the author did not hand-derive that a numerical claim is checked against: a closed form, a reference solver, a planted ground truth, or an exhaustive brute force."
+          },
+          {
+            "term": "Debrief",
+            "definition": "The markdown cell after a result-producing code cell that names the actual number, says what it proves, and says where it breaks down."
+          },
+          {
+            "term": "Draft banner",
+            "definition": "An in-notebook warning on a complete workshop that has not yet been verified, either because its proofs await an expert read or its code needs hardware the author lacks."
+          },
+          {
+            "term": "Student blank",
+            "definition": "A copy of a live-taught workshop with code cells emptied for students to fill in and teacher notes removed; its prose is re-derived from the parent by a script."
+          },
+          {
+            "term": "CFAR",
+            "definition": "Constant false alarm rate detection: a threshold set relative to the local noise estimate so the false-alarm rate stays fixed as the noise level changes."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "sps-chapter-website",
+      "title": "IEEE SPS @ UF — chapter website",
+      "subtitle": "The public site for the IEEE Signal Processing Society student chapter at the University of Florida: a React/TypeScript single-page app whose content lives in typed data modules, deployed to a raulv.dev subdomain.",
+      "img": "assets/img/projects/SPS_Logo.webp",
+      "imgAlt": "IEEE Signal Processing Society at UF logo.",
+      "tags": [
+        "web",
+        "community",
+        "tools"
+      ],
+      "pills": [
+        "React + TypeScript",
+        "Content as data",
+        "Research status page",
+        "GitHub Pages deploy"
+      ],
+      "meta": "IEEE SPS @ UF · chapter website · web engineering",
+      "desc": "The chapter's public website: a React/TypeScript/Vite single-page app with typed data modules for events, projects, and the board, a research status page, event RSVPs, and a GitHub Pages deploy pipeline.",
+      "featured": false,
+      "links": [
+        {
+          "label": "Chapter website",
+          "href": "https://ieee-sps-uf.raulv.dev/"
+        },
+        {
+          "label": "GitHub",
+          "href": "https://github.com/UFSPS/UFSPS-Website"
+        }
+      ],
+      "details": {
+        "overview": "The chapter website is where the IEEE SPS @ UF student chapter publishes its board, events, research projects, and ways to join or collaborate. It is a React 19 + TypeScript single-page app built with Vite and served by GitHub Pages at ieee-sps-uf.raulv.dev. Almost all of the content sits in six typed data modules, so a future board can update the site by editing data rather than components.",
+        "status": "Live and maintained; last update 2026-08-21. I serve as chapter President for the 2026–2027 term.",
+        "collaborators": [
+          "Chapter members built the original scaffold and the original three.js front-page model (December 2025 – April 2026)."
+        ],
+        "stack": [
+          "React",
+          "TypeScript",
+          "Vite",
+          "three.js",
+          "GitHub Actions",
+          "GitHub Pages"
+        ],
+        "what_i_built": [
+          "The GitHub Pages deployment and custom-domain setup: an Actions workflow that builds the Vite bundle and publishes it, a `CNAME` for the raulv.dev subdomain, and a post-build step that copies `index.html` to `404.html` so deep links into the single-page app resolve.",
+          "The content-as-data model: typed modules for events (with type, status, time zone, location, links, and an RSVP provider) and engagement paths, an expanded project model with status, health, progress, phase, and next milestone, plus the pages that render them — project hubs, events, join, network, and collaborate. The board and chapter-info modules predate my work.",
+          "The research status page, which shows each chapter project's phase, health, progress, and next milestone in one place.",
+          "The August 2026 redesign: a shared layout, a design-token system in plain CSS, a 404 page, and sitemap and robots files (the schema.org structured data dates from the April 2026 expansion).",
+          "Handoff documentation for officer turnover: build, deploy, and contributing instructions in the README, and an open-items checklist of everything that still needs board input."
+        ],
+        "writeup": {
+          "lead": "A student-chapter website built so that the next board can keep it current by editing data files instead of learning a codebase.",
+          "sections": [
+            {
+              "heading": "What it is",
+              "body": [
+                "The IEEE Signal Processing Society (SPS) student chapter at the University of Florida needed a public home for its board, events, workshop materials, and research projects. The site is a single-page application (SPA) built with React, TypeScript, and Vite, with a small three.js scene on the front page — a signal-globe reinterpretation of the SPS logo mark. It deploys automatically through GitHub Actions to GitHub Pages and is served from a raulv.dev subdomain.",
+                "The design decision I care most about is that content lives in typed data modules rather than in components: chapter info, the executive board, events, projects, engagement paths, and the research philosophy pillars. Adding an event or refreshing a project's status is a data edit, and the TypeScript types document the expected shape."
+              ],
+              "bullets": [
+                "**Events with RSVP** — each event carries a type, a scheduled/tentative/cancelled status, time-zone-aware start and end, a location, links, and an RSVP provider (for example, a Google Form or Discord).",
+                "**Research status page** — every chapter project reports a phase, a health flag (on track, watch, or blocked), a progress value, and a next milestone.",
+                "**Project hubs** — one page per chapter project with an overview, problem statement, current focus, roadmap, stack, and links."
+              ]
+            },
+            {
+              "heading": "Deploying a single-page app on GitHub Pages",
+              "body": [
+                "GitHub Pages serves static files and has no server-side routing, so a direct visit to a route like `/events` would normally return GitHub's own 404 page. The build script copies the built `index.html` to `404.html`; Pages serves that file for any unknown path, the app boots, and the client-side router renders the requested page. The trade-off is that deep links are answered with a 404 status code even though the page renders correctly.",
+                "A GitHub Actions workflow builds the Vite bundle and publishes it on every push, and a `CNAME` file pins the site to ieee-sps-uf.raulv.dev. Setting this up took a handful of small commits at the end of April 2026, mostly to get the project path and custom domain right."
+              ]
+            },
+            {
+              "heading": "Content as data",
+              "body": [
+                "Six TypeScript modules under `src/data/` hold the site's content: chapter info, the executive board, events, projects, engagement paths, and the research philosophy pillars. Each module exports plain values checked against an interface, so an editor who adds an event with a missing field finds out at build time rather than in production.",
+                "The events module is the most structured. An event has a type and a status, a start time (and optional end) in a named time zone, a location, a set of links, and an RSVP block with a provider — Google Form, Discord, Luma, or a mailto link — that can be enabled or closed with a message once the event has passed. The project model was expanded in April 2026 with a health flag, a progress value, a phase, and a next milestone, which is what the research status page reads."
+              ]
+            },
+            {
+              "heading": "My role",
+              "body": [
+                "I am the chapter's President for the 2026–2027 term. Chapter members built the original scaffold and the original three.js model between December 2025 and April 2026; my work starts at the end of April 2026 with the deployment pipeline and custom domain, followed by the events and engagement data model, the expanded project status model, and the project hub, research status, research philosophy, events, join, network, and collaborate pages. In August 2026 I led a full visual redesign and wrote the deploy and handoff documentation so the site can outlive any one board."
+              ]
+            },
+            {
+              "heading": "The August 2026 redesign",
+              "body": [
+                "The redesign introduced a shared layout component, a design-token system in plain CSS custom properties, a proper 404 page, and sitemap and robots files, and reworked the styling of the navbar, footer, cards, and profiles to match. Alongside it I wrote the build and deploy section of the README, a contributing-content guide, and an open-items checklist in `docs/` that records everything still waiting on board input — from confirming tentative events to refreshing project statuses."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "The site is live and was last updated on 2026-08-21, when the Fall 2026 first general body meeting and its RSVP form were added and the globe animation was reworked. The open-items checklist in the repository is honest about what still needs board input, including a refresh of the project status entries, which still reflect the Spring 2026 snapshot."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Did you build the whole site?",
+              "a": "No. Chapter members built the original scaffold and the original three.js model. I set up deployment, added the events and engagement data model and most of the current pages, led the August 2026 redesign, and wrote the handoff documentation."
+            },
+            {
+              "q": "Why keep content in TypeScript modules instead of a CMS?",
+              "a": "A student chapter turns over every year. Typed data files in a public repository need no accounts or hosting, the types tell the next editor what fields exist, and every change is recorded in the public git history where it can be reviewed."
+            },
+            {
+              "q": "How do deep links work on GitHub Pages?",
+              "a": "GitHub Pages cannot route a single-page app on its own, so the build copies `index.html` to `404.html`. A direct visit to a route like `/research/status` is answered with the app (technically with a 404 status code), which then renders the right page."
+            }
+          ]
+        },
+        "glossary": [
+          {
+            "term": "SPA",
+            "definition": "Single-page application: a site that loads one HTML page and renders each route in the browser with JavaScript."
+          },
+          {
+            "term": "Typed data module",
+            "definition": "A TypeScript file that exports site content (events, projects, board members) as values checked against a declared interface."
+          },
+          {
+            "term": "GitHub Pages",
+            "definition": "GitHub's static-site hosting; here it serves the built Vite bundle under a custom domain."
           }
         ]
       }
@@ -123,7 +384,7 @@
       "links": [
         {
           "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Aude"
+          "href": "https://github.com/Aude-SPS/Aude"
         }
       ],
       "details": {
@@ -138,7 +399,7 @@
           "Audio DSP + machine learning",
           "Microphone array + ESP32 capture hardware"
         ],
-        "status": "Active; baseline and data-capture phase in progress.",
+        "status": "Chartered January 2026 through IEEE SPS @ UF; planning and baseline stage.",
         "writeup": {
           "lead": "Aude is early-stage and honest about it: a charter, a roadmap, and a hardware plan for machine listening in messy real-world rooms.",
           "sections": [
@@ -240,12 +501,30 @@
                 "The system runs a six-stage pipeline. The important design idea is in the last stage: instead of scoring claims in isolation, trust propagates along the dependency edges of the graph, so a confident-sounding conclusion built on weak premises cannot inherit a high score."
               ],
               "breakdown": [
-                { "label": "1 · Validate", "text": "Accept a PDF upload or URL and extract the full text of the paper." },
-                { "label": "2 · Decompose", "text": "Use an LLM to break the paper into atomic, individually-checkable claims." },
-                { "label": "3 · Build graph", "text": "Structure the claims as a directed acyclic graph with role-aware nodes — Hypothesis, Evidence, Method, Conclusion." },
-                { "label": "4 · Organize agents", "text": "Dispatch browser-based agents to independently verify each claim against external sources." },
-                { "label": "5 · Compile evidence", "text": "Aggregate agent findings and score every node on six dimensions (below)." },
-                { "label": "6 · Evaluate integrity", "text": "Propagate trust through the graph using role-aware edge confidences and trust gating, producing a final integrity score." }
+                {
+                  "label": "1 · Validate",
+                  "text": "Accept a PDF upload or URL and extract the full text of the paper."
+                },
+                {
+                  "label": "2 · Decompose",
+                  "text": "Use an LLM to break the paper into atomic, individually-checkable claims."
+                },
+                {
+                  "label": "3 · Build graph",
+                  "text": "Structure the claims as a directed acyclic graph with role-aware nodes — Hypothesis, Evidence, Method, Conclusion."
+                },
+                {
+                  "label": "4 · Organize agents",
+                  "text": "Dispatch browser-based agents to independently verify each claim against external sources."
+                },
+                {
+                  "label": "5 · Compile evidence",
+                  "text": "Aggregate agent findings and score every node on six dimensions (below)."
+                },
+                {
+                  "label": "6 · Evaluate integrity",
+                  "text": "Propagate trust through the graph using role-aware edge confidences and trust gating, producing a final integrity score."
+                }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/platos-pipeline.svg",
@@ -273,10 +552,22 @@
                 "Plato's Cave is deployed as three cooperating services rather than one monolith, which is what lets the verification agents run in parallel and in isolation from the app the reviewer is looking at."
               ],
               "breakdown": [
-                { "label": "Frontend", "text": "A Gatsby.js + React interface that renders the claim graph interactively, shows the integrity score, and lets a reviewer share a live browser session with an agent." },
-                { "label": "Backend", "text": "A Python service that handles claim extraction, graph construction, the six-dimension scorer, and trust-gated propagation." },
-                { "label": "Verification agents", "text": "Browser-use agents packaged in Docker containers, dispatched per claim to gather external evidence." },
-                { "label": "Deployment", "text": "The services run together on AWS EC2." }
+                {
+                  "label": "Frontend",
+                  "text": "A Gatsby.js + React interface that renders the claim graph interactively, shows the integrity score, and lets a reviewer share a live browser session with an agent."
+                },
+                {
+                  "label": "Backend",
+                  "text": "A Python service that handles claim extraction, graph construction, the six-dimension scorer, and trust-gated propagation."
+                },
+                {
+                  "label": "Verification agents",
+                  "text": "Browser-use agents packaged in Docker containers, dispatched per claim to gather external evidence."
+                },
+                {
+                  "label": "Deployment",
+                  "text": "The services run together on AWS EC2."
+                }
               ],
               "figure": {
                 "svgFile": "assets/img/projects/diagrams/platos-architecture.svg",
@@ -321,7 +612,8 @@
             "definition": "Natural language processing: methods for working with text."
           }
         ]
-      }
+      },
+      "kicker": "GatorHack team project"
     },
     {
       "slug": "ergo",
@@ -345,7 +637,7 @@
       "links": [
         {
           "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Ergo"
+          "href": "https://github.com/Ergo-SPS/Ergo"
         }
       ],
       "details": {
@@ -364,7 +656,7 @@
           "Signal processing + feature extraction",
           "Control/dynamical systems simulation"
         ],
-        "status": "Active; hardware integration and simulation phases underway.",
+        "status": "Chartered January 2026 through IEEE SPS @ UF; early design and prototyping.",
         "writeup": {
           "lead": "Ergo pairs custom EMG/EEG acquisition hardware with dynamical-systems analysis of human-in-the-loop control.",
           "sections": [
@@ -380,9 +672,18 @@
                 "The intended hardware path is deliberately standard and repeatable rather than exotic:"
               ],
               "breakdown": [
-                { "label": "Analog front-end", "text": "An ADS1299 biopotential front-end for EMG/EEG capture." },
-                { "label": "MCU", "text": "An STM32 handling acquisition and streaming." },
-                { "label": "Analysis", "text": "Feature extraction feeding a control / dynamical-stability simulation." }
+                {
+                  "label": "Analog front-end",
+                  "text": "An ADS1299 biopotential front-end for EMG/EEG capture."
+                },
+                {
+                  "label": "MCU",
+                  "text": "An STM32 handling acquisition and streaming."
+                },
+                {
+                  "label": "Analysis",
+                  "text": "Feature extraction feeding a control / dynamical-stability simulation."
+                }
               ]
             },
             {
@@ -429,7 +730,7 @@
       "links": [
         {
           "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Ergo"
+          "href": "https://github.com/Ergo-SPS/Ergo"
         }
       ],
       "details": {
@@ -444,7 +745,7 @@
           "Control + sensing",
           "Data logging"
         ],
-        "status": "In development.",
+        "status": "Early design; developed alongside Ergo through IEEE SPS @ UF.",
         "glossary": [
           {
             "term": "Real-time",
@@ -455,46 +756,543 @@
     },
     {
       "slug": "ora",
-      "title": "Ora — local-first workout tracker with voice logging",
-      "subtitle": "A deployable app for fast workout logging, structured training data capture, and longitudinal analysis of hypertrophy, strength, and endurance trends.",
-      "img": "assets/img/projects/Ora_Icon_nobg.png",
-      "imgAlt": "Ora project logo.",
+      "title": "Ora — a local-first training and progress app for lifters",
+      "subtitle": "A Flutter app for logging training, diet, and progress on-device, with a coach that drafts one change at a time and shows its confidence, and two Python research packages — exercise mechanics and a muscle-tendon-bone digital twin — beside it.",
+      "img": "assets/img/projects/ora-mark.webp",
+      "imgAlt": "Ora brand mark: a blue ring with a dumbbell.",
       "tags": [
-        "apps",
-        "ml",
-        "speech"
+        "local-first",
+        "on-device-speech",
+        "biomechanics",
+        "flutter"
       ],
       "pills": [
-        "Local-first data",
-        "Voice logging",
-        "Training trend analysis"
+        "Local-first SQLite",
+        "On-device speech",
+        "Draft-with-confidence coach",
+        "Deterministic mechanics",
+        "Digital-twin research"
       ],
-      "meta": "IEEE SPS @ UF · app systems · health analytics",
-      "desc": "Ora is built to reduce workout logging friction while generating high-quality structured data for ML-assisted progression analysis and coaching workflows.",
+      "meta": "IEEE SPS @ UF · app systems · biomechanics",
+      "desc": "A co-founded, local-first training and progress app for lifters: on-device logging, optional cloud or on-device language models under strict contracts, and a biomechanics research spine that says what it will not claim.",
       "featured": false,
+      "kicker": "Co-founded app",
       "links": [
         {
-          "label": "Open Ora app",
-          "href": "https://ora.raulv.dev/"
+          "label": "Ora website",
+          "href": "https://oracoach.app/"
         }
       ],
       "details": {
-        "overview": "Ora prioritizes daily usability: local-first storage for privacy and reliability, voice-first capture for speed, and clear summaries that make progression trends easy to interpret over time.",
-        "what_i_built": [
-          "A product architecture centered on local-first persistence and offline-friendly usage.",
-          "Voice-to-structured-log workflows that reduce interaction cost during training sessions.",
-          "A roadmap from MVP logging to richer trend analysis and ML-assisted coaching features."
+        "overview": "Ora is a training and progress app for lifters that keeps core records in an on-device SQLite database and opens without an account, cloud key, or Firebase. The coach drafts one change to today's session with one reason and a confidence level, and nothing changes until the lifter applies it. Beside the app sit two research packages: one with a deterministic planar mechanics engine and an explicit wall of allowed and barred outputs, and a finite-element muscle-tendon-bone demonstrator run as a contract-and-decision-log research loop.",
+        "status": "Private beta (waitlist on the public site, live at oracoach.app since June 2026; current version deployed 2026-06-22, last updated 2026-07-18); last app commit 2026-08-17; research packages active through 2026-09-05.",
+        "collaborators": [
+          "The Ora team at IEEE SPS @ UF — co-founded with a small student team"
         ],
         "stack": [
-          "Flutter + Riverpod",
-          "SQLite",
-          "Speech pipeline (Vosk/Gemini-ready)"
+          "Flutter + Dart",
+          "SQLite (sqflite, sqflite_common_ffi on desktop)",
+          "Vosk on-device speech recognition",
+          "Hand-written NLU grammar for voice commands",
+          "Optional OpenAI / Gemini parsing with a user-supplied key",
+          "Optional on-device LLMs via llama.cpp (GGUF) and LiteRT-LM",
+          "Firebase (build-flag optional, for account-backed surfaces)",
+          "Python 3 (ora-biomech; canonical-msk-twin is standard-library only)",
+          "GitHub Actions"
         ],
-        "status": "Active MVP development with expanding analysis features.",
+        "what_i_built": [
+          "The machine-learning workstream: how voice, cloud, and on-device language models are allowed to touch training data, and the contracts (data allowlist, token budget, cancellation, content-free receipt) each call must declare.",
+          "The coach experience: recommendation surfaces that carry one reason, a confidence label, evidence, and a missing-data state, and plan changes that go recommendation → preview draft → confirm → apply → rollback.",
+          "ora-biomech: a Python package whose mechanics kernel is a deterministic two-dimensional quasi-static solver that compares two exercise setups and returns unit-labeled joint-moment curves, sensitivities, and bounded uncertainty, with a released response surface the Dart app can interpolate on-device.",
+          "The ora-biomech claim wall: nine outputs the engine may report and nine it structurally cannot (muscle activation, individual muscle force, joint contact force, tendon force, ligament stress, tissue stress, injury probability, medical interpretation, 3D dynamics).",
+          "canonical-msk-twin: a pure-standard-library nonlinear finite-element muscle-tendon-enthesis-bone anatomy from which meshes and solves are derived views, with byte-deterministic result packages and a claim guard that rejects 'validated' or 'subject-specific' language.",
+          "The research loop that runs the twin: a numbered design contract, a decision log, and a program graph, with each increment checking that earlier committed packages stay byte-identical, and any regeneration recorded as an explicit decision."
+        ],
+        "how_it_works": [
+          "Every set mutation goes through a command bus, so tap and voice edits share one semantics and undo/redo comes for free.",
+          "Voice is parsed on-device first: Vosk transcribes, a deterministic grammar turns the transcript into a command. Cloud parsing only runs if the user has added their own key, and only under a typed contract with a token ceiling and a receipt that carries no prompt, transcript, or response text.",
+          "Language models may phrase, summarize, classify, or propose drafts; deterministic services own calculations, progression math, consent, and mutations.",
+          "Firebase initializes only when the app is built with an explicit flag, and only backs account-based surfaces such as coach sharing; the tracker itself does not need it.",
+          "ora-biomech evaluates a scenario either with its direct solver or from a released, digest-pinned response surface, and every packet lists which outputs were unavailable and why.",
+          "canonical-msk-twin treats the hierarchical anatomy as the canonical object; meshes, solver models, and the HTML viewer are regenerated numerical views for a declared context of use."
+        ],
+        "writeup": {
+          "lead": "What does a training app look like when the data lives on the phone, the AI can only draft, and the physics is honest about what it cannot say?",
+          "sections": [
+            {
+              "heading": "What Ora is",
+              "body": [
+                "Ora started in January 2026 as an IEEE SPS @ UF team project and has become a co-founded app in private beta. The shell has four surfaces — Training, Diet, Progress, and Hub — and a floating input hub called the **Ora Orb** that gives camera, upload, microphone, and text entry from anywhere in the app. Training covers programs, day selection, live session logging with a rest timer and next-set targets, and exercise sheets with technique, safety, and personal history. Diet is deliberately basic logging: search, barcode scan, recipes, and step-calorie carryover. Progress is a weekly review built around estimated one-rep max (e1RM) trends, hard sets per muscle, and weekly volume.",
+                "The coach follows one rule from the public site: it drafts a change to today's session with one reason and a confidence level, and nothing changes until you apply it. Estimates are labeled as estimates and missing data is shown before a recommendation rather than hidden behind one."
+              ],
+              "breakdown": [
+                {
+                  "label": "Training",
+                  "text": "Programs, live session logging, rest and next-set targets, exercise info sheets, undo/redo on every set edit."
+                },
+                {
+                  "label": "Diet",
+                  "text": "Food search, barcode scan, recipes, goals, step-calorie carryover — positioned as logging, not a nutrition product."
+                },
+                {
+                  "label": "Progress",
+                  "text": "Weekly review, e1RM trend per lift, hard sets per muscle, weekly volume, powerlifting calculators."
+                },
+                {
+                  "label": "Coach",
+                  "text": "One drafted change, one reason, a confidence level, apply or ignore."
+                }
+              ]
+            },
+            {
+              "heading": "Local-first and LLM-optional",
+              "body": [
+                "The architecture is deterministic-first. Core records live in an on-device SQLite database and the app opens straight into the shell with no account, cloud key, or Firebase. A command bus owns every set mutation, which gives undo/redo for free and lets voice and tap commands share the same reducer.",
+                "Voice runs through an on-device **Vosk** speech model and a hand-written grammar before anything else. Cloud parsing (OpenAI or Gemini) is optional and only prompted when a user invokes an AI action with their own key; each such call is being moved onto a typed contract that declares what data may leave the device, a token ceiling, cancellation, and a **content-free receipt** that cannot contain the prompt, transcript, or provider response. There is also an optional on-device path: quantized GGUF models run through llama.cpp, plus a LiteRT-LM channel, pinned by a release manifest. A census tracks every model-call site in the app so a new one cannot appear unaudited. The rule that binds all of it: language models may phrase, summarize, classify, or propose drafts, while deterministic services own calculations, progression math, consent, and mutations.",
+                "Firebase exists in the build, but it initializes only when the app is compiled with an explicit flag and only backs account-based surfaces such as the coach portal. The public site is honest that some beta and web features store data in cloud services; the tracker itself does not depend on them."
+              ]
+            },
+            {
+              "heading": "The privacy contract",
+              "body": [
+                "The public site states the contract in plain terms, and the app is built to keep it structural rather than a slogan. The app's dependency list contains no advertising or analytics SDK. The public site says support never means selling or sharing your data, and that privacy, export, and delete are always free; the waitlist card says export or delete anytime. Coach access is explicit, scoped, revocable, and auditable — sharing is athlete-granted, report-first, and can be withdrawn.",
+                "The site does not claim that everything stays on your device, because Ora has account-backed and shared surfaces. What it says instead is which surfaces are local, account-backed, or shared, and that report exports keep their caveats attached."
+              ],
+              "bullets": [
+                "No ad or analytics SDK in the app's dependencies; the privacy policy says Ora does not sell personal information.",
+                "Privacy, export, and delete are always free.",
+                "Sharing with a coach is opt-in, scoped to reports, revocable, and auditable.",
+                "Cloud AI is bring-your-own-key, and each call's receipt is content-free."
+              ]
+            },
+            {
+              "heading": "The biomechanics research spine",
+              "body": [
+                "Two Python packages sit beside the app. Both are research demonstrators, not validated models, and both encode that fact in code rather than in a disclaimer.",
+                "**ora-biomech** (started May 2026) contains a deterministic two-dimensional quasi-static mechanics engine. It compares two exercise setups — load, pulley height, limb lengths, range of motion — and returns unit-labeled joint-moment curves, finite-difference sensitivities, and bounded uncertainty. Its central asset is a **claim wall**: an enum of nine outputs a mechanics packet may contain and nine it structurally cannot, such as muscle activation, individual muscle force, joint contact force, tendon force, ligament stress, injury probability, and medical interpretation. Promoting anything across that wall is a reviewed decision with a named validation bar. A released, digest-pinned response surface for a single-arm cable lateral raise lets the Dart app interpolate results on-device; the in-app feature that uses it is still behind a flag that is off.",
+                "**canonical-msk-twin** (started 2026-08-13, standard-library Python only) is a finite-element muscle-tendon-bone demonstrator: a pennate muscle belly, two aponeuroses, a tapered tendon, a graded enthesis, and cortical and trabecular bone, from which meshes and a total-Lagrangian nonlinear solve are derived as disposable numerical views. Later increments add prescribed and computed activation, calcium and crossbridge state, and a sagittal human-scale frame with gravity and routed muscle paths. It is run as an explicit RESEARCH → EXECUTE → EVALUATE → REPEAT loop with a numbered design contract (through §82 as of 2026-09-05), a decision log (through D-097), and a typed program graph. Its honesty statement is the point: everything is a reference parametric anatomy and a structural benchmark, with zero measured inputs, no biological validation, and no medical interpretation — and a claim guard enforces that the prose cannot say otherwise."
+              ],
+              "breakdown": [
+                {
+                  "label": "ora-biomech",
+                  "text": "Planar quasi-static mechanics, A/B setup comparison, 9 allowed vs 9 barred outputs, released response surface consumed by the app."
+                },
+                {
+                  "label": "canonical-msk-twin",
+                  "text": "Nonlinear FE muscle-tendon-enthesis-bone anatomy, byte-deterministic packages, contract + decision log + program graph, claim guard on the prose."
+                }
+              ]
+            },
+            {
+              "heading": "My role and the team",
+              "body": [
+                "Ora is co-founded with a small student team from the IEEE SPS @ UF chapter, and the app is a team effort. My own workstreams are machine learning — how voice, cloud, and on-device models may touch training data — the coach experience, and the two mechanics and digital-twin research packages, which I authored. The public site, a separate public repository, carries the positioning and privacy copy this page quotes."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "Ora is in private beta with a waitlist on the public site, which has been live at oracoach.app since June 2026; the current version was deployed 2026-06-22 and last updated 2026-07-18. The site lists voice logging as upcoming for beta users even though the on-device pipeline described here is in the codebase, and it is explicit that the app does not analyze form from video. The last commit touching the Flutter app on my working branch is 2026-08-17.",
+                "Since mid-August the activity has been the research packages: canonical-msk-twin's contract and decision log ran through 2026-09-05. None of the mechanics or twin results are published, and the honest framing is that they are structural benchmarks with no validation claim. Nothing here is a medical device, and the site says so."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Does Ora need an account or an internet connection?",
+              "a": "No. The app opens into the shell with core records in an on-device SQLite database. Accounts and Firebase exist only for account-backed surfaces such as sharing reports with a coach, and only when the app is built with that flag on."
+            },
+            {
+              "q": "Is the coach an AI that changes my program?",
+              "a": "It drafts one change to today's session with one reason and a confidence level, and waits for you to apply or ignore it. Language models may phrase and propose; deterministic services own the math and the mutations."
+            },
+            {
+              "q": "Does the biomechanics engine tell me my injury risk or muscle forces?",
+              "a": "No, and it cannot: those outputs are on the barred side of the claim wall and are structurally unreachable. The engine reports modeled positions, external forces, moment arms, balancing joint moments, A/B differences, sensitivities, and bounded uncertainty."
+            },
+            {
+              "q": "Is the digital twin a validated model?",
+              "a": "No. canonical-msk-twin is a reference parametric anatomy and a structural benchmark with zero measured inputs, no biological validation, and no medical interpretation. A claim guard rejects prose that says otherwise."
+            }
+          ]
+        },
         "glossary": [
           {
             "term": "Local-first",
-            "definition": "An architecture where core app functionality and data storage work on-device by default."
+            "definition": "Core app functionality and data storage work on-device by default; network and account features are optional additions rather than requirements."
+          },
+          {
+            "term": "RPE / RIR",
+            "definition": "Rate of perceived exertion and reps in reserve: two effort scales logged next to load so a set records how hard it was, not only what was lifted."
+          },
+          {
+            "term": "e1RM",
+            "definition": "Estimated one-rep max, computed from a set's load and reps; Ora tracks it per lift as a strength trend and labels it as an estimate."
+          },
+          {
+            "term": "Claim wall",
+            "definition": "In ora-biomech, the pair of enums listing the nine outputs a mechanics packet may contain and the nine it structurally cannot; crossing it requires a reviewed decision."
+          },
+          {
+            "term": "Digital twin",
+            "definition": "Here, a parametric computational anatomy from which meshes and finite-element solves are derived; in canonical-msk-twin it is explicitly a structural benchmark, not a subject-specific or validated model."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "gradus",
+      "title": "Gradus: reasoning practice for rigorous STEM courses",
+      "subtitle": "A Flutter app that models a course as a concept graph, grades answers deterministically, diagnoses why a miss happened, and routes the learner to the smallest useful prerequisite repair.",
+      "img": "assets/img/projects/gradus-icon.webp",
+      "imgAlt": "Gradus app icon.",
+      "tags": [
+        "adaptive-learning",
+        "concept-graphs",
+        "app-systems",
+        "education"
+      ],
+      "pills": [
+        "Concept-graph courses",
+        "Deterministic diagnosis",
+        "Prerequisite repair",
+        "Transfer checks",
+        "Flutter web + mobile"
+      ],
+      "meta": "Independent project · adaptive learning · app systems",
+      "desc": "Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on.",
+      "featured": false,
+      "kicker": "Independent project",
+      "links": [
+        {
+          "label": "Open Gradus",
+          "href": "https://gradus.raulv.dev/"
+        },
+        {
+          "label": "Try the demo",
+          "href": "https://gradus.raulv.dev/demo"
+        }
+      ],
+      "details": {
+        "overview": "Gradus is a learning app for courses where the hard part is the reasoning, not the recall: real analysis, topology, convex optimization, algorithms, automata. Instead of tracking flashcards, it tracks mastery per concept in a graph with prerequisites and author-defined fail points, grades every answer with rules rather than a language model, and turns each miss into a specific diagnosis and a specific repair. It runs on web, Android, and iOS from one Flutter codebase, with a public no-sign-in demo and a closed beta.",
+        "status": "Closed beta plus public demo. Solo project since March 2026; last verified closed-beta deploy May 8, 2026; last commit May 30, 2026. No pilot outcome data yet.",
+        "stack": [
+          "Flutter",
+          "Dart",
+          "SQLite",
+          "Cloud Firestore",
+          "Firebase Auth / Hosting / Storage",
+          "TypeScript Cloud Functions",
+          "KaTeX subset (flutter_math_fork)",
+          "Kokoro / OpenAI TTS"
+        ],
+        "what_i_built": [
+          "A course data model — course, chapter, lesson, concept, item family, question instance — where each concept carries prerequisites, neighbors, expected fail points, and staged item families from recognition through reasoning.",
+          "A deterministic session engine: rule-based grading (exact match, regex, choice, sequential fill-in-the-blank) with LaTeX-aware normalization, a per-concept mastery vector, and a scheduler for lesson-only, review-only, and mixed sessions.",
+          "A diagnosis and repair path that maps a miss to one of twelve error types, then runs a backward breadth-first search over the prerequisite graph to pick the repair target, followed by a transfer check.",
+          "A content pipeline where a coding agent drafts course packages through prompt and response files, with checkpoints, auto-repair of coercible issues, strict LaTeX and schema gates, a readiness rubric, and versioned publishing to Firebase Storage.",
+          "The app surfaces: a Learning Mode reader with generated text and optional narration, Progress Review, role-gated teacher and organization dashboards, and a public demo that stores progress only in the browser.",
+          "Persistence and sync: SQLite on device, Cloud Firestore when signed in, and a merge of guest progress on first sign-in, plus TypeScript Cloud Functions for waitlist notifications, demo telemetry, and signed course-asset URLs."
+        ],
+        "how_it_works": [
+          "The learner predicts, attempts, and briefly explains; the engine grades the attempt with a rule, never a model call.",
+          "A miss is matched against the concept's author-defined fail points and labeled with an error type such as prerequisite gap, quantifier error, or theorem-condition error.",
+          "For a prerequisite gap, a backward breadth-first search from the missed concept walks the prerequisite edges, orders candidates by distance and then mastery, and prefers a concept below a weakness threshold as the repair target; confusion and scope errors check neighboring concepts first.",
+          "After repair, a transfer check asks a different-looking item that depends on the same idea, and the learner reflects on what changed.",
+          "Mastery is a small per-concept vector (recall, reasoning, stability, overall) updated by stage; the scheduler picks the next concept and operation from those scores and the session budget."
+        ],
+        "writeup": {
+          "lead": "Students in proof-based and systems courses rarely lack explanations; what they lack is a precise account of where their reasoning broke and which earlier idea caused it.",
+          "sections": [
+            {
+              "heading": "The idea: make the miss legible",
+              "body": [
+                "Gradus started in March 2026 as an adaptive course engine for proof-based mathematics, piloted on a chapter of Rudin's *Principles of Mathematical Analysis*, and grew into what its docs call a reasoning mastery platform for rigorous courses. The framing I settled on is that the product is not an answer machine. A chat model can already explain any theorem on demand. The durable problem is that a student, and their instructor, usually cannot see which step failed, which prerequisite was missing, or whether the idea would transfer to a differently worded problem.",
+                "The whole app is organized around one loop: **Predict → Attempt → Explain → Diagnose → Repair → Transfer → Reflect**. The learner states an expectation before answering, answers, gives a short justification, gets a structured diagnosis rather than just right/wrong, is sent to the smallest useful repair target, is asked a transfer item that needs the same underlying idea, and finally names what changed. Product copy, the demo, Progress Review, and the teacher views are all supposed to make that loop visible; features that do not strengthen one of its stages are treated as secondary."
+              ]
+            },
+            {
+              "heading": "The concept graph",
+              "body": [
+                "A course is a package of JSON documents, not a deck of cards. The hierarchy is course → chapter → lesson → concept → item family → question instance. A concept is the atomic unit: a definition, theorem, technique, or proof pattern. Each one lists its prerequisites and neighbors and carries author-defined **fail points**, which are the specific wrong moves a learner is expected to make on that concept.",
+                "Each concept has item families at four cognitive stages: **A** recognition, **B** recall, **C** structured completion, and **D** reasoning. An item family is a reusable question template tied to one concept; a question instance is one rendered prompt from it. Stage unlocks are threshold-based on the concept's mastery scores, so a learner does not see a stage-D proof-reasoning item until the recall and completion evidence supports it. Transfer prompts attach to stage-D items."
+              ],
+              "breakdown": [
+                {
+                  "label": "Concept",
+                  "text": "Atomic unit with prerequisites, neighbors, difficulty and importance weights, and a list of expected fail points."
+                },
+                {
+                  "label": "Item family",
+                  "text": "A question template with an answer spec (mode, canonical answer, aliases) and a stage from A to D."
+                },
+                {
+                  "label": "Mastery vector",
+                  "text": "Per-concept recall, reasoning, stability, and overall scores, updated by fixed increments per stage."
+                }
+              ]
+            },
+            {
+              "heading": "Deterministic grading and diagnosis",
+              "body": [
+                "The first architecture decision, recorded in the project's ADR 0001 on 2026-03-07, was that the runtime would not use a language model to grade anything. Grading is rule-based: exact match, regex, multiple- and few-choice, and sequential fill-in-the-blank, with LaTeX-aware normalization so that equivalent notation is treated as equal. Language models are allowed only offline, for drafting content. The reasons were reproducibility, easier A/B testing of scheduling policies, and simpler debugging; the accepted cost is less flexibility for free-form responses.",
+                "Diagnosis is also deterministic. A miss is matched against the concept's fail points and assigned one of twelve error types: eight general ones (prerequisite gap, recall miss, reasoning miss, confusion, missing step, wrong application, scope error, careless miss), three proof-specific ones (quantifier error, theorem-condition error, counterexample gap), and a no-error value. The error type decides what happens next. A prerequisite gap triggers a **backward breadth-first search** from the missed concept along prerequisite and neighbor edges; candidates are ordered by graph distance and then by mastery, and any concept below a weakness threshold is preferred as the repair target. Confusion and scope errors look at neighboring concepts first, since the learner mixed up two nearby ideas rather than missing an earlier one. After repair, a transfer check asks for the same idea in a different form before the concept is treated as recovered."
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/gradus-loop.svg",
+                "alt": "The Gradus loop from Predict through Reflect, with the Diagnose step expanded to show a backward breadth-first search over a prerequisite graph selecting a repair target before a transfer check.",
+                "caption": "Figure 1 — The seven-stage loop, with the Diagnose → Repair path expanded: a prerequisite-gap error type walks backward through the concept graph to the nearest weak prerequisite."
+              }
+            },
+            {
+              "heading": "The content pipeline",
+              "body": [
+                "Writing concept graphs with fail points by hand is slow, so most course packages come from a generation pipeline. This is infrastructure, not the product: the learner-facing promise is the diagnosis and repair, and the packages are plain JSON that a human can read and edit. The generator runs in a manual-chat mode where a coding agent reads a prompt file and writes a JSON response file; there is also a direct API path for unattended runs. Generation is checkpointed and resumable, and chapters can be produced in parallel and merged.",
+                "Nothing generated is trusted by default. A validate-and-repair tool maps every failure back to a concept or item family, applies coercion fixes for issues that can be repaired mechanically, and flags the rest for regeneration. A strict LaTeX gate and JSON schema checks block publishing. A separate readiness rubric scores whether a package can support an instructor-facing pilot rather than whether its JSON parses, covering graph quality, prerequisite links, diagnosis coverage, repair paths, transfer practice, and accessibility. Publishing uploads an immutable versioned snapshot plus a `current` pointer to Firebase Storage, with a Firestore catalog entry that the app reads at runtime, so a bad package can be rolled back."
+              ]
+            },
+            {
+              "heading": "The product surfaces",
+              "body": [
+                "One Flutter codebase builds the web, Android, and iOS apps. Progress lives in SQLite on device and in Cloud Firestore when the learner signs in; a sync service merges guest progress into the account on first sign-in. Firebase Hosting serves three routes: a static landing page at `/`, a public demo at `/demo` that needs no sign-in or email and stores progress only in the visitor's browser, and the closed-beta app at `/app`, gated by per-account access records. TypeScript Cloud Functions handle waitlist notifications, demo telemetry, and short-lived signed URLs for course assets.",
+                "Around the practice loop there is a Learning Mode reader that shows generated text for each concept, with optional narration rendered ahead of time by a local Kokoro model or OpenAI text-to-speech; a Progress Review area for historical diagnoses, coverage, weak patterns, and repair actions; and role-gated Teacher Hub and Organization Dashboard views that surface class-level fail-point patterns and transfer results. Math renders through a KaTeX-subset Flutter package."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "Gradus is a closed beta with a public demo. The README's catalog table lists 13 published remote courses: proof-based mathematics (topology, complex analysis, probability), an ML-readiness wave (linear algebra, convex optimization, statistical inference), a computer-science foundations wave (programming concepts, algorithms, operating systems, automata, AI/ML systems, cybersecurity), and a business-analytics slice used by the demo. The original real-analysis (Rudin) course is published alongside them as a remote-first library entry. The last verified closed-beta deploy is from 2026-05-08 and the last commit from 2026-05-30. It has been a solo project since the first commit on 2026-03-07.",
+                "What is not established: any learning outcome. A pilot protocol and a readiness rubric exist, but no school pilot has run and no efficacy numbers exist, so the page makes no such claim. Near-term work is filling learning-text and narration gaps across the published catalog, continuing the machine-learning course sequence, and an in-progress audit that flags template-stamped item families in generated courses so they can be regenerated."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Is Gradus an AI tutor?",
+              "a": "No. It does not chat, and it does not explain on demand. It grades with rules, diagnoses a miss with author-defined fail points, and routes the learner to a prerequisite repair and a transfer check. AI is used offline to draft course packages, which are then validated and human-readable."
+            },
+            {
+              "q": "Does a language model grade my answers?",
+              "a": "No. ADR 0001 (2026-03-07) fixed the runtime as deterministic: exact match, regex, choice, and sequential fill grading with LaTeX-aware normalization. The trade-off is less flexibility for free-form written answers."
+            },
+            {
+              "q": "How is the repair target chosen?",
+              "a": "For a prerequisite-gap error, a backward breadth-first search from the missed concept walks the prerequisite edges and picks the nearest concept whose mastery is below a weakness threshold. Confusion, wrong-application, and scope errors rank the concept's neighbors first instead, and reasoning-type errors search prerequisites only."
+            },
+            {
+              "q": "Can I try it?",
+              "a": "The public demo at gradus.raulv.dev/demo needs no sign-in or email and keeps progress only in your browser. The full app at /app is a closed beta."
+            },
+            {
+              "q": "Does it work?",
+              "a": "Unknown in the measured sense. The engine, content, and dashboards are built and deployed, and a pilot protocol is written, but no pilot has run and there are no learning-outcome results."
+            }
+          ]
+        },
+        "glossary": [
+          {
+            "term": "Concept graph",
+            "definition": "The course model: concepts linked by prerequisite and neighbor edges, each with staged item families and expected fail points."
+          },
+          {
+            "term": "Fail point",
+            "definition": "An author-labeled expected error pattern on a concept, used to turn a miss into a specific diagnosis."
+          },
+          {
+            "term": "Item family",
+            "definition": "A reusable question template tied to one concept; each rendered prompt from it is a question instance."
+          },
+          {
+            "term": "Stage",
+            "definition": "The cognitive level of an item family: A recognition, B recall, C structured completion, D reasoning."
+          },
+          {
+            "term": "Repair target",
+            "definition": "The concept selected to remediate a diagnosed weakness, chosen by a backward search over prerequisites."
+          },
+          {
+            "term": "Transfer check",
+            "definition": "A different-looking item that requires the same underlying idea, asked after repair to confirm the idea generalizes."
+          }
+        ]
+      }
+    },
+    {
+      "slug": "media-cull-suite",
+      "title": "Media Cull Suite: local-first photo and video culling that learns your taste",
+      "subtitle": "Three command-line tools and a React app that rank a shoot, learn a photographer's preferences, and feed a corrective camera recipe back before the next shoot, all on the user's own machine.",
+      "img": "assets/img/projects/diagrams/media-cull-loops.svg",
+      "imgAlt": "Diagram of the Media Cull Suite's four loops: capture, cull, memory, deliver.",
+      "tags": [
+        "photography",
+        "local-first",
+        "computer-vision",
+        "tooling"
+      ],
+      "pills": [
+        "Four closed loops",
+        "Capture recipes to camera",
+        "Rules-first prompt router",
+        "Local-only by contract"
+      ],
+      "meta": "Independent project · photography tooling · local-first ML",
+      "desc": "A local-first culling suite that ranks a shoot, learns a photographer's taste, and closes a capture loop back to the camera so the next shoot comes out better, without uploading a single frame.",
+      "featured": false,
+      "kicker": "Independent project",
+      "links": [],
+      "details": {
+        "overview": "Media Cull Suite bundles a photo culling assistant (pca), a video clipping assistant (vca), and a shared launcher (mc) into one install that turns a folder of frames into a ranked, reviewed, exportable set. The unusual part is that it does not stop at the cull: it measures what went wrong on a shoot, proposes corrective camera settings for the next one, and can push them to a Sony α6700. Everything runs locally; no image, video, embedding, or transcript ever leaves the machine.",
+        "status": "v0.42 by its changelog as of 2026-06-10 (81 commits, 2026-05-16 to 2026-06-10); all four loops shipped; no commits since. Private repository.",
+        "stack": [
+          "Python",
+          "FastAPI",
+          "React + TypeScript",
+          "PyTorch",
+          "OpenCLIP",
+          "YOLOv8",
+          "faster-whisper",
+          "Sony Camera Remote SDK (C++ helper)",
+          "SQLite"
+        ],
+        "what_i_built": [
+          "A ten-stage photo pipeline (ingest, metadata, previews, technical quality, faces, embeddings, semantic prompts, grouping, interest scoring, shortlist) and a video pipeline built on shot detection, CLIP embeddings, and local Whisper transcription, each producing keep/maybe/reject recommendations with per-item reasons.",
+          "Four closed loops (capture, cull, memory, deliver) that share one interaction pattern, plus a rules-first router (`pca ask`, `vca ask`, `mc ask`, and an Ask bar in the app) that sends a plain-English prompt to the right loop.",
+          "The capture loop end to end: per-situation failure signatures from EXIF and technical scores, corrective capture recipes, a pre-shoot briefing, an offline phone-styled field card, and a live push to a Sony α6700 through a small C++ helper over the Camera Remote SDK.",
+          "A per-photographer taste preset fit from the user's own accept/reject decisions, with shoot-over-shoot tracking of how often the first pass agreed with the final cull.",
+          "A persistent cross-shoot embedding index and delivery ledger that answer \"have I shot or delivered this before?\", and a delivery object that applies a consistent look and exports named channels (full-resolution gallery, 1080×1350 Instagram crop, web).",
+          "Three CLIs (pca 43 commands, vca 23, mc 17 plus subcommand groups), a FastAPI service, a React + TypeScript app with a view for every loop, and a 499-test suite."
+        ],
+        "how_it_works": [
+          "Every loop has the same five beats: observe what happened, diagnose, propose a minimal action, let the human approve, learn from the approval.",
+          "The capture loop clusters one shoot into situations by time of day, GPS, and CLIP scene type, then computes a failure signature per situation: percent underexposed, blurred, and noisy, ISO and shutter medians, keeper rate, and a plain-English diagnosis.",
+          "Deterministic rules turn each signature into a capture recipe (exposure shift, Auto-ISO ceiling, shutter floor, white balance, metering, dynamic-range optimizer, creative look) with a one-line rationale per setting; no language model is involved.",
+          "A global capture log keys each shoot by a stable, user-confirmed situation type and records which recipe was in effect, so the next cull can show whether keeper rate and the objective failure metric moved.",
+          "The router checks any routing corrections you have recorded, then classifies the prompt with weighted trigger phrases; an optional local model through Ollama breaks ties only when the rules are unsure, and a deterministic offline path always exists.",
+          "Edits are non-destructive graphs stored in a per-project SQLite catalog; rejects are catalog flags, and originals change only on an explicit export."
+        ],
+        "writeup": {
+          "lead": "What would a culling tool look like if it treated the next shoot, not the current one, as the thing to improve?",
+          "sections": [
+            {
+              "heading": "The problem: the shoot is the easy part",
+              "body": [
+                "A single outing produces hundreds or thousands of frames, and if there is video, hours of footage. Deciding what to keep is the slow, tedious part, and it is where most of a photographer's evening goes. Some tools that automate it upload the take to a cloud service, which is a non-starter for anything shot under an NDA, anything with minors in it, or anyone who simply does not want their raw files on someone else's server.",
+                "I wanted a culling assistant that ran entirely on my own machine, produced a ranked shortlist I could review quickly, and learned what I actually keep rather than what a generic aesthetic model prefers. Once that existed, a second question became more interesting: the cull already knows which frames failed and why. Could that feed back into how I shoot?"
+              ]
+            },
+            {
+              "heading": "Four loops, one interaction pattern",
+              "body": [
+                "The suite is organized around four loops rather than four features. Each one observes something about a shoot, diagnoses it, proposes a minimal action, waits for the human to approve, and learns from the approval. That five-beat shape is the only interaction pattern in the product, and a single front door routes a plain-English prompt (\"cull the obvious rejects\", \"what should I dial in tomorrow\", \"have I delivered this before\") to whichever loop it belongs to."
+              ],
+              "breakdown": [
+                {
+                  "label": "Capture",
+                  "text": "Observes last shoot's EXIF and technical failure scores, diagnoses a per-situation failure signature, and proposes a corrective recipe to load before the next shoot."
+                },
+                {
+                  "label": "Cull",
+                  "text": "Ranks the full take with technical scores and a learned taste preset, proposes a shortlist plus the frames it is unsure about, and refits from your accept/reject decisions."
+                },
+                {
+                  "label": "Memory",
+                  "text": "Keeps a career-spanning embedding index and a delivery ledger, flags near-duplicates of things you have already shot or delivered, and learns which repeats you dismiss as not meaningful."
+                },
+                {
+                  "label": "Deliver",
+                  "text": "Treats stills and clips from one event as a single delivery, flags frames that drift from your house look, applies it in one click, and exports each named channel."
+                }
+              ],
+              "figure": {
+                "svgFile": "assets/img/projects/diagrams/media-cull-loops.svg",
+                "alt": "Four loops (capture, cull, memory, deliver) arranged around a shoot, each following observe, diagnose, propose, approve, learn. A dashed arrow from the capture loop feeds a recipe back into the camera before the next shoot.",
+                "caption": "Figure 1 — The four loops share one engine and one approval surface. Only the capture loop reaches back in front of the shutter."
+              }
+            },
+            {
+              "heading": "The capture loop: feeding the next shoot",
+              "body": [
+                "The culling tools I know of work after the shutter. The capture loop is the part I have not seen elsewhere, and it was the first loop I made work end to end. It starts by clustering a shoot into **situations** by time of day, GPS, and CLIP scene type. For each situation it computes a **failure signature**: the fraction of frames underexposed, blurred, or noisy, the ISO and shutter medians, the keeper rate, and a plain-English diagnosis. Deterministic rules turn that signature into a **capture recipe** (exposure shift, Auto-ISO ceiling, shutter floor, white balance, metering, dynamic-range optimizer, creative look), with every line justified by the diagnosis that produced it.",
+                "The recipe is only half a loop. The other half is knowing whether acting on it worked, and that turned out to be the real gap: keeper rate was computed per project, situations had no identity across shoots, and recipes were fire-and-forget. So the loop got a backward axis: a global capture log keyed by a stable, user-confirmed situation type, recording which recipe was in effect for each shoot, and a trend view that pairs keeper rate with the objective failure metric that was worst at the start (so a curve survives \"I just got pickier\"). The trend is worded as association, not causation, and it refuses to draw a curve from one data point.",
+                "On top of that sit a pre-shoot **briefing** built from history (\"here is the recipe in effect during your best past shoot of this type\"), an offline, phone-styled HTML **field card** you generate at home and consult on a trail with no signal, and `pca tonight`, an in-trip evening ritual that analyzes today's card, logs it, pushes tomorrow's recipe, regenerates the field card, and prints the day-over-day curve within a single trip."
+              ]
+            },
+            {
+              "heading": "Pushing a recipe to a real camera",
+              "body": [
+                "The camera push was deliberately kept off the critical path. A hand-dialed recipe from the field card is a perfectly valid delivery channel, so the loop was demonstrable without any hardware. Once that was true, I brought up a Sony α6700 over Sony's Camera Remote SDK through a small C++ helper that the Python side talks to over a JSON protocol. It connects, reads each property's writability, snaps requested values to what the body allows, and reports what it could not set as advisory rather than failing.",
+                "Verified on the body on 2026-06-09, with the mode dial in M: **four of the six recipe settings the helper targets push live** (creative look, metering, Auto-ISO ceiling, exposure compensation). The remaining two are inherent camera or SDK limits reported honestly: the Kelvin value for white balance is read-only over the SDK on this body (the mode switches to color temperature but the number must be dialed by hand), and the Auto-ISO minimum shutter is a P/A-mode feature that does not apply in M. The SDK also cannot write the MR dial slots, so `--register MR1` records the slot in the local bank registry and prints the one-time on-camera save step. A mock controller runs the whole round trip without a camera, which is how the tests cover it."
+              ]
+            },
+            {
+              "heading": "Orchestrate, don't operate",
+              "body": [
+                "About halfway through, the feature list was growing faster than the product's identity, so I wrote down what the suite is and is not. Lightroom, Capture One, and Resolve are instruments: they assume a skilled operator who wants the controls, and they win on depth of manual control. This suite is a conductor. The user states intent, the system orchestrates the steps minimally and reversibly, and it surfaces a decision only when it is genuinely the human's to make. The product is the orchestration layer; the editor is the escape hatch.",
+                "That thesis had a concrete cost. The React Flow node-graph editor, the most engineering-heavy surface in the codebase, is the most low-level, operator-oriented thing I could have shipped: it literally exposes the processing graph. It was worth building, but it works against the thesis, so it was frozen as \"the control surface for when you want control\" and the planned work to deepen it (a history scrubber, direct-manipulation handles, conditional nodes) was dropped. Every proposal any loop makes must instead satisfy a minimal-action contract: one sentence of why, one click to apply, always undoable, never silently touching originals. If an action cannot meet that contract, it belongs in the editor, not in a loop."
+              ]
+            },
+            {
+              "heading": "The privacy contract",
+              "body": [
+                "Local-first is a hard guarantee, not a default setting. No image, video, audio, embedding, or transcript leaves the machine, and there is no telemetry. GPS is extracted from EXIF but hidden unless you opt in. Originals are never modified or deleted: a reject is a flag in the catalog, safe-delete moves files to a folder, and edits are non-destructive specs that are baked only on an explicit export. Transcription for video is opt-in and runs locally.",
+                "Faces are the one place this needed real care. Face detection is always on but anonymous: faces are counted and may be grouped into similarity clusters within a single shoot, with no names and no linkage across shoots. Recognizing a *named* person across shoots is a different thing, and adding it changed a stated promise in the privacy document, so it is strictly opt-in. Nothing is stored or matched until you create a profile yourself, the reference embedding and name live in one local JSON file, matches are applied only as non-destructive edit nodes and reported with their match score, and one command (or deleting that file) wipes it."
+              ]
+            },
+            {
+              "heading": "Where it stands",
+              "body": [
+                "The suite is at v0.42 by its changelog as of 2026-06-10, after a 26-day build of 81 commits. All four loops are shipped end to end with the router in front of them, the Sony α6700 live push is verified on hardware, and the test suite collects 499 tests. There have been no commits since; the repository is private and the code has not been packaged or published.",
+                "The React + TypeScript app is replacing the original Streamlit interfaces: every loop has a React view and natural-language search was ported, with cross-shoot duplicate and coverage views still to move before the Streamlit surfaces are marked legacy. Further out: a native binary wrapper, bringing the video assistant into the evening ritual, a bundled demo dataset for a first run, and packaging. I have not measured the improvement curve on enough real shoots to report numbers, so the headline claim stays the loop itself, not a keeper-rate figure."
+              ]
+            }
+          ],
+          "faq": [
+            {
+              "q": "Does anything get uploaded?",
+              "a": "No. Images, video, audio, embeddings, and transcripts stay on the machine, and there is no telemetry. Model weights are fetched once by the upstream libraries, and an optional local Ollama model can break ties in the router; the router works without it."
+            },
+            {
+              "q": "Does it recognize people?",
+              "a": "Detection is always on but anonymous within a shoot. Recognizing a named person across shoots is off until you create a profile yourself; the profile lives in one local file, matches are applied as non-destructive edit nodes and reported with their score, and one command removes the profile."
+            },
+            {
+              "q": "Does the camera push fully automate settings?",
+              "a": "Partly. On the α6700, four of the six recipe settings the helper targets push live; the Kelvin white-balance value and the Auto-ISO minimum shutter are reported as advisory because the SDK or the body does not allow them. Hand-dialing from the field card remains a supported path."
+            },
+            {
+              "q": "Is it a Lightroom replacement?",
+              "a": "No, and it is not trying to be. It orchestrates the cull, the delivery, and the next shoot's settings; for manual control there is a non-destructive editor, kept deliberately as an escape hatch rather than the product."
+            },
+            {
+              "q": "Can I use it?",
+              "a": "Not yet. The repository is private, there is no package, and there have been no commits since v0.42 on 2026-06-10."
+            }
+          ]
+        },
+        "glossary": [
+          {
+            "term": "Culling",
+            "definition": "Reducing a shoot's full take to the frames worth keeping and editing."
+          },
+          {
+            "term": "Situation",
+            "definition": "A cluster of frames from one shoot that share time of day, location, and scene type; the unit the capture loop diagnoses."
+          },
+          {
+            "term": "Failure signature",
+            "definition": "Per-situation statistics (percent underexposed, blurred, noisy; ISO and shutter medians; keeper rate) plus a plain-English diagnosis."
+          },
+          {
+            "term": "Capture recipe",
+            "definition": "Corrective camera settings derived from a failure signature, with a one-line rationale per setting."
+          },
+          {
+            "term": "Keeper rate",
+            "definition": "The fraction of a shoot's frames the photographer accepted; paired with an objective failure metric so a pickier cull does not read as worse shooting."
+          },
+          {
+            "term": "CLIP",
+            "definition": "A model that embeds images and text in a shared space; used here for scene type, semantic prompts, and the cross-shoot memory index."
           }
         ]
       }
@@ -521,7 +1319,7 @@
       "links": [
         {
           "label": "GitHub",
-          "href": "https://github.com/Jibby2k1/Vie"
+          "href": "https://github.com/Vie-SPS/Vie"
         }
       ],
       "details": {
@@ -536,7 +1334,7 @@
           "Dataset engineering + annotation",
           "Real-time inference prototyping"
         ],
-        "status": "Active; dataset and initial model pipeline in progress.",
+        "status": "Chartered January 2026 through IEEE SPS @ UF; early model experiments.",
         "writeup": {
           "lead": "Vie is early-stage: biologically plausible video scene analysis that learns from real-world dynamics.",
           "sections": [

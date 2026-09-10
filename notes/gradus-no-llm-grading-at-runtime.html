@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Why Gradus refuses to let a language model grade anything at runtime | Raul Valle Writing</title>
+  <meta name="description" content="The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Why Gradus refuses to let a language model grade anything at runtime | Raul Valle Writing" />
+  <meta property="og:description" content="The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs." />
+  <meta property="og:url" content="https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta property="og:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Why Gradus refuses to let a language model grade anything at runtime | Raul Valle Writing" />
+  <meta name="twitter:description" content="The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/og-card.png" />
+  <meta name="twitter:image:alt" content="Raul Valle — machine learning for physical and neural systems at the University of Florida" />
+  <link rel="canonical" href="https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html#webpage","url":"https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html","name":"Why Gradus refuses to let a language model grade anything at runtime | Raul Valle Writing","description":"The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"BlogPosting","@id":"https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html#post","headline":"Why Gradus refuses to let a language model grade anything at runtime","description":"The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs.","datePublished":"2026-09-08","dateModified":"2026-09-08","author":{"@id":"https://www.raulv.dev/#person"},"publisher":{"@id":"https://www.raulv.dev/#person"},"image":"https://www.raulv.dev/assets/img/blog/gradus-no-llm-grading-at-runtime.svg","mainEntityOfPage":"https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html","articleSection":"Design log","keywords":["adaptive learning","deterministic grading","product design","education"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://www.raulv.dev/blog.html"},{"@type":"ListItem","position":3,"name":"Why Gradus refuses to let a language model grade anything at runtime","item":"https://www.raulv.dev/notes/gradus-no-llm-grading-at-runtime.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="sps">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">Design log</div>
+          <h1 class="h1">Why Gradus refuses to let a language model grade anything at runtime</h1>
+          <p class="lead">The March 2026 decision to keep language models out of the Gradus grading loop, what deterministic diagnosis actually requires, and what the boundary costs.</p>
+          <div class="meta hero-meta"><span class="track">Sep 8, 2026</span> · adaptive learning · deterministic grading · product design · education</div>
+          <div class="hero-media" role="img" aria-label="Diagram of a content factory feeding course packages through a validation gate into a runtime engine marked no language model, where grading and diagnosis happen."><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 750" role="img" aria-labelledby="gradus-nollm-title gradus-nollm-desc" style="font-family: var(--mono, ui-monospace, monospace); color: currentColor;" class="diagram" id="svg-mch6ns">
+  <title id="gradus-nollm-title">Gradus: content factory, validation gate, deterministic runtime</title>
+  <desc id="gradus-nollm-desc">Two boxes connected by a gate. On the left, an authoring content factory where a language model drafts course packages. In the middle, a validation gate listing schema, strict LaTeX, and substance audit checks, with a rejected branch that regenerates flagged families. On the right, the runtime box marked no LLM, where a learner answer is normalized and graded, diagnosed against twelve error types, and routed to a repair target by a backward search over prerequisites.</desc>
+
+  <!-- Authoring content factory -->
+  <rect x="60" y="150" width="380" height="440" rx="18" fill="currentColor" opacity="0.04"/>
+  <rect x="60" y="150" width="380" height="440" rx="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="10 8"/>
+  <text x="250" y="120" text-anchor="middle" font-size="26" fill="currentColor">AUTHORING</text>
+  <text x="250" y="200" text-anchor="middle" font-size="24" fill="currentColor" opacity="0.85">content factory</text>
+
+  <!-- LLM chip inside factory -->
+  <rect x="120" y="240" width="260" height="70" rx="12" fill="var(--section-accent, currentColor)" opacity="0.14"/>
+  <rect x="120" y="240" width="260" height="70" rx="12" fill="none" stroke="var(--section-accent, currentColor)" stroke-width="2.5"/>
+  <text x="250" y="284" text-anchor="middle" font-size="24" fill="currentColor">language model</text>
+
+  <!-- draft package stack -->
+  <g fill="none" stroke="currentColor" stroke-width="2">
+    <rect x="150" y="360" width="200" height="130" rx="8" opacity="0.35"/>
+    <rect x="165" y="375" width="200" height="130" rx="8" opacity="0.6"/>
+    <rect x="180" y="390" width="200" height="130" rx="8"/>
+  </g>
+  <text x="280" y="440" text-anchor="middle" font-size="22" fill="currentColor">course</text>
+  <text x="280" y="470" text-anchor="middle" font-size="22" fill="currentColor">package</text>
+  <text x="250" y="560" text-anchor="middle" font-size="22" fill="currentColor" opacity="0.7">drafts, sidecars, narration</text>
+
+  <!-- arrow factory -> gate -->
+  <g stroke="currentColor" stroke-width="3" fill="none">
+    <path d="M440 370 H505"/>
+    <path d="M492 358 L508 370 L492 382"/>
+  </g>
+
+  <!-- Validation gate -->
+  <rect x="510" y="250" width="180" height="240" rx="14" fill="var(--section-accent, currentColor)" opacity="0.12"/>
+  <rect x="510" y="250" width="180" height="240" rx="14" fill="none" stroke="var(--section-accent, currentColor)" stroke-width="3"/>
+  <text x="600" y="120" text-anchor="middle" font-size="26" fill="currentColor">GATE</text>
+  <text x="600" y="295" text-anchor="middle" font-size="22" fill="currentColor">schema</text>
+  <text x="600" y="345" text-anchor="middle" font-size="22" fill="currentColor">strict LaTeX</text>
+  <text x="600" y="395" text-anchor="middle" font-size="22" fill="currentColor">substance</text>
+  <text x="600" y="425" text-anchor="middle" font-size="22" fill="currentColor">audit</text>
+  <!-- rejected branch -->
+  <g stroke="currentColor" stroke-width="2" fill="none" opacity="0.55">
+    <path d="M600 490 V560"/>
+    <path d="M588 548 L600 562 L612 548"/>
+  </g>
+  <text x="600" y="600" text-anchor="middle" font-size="22" fill="currentColor" opacity="0.7">rejected:</text>
+  <text x="600" y="630" text-anchor="middle" font-size="22" fill="currentColor" opacity="0.7">regenerate</text>
+
+  <!-- arrow gate -> runtime -->
+  <g stroke="currentColor" stroke-width="3" fill="none">
+    <path d="M690 370 H755"/>
+    <path d="M742 358 L758 370 L742 382"/>
+  </g>
+
+  <!-- Runtime -->
+  <rect x="760" y="150" width="380" height="440" rx="18" fill="currentColor" opacity="0.04"/>
+  <rect x="760" y="150" width="380" height="440" rx="18" fill="none" stroke="currentColor" stroke-width="3"/>
+  <text x="950" y="120" text-anchor="middle" font-size="26" fill="currentColor">RUNTIME</text>
+
+  <!-- no LLM badge -->
+  <rect x="860" y="176" width="180" height="46" rx="23" fill="var(--section-accent, currentColor)" opacity="0.16"/>
+  <rect x="860" y="176" width="180" height="46" rx="23" fill="none" stroke="var(--section-accent, currentColor)" stroke-width="2.5"/>
+  <text x="950" y="208" text-anchor="middle" font-size="24" font-weight="bold" fill="currentColor">no LLM</text>
+
+  <!-- pipeline inside runtime -->
+  <g fill="none" stroke="currentColor" stroke-width="2.5">
+    <rect x="800" y="250" width="300" height="60" rx="10"/>
+    <rect x="800" y="340" width="300" height="60" rx="10"/>
+    <rect x="800" y="430" width="300" height="60" rx="10"/>
+    <path d="M950 310 V332"/>
+    <path d="M940 324 L950 336 L960 324"/>
+    <path d="M950 400 V422"/>
+    <path d="M940 414 L950 426 L960 414"/>
+  </g>
+  <text x="950" y="288" text-anchor="middle" font-size="22" fill="currentColor">grade: normalize</text>
+  <text x="950" y="378" text-anchor="middle" font-size="22" fill="currentColor">diagnose: 12 types</text>
+  <text x="950" y="468" text-anchor="middle" font-size="22" fill="currentColor">repair: backward BFS</text>
+
+  <!-- learner answer in / next question out -->
+  <g stroke="currentColor" stroke-width="2.5" fill="none">
+    <path d="M950 660 V600"/>
+    <path d="M940 612 L950 598 L960 612"/>
+  </g>
+  <text x="950" y="700" text-anchor="middle" font-size="22" fill="currentColor" opacity="0.8">answer in, next question out</text>
+
+  <!-- footer legend -->
+  <text x="250" y="700" text-anchor="middle" font-size="22" fill="currentColor" opacity="0.8">model drafts, gate checks</text>
+</svg></div>
+        </section>
+
+        <section class="project-detail reveal" data-track="sps">
+          <div class="project-main">
+            <article class="card reveal prose-card">
+              <h2 class="project-section-title">Entry</h2>
+              <p>The landing page for Gradus shows a stat that reads &quot;0 runtime LLM grading decisions&quot;. This post is about why that number is zero, what it takes to keep it there, and what it has cost me.</p>
+<h2>The decision</h2>
+<p>Gradus began on 2026-03-07, under the working name Piso, as an adaptive engine for a proof-based real analysis pilot. The first architecture decision record (ADR), written the same day, settled the grading question before any product existed: the V1 runtime uses deterministic grading and diagnosis logic, and language models may be used only offline for content drafting.</p>
+<p>The reasoning in the ADR is short. A pilot has to be explainable, stable, and measurable if I ever want to run research-style experiments on it. Grading with a large language model (LLM) at runtime introduces nondeterminism and operational risk. Two alternatives were considered and rejected: fully LLM-driven grading, and a hybrid where a deterministic grader falls back to a model for anything it cannot handle. The listed benefits are reproducible outcomes, easier A/B testing, and simpler debugging. The listed cost is reduced flexibility for free-form responses. The ADR leaves a follow-up for a controlled natural-language evaluation path, which is still open.</p>
+<p>Two months later the positioning docs turned that constraint into the product wedge: Gradus is not an answer machine, and it should not rely on unverified runtime LLM grading for learner-facing correctness decisions.</p>
+<h2>What deterministic grading actually requires</h2>
+<p>Rule-based grading sounds simple until a learner types LaTeX. The item family schema allows five answer modes: choice, exact, regex, sequential, and latex_exact. The interesting work is in normalization, which was added the day after the ADR.</p>
+<p>For latex_exact the normalizer lowercases, strips <code>$</code>, <code>$$</code>, <code>\(...\)</code>, and <code>\[...\]</code> delimiters, maps Unicode inequality symbols to their macros, removes <code>\left</code> and <code>\right</code>, applies built-in aliases such as <code>\le</code> to <code>\leq</code> and <code>\to</code> to <code>\rightarrow</code>, applies per-concept aliases that the author declares, and finally collapses whitespace around braces, brackets, and operators. Only then are learner and canonical strings compared. Sequential mode grades a fill-in-the-blank chain step by step, each step with its own mode, and scores partial credit as matched steps over total steps. Choice mode compares the selected set to the canonical set exactly.</p>
+<p>Diagnosis is where a model would be most tempting, and it is where the rule-based design is most exposed. The error taxonomy has twelve values including &quot;none&quot;: eight universal types (missing prerequisite, recall miss, reasoning miss, confusion miss, missing step, wrong application, scope error, careless miss) and three proof-math extensions (quantifier error, theorem-condition error, counterexample gap). On a wrong choice, the engine looks up the distractor's declared fail point and reads the error type from it. If no mapping exists, it falls back to the concept's first author-defined fail point, and failing that to a stage heuristic: recognition and recall stages default to a recall miss, structured-completion and reasoning stages to a reasoning miss. Repeated misses on the same concept escalate to a prerequisite miss.</p>
+<p>The engine records a confidence proxy of 0.35 for any miss and 0.55 when repeated misses trigger a prerequisite backtrack, so the learner-facing copy calls every miss diagnosis a best guess. Whether the fail point came from a distractor mapping or a fallback is recorded separately, in the ranked-weakness list, not in that number.</p>
+<p>Each error type then routes to a repair target. Recall and careless misses stay on the same concept. Reasoning, missing-step, quantifier, theorem-condition, and counterexample errors run a backward breadth-first search over the prerequisite graph and put weak prerequisites first. Confusion, wrong-application, and scope errors look at declared neighbor concepts, sorted by mastery, before the traversal. A prerequisite miss traverses prerequisites and neighbors together. Ties are broken by graph distance, then mastery, then concept order, so the same learner history always produces the same next question.</p>
+<h2>Where language models are allowed</h2>
+<p>The zero on the landing page is not a claim that Gradus avoids language models. It uses them heavily, but outside the grading loop and behind validation gates. Course packages are generated by <code>tool/generate_course.dart</code>, which can run through a coding agent reading prompt files and writing JSON, or through an API. The app itself also has a course builder under its developer and authoring tools, so &quot;offline&quot; in the ADR's sense is no longer literally true; that builder runs the same validate-and-repair loop. Every package then passes <code>tool/validate_and_repair_course.dart</code>, which checks schemas and, with <code>--strict-latex</code>, promotes LaTeX warnings to blockers. Generated learning sidecars add reading text and audio scripts to a lesson, and narration is rendered from that validated text by a local text-to-speech model or an API voice; the audio itself is not separately inspected.</p>
+<p>The boundary is the product. Every course package a model drafts passes validation before a learner sees it, and nothing a learner writes is judged by a model. That is what lets me say a wrong answer maps to the same fail point today, tomorrow, and in the control arm of an experiment.</p>
+<h2>What it cost</h2>
+<p>The first cost is authoring burden. The runtime has no intelligence of its own, so every concept has to carry prerequisites, neighbors, author fail points with error types, distractors mapped to fail points, and LaTeX aliases. Any concept missing that contract degrades to the stage heuristic.</p>
+<p>The second cost was subtler. Generated courses were passing the schema and LaTeX gates and still being hollow. In July I wrote a substance audit (still uncommitted as I write this) that normalizes each prompt, its choices, and its canonical answer into a skeleton, replacing the concept title with a topic placeholder and math with a math placeholder, and flags any skeleton shared by three or more families across three or more concepts, plus a list of known template frames. Calibrating it against the hand-authored analysis pilot gave roughly one percent boilerplate; template-stamped generated courses scored between 83 and 98 percent and failed the gate. Only the flagged families are regenerated, rather than the whole course.</p>
+<p>That audit exists because of the ADR. When the grader is a rule, the content has to carry the meaning, and structural validity is not the same thing as substance.</p>
+<h2>Where it stands</h2>
+<p>Gradus is in a closed learner beta with a <a href="https://gradus.raulv.dev/demo">public demo</a> that needs no sign-in. No school pilot has run and there are no efficacy results; the deterministic design is what would make such a pilot measurable, not evidence that it works.</p>
+            </article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal"><h2 class="project-section-title">Key takeaways</h2><ul><li>A deterministic grader makes every learner outcome reproducible and A/B testable, which is the property a research-style pilot needs most.</li><li>Diagnosis without a model is a lookup over author-declared fail points, so the authoring contract carries the intelligence.</li><li>The boundary between content generation and runtime grading is the product; validation gates and a substance audit are what keep it honest.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="stack-links"><a class="related-link" href="../projects/gradus.html"><strong>Gradus: reasoning practice for rigorous STEM courses</strong><span>Gradus turns rigorous STEM courses into concept-graph practice: deterministic grading, a diagnosis of why an answer missed, a repair target chosen by walking the prerequisite graph, and a transfer check before moving on.</span></a></div></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>
