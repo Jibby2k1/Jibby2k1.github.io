@@ -129,6 +129,23 @@
             "term": "Rollout",
             "definition": "Feeding a model's own predictions back as inputs for the next step; the standard stress test for learned dynamics."
           }
+        ],
+        "organizations": [
+          {
+            "name": "Lawrence Livermore National Laboratory",
+            "logo": "assets/img/orgs/llnl.webp",
+            "url": "https://www.llnl.gov/"
+          },
+          {
+            "name": "CM³C, University of Florida",
+            "logo": "assets/img/orgs/cm3c.webp"
+          },
+          {
+            "name": "SmartDATA Lab, University of Florida",
+            "logo": "assets/img/orgs/smartdata-lab.webp",
+            "ground": "own",
+            "url": "https://smartdata.ece.ufl.edu/"
+          }
         ]
       }
     }

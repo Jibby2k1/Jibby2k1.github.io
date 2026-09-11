@@ -363,6 +363,18 @@
             "term": "Separability",
             "definition": "How distinctly a representation supports distinguishing the labeled classes in an evaluation set."
           }
+        ],
+        "organizations": [
+          {
+            "name": "Computational NeuroEngineering Lab, University of Florida",
+            "logo": "assets/img/orgs/cnel.webp",
+            "url": "https://cnel.ufl.edu/"
+          },
+          {
+            "name": "Sony Research",
+            "logo": "assets/img/orgs/sony.webp",
+            "ground": "blend"
+          }
         ]
       }
     },
@@ -547,6 +559,17 @@
           {
             "term": "Fixed-budget recall",
             "definition": "The fraction of known events recovered when every method is allowed the same number of ranked candidates."
+          }
+        ],
+        "organizations": [
+          {
+            "name": "Air Force Research Laboratory",
+            "logo": "assets/img/orgs/afrl.webp"
+          },
+          {
+            "name": "Computational NeuroEngineering Lab, University of Florida",
+            "logo": "assets/img/orgs/cnel.webp",
+            "url": "https://cnel.ufl.edu/"
           }
         ]
       },

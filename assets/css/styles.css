@@ -94,6 +94,13 @@
   --card-line-inner: #e6e1d7;
   --overlay: rgba(27, 24, 22, 0.86);
   --overlay-ink: #f3f0e9;
+  /* Ground for third-party organisation marks. Aliases --overlay-ink because
+     that is the one token pair in the palette that stays LIGHT IN BOTH THEMES
+     (it exists so the lightbox overlay's ink never flips). Most of these logos
+     are drawn for a light ground -- CNEL's purple is 1.09:1 and AFRL's navy
+     1.82:1 against dark paper -- and they cannot be filtered into the palette
+     because inverting anything with chroma is a hue rotation. */
+  --mark-ground: #f3f0e9;
   --overlay-line: rgba(243, 240, 233, 0.35);
   --motif-line-opacity: 0.26;
   --motif-dot-opacity: 0.6;
@@ -133,6 +140,7 @@
   --card-line-inner: #2e2925;
   --overlay: rgba(0, 0, 0, 0.88);
   --overlay-ink: #ece6dc;
+  --mark-ground: #ece6dc;
   --overlay-line: rgba(236, 230, 220, 0.3);
   --motif-line-opacity: 0.2;
   --motif-dot-opacity: 0.55;
@@ -1165,6 +1173,16 @@ a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-colo
 
 /* ---------- print ---------- */
 @media print{
+  /* The print sheet does not reset data-theme, so a dark-theme reader would
+     otherwise keep mix-blend-mode:screen -- and .card{background:none} below
+     removes the very backdrop that blend cancels against, printing Sony's black
+     ground as a solid rectangle of ink. Invert in both themes: the ground goes
+     white on white paper and the wordmark prints black. */
+  .org-mark--blend img,
+  [data-theme="dark"] .org-mark--blend img{
+    filter:contrast(1.35) invert(1) !important;
+    mix-blend-mode:normal !important;
+  }
   .site-header,
   .footer,
   .skip-link,
@@ -1382,4 +1400,93 @@ a.pill{ color:var(--accent-ink); text-decoration:underline; text-decoration-colo
     mask-image:linear-gradient(90deg, #000 0, #000 88%, transparent 100%);
   }
   .writeup-figure .figure-svg svg{ width:var(--diagram-w); max-width:none; }
+}
+
+/* ---------- organisation marks ----------
+   Third-party logos. Two rules govern this component:
+
+   1. No --section-accent anywhere on it. Every other well on the site wears
+      border-top:3px solid var(--section-accent) (.mark, .record-card > .media,
+      .writeup-figure .figure-svg). That cap is the site's own voice, and
+      lending it to somebody else's trademark is the visual form of an
+      endorsement claim. These use --line-strong on all four sides instead.
+   2. The marks are never recoloured, inverted, masked or hue-shifted. They are
+      placed on a ground that suits them. The one exception is Sony, which is a
+      true 2-tone greyscale tile and therefore the only one where inversion is
+      not a hue rotation. */
+.org-list{ list-style:none; margin:0; padding:0; display:grid; gap:16px; }
+.org-item{ margin:0; min-width:0; }
+.org-link{ display:grid; grid-template-columns:132px minmax(0, 1fr); align-items:center; gap:14px; }
+.org-link:hover{ text-decoration:none; }
+.org-name{ display:block; color:var(--ink); }
+.org-label{ display:block; margin-top:2px; }
+a.org-link .org-name{ text-decoration:underline; text-decoration-color:var(--accent); text-decoration-thickness:1px; text-underline-offset:0.16em; }
+
+.org-mark{
+  flex:none;
+  display:grid;
+  place-items:center;
+  width:132px;
+  height:54px;
+  padding:6px 8px;
+  background:var(--mark-ground);
+  border:1px solid var(--line-strong);
+  box-shadow:var(--shadow);
+}
+.org-mark img{ max-width:108px; max-height:40px; width:auto; height:auto; object-fit:contain; }
+
+/* SmartDATA ships its artwork on its own orange field. A ground inside a
+   ground looks like a rendering fault, so the chip is removed. The orange is
+   mid-value (relative luminance ~0.30), so unlike a white plate it separates
+   from the page in BOTH themes instead of glaring in one; the hairline is
+   there to make the rectangle read as a deliberate edge. */
+.org-mark--own-ground{
+  background:none;
+  border:0;
+  box-shadow:none;
+  padding:0;
+}
+.org-mark--own-ground img{ border:1px solid var(--line-strong); max-height:48px; }
+
+/* Sony Biotechnology is white-on-black with zero chroma throughout, so its
+   plate can be removed optically rather than by editing the file. multiply
+   against the light card turns the white-inverted tile into the card exactly;
+   screen against the dark card does the same for black. contrast() first is
+   load-bearing: it crushes JPEG ringing that would otherwise show as a halo. */
+.org-mark--blend{
+  background:none;
+  border:0;
+  box-shadow:none;
+  padding:0;
+  width:auto;
+}
+.org-mark--blend img{
+  filter:contrast(1.35) invert(1);
+  mix-blend-mode:multiply;
+  max-height:34px;
+}
+[data-theme="dark"] .org-mark--blend img{
+  filter:contrast(1.35);
+  mix-blend-mode:screen;
+}
+
+/* No mark: the name carries the entry on its own. The rule is --line-strong,
+   not --section-accent -- rule 1 above applies to this branch most of all,
+   since it is the one reserved for marks we would rather not reproduce. */
+.org-item--type .org-link{ grid-template-columns:1fr; gap:0; padding-left:14px; border-left:3px solid var(--line-strong); }
+.org-item--type .org-name{ font-family:var(--display); font-weight:600; font-size:1.1rem; font-variation-settings:"opsz" 36; }
+
+.org-disclaimer{ margin:16px 0 0; color:var(--faint); font-size:0.85rem; }
+
+/* About-page strip: marks only, names already in the card's prose and pills. */
+.org-strip{ display:flex; flex-wrap:wrap; gap:12px; margin:0 0 14px; }
+.org-strip .org-mark{ width:108px; height:42px; padding:5px 7px; }
+.org-strip .org-mark img{ max-width:88px; max-height:30px; }
+.org-strip .org-mark--own-ground,
+.org-strip .org-mark--blend{ width:108px; }
+.org-strip .org-mark--own-ground img{ max-height:36px; }
+.org-strip .org-mark--blend img{ max-height:26px; }
+
+@media (max-width: 700px){
+  .org-link{ grid-template-columns:1fr; gap:10px; justify-items:start; }
 }

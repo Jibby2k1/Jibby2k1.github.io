@@ -229,6 +229,13 @@
             "term": "CFAR",
             "definition": "Constant false alarm rate detection: a threshold set relative to the local noise estimate so the false-alarm rate stays fixed as the noise level changes."
           }
+        ],
+        "organizations": [
+          {
+            "name": "IEEE Signal Processing Society",
+            "logo": "assets/img/orgs/ieee-sps.webp",
+            "url": "https://signalprocessingsociety.org/"
+          }
         ]
       }
     },
@@ -358,6 +365,13 @@
           {
             "term": "GitHub Pages",
             "definition": "GitHub's static-site hosting; here it serves the built Vite bundle under a custom domain."
+          }
+        ],
+        "organizations": [
+          {
+            "name": "IEEE Signal Processing Society",
+            "logo": "assets/img/orgs/ieee-sps.webp",
+            "url": "https://signalprocessingsociety.org/"
           }
         ]
       }

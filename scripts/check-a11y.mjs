@@ -1,11 +1,26 @@
-// Runs axe-core against every top-level page and fails on serious/critical violations.
+// Runs axe-core against every generated page and fails on serious/critical violations.
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import { chromium } from 'playwright';
 import AxeBuilder from '@axe-core/playwright';
 import { startServer } from './lib/server.mjs';
 
 const root = process.cwd();
-const pages = (await fs.readdir(root)).filter((f) => f.endsWith('.html'));
+
+// Recursive, matching check-links.mjs. A top-level-only readdir scanned 14 pages
+// and skipped the 26 under projects/ and notes/, so anything rendered only on a
+// project or note page was never audited at all.
+const SKIP = new Set(['node_modules', '.git', '.cache', 'ieee-sps-uf-site']);
+async function htmlPages(dir = root, prefix = '') {
+  const out = [];
+  for (const entry of await fs.readdir(dir, { withFileTypes: true })) {
+    if (SKIP.has(entry.name) || entry.name.startsWith('.')) continue;
+    if (entry.isDirectory()) out.push(...await htmlPages(path.join(dir, entry.name), `${prefix}${entry.name}/`));
+    else if (entry.name.endsWith('.html')) out.push(`${prefix}${entry.name}`);
+  }
+  return out;
+}
+const pages = (await htmlPages()).sort();
 const { server, port } = await startServer(root);
 const base = `http://localhost:${port}`;
 const browser = await chromium.launch();

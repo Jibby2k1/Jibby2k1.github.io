@@ -280,13 +280,13 @@
     });
   }
 
-  // A diagram well that has become a horizontal scroller must be reachable by
+  // A region that has become a horizontal scroller must be reachable by
   // keyboard, or its right-hand side is unreachable without a mouse or a
   // finger. Applied from the actual overflow rather than from the markup, so
   // that wells wide enough to show the whole diagram don't leave a focusable
   // element behind that does nothing.
   function initScrollableDiagrams() {
-    const wells = [...document.querySelectorAll('.media, .hero-media, .figure-svg')];
+    const wells = [...document.querySelectorAll('.media, .hero-media, .figure-svg, pre.cite-block')];
     if (!wells.length) return;
     const sync = () => {
       wells.forEach((el) => {

@@ -51,6 +51,34 @@
     "width": 1200,
     "height": 630
   },
+  "assets/img/orgs/afrl.webp": {
+    "width": 98,
+    "height": 96
+  },
+  "assets/img/orgs/cm3c.webp": {
+    "width": 95,
+    "height": 96
+  },
+  "assets/img/orgs/cnel.webp": {
+    "width": 216,
+    "height": 79
+  },
+  "assets/img/orgs/ieee-sps.webp": {
+    "width": 109,
+    "height": 96
+  },
+  "assets/img/orgs/llnl.webp": {
+    "width": 216,
+    "height": 84
+  },
+  "assets/img/orgs/smartdata-lab.webp": {
+    "width": 149,
+    "height": 96
+  },
+  "assets/img/orgs/sony.webp": {
+    "width": 288,
+    "height": 61
+  },
   "assets/img/photography/web/DSC02466-1600.webp": {
     "width": 1600,
     "height": 1067

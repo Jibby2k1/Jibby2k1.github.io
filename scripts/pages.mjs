@@ -2,7 +2,7 @@
 // Each function receives a context with shared helpers and data:
 // { site, escapeHtml, imgTag, awards, projects, writing }
 
-export function aboutPage({ imgTag }) {
+export function aboutPage({ imgTag, orgList, affiliationMarks }) {
   return `<div class="container about-shell">
     <section class="page-hero about-hero reveal accent-cool">
       <div class="about-hero-head">
@@ -30,6 +30,7 @@ export function aboutPage({ imgTag }) {
       <article class="card reveal">
         <h3>Affiliations and profiles</h3>
         <p>My current work is connected to UF ECE, the SmartDATA Lab, and the Computational NeuroEngineering Lab. I am the 2026–2027 president of the IEEE Signal Processing Society student chapter at UF, where I built the chapter's workshop curriculum and maintain its website.</p>
+        ${orgList(affiliationMarks, { className: 'org-list org-strip', names: false })}
         <div class="pill-row">
           <a class="pill" href="https://www.ufl.edu/" target="_blank" rel="noreferrer">University of Florida</a>
           <a class="pill" href="https://www.ece.ufl.edu/" target="_blank" rel="noreferrer">UF ECE</a>

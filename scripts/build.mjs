@@ -534,6 +534,35 @@ function cardProject(project, prefix = '', extraClass = '') {
 </article>`;
 }
 
+// Organisation marks. Neutral by construction: an entry renders its name,
+// optionally its mark, optionally a link, and nothing else -- no relationship
+// word is emitted unless `label` is supplied, so the markup asserts no funding,
+// sponsorship or endorsement. `logo` is optional too: with no logo the name is
+// set in type, which is the escape hatch for any mark we would rather not
+// reproduce.
+const ORG_GROUND = { blend: 'org-mark--blend', own: 'org-mark--own-ground' };
+
+function orgList(orgs, { prefix = '', className = 'org-list', names = true } = {}) {
+  const entries = names ? orgs : orgs.filter((org) => org.logo);
+  if (!entries.length) return '';
+  return `<ul class="${className}"${names ? '' : ' aria-hidden="true"'}>${entries.map((org) => {
+    const variant = ORG_GROUND[org.ground] || '';
+    const mark = org.logo
+      ? `<span class="org-mark${variant ? ` ${variant}` : ''}">${imgTag(org.logo, { alt: '', prefix })}</span>`
+      : '';
+    // Marks-only strips are decorative repetition of names the surrounding copy
+    // already carries, so alt="" (WCAG H67) and the list is hidden wholesale.
+    if (!names) return `<li class="org-item">${mark}</li>`;
+    const body = `${mark}<span class="org-body"><span class="org-name">${escapeHtml(org.name)}</span>${org.label ? `<span class="org-label meta">${escapeHtml(org.label)}</span>` : ''}</span>`;
+    // An anchor is only ever produced alongside visible name text, so an <a>
+    // wrapping a bare alt="" image -- axe `link-name`, serious -- cannot occur.
+    const link = org.url
+      ? `<a class="org-link" href="${org.url}" target="_blank" rel="noreferrer">${body}</a>`
+      : `<span class="org-link">${body}</span>`;
+    return `<li class="org-item${mark ? '' : ' org-item--type'}">${link}</li>`;
+  }).join('')}</ul>`;
+}
+
 function markCard(project, prefix = '') {
   const badge = project.icon
     ? imgTag(project.icon, { alt: '', prefix })
@@ -790,7 +819,16 @@ async function main() {
     }
   ];
 
-  const pageCtx = { site, escapeHtml, imgTag, awards: awardsData, projects, writing };
+  // About-page mark strip: only the three organisations the card's own prose
+  // already names. "Affiliations" is itself a claim of formal association, so
+  // nothing goes here that the page does not already claim in words.
+  const affiliationMarks = [
+    { name: 'SmartDATA Lab, University of Florida', logo: 'assets/img/orgs/smartdata-lab.webp', ground: 'own' },
+    { name: 'Computational NeuroEngineering Lab, University of Florida', logo: 'assets/img/orgs/cnel.webp' },
+    { name: 'IEEE Signal Processing Society at the University of Florida', logo: 'assets/img/orgs/ieee-sps.webp' }
+  ];
+
+  const pageCtx = { site, escapeHtml, imgTag, orgList, affiliationMarks, awards: awardsData, projects, writing };
 
   await writePage('about.html', pageShell({
     outputPath: 'about.html',
@@ -1112,6 +1150,7 @@ async function main() {
             ${Array.isArray(details.what_i_built) && details.what_i_built.length ? `<article class="card reveal"><h2 class="project-section-title">What I built</h2><ul>${details.what_i_built.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${Array.isArray(details.how_it_works) && details.how_it_works.length ? `<article class="card reveal"><h2 class="project-section-title">How it works</h2><ul>${details.how_it_works.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
             ${Array.isArray(details.deliverables) && details.deliverables.length ? `<article class="card reveal"><h2 class="project-section-title">Deliverables</h2><ul>${details.deliverables.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></article>` : ''}
+            ${Array.isArray(details.organizations) && details.organizations.length ? `<article class="card reveal"><h2 class="project-section-title">Organizations connected to this work</h2>${orgList(details.organizations, { prefix: '../' })}<p class="org-disclaimer">Organization names and marks are the trademarks of their respective owners. Their appearance here does not imply endorsement of this site or its contents.</p></article>` : ''}
             ${relatedWriting.length ? `<article class="card reveal"><h2 class="project-section-title">Related writing</h2><div class="grid two">${relatedWriting.map((post) => `<a class="related-link" href="../${post.url}"><strong>${escapeHtml(post.title)}</strong><span>${escapeHtml(post.summary || post.description)}</span></a>`).join('')}</div></article>` : ''}
             ${relatedProjects.length ? `<article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="grid two">${relatedProjects.map((item) => `<a class="related-link" href="${item.slug}.html"><strong>${escapeHtml(item.title)}</strong><span>${escapeHtml(item.desc || item.subtitle || '')}</span></a>`).join('')}</div></article>` : ''}
             ${siblings.length > 1 ? `<nav class="project-pager reveal" aria-label="More ${track.name}">
