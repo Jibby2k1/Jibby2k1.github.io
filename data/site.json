@@ -14,7 +14,8 @@
     "https://www.linkedin.com/in/raul-valle1/",
     "https://x.com/Jibby2k1",
     "https://www.instagram.com/raul.research/",
-    "https://www.youtube.com/watch?v=yuJaMaA18js"
+    "https://www.youtube.com/watch?v=yuJaMaA18js",
+    "https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html"
   ],
   "affiliations": [
     {
@@ -76,5 +77,35 @@
       "rel": "me noreferrer",
       "icon": "scholar"
     }
-  ]
+  ],
+  "publications": [
+    {
+      "id": "platos-cave-preprint",
+      "title": "Plato's Cave: A Human-Centered Research Verification System",
+      "authors": [
+        "Matheus Kunzler Maldaner",
+        "Raul Valle",
+        "Junsung Kim",
+        "Tonuka Sultan",
+        "Pranav Bhargava",
+        "Matthew Maloni",
+        "John Courtney",
+        "Hoang Nguyen",
+        "Aamogh Sawant",
+        "Kristian O'Connor",
+        "Stephen Wormald",
+        "Damon L. Woodard"
+      ],
+      "datePublished": "2026-03-06",
+      "url": "https://arxiv.org/abs/2603.23526",
+      "identifier": "arXiv:2603.23526",
+      "doi": "https://doi.org/10.48550/arXiv.2603.23526",
+      "publisher": "arXiv",
+      "relatedProject": "platos-cave"
+    }
+  ],
+  "verification": {
+    "google": "",
+    "bing": ""
+  }
 }

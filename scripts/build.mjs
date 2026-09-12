@@ -7,8 +7,16 @@ import { aboutPage, cvPage, contactPage } from './pages.mjs';
 const root = process.cwd();
 const site = JSON.parse(await fs.readFile(path.join(root, 'data/site.json'), 'utf8'));
 const imageManifest = JSON.parse(await fs.readFile(path.join(root, 'data/image-manifest.json'), 'utf8'));
-// Deterministic lastmod so the CI build-reproducibility gate doesn't churn daily:
-// SITE_LASTMOD env wins, then the last git commit date, then today.
+// Per-URL sitemap <lastmod>. One global date meant a CSS-only commit told
+// crawlers all 36 pages had changed, which is a false signal on every page that
+// did not. Each URL now keeps the date already recorded in the committed
+// sitemap for as long as that page's bytes are unchanged; only a page that
+// actually differs is re-stamped.
+//
+// Reproducible by construction: CI's diff gate requires built output to equal
+// committed output, so in a fresh CI build every page compares equal, every
+// date carries forward, and sitemap.xml rebuilds byte-identically. The
+// SITE_LASTMOD pin still applies to genuinely-changed pages.
 const nowIso = process.env.SITE_LASTMOD || (() => {
   try {
     return execSync('git log -1 --format=%cs', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
@@ -16,6 +24,16 @@ const nowIso = process.env.SITE_LASTMOD || (() => {
     return new Date().toISOString().slice(0, 10);
   }
 })();
+
+const previousLastmod = (() => {
+  try {
+    const xml = readFileSync(path.join(root, 'sitemap.xml'), 'utf8');
+    return new Map([...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)].map(([, loc, mod]) => [loc, mod]));
+  } catch {
+    return new Map();
+  }
+})();
+const pageChanged = new Map();
 
 function imageSize(src) {
   const size = imageManifest[src];
@@ -169,6 +187,20 @@ function formatDate(value) {
   });
 }
 
+// Search Console / Bing Webmaster HTML-tag verification. DNS TXT is the better
+// route -- it verifies a domain property covering every subdomain and needs no
+// repo change at all -- but this covers the URL-prefix property case: paste a
+// token into data/site.json and rebuild. Emitted only on the property root,
+// since a verification tag is never read anywhere else.
+function verificationMeta(outputPath) {
+  if (outputPath !== 'index.html') return '';
+  const v = site.verification || {};
+  return [
+    v.google ? `<meta name="google-site-verification" content="${escapeHtml(v.google)}" />` : '',
+    v.bing ? `<meta name="msvalidate.01" content="${escapeHtml(v.bing)}" />` : ''
+  ].filter(Boolean).map((tag) => `\n  ${tag}`).join('');
+}
+
 function canonicalFor(outputPath) {
   if (outputPath === 'index.html') return `${site.siteUrl}/`;
   return `${site.siteUrl}/${outputPath}`;
@@ -295,6 +327,24 @@ function personSchema() {
   };
 }
 
+function publicationSchema() {
+  return (site.publications || []).map((pub) => ({
+    '@type': 'ScholarlyArticle',
+    '@id': `${site.siteUrl}/research.html#${pub.id}`,
+    headline: pub.title,
+    name: pub.title,
+    author: pub.authors.map((name) => (name === site.name
+      ? { '@id': `${site.siteUrl}/#person` }
+      : { '@type': 'Person', name })),
+    datePublished: pub.datePublished,
+    url: pub.url,
+    identifier: pub.identifier,
+    ...(pub.doi ? { sameAs: pub.doi } : {}),
+    publisher: { '@type': 'Organization', name: pub.publisher },
+    mainEntityOfPage: `${site.siteUrl}/research.html`
+  }));
+}
+
 function websiteSchema() {
   return {
     '@type': 'WebSite',
@@ -336,6 +386,10 @@ function pageShell({
       description,
       inLanguage: 'en-US',
       about: { '@id': `${site.siteUrl}/#person` },
+      // ProfilePage requires mainEntity -- it is how a crawler knows whose
+      // profile this is. Harmless on the other page types, but only emitted
+      // where it is actually specified.
+      ...(pageType === 'ProfilePage' ? { mainEntity: { '@id': `${site.siteUrl}/#person` } } : {}),
       isPartOf: { '@id': `${site.siteUrl}/#website` }
     },
     ...schemaExtras
@@ -349,7 +403,7 @@ function pageShell({
   <title>${escapeHtml(title)}</title>
   <meta name="description" content="${escapeHtml(description)}" />
   <meta name="author" content="${site.name}" />
-  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />${verificationMeta(outputPath)}
   <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
   <meta property="og:locale" content="en_US" />
@@ -374,7 +428,7 @@ function pageShell({
   <link rel="preload" href="${prefix}assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="${prefix}assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="${prefix}assets/css/styles.css" />
-  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph })}</script>
+  <script type="application/ld+json">${JSON.stringify({ '@context': 'https://schema.org', '@graph': graph }).replace(/</g, '\\u003c')}</script>
 </head>
 <body>
   ${nav(outputPath)}
@@ -662,8 +716,8 @@ function outputsSection({ includeIntro = false } = {}) {
         <h3>UF coverage and recognition</h3>
         <p>University pages connect the work to UF AI, UF ECE, and public award context.</p>
         <div class="cta-row">
-          <a class="btn primary" href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a>
-          <a class="btn" href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a>
+          <a class="btn primary" href="https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a>
+          <a class="btn" href="https://ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a>
         </div>
       </article>
     </div>
@@ -769,8 +823,22 @@ function faqSchema(details, id) {
 }
 
 async function writePage(outputPath, content) {
+  // The read must happen before the write. sitemap.xml is generated at the end
+  // of main(), by which point every page on disk already equals what this build
+  // produced -- comparing there would mark everything unchanged forever and
+  // freeze all 36 dates permanently while still passing CI.
+  let previous = null;
+  try {
+    previous = await fs.readFile(path.join(root, outputPath), 'utf8');
+  } catch {}
+  pageChanged.set(outputPath, previous !== content);
   await fs.mkdir(path.dirname(path.join(root, outputPath)), { recursive: true });
   await fs.writeFile(path.join(root, outputPath), content);
+}
+
+function lastmodFor(outputPath) {
+  const carried = previousLastmod.get(canonicalFor(outputPath));
+  return pageChanged.get(outputPath) === false && carried ? carried : nowIso;
 }
 
 async function main() {
@@ -930,7 +998,7 @@ async function main() {
           <dl class="kv kv-links">
             <div class="kv-row"><dt class="kv-key">Citations</dt><dd class="kv-val"><a href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&amp;hl=en" target="_blank" rel="me noreferrer">Google Scholar</a> · <a href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer">ORCID</a></dd></div>
             <div class="kv-row"><dt class="kv-key">Code</dt><dd class="kv-val"><a href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer">GitHub</a></dd></div>
-            <div class="kv-row"><dt class="kv-key">University</dt><dd class="kv-val"><a href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a> · <a href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a></dd></div>
+            <div class="kv-row"><dt class="kv-key">University</dt><dd class="kv-val"><a href="https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI bio</a> · <a href="https://ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF ECE news</a></dd></div>
             <div class="kv-row"><dt class="kv-key">Talks</dt><dd class="kv-val"><a href="https://www.youtube.com/watch?v=yuJaMaA18js" target="_blank" rel="noreferrer">Foundations of Signal Processing (video)</a></dd></div>
             <div class="kv-row"><dt class="kv-key">Chapter</dt><dd class="kv-val"><a href="https://ieee-sps-uf.raulv.dev/" target="_blank" rel="noreferrer">IEEE SPS @ UF</a></dd></div>
           </dl>
@@ -973,6 +1041,9 @@ async function main() {
     pageType: 'CollectionPage',
     image: `${site.siteUrl}/assets/img/projects/HLDS_Inf.png`,
     imageAlt: 'Research visual for Raul Valle',
+    // The preprint is displayed on this page as visible text; this is the
+    // machine-readable form of the same claim.
+    schemaExtras: publicationSchema(),
     main: `<div class="container">
       <section class="page-hero reveal accent-cool">
         <div class="kicker">Research overview</div>
@@ -1042,7 +1113,8 @@ async function main() {
           </div>
         </section>
       </div>`,
-      schemaExtras: [{
+      schemaExtras: [
+      {
         '@type': 'ItemList',
         '@id': `${site.siteUrl}/${track.slug}#itemlist`,
         itemListElement: items.map((item, index) => ({
@@ -1197,6 +1269,50 @@ async function main() {
         ...faqSchema(details, `${site.siteUrl}/projects/${project.slug}.html#faq`)
       ]
     }));
+
+    // Retired slugs. A project that was renamed keeps its old URL alive as a
+    // generated "moved" stub rather than a hand-written file: noindex so it
+    // never competes with the real page, follow so any inbound link's value
+    // still reaches it, and canonical pointing at the current slug. Aliases are
+    // deliberately kept out of sitemapUrls -- a sitemap is a list of pages you
+    // want indexed, and check-seo.mjs fails the build if a noindex page appears
+    // there.
+    for (const alias of project.aliases || []) {
+      await writePage(`projects/${alias}.html`, `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Moved: ${escapeHtml(project.title)} | Raul Valle</title>
+  <meta name="description" content="This project moved to a new URL. ${escapeHtml(project.desc || project.subtitle || '')}" />
+  <meta name="robots" content="noindex, follow, max-image-preview:large" />
+  <link rel="canonical" href="${site.siteUrl}/projects/${project.slug}.html" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+</head>
+<body>
+  ${nav(`projects/${alias}.html`)}
+  <main id="main">
+    <div class="container">
+      <section class="page-hero reveal accent-cool">
+        <div class="kicker">Moved</div>
+        <h1 class="h1">This project has a new address</h1>
+        <p class="lead">${escapeHtml(project.title)} now lives at a different URL. If you are not redirected automatically, follow the link below.</p>
+        <div class="cta-row">
+          <a class="btn primary" href="${project.slug}.html">${escapeHtml(project.title)}</a>
+          <a class="btn" href="../research.html">Research overview</a>
+        </div>
+      </section>
+    </div>
+  </main>
+  ${footer(`projects/${alias}.html`)}
+  <script>window.location.replace("${project.slug}.html");</script>
+  <script src="../assets/js/site.js" defer></script>
+</body>
+</html>
+`);
+    }
   }
 
   for (const post of writing) {
@@ -1405,7 +1521,7 @@ async function main() {
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${sitemapUrls.map((page) => `
   <url>
     <loc>${canonicalFor(page)}</loc>
-    <lastmod>${nowIso}</lastmod>
+    <lastmod>${lastmodFor(page)}</lastmod>
   </url>`).join('')}
 </urlset>`;
   await writePage('sitemap.xml', sitemap);

@@ -250,8 +250,8 @@ export function cvPage({ escapeHtml, awards }) {
       <article class="card reveal">
         <h3>Official UF mentions</h3>
         <ul class="cv-list">
-          <li><a href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI biography</a> — HiPerGator Early Career Award profile.</li>
-          <li><a href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF student hackers enter 'Plato's Cave' for first-place win</a> — UF ECE coverage.</li>
+          <li><a href="https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">UF AI biography</a> — HiPerGator Early Career Award profile.</li>
+          <li><a href="https://ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">UF student hackers enter 'Plato's Cave' for first-place win</a> — UF ECE coverage.</li>
           <li><a href="https://www.ufdsi.com/symposium" target="_blank" rel="noreferrer">DSI Spring Symposium 2025</a> — workshop talk context.</li>
         </ul>
       </article>
@@ -324,13 +324,13 @@ export function contactPage({ site, escapeHtml }) {
   <h3>UF AI biography</h3>
   <p>Official University of Florida profile for the HiPerGator Early Career Award.</p>
   <div class="cta-row">
-    <a class="btn primary" href="https://ai.ufl.edu/teaching-with-ai/for-uf-faculty/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">Open UF AI bio</a>
+    <a class="btn primary" href="https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html" target="_blank" rel="noreferrer">Open UF AI bio</a>
   </div>
 </article><article class="card reveal">
   <h3>UF ECE news</h3>
   <p>UF Electrical &amp; Computer Engineering coverage of the Plato's Cave team and first-place finish.</p>
   <div class="cta-row">
-    <a class="btn primary" href="https://news.ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">Open UF ECE news</a>
+    <a class="btn primary" href="https://ece.ufl.edu/2025/11/10/uf-student-hackers-enter-platos-cave-for-first-place-win/" target="_blank" rel="noreferrer">Open UF ECE news</a>
   </div>
 </article><article class="card reveal">
   <h3>UF ECE</h3>

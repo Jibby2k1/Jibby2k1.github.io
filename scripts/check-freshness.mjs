@@ -40,7 +40,9 @@ for (const file of htmlFiles.filter((f) => f.endsWith('.html'))) {
 for (const url of [...externalLinks].sort()) {
   if (url.startsWith('https://www.raulv.dev')) continue;
   let ok = false;
-  for (const method of ['HEAD', 'GET']) {
+  let landed = null;
+  let gated = false;
+  for (const method of ['GET', 'HEAD']) {
     try {
       const res = await fetch(url, {
         method,
@@ -49,10 +51,35 @@ for (const url of [...externalLinks].sort()) {
         headers: { 'user-agent': 'Mozilla/5.0 (compatible; raulv.dev link checker)' }
       });
       // 403/405/429 usually mean a bot wall, not a dead link
-      if (res.status < 400 || [403, 405, 429].includes(res.status)) { ok = true; break; }
+      if (res.status < 400 || [403, 405, 429].includes(res.status)) {
+        ok = true;
+        landed = res.url;
+        // A 200 is not proof the content is still there. Both link rots this
+        // check missed returned 200: one soft-redirected to a section landing
+        // page, the other became a WordPress password wall.
+        if (method === 'GET' && res.status === 200) {
+          const body = await res.text().catch(() => '');
+          gated = /name=["']post_password["']|<title>[^<]*Protected:/i.test(body);
+        }
+        break;
+      }
     } catch { /* try next method */ }
   }
-  if (!ok) problems.push(`External link may be dead: ${url}`);
+  if (!ok) {
+    problems.push(`External link may be dead: ${url}`);
+  } else if (gated) {
+    problems.push(`External link is password-protected: ${url}`);
+  } else if (landed) {
+    // Only flag a redirect that drops the path -- www/https canonicalisation
+    // keeps the path and is harmless.
+    const from = new URL(url);
+    const to = new URL(landed);
+    const lostPath = from.pathname.replace(/\/$/, '') !== '' && to.pathname.replace(/\/$/, '') === '';
+    const changedPath = from.pathname.replace(/\/$/, '') !== to.pathname.replace(/\/$/, '');
+    if (lostPath || (changedPath && from.hostname === to.hostname)) {
+      problems.push(`External link redirects away from the linked page: ${url} -> ${landed}`);
+    }
+  }
 }
 
 if (problems.length) {

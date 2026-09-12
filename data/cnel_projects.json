@@ -376,7 +376,10 @@
             "ground": "blend"
           }
         ]
-      }
+      },
+      "aliases": [
+        "eeg-sentiment-state-space"
+      ]
     },
     {
       "slug": "zebrafish-voltage-imaging-detection",
