@@ -25,6 +25,7 @@
   --cursor: #e5e9e7; --chip: #252c29;
 }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html, body { margin: 0; background: var(--bg); color: var(--ink);
   font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, Ubuntu, sans-serif; }
 body { padding: 14px 16px 24px; }
@@ -198,8 +199,18 @@ legend { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; colo
       at the centre lights up. Your answers stay in this browser until you download them.</p>
     <div class="resume-list" id="resumeList" hidden></div>
     <div class="field">
-      <label for="who_name"><strong>Your name</strong></label>
-      <input id="who_name" type="text" maxlength="60" autocomplete="name" required>
+      <label for="packZip"><strong>1 · The pack you were sent</strong> (a .zip file)</label>
+      <div class="filepick"><input id="packZip" type="file" accept=".zip,application/zip"></div>
+      <label for="packDir" class="privacy">…or an unzipped pack folder: <input id="packDir" type="file" webkitdirectory></label>
+      <p class="privacy" id="packInfo" hidden></p>
+    </div>
+    <fieldset id="whoChoice" hidden>
+      <legend>2 · Who is reviewing?</legend>
+      <div class="chips" id="whoChips"></div>
+    </fieldset>
+    <div class="field" id="whoTyped">
+      <label for="who_name"><strong id="whoLabel">2 · Your name</strong></label>
+      <input id="who_name" type="text" maxlength="60" autocomplete="name">
     </div>
     <fieldset>
       <legend>Experience with calcium imaging</legend>
@@ -209,11 +220,6 @@ legend { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; colo
         <label><input type="radio" name="exp" value="expert"><span>Expert</span></label>
       </div>
     </fieldset>
-    <div class="field">
-      <label for="packZip"><strong>The pack you were sent</strong> (a .zip file)</label>
-      <div class="filepick"><input id="packZip" type="file" accept=".zip,application/zip"></div>
-      <label for="packDir" class="privacy">…or an unzipped pack folder: <input id="packDir" type="file" webkitdirectory></label>
-    </div>
     <p class="err" id="welcomeErr" hidden></p>
     <p class="privacy">Nothing is uploaded: the pack is read on this computer, and your answers are saved in this
       browser. When you are done, use <em>Download results</em> and send the zip back.</p>
@@ -388,7 +394,7 @@ function localBackend(pack, annotator, records, profile) {
       records.push(full);
       try { await IDB.put("records", { log: logKey, rec: full }); }
       catch (e) { toast("Saved for this visit only: this browser blocks storage"); }
-      IDB.put("sessions", { log: logKey, pack_id: pack.pack_id, annotator, profile, source: pack.manifest.source.file,
+      IDB.put("sessions", { log: logKey, pack_id: pack.pack_id, annotator, profile, source: pack.manifest.label || pack.manifest.source.file,
                            n: pack.manifest.items.length, decided: Object.keys(decisions).length + (full.type === "decision" ? 1 : 0),
                            updated: Date.now() }).catch(() => {});
       return { ok: true };
@@ -423,7 +429,7 @@ function resultsZip() {
   const summary = [
     "NeuRev Review results", "=====================", "",
     "Reviewer:     " + b.profile.name + " (experience: " + b.profile.experience + ")",
-    "Pack:         " + man.pack_id + " (" + man.source.file + ", " + man.items.length + " items)",
+    "Pack:         " + (man.label ? man.label + " · " : "") + man.pack_id + " (" + man.source.file + ", " + man.items.length + " items)",
     "Exported:     " + new Date().toString(), "",
     "Decided:      " + (acc + dec + uns) + " of " + man.items.length,
     "  accept      " + acc, "  decline     " + dec, "  unsure      " + uns,
@@ -842,7 +848,7 @@ function ensureGoalChip() {          // a goal from --budget / --minutes that is
 async function begin(st) {
   M = st.manifest; S = M.clip.size; F = M.clip.frames; items = M.items; N = items.length; decisions = st.decisions;
   notes = st.notes || {}; logPath = st.log_file;
-  $("who").textContent = st.annotator + " · " + (M.source.file || M.lane || "") + " · pack " + M.pack_id;
+  $("who").textContent = st.annotator + " · " + (M.label || M.source.file || M.lane || "") + " · pack " + M.pack_id;
   $("lsr").textContent = M.display.ls_range;
   $("logpath").textContent = backend.mode === "local" ? "saved in this browser · use Download results to send them" : "saving to " + st.log_file;
   $("download").hidden = backend.mode !== "local";
@@ -896,15 +902,58 @@ async function openWelcome() {
   $("who_name").value = store.get("name", "");
 }
 function showErr(m) { const e = $("welcomeErr"); e.textContent = m; e.hidden = !m; }
+let pendingPack = null, pendingFrom = null;
+async function readChosenPack() {
+  const zip = $("packZip").files[0], dir = $("packDir").files;
+  const from = zip ? zip : (dir && dir.length ? dir : null);
+  if (!from) return null;
+  if (pendingPack && pendingFrom === from) return pendingPack;
+  pendingFrom = from;
+  pendingPack = await loadPack(zip ? await readZip(zip) : readFolder(dir));
+  return pendingPack;
+}
+function whoName() {
+  const c = document.querySelector("input[name=who]:checked");
+  if (c && c.value !== "__other") return c.value;
+  return $("who_name").value.trim();
+}
+function renderWho(man) {
+  const names = (man && Array.isArray(man.reviewers)) ? man.reviewers.filter(n => typeof n === "string" && n.trim()) : [];
+  const box = $("whoChips");
+  box.textContent = "";
+  $("whoChoice").hidden = !names.length;
+  if (!names.length) { $("whoTyped").hidden = false; $("whoLabel").textContent = "2 · Your name"; return; }
+  const last = store.get("name", "");
+  for (const n of names.concat(["__other"])) {
+    const lab = document.createElement("label"), inp = document.createElement("input"), sp = document.createElement("span");
+    inp.type = "radio"; inp.name = "who"; inp.value = n; inp.checked = n === last;
+    sp.textContent = n === "__other" ? "Someone else" : n;
+    inp.onchange = () => { $("whoTyped").hidden = inp.value !== "__other"; if (inp.value === "__other") $("who_name").focus(); };
+    lab.append(inp, sp); box.appendChild(lab);
+  }
+  $("whoTyped").hidden = true; $("whoLabel").textContent = "Your name";
+}
+async function onPackChosen() {
+  showErr(""); $("packInfo").hidden = false; $("packInfo").textContent = "Reading the pack…";
+  try {
+    const pack = await readChosenPack();
+    if (!pack) { $("packInfo").hidden = true; return; }
+    const m = pack.manifest;
+    $("packInfo").textContent = "✓ " + (m.label || m.source.file) + " · " + m.items.length + " clips";
+    renderWho(m);
+  } catch (err) { $("packInfo").hidden = true; pendingPack = null; showErr(err.message); }
+}
+$("packZip").addEventListener("change", onPackChosen);
+$("packDir").addEventListener("change", onPackChosen);
 $("welcomeForm").onsubmit = async e => {
   e.preventDefault(); showErr("");
-  const name = $("who_name").value.trim();
-  if (!name) return showErr("Please enter your name.");
   const zip = $("packZip").files[0], dir = $("packDir").files;
   if (!zip && !(dir && dir.length)) return showErr("Choose the pack zip you were sent.");
   $("welcomeBtn").disabled = true; $("welcomeBtn").textContent = "Opening…";
   try {
-    const pack = await loadPack(zip ? await readZip(zip) : readFolder(dir));
+    const pack = await readChosenPack();
+    const name = whoName();
+    if (!name) { showErr("Please choose or type your name."); $("welcomeBtn").disabled = false; $("welcomeBtn").textContent = "Open pack"; return; }
     try { await IDB.put("packs", pack); } catch (err) { toast("This browser will not keep the pack; you will need to open it again next time"); }
     store.set("name", name);
     await startLocal(pack, name, { name, experience: (document.querySelector("input[name=exp]:checked") || {}).value || "some" });
