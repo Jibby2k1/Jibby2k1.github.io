@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { aboutPage, cvPage, contactPage } from './pages.mjs';
+import { neurevReviewPage } from './neurev-review.mjs';
 
 const root = process.cwd();
 const site = JSON.parse(await fs.readFile(path.join(root, 'data/site.json'), 'utf8'));
@@ -922,6 +923,16 @@ async function main() {
     main: contactPage(pageCtx)
   }));
 
+  // NeuRev Review: a landing page plus the review app itself (vendored verbatim from NeuRev-Workbench, noindex).
+  await writePage('neurev/review/index.html', pageShell({
+    outputPath: 'neurev/review/index.html',
+    title: 'NeuRev Review: label calcium events in your browser | Raul Valle',
+    description: 'NeuRev Review is a browser tool for labelling calcium events in zebrafish light-sheet recordings: decide ranked candidate clips one at a time, privately, at your own pace.',
+    pageType: 'WebPage',
+    main: neurevReviewPage({ imgTag, prefix: prefixFor('neurev/review/index.html') })
+  }));
+  await writePage('neurev/review/app.html', readFileSync(path.join(root, 'vendor/neurev-review/app.html.vendored'), 'utf8'));
+
   await writePage('publications.html', `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1515,6 +1526,7 @@ async function main() {
     'awards.html',
     'photography.html',
     ...projects.map((project) => `projects/${project.slug}.html`),
+    'neurev/review/index.html',
     ...writing.map((post) => post.url)
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

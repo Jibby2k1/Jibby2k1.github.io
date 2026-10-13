@@ -406,6 +406,10 @@
         {
           "label": "GitHub",
           "href": "https://github.com/Jibby2k1/NeuRev-Workbench"
+        },
+        {
+          "label": "NeuRev Review",
+          "href": "../neurev/review/index.html"
         }
       ],
       "details": {

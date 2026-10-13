@@ -1490,3 +1490,23 @@ a.org-link .org-name{ text-decoration:underline; text-decoration-color:var(--acc
 @media (max-width: 700px){
   .org-link{ grid-template-columns:1fr; gap:10px; justify-items:start; }
 }
+
+/* NeuRev Review landing page */
+.neurev-shot{ margin:8px 0 0; padding:12px; }
+.neurev-shot img{ display:block; width:100%; height:auto; border-radius:6px; }
+.neurev-shot figcaption{
+  margin-top:10px;
+  font-family:var(--mono);
+  font-size:0.8rem;
+  letter-spacing:0.02em;
+  color:var(--faint);
+}
+kbd{
+  font-family:var(--mono);
+  font-size:0.82em;
+  padding:0.05rem 0.38rem;
+  border:1px solid var(--line-strong);
+  border-bottom-width:2px;
+  border-radius:4px;
+  background:var(--code-bg);
+}
