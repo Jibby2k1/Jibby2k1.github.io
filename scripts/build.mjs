@@ -143,7 +143,8 @@ const trackMeta = {
     label: 'CNEL',
     name: 'CNEL projects',
     kicker: 'Computational NeuroEngineering Lab',
-    description: 'Voltage imaging, biological time-series modeling, and experiment infrastructure connected to CNEL research at UF.'
+    description: 'Voltage imaging, biological time-series modeling, and experiment infrastructure connected to CNEL research at UF.',
+    links: [{ href: 'neurev/review/index.html', label: 'NeuRev Review: label calcium events' }]
   },
   sps: {
     slug: 'research-sps.html',
@@ -269,6 +270,7 @@ function footer(outputPath) {
         <a href="${prefix}blog.html">Writing</a>
         <a href="${prefix}awards.html">Awards</a>
         <a href="${prefix}photography.html">Photography</a>
+        <a href="${prefix}neurev/review/index.html">NeuRev Review</a>
         <a href="${prefix}contact.html">Contact</a>
       </div>
     </div>
@@ -1112,6 +1114,7 @@ async function main() {
           <div class="kicker">${track.kicker}</div>
           <h1 class="h1">${track.name}</h1>
           <p class="lead">${track.description}</p>
+          ${track.links ? `<div class="cta-row">${track.links.map((link) => `<a class="btn" href="${link.href}">${link.label}</a>`).join('')}</div>` : ''}
         </section>
         ${filterBar({
           searchLabel: `Search ${track.label} work`,
