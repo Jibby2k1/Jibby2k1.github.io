@@ -308,6 +308,79 @@
     }
   }
 
+  // ARIA tabs (About page). Without JS every panel is shown stacked and the
+  // tab strip is hidden by CSS, so nothing is ever unreachable.
+  function initTabs() {
+    document.querySelectorAll('[data-tabs]').forEach((root) => {
+      const tabs = [...root.querySelectorAll('[role="tab"]')];
+      if (!tabs.length) return;
+      const select = (tab, focus) => {
+        tabs.forEach((other) => {
+          const selected = other === tab;
+          other.setAttribute('aria-selected', String(selected));
+          if (selected) other.removeAttribute('tabindex');
+          else other.setAttribute('tabindex', '-1');
+          const panel = document.getElementById(other.getAttribute('aria-controls'));
+          if (panel) panel.toggleAttribute('data-inactive', !selected);
+        });
+        if (focus) tab.focus();
+      };
+      tabs.forEach((tab, index) => {
+        tab.addEventListener('click', () => select(tab, false));
+        tab.addEventListener('keydown', (event) => {
+          const moves = { ArrowRight: index + 1, ArrowLeft: index - 1, Home: 0, End: tabs.length - 1 };
+          if (!(event.key in moves)) return;
+          event.preventDefault();
+          select(tabs[(moves[event.key] + tabs.length) % tabs.length], true);
+        });
+      });
+    });
+  }
+
+  // Easter egg (About page only): the Konami code, typing "jibby", or three
+  // quick taps on the motto toggles rave mode. Esc turns it off.
+  function initEasterEgg() {
+    const root = document.querySelector('[data-egg]');
+    if (!root) return;
+    const status = root.querySelector('[data-egg-status]');
+    const konami = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a'];
+    const word = 'jibby';
+    let keys = [];
+    const set = (on) => {
+      root.classList.toggle('is-raving', on);
+      if (status) status.textContent = on ? 'Rave mode: around the world, around the world. Press Esc or tap the motto to stop.' : 'Rave mode off.';
+    };
+    const toggle = () => set(!root.classList.contains('is-raving'));
+
+    // Capture phase, so the lightbox/menu guard sees their state before their
+    // own Escape handlers close them.
+    window.addEventListener('keydown', (event) => {
+      const target = event.target;
+      if (target && target.closest && target.closest('input, textarea, select, [contenteditable], [role="tablist"]')) return;
+      if (document.querySelector('.lightbox.open, .burger[aria-expanded="true"]')) return;
+      if (event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
+      if (event.key === 'Escape' && root.classList.contains('is-raving')) { set(false); return; }
+      if (!event.key || event.key.length > 10 || ['Shift', 'CapsLock'].includes(event.key)) return;
+      keys = [...keys, event.key.toLowerCase()].slice(-konami.length);
+      const tail = keys.join(',');
+      if (tail.endsWith(konami.join(',')) || keys.slice(-word.length).join('') === word) {
+        keys = [];
+        toggle();
+      }
+    }, true);
+
+    const tapTarget = root.querySelector('[data-egg-tap]');
+    if (tapTarget) {
+      let taps = [];
+      tapTarget.addEventListener('click', (event) => {
+        if (root.classList.contains('is-raving')) { set(false); taps = []; return; }
+        const t = event.timeStamp;
+        taps = [...taps.filter((time) => t - time < 900), t];
+        if (taps.length >= 3) { taps = []; set(true); }
+      });
+    }
+  }
+
   initReveal();
   initScrollableDiagrams();
   setActiveNav();
@@ -317,4 +390,6 @@
   initTheme();
   initLightbox();
   initFilters();
+  initTabs();
+  initEasterEgg();
 })();

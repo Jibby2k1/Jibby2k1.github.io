@@ -1,0 +1,116 @@
+{
+  "motto": {
+    "text": "memento mori",
+    "gloss": "remember that you will die",
+    "source": "Picked up from the anime Death Parade. It is about as common as quotes get, but that is where it found me."
+  },
+  "now": {
+    "updated": "October 2026",
+    "items": [
+      { "label": "Research", "html": "CFD surrogates in the <a href=\"research-physics.html\">SmartDATA Lab</a>: learned stand-ins for slow physics solvers." },
+      { "label": "Wrapping up", "html": "Closing out my calcium-imaging work at CNEL, including <a href=\"neurev/review/index.html\">NeuRev Review</a>, a browser tool for labelling events." },
+      { "label": "Chapter", "html": "Running IEEE SPS @ UF as 2026–27 president: workshops, curriculum, and the <a href=\"https://ieee-sps-uf.raulv.dev/\" target=\"_blank\" rel=\"noreferrer\">chapter site</a>." }
+    ]
+  },
+  "tabs": [
+    {
+      "id": "music",
+      "label": "Music",
+      "title": "The constants",
+      "intro": "My taste is all over the place, but these are the artists I always come back to.",
+      "list": ["Jamiroquai", "Daft Punk", "Two Door Cinema Club", "The Hours", "Kanye West", "The Weeknd"],
+      "listStyle": "setlist",
+      "outro": "I am also pretty into raving. The atmosphere is the point, and as a Miami native the scene has always been right there.",
+      "link": { "href": "https://open.spotify.com/user/21bos2jze5rhqxzjuobxfuncq", "label": "Everything else is on my Spotify" }
+    },
+    {
+      "id": "lifting",
+      "label": "Lifting",
+      "title": "Under the bar",
+      "intro": "Just lifting at the moment. I am not training for anything specific, just functional strength.",
+      "outro": "Related: <a href=\"projects/ora.html\">Ora</a>, the training app for lifters I co-founded."
+    },
+    {
+      "id": "camera",
+      "label": "Camera",
+      "title": "Behind the lens",
+      "intro": "I shoot on a Sony Alpha 6700, mostly friends, nights out, and whatever the light is doing.",
+      "outro": "I also wrote a local-first <a href=\"projects/media-cull-suite.html\">photo-culling suite</a> for my own shoots. The results live in the <a href=\"photography.html\">photography archive</a>."
+    },
+    {
+      "id": "lore",
+      "label": "Lore",
+      "title": "Assorted lore",
+      "list": [
+        "<strong>Jibby2k1</strong> is a middle-school tribute to Jimin, my favourite member of BTS. He was known for a certain asset, and I took the name. It stuck.",
+        "<strong>The photo at the top of this page</strong> is from the grand opening of Malachowsky Hall at UF. I showed up trying to vibe-match Jensen Huang's leather jacket, then was so star-struck I could not say a single word to him.",
+        "<strong>Doral Academy:</strong> Mu Alpha Theta, FAMAT, AMC and AIME, plus proof-based competitions around Florida. I was also in Zeta Omicron and the Robotics Society, and I founded the school's Physics-Chemistry Club."
+      ],
+      "listStyle": "lore",
+      "outro": "There is an easter egg on this page. <span class=\"egg-hint\">↑ ↑ ↓ ↓ ← → ← → B A</span> (on a phone, tap the motto three times)."
+    },
+    {
+      "id": "toolbox",
+      "label": "Toolbox",
+      "title": "Daily drivers",
+      "intro": "These days I work almost entirely out of the Codex app and a terminal.",
+      "defs": [
+        { "term": "Desk", "detail": "Ubuntu, bash, an RTX 4070 SUPER, and UF's HiPerGator cluster for anything bigger" },
+        { "term": "Research", "detail": "Python: PyTorch, NumPy, SciPy, CuPy, Jupyter, with uv and conda for environments" },
+        { "term": "Apps & web", "detail": "TypeScript and React, Flutter and Firebase, and plain Node scripts for this site" },
+        { "term": "Writing", "detail": "LaTeX for papers" },
+        { "term": "Camera", "detail": "Sony α6700 plus my own culling pipeline" }
+      ]
+    }
+  ],
+  "photos": {
+    "title": "Proof of life",
+    "intro": "A few times I ended up on the other side of a camera, plus a few frames from mine.",
+    "items": [
+      {
+        "img": "assets/img/awards/PlatoCaveAward.webp",
+        "thumb": "assets/img/me/gatorhack-thumb.webp",
+        "position": "50% 30%",
+        "title": "GatorHack, 1st place",
+        "caption": "UF AI Days, 2025. The full shot has Albert and Alberta in it too.",
+        "alt": "Raul in a green hoodie wearing a GatorHack first-place medal, between two teammates.",
+        "who": "me"
+      },
+      {
+        "img": "assets/img/awards/EarlyCareerAward.webp",
+        "thumb": "assets/img/awards/EarlyCareerAward.webp",
+        "position": "50% 40%",
+        "title": "HiPerGator Early Career Award",
+        "caption": "University of Florida, 2025. String lights, folders, and an evening reception.",
+        "alt": "Two award recipients holding UF folders under string lights at an evening reception; Raul is on the right.",
+        "who": "me"
+      },
+      {
+        "img": "assets/img/photography/web/DSC03175-1600.webp",
+        "thumb": "assets/img/photography/web/DSC03175-640.webp",
+        "position": "50% 50%",
+        "title": "Sandevistan",
+        "caption": "Time moves slow.",
+        "alt": "A curly-haired partygoer in profile through thick purple fog, shot by Raul.",
+        "who": "shot"
+      },
+      {
+        "img": "assets/img/photography/web/DSC02466-1600.webp",
+        "thumb": "assets/img/photography/web/DSC02466-640.webp",
+        "position": "50% 50%",
+        "title": "untitled1",
+        "caption": "The lights glimmering was a cool effect, haven't been able to recreate this intentionally.",
+        "alt": "Two people on a balcony at night, string lights streaking behind them, shot by Raul.",
+        "who": "shot"
+      }
+    ]
+  },
+  "friends": {
+    "title": "Friends on the web",
+    "intro": "People whose corners of the internet are worth a visit.",
+    "items": [
+      { "name": "Evan Partidas", "url": "https://evanpartidas.com/", "host": "evanpartidas.com", "note": "Freelance full-stack developer." },
+      { "name": "Matheus Kunzler Maldaner", "url": "https://matheus.wiki/", "host": "matheus.wiki", "note": "Building AI systems people can inspect and trust." }
+    ]
+  }
+}

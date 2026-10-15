@@ -2,7 +2,95 @@
 // Each function receives a context with shared helpers and data:
 // { site, escapeHtml, imgTag, awards, projects, writing }
 
-export function aboutPage({ imgTag, orgList, affiliationMarks }) {
+// Personal half of the About page, rendered from data/about.json. Fields named
+// `html`, list items, and `intro`/`outro` are trusted repo-authored markup;
+// everything else is escaped.
+function aboutPersonal({ about, escapeHtml, imgTag, motifSvg }) {
+  if (!about) return '';
+  const { motto, now, tabs, photos, friends } = about;
+  const tabList = tabs.map((tab, index) => `<button class="tab" type="button" role="tab" id="tab-${tab.id}" aria-controls="panel-${tab.id}" aria-selected="${index === 0}"${index === 0 ? '' : ' tabindex="-1"'}>${escapeHtml(tab.label)}</button>`).join('');
+  const panelBody = (tab) => {
+    const parts = [];
+    if (tab.intro) parts.push(`<p>${tab.intro}</p>`);
+    if (tab.list && tab.listStyle === 'setlist') {
+      parts.push(`<ol class="setlist">${tab.list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`);
+    } else if (tab.list) {
+      parts.push(`<ul class="lore-list">${tab.list.map((item) => `<li>${item}</li>`).join('')}</ul>`);
+    }
+    if (tab.defs) {
+      parts.push(`<dl class="tool-list">${tab.defs.map((def) => `<div><dt>${escapeHtml(def.term)}</dt><dd>${escapeHtml(def.detail)}</dd></div>`).join('')}</dl>`);
+    }
+    if (tab.outro) parts.push(`<p class="tab-outro">${tab.outro}</p>`);
+    if (tab.link) parts.push(`<p class="tab-link"><a href="${escapeHtml(tab.link.href)}" target="_blank" rel="me noreferrer">${escapeHtml(tab.link.label)} ↗</a></p>`);
+    return parts.join('\n            ');
+  };
+  const panels = tabs.map((tab, index) => `<div class="tab-panel" role="tabpanel" id="panel-${tab.id}" aria-labelledby="tab-${tab.id}" tabindex="0"${index === 0 ? '' : ' data-inactive'}>
+            <h4>${escapeHtml(tab.title)}</h4>
+            ${panelBody(tab)}
+          </div>`).join('\n          ');
+  const nowItems = now.items.map((item) => `<div><dt>${escapeHtml(item.label)}</dt><dd>${item.html}</dd></div>`).join('\n            ');
+  const photoItems = photos.items.map((item) => `<li class="strip-item">
+            <button class="strip-trigger" type="button" data-lightbox data-full="${escapeHtml(item.img)}" data-title="${escapeHtml(item.title)}" data-caption="${escapeHtml(item.caption)}" aria-label="${escapeHtml(item.alt)} View ${escapeHtml(item.title)} at full size." style="--pos:${escapeHtml(item.position || '50% 50%')}">
+              ${imgTag(item.thumb, { className: 'strip-media', alt: item.alt })}
+              <span class="strip-tag">${item.who === 'me' ? 'Me' : 'Shot by me'}</span>
+            </button>
+            <p class="strip-caption"><strong>${escapeHtml(item.title)}.</strong> ${escapeHtml(item.caption)}</p>
+          </li>`).join('\n          ');
+  const friendItems = friends.items.map((friend) => `<li>
+            <a class="friend-link" href="${escapeHtml(friend.url)}" target="_blank" rel="noreferrer"><span class="friend-name">${escapeHtml(friend.name)}</span><span class="friend-host">${escapeHtml(friend.host)} ↗</span></a>
+            <p>${escapeHtml(friend.note)}</p>
+          </li>`).join('\n          ');
+
+  return `<section class="about-personal" data-egg aria-labelledby="off-clock-title">
+      <div class="personal-head reveal">
+        <div class="kicker">Off the clock</div>
+        <h2 class="section-title" id="off-clock-title">The rest of the signal</h2>
+      </div>
+
+      <div class="motto-band reveal" data-track="cnel">
+        <div class="motto-motif" aria-hidden="true">${motifSvg({ width: 980, height: 280, lines: 8, dots: 12, seed: 20261015 })}</div>
+        <figure class="motto">
+          <blockquote><p class="motto-text" lang="la" data-egg-tap>${escapeHtml(motto.text)}</p></blockquote>
+          <figcaption><span class="motto-gloss">“${escapeHtml(motto.gloss)}”</span> ${escapeHtml(motto.source)}</figcaption>
+        </figure>
+        <p class="egg-status" role="status" aria-live="polite" data-egg-status></p>
+      </div>
+
+      <div class="personal-grid">
+        <article class="card now-card reveal">
+          <div class="archive-ledger-label">Now · updated ${escapeHtml(now.updated)}</div>
+          <h3>What I am on right now</h3>
+          <dl class="now-list">
+            ${nowItems}
+          </dl>
+        </article>
+
+        <div class="tabs reveal" data-tabs>
+          <h3 class="tabs-title">A little more about me</h3>
+          <div class="tab-list" role="tablist" aria-label="A little more about me">${tabList}</div>
+          ${panels}
+        </div>
+      </div>
+
+      <div class="personal-sub-wrap reveal">
+        <h3 class="personal-sub">${escapeHtml(photos.title)}</h3>
+        <p class="personal-intro">${escapeHtml(photos.intro)}</p>
+        <ul class="photo-strip">
+          ${photoItems}
+        </ul>
+      </div>
+
+      <div class="personal-sub-wrap reveal">
+        <h3 class="personal-sub">${escapeHtml(friends.title)}</h3>
+        <p class="personal-intro">${escapeHtml(friends.intro)}</p>
+        <ul class="friend-list">
+          ${friendItems}
+        </ul>
+      </div>
+    </section>`;
+}
+
+export function aboutPage({ imgTag, orgList, affiliationMarks, about, escapeHtml, motifSvg }) {
   return `<div class="container about-shell">
     <section class="page-hero about-hero reveal accent-cool">
       <div class="about-hero-head">
@@ -10,7 +98,7 @@ export function aboutPage({ imgTag, orgList, affiliationMarks }) {
           <div class="kicker">About</div>
           <h1 class="h1">About Raul Valle</h1>
         </div>
-        ${imgTag('assets/img/me/portrait-680.webp', { className: 'portrait', alt: 'Portrait of Raul Valle', eager: true })}
+        ${imgTag('assets/img/me/portrait-680.webp', { className: 'portrait', alt: 'Raul Valle with Jensen Huang at the Malachowsky Hall grand opening, University of Florida', eager: true })}
       </div>
       <div class="about-hero-body">
         <p class="lead">I am a Ph.D. student in Electrical and Computer Engineering at the University of Florida. My current research in the SmartDATA Lab builds machine-learning surrogate models for computational fluid dynamics — fast learned stand-ins for expensive physics solvers that are audited against the physics they approximate. That work sits on a foundation of signal processing, time-series machine learning, and neuroengineering built in the Computational NeuroEngineering Lab.</p>
@@ -51,7 +139,7 @@ export function aboutPage({ imgTag, orgList, affiliationMarks }) {
         <p>That mindset carries into teaching and community work too. If a concept cannot survive being explained clearly, tested, and reused by someone else, the pipeline is probably not rigorous enough yet.</p>
       </article>
 
-      <div class="grid three">
+      <div class="grid two">
         <article class="card reveal">
           <h3>Primary topics</h3>
           <div class="pill-row">
@@ -71,12 +159,10 @@ export function aboutPage({ imgTag, orgList, affiliationMarks }) {
             <span class="pill">Technical writing</span>
           </div>
         </article>
-        <article class="card reveal">
-          <h3>Outside the lab</h3>
-          <p>Photography, music, and training matter to me for the same reason research does: they reward discipline, iteration, and attention to detail. They also turn into software: a local-first <a href="projects/media-cull-suite.html">photo-culling suite</a> for my own shoots and <a href="projects/ora.html">Ora</a>, a training app I co-founded.</p>
-        </article>
       </div>
     </div>
+
+    ${aboutPersonal({ about, escapeHtml, imgTag, motifSvg })}
 
     <section class="accent-cool">
       <h2 class="section-title reveal">Writing, recognition, and visual work</h2>

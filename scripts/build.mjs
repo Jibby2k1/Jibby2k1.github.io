@@ -853,6 +853,7 @@ async function main() {
     loadJson('data/photography.json'),
     loadWriting()
   ]);
+  const aboutData = await loadJson('data/about.json');
 
   const projects = [
     ...physicsData.items.map((item) => ({ ...item, track: 'physics' })),
@@ -899,7 +900,7 @@ async function main() {
     { name: 'IEEE Signal Processing Society at the University of Florida', logo: 'assets/img/orgs/ieee-sps.webp' }
   ];
 
-  const pageCtx = { site, escapeHtml, imgTag, orgList, affiliationMarks, awards: awardsData, projects, writing };
+  const pageCtx = { site, escapeHtml, imgTag, orgList, affiliationMarks, motifSvg, about: aboutData, awards: awardsData, projects, writing };
 
   await writePage('about.html', pageShell({
     outputPath: 'about.html',
