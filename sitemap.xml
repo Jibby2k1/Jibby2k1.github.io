@@ -26,11 +26,15 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/research-cnel.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/research-sps.html</loc>
     <lastmod>2026-10-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/research-archive.html</loc>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/blog.html</loc>
@@ -58,7 +62,7 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/time-series-ml-experiment-infra.html</loc>

@@ -410,6 +410,10 @@
         {
           "label": "NeuRev Review",
           "href": "../neurev/review/index.html"
+        },
+        {
+          "label": "Research archive",
+          "href": "../research-archive.html#cnel"
         }
       ],
       "details": {

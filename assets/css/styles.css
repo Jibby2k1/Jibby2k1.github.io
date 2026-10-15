@@ -1845,3 +1845,66 @@ kbd{
   border-radius:4px;
   background:var(--code-bg);
 }
+
+/* Research archive: a dated ledger. Month labels in mono sit on a rule; each
+   entry is date + status on the left, text on the right; major chapters get
+   the track accent on the date column. Collapses to one column on phones. */
+.archive-note{ max-width:66ch; color:var(--muted); font-size:0.95rem; }
+.archive-pointer{ max-width:66ch; margin:22px 0 0; color:var(--ink-soft); }
+.archive-pointer a{ color:var(--accent-ink); text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
+.arc-track{ margin-top:12px; }
+.arc-track-head .section-subtitle{ max-width:66ch; }
+.arc-month{ margin-top:34px; }
+.arc-month-label{
+  margin:0 0 4px;
+  padding-bottom:6px;
+  border-bottom:1px solid var(--line-strong);
+  font-family:var(--mono);
+  font-size:0.8rem;
+  font-weight:500;
+  letter-spacing:0.08em;
+  text-transform:uppercase;
+  color:var(--section-accent);
+}
+.arc-list{ list-style:none; margin:0; padding:0; }
+.arc-entry{
+  display:grid;
+  grid-template-columns:9.5rem minmax(0, 1fr);
+  gap:22px;
+  padding:18px 0;
+  border-bottom:1px solid var(--line);
+}
+.arc-when{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  padding-left:10px;
+  border-left:2px solid var(--line);
+  font-family:var(--mono);
+  font-size:0.82rem;
+  color:var(--muted);
+  font-variant-numeric:tabular-nums;
+}
+.arc-major .arc-when{ border-left-color:var(--section-accent); color:var(--ink-soft); }
+.arc-status{ font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--faint); }
+.arc-ongoing{ color:var(--section-accent); }
+.arc-title{ margin:0 0 6px; font-family:var(--display); font-size:1.18rem; font-weight:600; line-height:1.3; text-wrap:balance; }
+.arc-body p{ margin:0 0 8px; max-width:66ch; color:var(--ink-soft); }
+.arc-learned span{
+  margin-right:6px;
+  font-family:var(--mono);
+  font-size:0.72rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--section-accent);
+}
+.arc-links{ display:flex; flex-wrap:wrap; gap:4px 16px; font-size:0.92rem; }
+.arc-links a{ color:var(--accent-ink); text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
+@media (max-width: 700px){
+  .arc-entry{ grid-template-columns:1fr; gap:8px; }
+  .arc-when{ flex-direction:row; gap:12px; align-items:baseline; }
+}
+.arc-crumbs a{ text-decoration:underline; text-decoration-color:var(--accent); text-underline-offset:0.16em; }
+.arc-track-head{ margin-top:36px; }
+.arc-track-head .section-subtitle{ margin-top:10px; }
+.arc-track-head .section-title{ margin:6px 0 0; padding-top:0; border-top:0; }

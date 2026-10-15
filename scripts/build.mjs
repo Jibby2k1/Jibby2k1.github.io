@@ -144,7 +144,10 @@ const trackMeta = {
     name: 'CNEL projects',
     kicker: 'Computational NeuroEngineering Lab',
     description: 'Voltage imaging, biological time-series modeling, and experiment infrastructure connected to CNEL research at UF.',
-    links: [{ href: 'neurev/review/index.html', label: 'NeuRev Review: label calcium events' }]
+    links: [
+      { href: 'research-archive.html#cnel', label: 'Research archive: dated timeline' },
+      { href: 'neurev/review/index.html', label: 'NeuRev Review: label calcium events' }
+    ]
   },
   sps: {
     slug: 'research-sps.html',
@@ -853,6 +856,7 @@ async function main() {
     loadJson('data/photography.json'),
     loadWriting()
   ]);
+  const archive = await loadJson('data/research_archive.json');
   const aboutData = await loadJson('data/about.json');
 
   const projects = [
@@ -1073,6 +1077,7 @@ async function main() {
           <span class="read" aria-hidden="true">Open the track →</span>
         </article>`).join('')}
       </div>
+      <p class="archive-pointer reveal">Looking for how the work got here? The <a href="research-archive.html">research archive</a> keeps a dated record of each project: what was tried, why, and what it showed.</p>
 
       <section class="accent-amber">
         <h2 class="section-title reveal">Featured project pages</h2>
@@ -1144,6 +1149,57 @@ async function main() {
       }]
     }));
   }
+
+  // Research archive: a dated record of each track's work, kept in
+  // data/research_archive.json. Entries carry methods and qualitative outcomes
+  // only -- numbers must already be public elsewhere on the site.
+  const archiveStatus = { finished: 'Done', superseded: 'Superseded', ongoing: 'Ongoing', paused: 'Paused' };
+  const monthName = (ym) => new Date(`${ym}-01T00:00:00Z`).toLocaleDateString('en-US', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  const entryDate = (d) => (d.length > 7
+    ? new Date(`${d}T00:00:00Z`).toLocaleDateString('en-US', { month: 'short', day: 'numeric', timeZone: 'UTC' })
+    : 'During the month');
+  const archiveTracks = Object.entries(archive.tracks).map(([key, meta]) => {
+    const entries = archive.entries.filter((e) => e.track === key).sort((a, b) => a.date.localeCompare(b.date));
+    const months = [...new Set(entries.map((e) => e.date.slice(0, 7)))];
+    return { key, meta, entries, months };
+  });
+  await writePage('research-archive.html', pageShell({
+    outputPath: 'research-archive.html',
+    title: 'Research Archive | Raul Valle',
+    description: archive.description,
+    pageType: 'CollectionPage',
+    main: `<div class="container">
+      <section class="page-hero reveal">
+        <nav class="breadcrumbs arc-crumbs" aria-label="Breadcrumb"><a href="research.html">Research</a> / Archive</nav>
+        <div class="kicker">Research archive</div>
+        <h1 class="h1">${escapeHtml(archive.heading)}</h1>
+        <p class="lead">${escapeHtml(archive.lead)}</p>
+        <p class="archive-note">${escapeHtml(archive.note)}</p>
+      </section>
+      ${archiveTracks.map(({ key, meta, entries, months }) => `<section class="arc-track" id="${key}" data-track="${key}">
+        <div class="arc-track-head reveal">
+          <div class="kicker">${escapeHtml(trackMeta[key].label)} · ${escapeHtml(meta.span)}</div>
+          <h2 class="section-title">${escapeHtml(meta.heading)}</h2>
+          <p class="section-subtitle">${escapeHtml(meta.intro)}</p>
+          ${(meta.links || []).length ? `<div class="cta-row">${meta.links.map((link) => `<a class="btn" href="${link.href}">${escapeHtml(link.label)}</a>`).join('')}</div>` : ''}
+        </div>
+        ${months.map((ym) => `<div class="arc-month">
+          <h3 class="arc-month-label"><time datetime="${ym}">${monthName(ym)}</time></h3>
+          <ol class="arc-list">
+            ${entries.filter((e) => e.date.startsWith(ym)).map((e) => `<li class="arc-entry${e.importance >= 4 ? ' arc-major' : ''}">
+              <div class="arc-when"><time datetime="${e.date}">${entryDate(e.date)}</time><span class="arc-status arc-${e.status}">${archiveStatus[e.status]}</span></div>
+              <div class="arc-body">
+                <h4 class="arc-title">${escapeHtml(e.title)}</h4>
+                <p>${escapeHtml(e.summary)}</p>
+                ${e.learned ? `<p class="arc-learned"><span>What it showed</span> ${escapeHtml(e.learned)}</p>` : ''}
+                ${(e.links || []).length ? `<p class="arc-links">${e.links.map((link) => `<a href="${link.href}"${/^https?:/.test(link.href) ? ' target="_blank" rel="noreferrer"' : ''}>${escapeHtml(link.label)}</a>`).join('')}</p>` : ''}
+              </div>
+            </li>`).join('')}
+          </ol>
+        </div>`).join('')}
+      </section>`).join('')}
+    </div>`
+  }));
 
   await writePage('blog.html', pageShell({
     outputPath: 'blog.html',
@@ -1526,6 +1582,7 @@ async function main() {
     'contact.html',
     'research.html',
     ...Object.values(trackMeta).map((track) => track.slug),
+    'research-archive.html',
     'blog.html',
     'awards.html',
     'photography.html',

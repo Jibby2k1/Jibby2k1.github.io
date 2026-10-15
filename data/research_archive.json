@@ -1,0 +1,446 @@
+{
+  "heading": "A dated record of the research",
+  "lead": "What I tried, why I tried it, and what each step showed — including the dead ends. Project pages describe where the work stands; this page shows how it got there.",
+  "note": "Entries describe methods and qualitative outcomes. Results that are unpublished or still under review are described without figures, and open questions are marked as open.",
+  "description": "A dated archive of Raul Valle's research: what was tried, why, and what each step showed, starting with zebrafish neural-imaging work at CNEL.",
+  "tracks": {
+    "cnel": {
+      "heading": "Zebrafish neural imaging",
+      "span": "Jan–Oct 2026",
+      "intro": "Detecting brief neural events in zebrafish imaging video, and working out which parts of the signal are identifiable at all. The work began with a voltage-imaging detection pipeline in January. Calcium-imaging work started in May, when new recordings arrived from the lab, and moved to a spontaneous calcium-burst recording in July.",
+      "links": [
+        {
+          "label": "Project page",
+          "href": "projects/zebrafish-voltage-imaging-detection.html"
+        },
+        {
+          "label": "Code on GitHub",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench"
+        }
+      ]
+    }
+  },
+  "entries": [
+    {
+      "track": "cnel",
+      "date": "2026-01-29",
+      "title": "A radar-style detection pipeline for voltage-imaging video",
+      "summary": "The project started with high-frame-rate voltage-imaging videos of zebrafish, and its first committed code was a detection pipeline borrowed from radar. Preprocessing filters can be swapped in and out: a Gamma spatio-temporal enhancement filter, or a Kalman filter with a maximum-correntropy criterion for robust background estimation. Both feed a CFAR (constant false-alarm rate) detector. A parallel grid search sweeps filter and detector parameters, and operating points are chosen against a hand-labelled video with detection-theory metrics (FROC curves, truncated AUC) rather than by eye.",
+      "learned": "The starting premise was to treat microscopy as a detection problem, with thresholds that adapt to the local background. Whether that local adaptation actually helps, rather than only moving detections around, became something the later work had to test instead of assume.",
+      "status": "superseded",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Project page",
+          "href": "projects/zebrafish-voltage-imaging-detection.html"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-05-11",
+      "title": "First calcium recordings, and a review workbench to go with them",
+      "summary": "Work resumed in May, when new calcium-imaging recordings arrived from the lab. A resting hindbrain video has an uneven, clustered background, so a single global threshold was never going to work. The first method combined temporal high-pass filtering, robust z-scores against each pixel's own neighbourhood, compact connected-component proposals, and a per-region trace with a slow robust baseline that flags positive transients. Alongside it I built a browser workbench where a scientist steps through candidate regions and events with zoom, contrast and overlay controls. Decisions are accept, reject or unsure at both region and event level, and they save automatically and export. By the end of the week it also had missed-neuron discovery views, a pipeline lab that documents every stage and parameter, and tools for tracking reviewer provenance.",
+      "learned": "The output was a set of candidates for a person to review, not a validated detector. Nothing had been labelled yet, and the defaults were heuristic, so the immediate need was annotation, not more tuning.",
+      "status": "superseded",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Resting-video algorithm brief",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/RESTING_VIDEO_ALGORITHM_BRIEF.md"
+        },
+        {
+          "label": "Workbench guide",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/NEURON_WORKBENCH.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-05-13",
+      "title": "Neurobench: a modular, tested research platform",
+      "summary": "I rebuilt the scripts into a modular platform with a command-line interface. It covers video loading and quality control, checksums, synthetic data, motion correction, chunked CFAR processing, a registry of pipeline stages with parameter sweeps, candidate ranking and active-learning batch selection, annotation and behaviour-alignment exports, and run logging. A raw-video-to-report workflow documents the full path. A long repeated-execution soak run followed, to confirm the software was stable before more data arrived.",
+      "learned": "The soak validated software reliability, not scientific accuracy. Keeping those two kinds of evidence apart became a working rule for the rest of the project.",
+      "status": "finished",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Raw video to report",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/raw_video_to_report.md"
+        },
+        {
+          "label": "Test and experiment report",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/TEST_AND_EXPERIMENT_REPORT.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-06-01",
+      "title": "CFAR sweeps on new recordings, and cells that never switch off",
+      "summary": "I ran cascaded Gamma-filter CFAR parameter sweeps on new resting and left/right-labelled calcium recordings and on an additional test video. At my advisor's request I added CFAR contrast maps and side-by-side raw-versus-detection views, so every intermediate stage could be inspected. Some brightly fluorescent cells stay on for long stretches, and a detector built for transient change tends to treat them as background. A high-recall variant combined short-lived CFAR detections with persistent green-channel evidence, but visual review showed many persistent cells were still missed.",
+      "learned": "Preprocessing aimed at transient change, such as temporal high-pass filtering, can remove cells that stay active. Persistent and transient activity seem to need separate evidence. With no labels at this point, that remained an observation, not a measurement.",
+      "status": "superseded",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Workbench guide",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/NEURON_WORKBENCH.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-06-08",
+      "title": "From detecting activity to modelling it: template-registered grid dynamics",
+      "summary": "A second workflow registers each fish video to a shared template and pools it onto a coarse grid, as groundwork for eventually predicting and steering activity rather than only detecting it. A CNN autoencoder compresses each grid frame and a recurrent model predicts the next latent code. Over the following weeks I compared latent recurrent and transformer models, pixel-space temporal CNNs, ConvGRU/ConvLSTM and residual-target variants on higher-resolution grids. Every model was scored against persistence, moving-average and simple kinetic baselines, with train and test split by whole video.",
+      "learned": "Temporal convolutional predictors beat persistence most consistently on held-out videos, but only modestly beyond a moving average. That makes them candidate forward models at best. Prediction is not control: showing control would need an explicit action channel and intervention data, so the work turned back to getting reliable neuron-level measurements first.",
+      "status": "paused",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Grid workflow",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/TEMPLATE_GRID_WORKFLOW.md"
+        },
+        {
+          "label": "Inverse-control discussion brief",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/INVERSE_CONTROL_DISCUSSION_BRIEF.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-07-13",
+      "title": "A new spontaneous calcium-burst recording",
+      "summary": "A new spontaneous calcium-burst recording arrived, with soma-scale structure, persistent bright features and four population bursts. It became the main testbed for the rest of the year. I ran a bounded transfer study that kept three kinds of evidence apart: dark soma-core anatomy from a quiet pre-event baseline, broad positive excitation measured directly against that baseline, and local-contrast evidence from a CFAR-style detector. I also added a review mode that shows each candidate's outline beside the raw frame.",
+      "learned": "A CFAR-style detector only looks for positive local excursions, so dark soma cores staying background is expected behaviour, not a failure. Broad excitation showed up more strongly in a direct amplitude-versus-baseline lane than under local contrast, which suppresses spatially broad change. Without manual truth this said nothing yet about detection accuracy.",
+      "status": "finished",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Experiment history",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/programs/fish_inverse_control/EXPERIMENT_HISTORY.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-07-21",
+      "title": "Trying to make the CFAR detector learnable",
+      "summary": "Using sparse point labels on the burst recording, I tested whether a learnable contrast stage would recover more known events than the hand-designed one. The tests covered a learned contrast score, a factorial over spatiotemporal preprocessing and initialization, and a version that turned the hand-designed direct-amplitude baseline into learnable parameters. In the same week I reviewed the whole program, from activation detection through to closed-loop control, and rebuilt the workbench around a shared video catalogue with an always-visible annotation panel.",
+      "learned": "No learnable variant beat the hand-designed baseline. Starting from that baseline, training loss fell and the parameters moved, but the deployed threshold decisions did not improve. One specific chain of smoothing and robust rescaling removed signal outright. Forecasting, detection, intent and control turned out to be separate questions, each needing its own kind of ground truth.",
+      "status": "finished",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Experiment history",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/programs/fish_inverse_control/EXPERIMENT_HISTORY.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-07-27",
+      "title": "Multi-expert CFAR, frame differences, and denoise-then-difference",
+      "summary": "I screened a multi-expert CFAR whose experts varied spatial scale, robust background reference and causal temporal pooling. I also ran a causal proposal program built on frame differences and slowly adapting baselines, and fit ICA and NMF on adjacent frame pairs. These led to a 'denoise first, then differentiate' framework. To test it I added a first-order latent state-space model of the quiet-normalized residual, with a causal Kalman filter and an offline smoother, and presented the results to the lab group.",
+      "learned": "Scale, robust reference and temporal coherence helped CFAR, but fusing every expert hurt, and the multi-expert detector stayed below the direct baseline. ICA on adjacent frames recovers essentially a temporal derivative: useful timing evidence, not a separation of neural sources. In the latent model the denoised amplitude was the useful output, and differencing after denoising was not. The best variant was non-causal, so a real-time version that keeps the gain stayed an open step.",
+      "status": "finished",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Denoise then difference",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/DENOISE_THEN_DIFFERENCE.md"
+        },
+        {
+          "label": "Latent dynamics workflow",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/spon_ca_burst_latent_dynamics.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-07-29",
+      "title": "A representation benchmark and a hierarchical Parzen ICA proposal",
+      "summary": "I benchmarked standard representations on the burst recording: PCA, full-window spatial ICA, and linear and shallow nonlinear autoencoders, all scored under the same identification setup. I also built diagnostic overlays that colour matched, missed and unmatched candidates. That matters because the labels are sparse positives, so an unmatched candidate is unknown, not automatically a false alarm. Building on the adjacent-frame ICA result, I took up a two-stage hierarchical Parzen ICA proposal: first separate persistent background, then split the residual into structured signal and noise. I implemented the first stage and ran first tests the same day.",
+      "learned": "Deeper or higher-rank representations were not automatically better. The first hierarchical tests were mixed: background separation was only partly identifiable, and the signal/noise split did not come out clean.",
+      "status": "superseded",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Representation benchmark",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/spon_ca_burst_representation_benchmark.md"
+        },
+        {
+          "label": "Hierarchical Parzen ICA note",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/HIERARCHICAL_PARZEN_NOISY_ICA.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-07-30",
+      "title": "Public write-up: source separation for calcium imaging",
+      "summary": "I wrote up the calcium-burst source-separation program as a public research-journal post (it went live in August) and updated the project page. The program covered PCA and ICA, nonnegative factorization, spectral Wiener filtering, nonlocal denoising, Parzen models, latent dynamics, morphology-aware filters, CFAR variants, pairwise temporal separation and learned rankers. The post explains why sparse positive labels limit what can be claimed. It proposes keeping an untouched activity carrier and using separation outputs only as auxiliary ranking evidence.",
+      "learned": "At the candidate budget used then, quiet-field standardization and spatial context contributed more than model depth, and no denoising family passed every preservation gate. Later work showed these rankings depend on the operating point.",
+      "status": "finished",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Read the post",
+          "href": "notes/source-separation-for-zebrafish-calcium-imaging.html"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-03",
+      "title": "Information-theoretic ICA mostly rediscovers the frame difference",
+      "summary": "I tested whether ICA driven by information-theoretic objectives could pull neural activity apart from background. The objectives were Cauchy-Schwarz Parzen-window independence, and a dependent multiscale demixing model that lets related sources share structure. An adjacent-frame Parzen ICA converged cleanly, but the activity direction it found was almost exactly the frame-to-frame difference. Weighting training toward annotated events gave gains that depended on the fold and did not hold out. A synthetic identifiability study also turned up a design flaw: two test scenarios were numerically identical. I rebuilt it around source families that actually differ.",
+      "learned": "Without more structure, an expressive independence objective on adjacent frames collapses to a temporal derivative. Neither event weighting nor dependent-group demixing gave gains that held out and kept amplitude intact.",
+      "status": "finished",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Parzen ICA method reference",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/BASIC_TWO_FRAME_CS_PARZEN_ICA_METHOD_REFERENCE.md"
+        },
+        {
+          "label": "Identifiability study report",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/INFORMATION_SOURCE_SEPARATION_IDENTIFIABILITY_V1_FINAL_REPORT.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-09",
+      "title": "GPU multiscale normalization and ICA cascades",
+      "summary": "I moved the multiscale local-normalization and multiscale-ICA pipeline onto the GPU, which made broad screens practical. These covered stage orderings, multi-seed ensembles, cross-branch fusion, and alternative independence objectives (Parzen, HSIC, kNN mutual information, matrix-Rényi) over multi-lag and delay embeddings. Winners were chosen by label-free criteria, and label-assisted ceilings were reported separately as exploratory. For viewing the output, I compared framewise, rolling, causal-adaptive and fixed brightness scaling and settled on one zero-anchored global scale.",
+      "learned": "Reordering stages and averaging several ICA seeds helped more than adding depth. Individual components were unstable from seed to seed, but the averaged representation was consistent, which was treated as provisional. A fixed display scale avoided gain pumping, and hard max/min neighbourhood pooling merged nearby structures, so it was dropped.",
+      "status": "superseded",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Cascade results",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/MSLN_MSICA_CASCADE_V4_RESULTS.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-12",
+      "title": "From model sweeps to measurement",
+      "summary": "The available labels mark only some true events, so there was no way to tell whether an unmatched candidate was a missed neuron or an artifact. I prepared a detector-blinded review of the hardest annotated cases. Following a colleague's frame-level review, it keeps apart three issues that a single 'model miss' would hide: neuron identity, event timing, and morphology. I also built an annotation dashboard, plus a workflow that shows model proposals on recordings that had been captured but not yet annotated. A roadmap written that week ranked reviewing hard cases and building an exhaustively labelled region above any further broad model search.",
+      "learned": "The work had become limited by measurement, not model capacity, so reviewer time was planned ahead of compute.",
+      "status": "finished",
+      "importance": 5,
+      "links": [
+        {
+          "label": "Dashboard guide",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/HOW_TO_USE_DASHBOARD.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-20",
+      "title": "What does preprocessing contribute? Whitening against local normalization",
+      "summary": "ICA normally whitens its input first, so I asked whether my local normalization step was still needed or simply overlapped with whitening. I built a local covariance-whitening operator fitted on quiet periods, then a sequential program that tested learned and fractional whitening against a frozen baseline built directly from the raw movie. Samples, event windows and candidate budgets were held fixed so that only the preprocessing changed. A follow-up treated the whitening geometry itself (temporal, spatial or joint, with size and rank) as an ICA hyperparameter, screened first on synthetic data with known sources.",
+      "learned": "A whitened coordinate is a statistical coordinate, not a cleaned movie or a biological source. On this recording, local and learned whitening added nothing measurable over the raw baseline. No whitening geometry won across the board, since each traded trace preservation against decorrelation. That supported keeping ICA as auxiliary evidence rather than a required stage.",
+      "status": "finished",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Learned operator selection",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/spon_ca_burst_learned_operator_selection.md"
+        },
+        {
+          "label": "Whitening hyperparameter results",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/ICA_WHITENING_HYPERPARAMETER_EVALUATION_RESULTS.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-20",
+      "title": "The event waveform is shared by the surrounding tissue",
+      "summary": "I set up an unsupervised evaluation to check what the adjacent-frame ICA representation had actually learned. It used frozen representations, labels applied only at evaluation time, and time-shifted and spatial control windows. The ICA coordinate was enriched at annotated events, but it carried essentially the same information as a signed frame difference. The recurring event waveform also appeared in a matched ring of tissue around each region, and subtracting that ring left no reproducible neuron-specific waveform.",
+      "learned": "Event timing alone did not isolate a neuron-specific signature, and these tests could not tell whether the shared signal is a spatially shared burst or some other nuisance. That moved the core question from 'which model detects best' to 'what is identifiable at all'.",
+      "status": "finished",
+      "importance": 5,
+      "links": [
+        {
+          "label": "ICA assay",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/SPON_CA_BURST_TWO_FRAME_ICA_EXTERNAL_ASSAY_V1_RESULTS.md"
+        },
+        {
+          "label": "Ring-subtraction signature",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/SPON_CA_BURST_ROI_MINUS_ANNULUS_SIGNATURE_V1_RESULTS.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-08-29",
+      "title": "An identifiability program, an evidence registry, and learned-representation screens",
+      "summary": "I reorganized the project around neuron identifiability and published a schema-validated research registry. It records experiments, runs, evidence, claims and decisions separately, so that finishing a computation is never mistaken for a result. The next day I ran bounded screens on synthetic sources planted into real backgrounds. These covered a self-supervised spatiotemporal JEPA, a 'movie minus learned background' residual, background predictors, and a motion and registration audit, each with automated diagnostics. I also tested whether a small nonlinear network fused candidate features better than a linear model, and built a feature atlas spanning temporal, spatial, nuisance and contextual-envelope features.",
+      "learned": "In this small screen the JEPA representation collapsed to a few dimensions, and neither it nor the learned-background residual beat an interpretable baseline of activity carrier, spatial context and calcium kinetics. The small network did not beat linear fusion, and the new features mostly re-expressed an ordering that was already available.",
+      "status": "finished",
+      "importance": 4,
+      "links": [
+        {
+          "label": "Changelog",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/CHANGELOG.md"
+        },
+        {
+          "label": "JEPA screen",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/SPATIOTEMPORAL_JEPA_SCREEN_V1_RESULTS.md"
+        },
+        {
+          "label": "Feature atlas",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/SPON_CA_BURST_FEATURE_ATLAS_V1_RESULTS.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-09",
+      "title": "Consolidating on the simplest defensible detector",
+      "summary": "Because source separation and learned fusion had added little beyond a signed frame difference, I ran a final campaign to find the smallest pipeline the evidence could defend. The result is a single-scale causal chain: spatial smoothing, a causal exponential average, a signed frame difference, a CFAR-style local-standardization score, an empirical threshold and non-maximum suppression. Its outputs are frame-level candidate proposals, not confirmed events. ICA and PCA whitening were each tested against a protected improvement rule and kept as controls. Batch GPU throughput was measured, and paced streaming trials were run against a strict 1 kHz real-time gate.",
+      "learned": "No tested elaboration earned a place over plain signed differencing, and the chosen spatial support works but is not shown to be sufficient. Batch throughput was fast, but sustained 1 kHz streaming did not pass its strict gate.",
+      "status": "superseded",
+      "importance": 5,
+      "links": [
+        {
+          "label": "Current work",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/CURRENT_WORK.md"
+        },
+        {
+          "label": "Campaign results",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/research/SPON_CA_BURST_GAMMA_LS_PAPER_SUCCESS_RESULTS_2026_09_09.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-15",
+      "title": "Is each part of the detector necessary?",
+      "summary": "Over the following week I ran a family of controlled studies to find which parts of the detector actually matter. They compared direct and serial reference statistics, crossed activity level against activity change, and contrasted regional with global threshold calibration. Others tested crowded sources (a weak source beside a strong one), synthetic noise-covariance and background-gradient controls, reference-window weighting and distance, proposals that persist across frames, and 2D against causal 3D kernels. Midway through, the contribution was narrowed to CFAR prescreening. The synthetic studies sealed their outputs before truth was joined, and every study required a visual audit.",
+      "learned": "Each design question got its own controlled study instead of being assumed. These are development studies on one recording plus synthetic controls, not independent confirmation.",
+      "status": "finished",
+      "importance": 3,
+      "links": [
+        {
+          "label": "Necessity study",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/gamma_ls_necessity.md"
+        },
+        {
+          "label": "Control study",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/docs/workflows/gamma_ls_control_study.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-18",
+      "title": "A preregistered program: tracing where known events are lost",
+      "summary": "Results across earlier campaigns had been hard to compare, so I reset to a preregistered execution plan: baselines frozen in advance, sealed outputs, and decision gates fixed before any data is scored. The first stage confirmed that an independent replay reproduces the historical detector candidate for candidate. It then traced each known labelled event through the detector, stage by stage, to locate where events are lost. Synthetic tests probed how frame differencing handles slow plateaus and closely spaced sources. From this analysis I proposed a candidate-birth rule keyed on change in amplitude rather than static amplitude.",
+      "learned": "Tracing events stage by stage turns 'the detector misses events' into a concrete question about which stage loses them. Whether the new birth rule holds up across operating points and on a second recording is still being evaluated.",
+      "status": "ongoing",
+      "importance": 4,
+      "links": []
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-22",
+      "title": "Baselines at a matched candidate budget, and a verified GPU port",
+      "summary": "I added standard baselines and compared them with the local-standardization detector at an equal candidate budget, so no method gets credit just for proposing more. The baselines were matched filters, cell-averaging CFAR and spot detectors, and the comparison also covered low-SNR synthetic conditions. To make the studies practical I moved the dominant ranking stage onto the GPU. I then checked it end to end against the sealed CPU outputs, and every output matched exactly.",
+      "learned": "For a prescreener, comparing detectors at an equal candidate budget is the fair test. A GPU port has to be verified end to end against sealed reference outputs, and robust order statistics can make double precision necessary.",
+      "status": "finished",
+      "importance": 3,
+      "links": []
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-24",
+      "title": "Two recordings, and what carries over between them",
+      "summary": "I limited exploratory analysis to two recordings: the spontaneous burst recording, and a newer session recorded with visual stimulation. The goal was to distil what was known about the first into a few concepts, then test whether each carries over to the second. For the new session I built a reusable, label-free candidate pipeline with per-file registration, tissue and saturation masks, and several independent candidate generators. I profiled the labelled events in the burst recording (amplitude relative to local noise, rise and decay, footprint, regional brightening) and tried planting synthetic events built from those profiles back into real video.",
+      "learned": "Basic noise structure carried over: per-pixel noise tracks brightness, and calibration does not drift over minutes. Planted events failed the realism check, because real events arrive inside burst context (regional brightening, active neighbours) that planted ones lack. A synthetic-injection test cannot settle which detector is better until planting reproduces that context.",
+      "status": "finished",
+      "importance": 3,
+      "links": []
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-27",
+      "title": "Is local standardization justified?",
+      "summary": "Two questions came up. Why does a plain matched filter score some real events higher than the local-standardization detector? And does local standardization actually reduce false alarms? I first tested whether a per-pixel noise map estimated from rest epochs could serve as the reference for re-anchoring thresholds. I then ran a dedicated study that separated three things a normalization stage can do: reduce false alarms, hold its trigger rate steady, or change which events it finds. To make the detection-versus-false-alarm trade-off explicit, I also evaluated the detectors with free-response operating characteristic (FROC) curves on synthetic data with full ground truth, instead of at a single operating point.",
+      "learned": "A likely explanation for the matched filter's higher scores is that it keeps the regional brightening around active cells, which local standardization subtracts. Local standardization's clearest effect was on calibration, keeping its trigger rate near target, rather than on finding more events. Whether it reduces false alarms appeared to depend on the recording.",
+      "status": "finished",
+      "importance": 5,
+      "links": [
+        {
+          "label": "Project page",
+          "href": "projects/zebrafish-voltage-imaging-detection.html"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-09-29",
+      "title": "A pivot to causal spatiotemporal matched filters",
+      "summary": "My advisor and I reconsidered whether local standardization should be the method we propose. We moved the focus to simple matched filters upgraded to causal spatiotemporal filters, with as little conditioning as possible, judged on streaming speed as well as detection. Acquisition details from the lab (light-sheet microscopy, a GCaMP6f line, soma size and indicator kinetics) let me match the filters to the physics: a soma-scale spatial kernel, a GCaMP-shaped temporal profile, and a slow per-pixel baseline. A temporal variant of local standardization, which uses each pixel's own recent past as its reference, stayed in as a comparator. The next targets were 1 kHz streaming and synthetic multi-plane video streams for throughput testing.",
+      "learned": "Early, exploratory comparisons point to physics-matched filters and per-pixel temporal references as the most promising directions. Whether same-frame local standardization adds detection value beyond a matched filter is being evaluated against them.",
+      "status": "ongoing",
+      "importance": 5,
+      "links": [
+        {
+          "label": "Project page",
+          "href": "projects/zebrafish-voltage-imaging-detection.html"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-10-08",
+      "title": "Adaptive thresholds, difference views, and an annotation kit for brief events",
+      "summary": "As a diagnostic, I tested whether causal, locally adaptive threshold controllers on the existing detector score could recover missed events. I also tried a three-part prescreener: frame-wide nuisance separation, an adaptive per-pixel baseline that freezes during activity, and a soma-scale profile bank. To see fast activity more clearly I built frame-difference and slower multi-frame difference views, and compared several temporal constructions in theory, by eye and then on equal noise footing. Finally I drafted an annotation kit for very brief events that appear and vanish within a frame or two. It treats labels made on the raw view as the confirmatory ones, because a difference movie is itself a fast detector.",
+      "learned": "Most missed events never came close to any threshold, so the score itself is the bottleneck, not the threshold rule. In exploratory tests on the burst recording, neither the three-part prescreener nor the difference constructions caught up with the physics-matched filter, and simply pooling their candidates added nothing.",
+      "status": "finished",
+      "importance": 3,
+      "links": []
+    },
+    {
+      "track": "cnel",
+      "date": "2026-10-13",
+      "title": "NeuRev Review: a browser tool for labelling candidate events",
+      "summary": "Ground truth had become the main bottleneck, so I built a labeller that turns 'scan every pixel of every frame' into a ranked queue. The detector proposes candidates, and a person accepts or declines each short clip, shown as raw video, a locally standardized view and a centre-versus-ring trace. Blinded random controls and hidden reference events are mixed into the queue, to measure what the detector misses and how consistent reviewers are. It runs entirely in the browser, saves every answer as it is given, and exports a results file. A second version, with decline reasons and a separate step for linking items that show the same cell, is waiting for the current labelling round to finish.",
+      "learned": "",
+      "status": "ongoing",
+      "importance": 5,
+      "links": [
+        {
+          "label": "Open NeuRev Review",
+          "href": "neurev/review/index.html"
+        },
+        {
+          "label": "Labeller README",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/neurobench/tools/event_labeler/README.md"
+        },
+        {
+          "label": "Labelling guide",
+          "href": "https://github.com/Jibby2k1/NeuRev-Workbench/blob/main/neurobench/tools/event_labeler/LABELLING.md"
+        }
+      ]
+    },
+    {
+      "track": "cnel",
+      "date": "2026-10-13",
+      "title": "Multi-frame derivatives, few-label features, and a lesson about the metric",
+      "summary": "While labels were being collected, I ran a short exploratory feature study. It mapped the family of multi-frame derivative filters, tested label-free and few-label ways to re-rank or reject candidates (including positive-unlabelled learning), and added features from the literature: local correlation, peak-to-noise ratio, a cell-scale Laplacian-of-Gaussian, footprint shape and an autoregressive calcium-decay fit. I also checked whether each feature could be computed fast enough for streaming. Afterwards I made side-by-side videos for my advisor that put the original recording next to short and longer multi-frame difference views.",
+      "learned": "The literature features added nothing measurable. The small gains some re-rankers showed were reproduced by a control that demoted candidates at random, because recall on a fixed-size candidate list rewards spreading candidates over more sites. Any future feature claim needs that control.",
+      "status": "finished",
+      "importance": 3,
+      "links": []
+    }
+  ]
+}
