@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.raulv.dev/</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/about.html</loc>
@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/research.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/research-physics.html</loc>
@@ -34,7 +34,7 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/blog.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/awards.html</loc>
@@ -46,7 +46,7 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/cfd-surrogate-modeling.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/kernel-adaptive-memory.html</loc>
@@ -111,6 +111,22 @@
   <url>
     <loc>https://www.raulv.dev/neurev/review/index.html</loc>
     <lastmod>2026-10-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/inputs-before-capacity.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/superposing-learned-one-particle-flows.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/when-converging-is-the-wrong-goal.html</loc>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html</loc>

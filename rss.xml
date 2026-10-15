@@ -7,6 +7,34 @@
     <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering building machine learning for physical and neural systems: surrogate models for computational fluid dynamics, neural-imaging analysis, and research software.</description>
     
     <item>
+      <title>A research loop across two clusters</title>
+      <link>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</link>
+      <guid>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>How we organised hundreds of surrogate-model experiments across a university GPU cluster and a national-lab machine, with written targets, small screens before large grids, and gates that caught our own mistakes.</description>
+    </item>
+    <item>
+      <title>Inputs before capacity: one surrogate for 36 suspensions</title>
+      <link>https://www.raulv.dev/notes/inputs-before-capacity.html</link>
+      <guid>https://www.raulv.dev/notes/inputs-before-capacity.html</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger.</description>
+    </item>
+    <item>
+      <title>Superposing learned one-particle flows: a surrogate for settling suspensions</title>
+      <link>https://www.raulv.dev/notes/superposing-learned-one-particle-flows.html</link>
+      <guid>https://www.raulv.dev/notes/superposing-learned-one-particle-flows.html</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>How a single learned one-particle response, summed over neighbours and made self-consistent, reconstructs the flow inside dense suspensions of settling particles, and what the network ends up learning.</description>
+    </item>
+    <item>
+      <title>When converging is the wrong goal</title>
+      <link>https://www.raulv.dev/notes/when-converging-is-the-wrong-goal.html</link>
+      <guid>https://www.raulv.dev/notes/when-converging-is-the-wrong-goal.html</guid>
+      <pubDate>Thu, 15 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Step sizes, adaptive rules and acceleration for a self-consistent state iteration inside a learned flow model, and why the model's exact fixed point turned out not to be its best prediction.</description>
+    </item>
+    <item>
       <title>A claim wall for biomechanics</title>
       <link>https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html</link>
       <guid>https://www.raulv.dev/notes/a-claim-wall-for-biomechanics.html</guid>

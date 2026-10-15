@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Inputs before capacity: one surrogate for 36 suspensions | Raul Valle Writing</title>
+  <meta name="description" content="Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Inputs before capacity: one surrogate for 36 suspensions | Raul Valle Writing" />
+  <meta property="og:description" content="Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger." />
+  <meta property="og:url" content="https://www.raulv.dev/notes/inputs-before-capacity.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/research/cfd/what-improved.webp" />
+  <meta property="og:image:alt" content="Bar chart showing held-out accuracy rising as the inputs were log-scaled and the particle state was corrected for the mean fluid velocity." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Inputs before capacity: one surrogate for 36 suspensions | Raul Valle Writing" />
+  <meta name="twitter:description" content="Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/research/cfd/what-improved.webp" />
+  <meta name="twitter:image:alt" content="Bar chart showing held-out accuracy rising as the inputs were log-scaled and the particle state was corrected for the mean fluid velocity." />
+  <link rel="canonical" href="https://www.raulv.dev/notes/inputs-before-capacity.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js","https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/notes/inputs-before-capacity.html#webpage","url":"https://www.raulv.dev/notes/inputs-before-capacity.html","name":"Inputs before capacity: one surrogate for 36 suspensions | Raul Valle Writing","description":"Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"BlogPosting","@id":"https://www.raulv.dev/notes/inputs-before-capacity.html#post","headline":"Inputs before capacity: one surrogate for 36 suspensions","description":"Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger.","datePublished":"2026-10-15","dateModified":"2026-10-15","author":{"@id":"https://www.raulv.dev/#person"},"publisher":{"@id":"https://www.raulv.dev/#person"},"image":"https://www.raulv.dev/assets/img/research/cfd/what-improved.webp","mainEntityOfPage":"https://www.raulv.dev/notes/inputs-before-capacity.html","articleSection":"Research log","keywords":["scientific machine learning","generalization","fluid dynamics","surrogate modeling"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://www.raulv.dev/blog.html"},{"@type":"ListItem","position":3,"name":"Inputs before capacity: one surrogate for 36 suspensions","item":"https://www.raulv.dev/notes/inputs-before-capacity.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="physics">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">Research log</div>
+          <h1 class="h1">Inputs before capacity: one surrogate for 36 suspensions</h1>
+          <p class="lead">Training one particle-flow surrogate for every simulated suspension at once, and why rescaling two inputs and fixing the reference frame mattered more than making the network bigger.</p>
+          <div class="meta hero-meta"><span class="track">Oct 15, 2026</span> · scientific machine learning · generalization · fluid dynamics · surrogate modeling</div>
+          <div class="hero-media"><img src="../assets/img/research/cfd/what-improved.webp" alt="Bar chart showing held-out accuracy rising as the inputs were log-scaled and the particle state was corrected for the mean fluid velocity." width="1517" height="602" loading="lazy" decoding="async" /></div>
+        </section>
+
+        <section class="project-detail reveal" data-track="physics">
+          <div class="project-main">
+            <article class="card reveal prose-card">
+              <h2 class="project-section-title">Entry</h2>
+              <p>The first version of the <a href="superposing-learned-one-particle-flows.html">one-particle flow surrogate</a> was trained one simulation case at a time. That is fine for a proof of concept and useless as a tool: a surrogate that has to be retrained for every new suspension saves nothing. So the next question was whether a single model, trained on all 36 packed cases at once, could match the per-case models, and whether it could predict cases it had never seen.</p>
+<h2>The first shared model, and what broke it</h2>
+<p>The shared model trained without trouble and scored a median R² of 0.71 across the 36 cases, about 0.09 below the per-case models. On a held-out split (28 cases in training, 8 never seen), the self-consistent state improved five of the eight unseen cases and diverged on two. One of those, Case 32, has a particle-to-fluid density ratio of 256; the other, Case 3, is the only 64-particle case at density ratio 55.</p>
+<p>The tempting reading was capacity: one network stretched over 36 different suspensions. A deeper network did close most of the gap on the training cases. But the density ratio enters the network as a raw number between 2.56 and 256, next to a volume fraction between 0.02 and 0.29 and a Reynolds number between about 5 and 70. Raw, it dominates the scalar input.</p>
+<p>Putting the Reynolds number and density ratio on a log scale (and standardising all three scalars) changed the picture.</p>
+<figure class="writeup-figure"><img class="figure-img" src="../assets/img/research/cfd/what-improved.webp" alt="Paired bars of fixed-state and refined R² on unseen cases and on all 36 cases, for raw inputs, log-scaled inputs, and the two forms of the mean-fluid correction." loading="lazy" decoding="async" /><figcaption>Medians over cases, 32 outer cycles, 4 seeds. Left: the 8 held-out cases. Right: all 36 cases, each in training.</figcaption></figure>
+<p>With log-scaled inputs the held-out median rose from 0.68 to 0.75, and the self-consistent state improved all eight unseen cases. That held at eight seeds (held-out median 0.743, gains on 8 of 8). The deeper network, by contrast, fitted the training cases about as well as the log-scaled paper model and then reached only 0.43 on the held-out cases: depth had been compensating for a badly scaled input, and that compensation did not transfer.</p>
+<p>With the inputs scaled, capacity stopped mattering.</p>
+<figure class="writeup-figure"><img class="figure-img" src="../assets/img/research/cfd/capacity-grid.webp" alt="Heat map of median refined R² over network depth 3 to 9 and width 100 to 400." loading="lazy" decoding="async" /><figcaption>Shared model with log-scaled inputs, 16 cycles, 2 seeds. Each cell shows the median refined R² and the worst single-case gain from the self-consistent state.</figcaption></figure>
+<p>Across a fourfold range of width and a threefold range of depth, the median moved within 0.795 to 0.810, and the larger models had worse worst cases. We kept the original size.</p>
+<h2>Fixing the reference frame</h2>
+<p>Prof. Balachandar pointed out that our particle state was defined in the wrong frame. The simulations conserve zero net flux of the mixture, so while the particles settle, the fluid moves upward on average, by ⟨u_f⟩ = −φ⟨u_p⟩ / (1 − φ). A particle's slip, the quantity its one-particle response depends on, should be measured relative to that mean fluid velocity, not to a fluid at rest. In a suspension at volume fraction 0.26 the corrected state is about 1.36 times the particle velocity; in a dilute one it barely changes.</p>
+<figure class="writeup-figure"><img class="figure-img" src="../assets/img/research/cfd/mean-fluid-correction.webp" alt="Bars per case showing the change in fixed-state and refined R² from the mean-fluid correction in per-case training." loading="lazy" decoding="async" /><figcaption>Per-case training, 2 labels per case. The correction raises the starting accuracy most in the dense, mobile Case 13.</figcaption></figure>
+<p>In per-case training the correction raised the starting (fixed-state) accuracy everywhere, by 0.055 in Case 13, and nudged the refined result up. At density ratio 256 it changed almost nothing, consistent with heavy particles whose own velocity is already a reasonable local state. In the shared model the correction only paid off once the predicted fluid velocity was also measured relative to the mean flow; correcting the state alone made two unseen cases worse, because the network then had to rebuild the mean upflow out of particle contributions. With both, the held-out median reached 0.765, the best shared model so far.</p>
+<h2>The baseline we should have used first</h2>
+<p>For a while the comparison looked finished: the shared model with log-scaled inputs reached 0.807 against 0.799 for the per-case models. But those per-case models used raw inputs. Trained with the same log-scaled inputs, they reach 0.813 at 16 cycles and 0.817 at 32, and the gap reopens to about 0.014 to 0.020. Giving the shared model two training epochs per cycle (the per-case models get four) brings it back to about 0.010, concentrated in a few 64-particle cases. The lesson is general: when an input change helps, rerun the baseline with the same change before declaring parity.</p>
+<h2>Where it stops working</h2>
+<p>To map transfer case by case, we trained 36 shared models, each leaving one case out, and scored each on the case it never saw.</p>
+<figure class="writeup-figure"><img class="figure-img" src="../assets/img/research/cfd/leave-one-case-out.webp" alt="Dot plot of the held-out refined R² for each of the 36 cases before and after the mean-fluid correction." loading="lazy" decoding="async" /><figcaption>Leave-one-case-out, one seed, 16 cycles. Grey: before the correction; blue: after. Values below −1 are clipped.</figcaption></figure>
+<p>Most cases transfer: the held-out median is 0.745 against 0.799 for the same cases in training, and the two seeds we ran agree to about 0.01. The failures are cases with no near neighbour in particle count, density ratio and Reynolds number. Case 4, the only 64-particle case at density ratio 256, fell to −8.8, and the self-consistent state made it worse, amplifying an error the fixed state had already made. The mean-fluid correction rescued it (0.39) and softened two others, but two different cases then failed; a second seed is separating noise from effect.</p>
+<p>We also tried to make extrapolation safe without labels: watch each case's fixed-point residual and hold or reset its state when the residual leaves the range seen in training. The residual flagged the worst cases and never fired on good ones, but neither action reliably helped, because a model trained on refined states misreads an unrefined one. The honest conclusion is that this surrogate interpolates, and the fix for extrapolation is data coverage, not a correction inside the model.</p>
+            </article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal"><h2 class="project-section-title">Key takeaways</h2><ul><li>When one input spans two orders of magnitude, scale it before adding capacity; a deeper network compensated on the training cases but did not transfer.</li><li>The fair baseline for a shared model is a per-case model trained on the same inputs, and changing the baseline changed our conclusion.</li><li>The shared model interpolates across particle count, density ratio and Reynolds number; it does not extrapolate, and no label-free safeguard we tried made extrapolation safe.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="stack-links"><a class="related-link" href="../projects/cfd-surrogate-modeling.html"><strong>Learning surrogate models for computational fluid dynamics</strong><span>Ph.D. research in the SmartDATA Lab: learned surrogates that stand in for expensive CFD solvers, judged on stability, physical consistency, and generalization.</span></a></div></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../neurev/review/index.html">NeuRev Review</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

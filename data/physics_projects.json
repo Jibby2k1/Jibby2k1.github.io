@@ -23,7 +23,7 @@
       "links": [],
       "details": {
         "overview": "The project asks a simple question with a demanding answer: when can a learned model stand in for a numerical fluid-dynamics solver? A surrogate that is fast but physically wrong is worse than useless in a design loop, so the program treats evaluation — rollout stability, conservation behavior, and out-of-distribution generalization — as a first-class research object rather than an afterthought.",
-        "status": "Active research since Fall 2025 · results not yet public.",
+        "status": "Active research since Fall 2025 · first results written up in the research log (October 2026).",
         "collaborators": [
           "SmartDATA Lab, University of Florida — Dr. Joel B. Harley (advisor)"
         ],

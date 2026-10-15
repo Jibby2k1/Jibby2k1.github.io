@@ -359,6 +359,62 @@
     "width": 1316,
     "height": 934
   },
+  "assets/img/research/cfd/capacity-grid.webp": {
+    "width": 579,
+    "height": 587
+  },
+  "assets/img/research/cfd/gain-all-cases.webp": {
+    "width": 1600,
+    "height": 565
+  },
+  "assets/img/research/cfd/inference-acceleration.webp": {
+    "width": 1600,
+    "height": 464
+  },
+  "assets/img/research/cfd/inference-curve.webp": {
+    "width": 1142,
+    "height": 617
+  },
+  "assets/img/research/cfd/learned-response-grid.webp": {
+    "width": 1600,
+    "height": 1348
+  },
+  "assets/img/research/cfd/learned-response-profiles.webp": {
+    "width": 1568,
+    "height": 617
+  },
+  "assets/img/research/cfd/leave-one-case-out.webp": {
+    "width": 1517,
+    "height": 602
+  },
+  "assets/img/research/cfd/mean-fluid-correction.webp": {
+    "width": 1217,
+    "height": 527
+  },
+  "assets/img/research/cfd/method.webp": {
+    "width": 1600,
+    "height": 700
+  },
+  "assets/img/research/cfd/one-point-walkthrough.webp": {
+    "width": 1600,
+    "height": 623
+  },
+  "assets/img/research/cfd/step-size-curves.webp": {
+    "width": 1600,
+    "height": 663
+  },
+  "assets/img/research/cfd/training-length.webp": {
+    "width": 1517,
+    "height": 542
+  },
+  "assets/img/research/cfd/two-particles.webp": {
+    "width": 1600,
+    "height": 715
+  },
+  "assets/img/research/cfd/what-improved.webp": {
+    "width": 1517,
+    "height": 602
+  },
   "assets/img/research/source-separation/budget-recall-curves.svg": {
     "width": 1600,
     "height": 1000
