@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Does a hidden layer know more than its input? | Raul Valle Writing</title>
+  <meta name="description" content="A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any." />
+  <meta name="author" content="Raul Valle" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+  <meta name="theme-color" content="#f3f0e9" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#171412" media="(prefers-color-scheme: dark)" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Does a hidden layer know more than its input? | Raul Valle Writing" />
+  <meta property="og:description" content="A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any." />
+  <meta property="og:url" content="https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html" />
+  <meta property="og:site_name" content="Raul Valle" />
+  <meta property="og:image" content="https://www.raulv.dev/assets/img/research/hlds/layers-versus-input.webp" />
+  <meta property="og:image:alt" content="Dot plot for seven model configurations showing, for each latent layer, its own-delta accuracy next to the input's on the same feature row; no layer clears its input by more than the noise." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Does a hidden layer know more than its input? | Raul Valle Writing" />
+  <meta name="twitter:description" content="A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any." />
+  <meta name="twitter:image" content="https://www.raulv.dev/assets/img/research/hlds/layers-versus-input.webp" />
+  <meta name="twitter:image:alt" content="Dot plot for seven model configurations showing, for each latent layer, its own-delta accuracy next to the input's on the same feature row; no layer clears its input by more than the noise." />
+  <link rel="canonical" href="https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html" />
+  <link rel="alternate" type="application/rss+xml" title="Raul Valle Writing RSS" href="../rss.xml" />
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="../assets/img/favicon-48.png" type="image/png" sizes="48x48" />
+  <link rel="apple-touch-icon" href="../assets/img/apple-touch-icon.png" />
+  <script>(function(){var d=document.documentElement;d.classList.add('js');var t=null;try{t=localStorage.getItem('theme');}catch(e){}if(!t&&window.matchMedia&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark')d.setAttribute('data-theme','dark');})();</script>
+  <link rel="preload" href="../assets/fonts/fraunces-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="../assets/fonts/source-serif-4-latin-var.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="stylesheet" href="../assets/css/styles.css" />
+  <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Person","@id":"https://www.raulv.dev/#person","name":"Raul Valle","url":"https://www.raulv.dev/","image":"https://www.raulv.dev/assets/img/me/Raul_me.webp","jobTitle":"Ph.D. Student in Electrical and Computer Engineering","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","email":"mailto:raulresearch@proton.me","knowsAbout":["Scientific machine learning","Computational fluid dynamics (CFD) surrogate modeling","Physics-informed machine learning","Neural operators","Reduced-order modeling","Signal processing","Time-series machine learning","Neuroengineering","Electroencephalography (EEG)","State-space models","Statistical detection","Research software engineering","Python","PyTorch","GPU computing"],"alumniOf":{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},"homeLocation":{"@type":"Place","name":"Gainesville, Florida, USA"},"affiliation":[{"@type":"CollegeOrUniversity","name":"University of Florida","url":"https://www.ufl.edu/"},{"@type":"CollegeOrUniversity","name":"University of Florida Department of Electrical & Computer Engineering","url":"https://www.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"SmartDATA Lab, University of Florida","url":"https://smartdata.ece.ufl.edu/"},{"@type":"ResearchOrganization","name":"Computational NeuroEngineering Lab"},{"@type":"Organization","name":"IEEE Signal Processing Society at the University of Florida","url":"https://ieee-sps-uf.raulv.dev/"}],"sameAs":["https://orcid.org/0009-0004-0487-0086","https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en","https://github.com/Jibby2k1","https://www.linkedin.com/in/raul-valle1/","https://x.com/Jibby2k1","https://www.instagram.com/raul.research/","https://www.youtube.com/watch?v=yuJaMaA18js","https://ai.ufl.edu/ai-university/ai-faculty-awards/biography/raul-valle.html"]},{"@type":"WebSite","@id":"https://www.raulv.dev/#website","url":"https://www.raulv.dev/","name":"Raul Valle","description":"Raul Valle is a Ph.D. student in Electrical and Computer Engineering at the University of Florida. He builds machine-learning surrogate models for computational fluid dynamics in the SmartDATA Lab, and his neuroengineering work in the Computational NeuroEngineering Lab spans event detection and source separation for neural imaging, state-space modeling, and time-series experiment infrastructure.","publisher":{"@id":"https://www.raulv.dev/#person"},"inLanguage":"en-US"},{"@type":"WebPage","@id":"https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html#webpage","url":"https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html","name":"Does a hidden layer know more than its input? | Raul Valle Writing","description":"A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any.","inLanguage":"en-US","about":{"@id":"https://www.raulv.dev/#person"},"isPartOf":{"@id":"https://www.raulv.dev/#website"}},{"@type":"BlogPosting","@id":"https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html#post","headline":"Does a hidden layer know more than its input?","description":"A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any.","datePublished":"2026-10-18","dateModified":"2026-10-18","author":{"@id":"https://www.raulv.dev/#person"},"publisher":{"@id":"https://www.raulv.dev/#person"},"image":"https://www.raulv.dev/assets/img/research/hlds/layers-versus-input.webp","mainEntityOfPage":"https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html","articleSection":"Research log","keywords":["state-space models","preregistration","representation learning","research methodology"]},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://www.raulv.dev/"},{"@type":"ListItem","position":2,"name":"Writing","item":"https://www.raulv.dev/blog.html"},{"@type":"ListItem","position":3,"name":"Does a hidden layer know more than its input?","item":"https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html"}]}]}</script>
+</head>
+<body>
+  <header class="site-header">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="container navbar" role="navigation" aria-label="Primary">
+    <a class="brand" href="../index.html" aria-label="Raul Valle — home">
+      <span class="brand-copy">
+        <span class="brand-name">Raul Valle</span>
+      </span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false" aria-controls="navlinks">
+      <span aria-hidden="true">☰</span>
+    </button>
+
+    <nav class="navlinks" id="navlinks">
+      <a class="navlink" href="../index.html" data-route="index.html">Home</a>
+      <a class="navlink" href="../about.html" data-route="about.html">About</a>
+      <a class="navlink" href="../cv.html" data-route="cv.html">CV</a>
+      <a class="navlink" href="../research.html" data-route="research.html">Research</a>
+      <a class="navlink" href="../blog.html" data-route="blog.html">Writing</a>
+      <a class="navlink" href="../contact.html" data-route="contact.html">Contact</a>
+    </nav>
+
+    <div class="nav-right">
+      <a class="icon-link" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="icon-link" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="icon-link" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a>
+    </div>
+
+    <button class="icon-link theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark theme" title="Switch theme">
+      <svg class="icon-sun" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 7.5a4.5 4.5 0 1 0 0 9 4.5 4.5 0 0 0 0-9Zm0-5.5 1.8 3.2H10.2L12 2Zm0 20-1.8-3.2h3.6L12 22ZM2 12l3.2-1.8v3.6L2 12Zm20 0-3.2 1.8v-3.6L22 12ZM4.6 4.6l3.5 1-2.5 2.5-1-3.5Zm14.8 14.8-3.5-1 2.5-2.5 1 3.5Zm0-14.8-1 3.5-2.5-2.5 3.5-1ZM4.6 19.4l1-3.5 2.5 2.5-3.5 1Z"/></svg>
+      <svg class="icon-moon" aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M20.6 14.6A8.6 8.6 0 0 1 9.4 3.4 8.9 8.9 0 0 0 3 12a9 9 0 0 0 9 9 8.9 8.9 0 0 0 8.6-6.4Z"/></svg>
+      <span class="sr-only">Switch theme</span>
+    </button>
+  </div>
+</header>
+  <main id="main"><div class="container">
+        <section class="page-hero reveal" data-track="cnel">
+          <nav class="breadcrumbs" aria-label="Breadcrumb"><a href="../blog.html">Writing</a></nav>
+          <div class="kicker">Research log</div>
+          <h1 class="h1">Does a hidden layer know more than its input?</h1>
+          <p class="lead">A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any.</p>
+          <div class="meta hero-meta"><span class="track">Oct 18, 2026</span> · state-space models · preregistration · representation learning · research methodology</div>
+          <div class="hero-media"><img src="../assets/img/research/hlds/layers-versus-input.webp" alt="Dot plot for seven model configurations showing, for each latent layer, its own-delta accuracy next to the input's on the same feature row; no layer clears its input by more than the noise." width="1800" height="885" loading="lazy" decoding="async" /></div>
+        </section>
+
+        <section class="project-detail reveal" data-track="cnel">
+          <div class="project-main">
+            <article class="card reveal prose-card">
+              <h2 class="project-section-title">Entry</h2>
+              <p>The <a href="../projects/latent-signal-dynamical-classification.html">HLDS pipeline</a> turns a multichannel time-series recording into a stack of hidden trajectories: x, a filtered copy of the observation y, then u (16 dimensions), then z (2 dimensions) at the top. The data are a collaborator's dataset of 27 recordings, each trial carrying one of three condition labels. The tempting test is a classifier on z that beats chance.</p>
+<p>It is the wrong test. Every layer is a function of y, so anything a probe reads from z was already in y. The question that matters is narrower: does a layer carry condition information beyond its own input, in a form that is easier to read, and does that hold on recordings the analysis never touched? This post covers the protocol I built to answer it and the first three rounds. No round produced a layer that beat its input.</p>
+<h2>The protocol, written before the runs</h2>
+<ul><li><strong>Block folds.</strong> Each recording is cut into five contiguous segments, so test trials are never interleaved with training trials. That makes it much harder for slow drift to pass as decoding.</li><li><strong>A design null.</strong> Chance is not taken to be 1/3. Each null draw relabels a recording's trials with another recording's real condition sequence (or, in 13 of the 280 draws across the 14 explore recordings, a block rotation of one), while the fold partition stays fixed. A row's <em>own delta</em> is its balanced accuracy minus that recording's null mean.</li><li><strong>An explore/confirm split.</strong> 14 recordings for exploring and 13 held back, split with a fixed seed and stratified on a baseline's per-recording score. The goal I froze before round 2 added that each configuration gets at most one confirm run, declared in the ledger first.</li><li><strong>The screen.</strong> The rows are layer × summary (covariance or band-power of the trajectory; &quot;cov&quot; and &quot;bandpower&quot; in the figure) × probe (shrinkage linear discriminant analysis, written shrinkage LDA, or logistic regression; &quot;slda&quot; and &quot;lr&quot;). The <em>paired delta</em> d is layer minus y on the same summary and probe, per recording. A layer passes if, on its best row by d, d ≥ 0 and its own delta is positive at two-sided p &lt; 0.05.</li><li><strong>An input gate.</strong> Before any HLDS is trained on a new input, that input is probed alone. It passes if, on whichever of its four rows does best against the reference input, the mean paired difference is above zero.</li></ul>
+<p>The reference input is 20 channels summed into one signal, split into four frequency bands with 16 lags each: 64 columns. On the explore set it is a weak carrier. Its strongest row, covariance with shrinkage LDA, reaches own +0.040 (p 0.09), and only band-power with logistic regression clears p &lt; 0.05 (+0.027, p 0.042).</p>
+<h2>Round 0: six inputs and the default model</h2>
+<p>I probed six candidate inputs first. All six passed the gate, including one that sat below the reference on three of its four rows. Keeping channels separate gave the largest paired gain, +0.052 (p 0.044), and four spatial principal components gave the largest own delta, +0.075 (p 0.0014). No paired gain survives correction over the 24 input rows. A gate that everything passes is not filtering anything. Only one input was judged both worth training and affordable in round 1, the multi-modal one below: separate channels exceed the trainer's input size, four spatial components would have cost an estimated 37 times the default model, and two components were deferred on a weak gain and an estimated, never measured, cost of about 5.6 times.</p>
+<p>The default HLDS on the reference input failed the screen. u's best row had d −0.023 and own +0.008 (p 0.69); z's had d −0.026 and own +0.005 (p 0.75). Some rows were nominally significantly <em>worse</em> than y: z band-power with logistic regression had d −0.047 (p 0.008). The diagnostics suggested why: u and z had about one effective dimension within a trial (participation ratio 1.06-1.10, against 5.15 for y), and trials looked more alike in the layers than in the input.</p>
+<h2>Round 1: five noise settings and a multi-modal arm</h2>
+<p>The obvious knob was the noise hierarchy. By default each layer's process noise is ten times smaller than the one below (σz 0.001, σu 0.01, σx 0.1, with observation noise σy 1), so I gave the upper layers more noise to let them move. I ran five settings plus a multi-modal arm that adds a second recorded signal to the input (11 recordings had enough usable coverage of it).</p>
+<figure class="writeup-figure"><img class="figure-img" src="../assets/img/research/hlds/layers-versus-input.webp" alt="Dot plot comparing each latent layer's own delta on its best row with the input's own delta on the same row, for the default model, five noise settings and a multi-modal arm." loading="lazy" decoding="async" /><figcaption>Explore set, block folds, 20 null draws. Teal: the layer on its best row. Grey: the input on that row. Open: the input's strongest row. Right: paired d with a 95% CI. The dot gap differs slightly from d because each row has its own null.</figcaption></figure>
+<p>Raising the noise brought most best rows closer to the input: across the five settings, best-row d ranged from −0.023 to +0.020. The largest, +0.020, was for u with both upper noises at 0.1, with a 95% CI of −0.019 to +0.058. No best row reached own p &lt; 0.05; the closest was z in the inverted setting (σx lowered to 0.01, σu and σz raised to 0.1), at 0.052. With best-row selection over seven configurations and two layers, about 0.7 to 1 false pass would be expected by chance alone; none occurred. The open circles show a second point: selecting the best row by d favours rows where the input is weak. The input's own strongest row (+0.040, or +0.066 with p 0.033 for the multi-modal input) sat at or above every layer's best row. Off the best rows, two z covariance rows with shrinkage LDA did clear own p &lt; 0.05 (+0.043, p 0.034, and +0.034, p 0.042), but both had a negative paired d against the input on the same row (−0.006 and −0.012): above chance is not beyond the input. In the multi-modal arm both layers fell below the input (d −0.039 and −0.047).</p>
+<p>In the default and multi-modal models the point estimates sat below the input, though not significantly on the best rows; under raised noise the best rows sat near the input, never significantly above it. Across all seven, no layer significantly beat its input. At n = 14 this is absence of evidence, and best-row gains of about +0.06 to +0.07 cannot be excluded.</p>
+<h2>The rows that looked like a lead</h2>
+<p>Outside the pre-registered family, log-variance rows of the layers looked good: u in the inverted setting reached own +0.055 (p 0.003) with logistic regression. They could not count, but I checked them afterwards, on the explore set only, against unsupervised controls of the same size: the log-variance of 16 principal components of the input for u, 2 for z, fitted on training trials, and random projections of the same sizes. With the same probe, the 16-component control alone reached own +0.053 (p 0.014), and +0.074 (p 0.008) with shrinkage LDA. Layer minus its matched control ranged from −0.035 to +0.033, with every p ≥ 0.16. Against the input's own covariance row the layer rows were within ±0.02 (every p ≥ 0.53): they cleared p &lt; 0.05 where that row did not, a difference in significance, not in accuracy. This is what projecting to a few dimensions gives without any dynamics, though paired intervals about ±0.05 wide leave differences of that size open. The matched principal-component control became a required comparison in the redesign.</p>
+<h2>Round 2: nothing moved, so nothing was screened</h2>
+<p>Before round 2 I froze a goal and a stop rule, and made a label-free <em>move check</em> binding: on two explore recordings and one fold, u or z needs within-trial participation ratio ≥ 1.5 and between-trial band-power spread ≥ 0.35 before it may see labels. 38 configurations covered every knob on the menu: the reset prior, no reset, smoothed states and a learned observation matrix. None moved. The stop rule fired on its first condition, and the confirm set was never used.</p>
+<p>The label-free diagnosis that followed, in <a href="redesigning-a-model-so-its-latents-count.html">the next post</a>, found the first part of the reason: the summed input has roughly one slow direction, so the layers had little to spread into.</p>
+            </article>
+          </div>
+          <div class="project-side">
+            <article class="card reveal"><h2 class="project-section-title">Key takeaways</h2><ul><li>When a representation is computed from an input, the baseline is the input, not chance; a layer that decodes above chance may only be passing through what it was given.</li><li>A gate that every candidate passes is not a gate. All six input arms cleared the input gate, so passing it told me almost nothing.</li><li>Rows outside the pre-registered family looked strong until an unsupervised projection of the input of the same dimension did as well; their edge over the input's own covariance row was one of significance, not of accuracy.</li></ul></article>
+            <article class="card reveal"><h2 class="project-section-title">Related projects</h2><div class="stack-links"><a class="related-link" href="../projects/latent-signal-dynamical-classification.html"><strong>Latent-signal classification with hierarchical dynamical systems</strong><span>Pipeline that maps noisy multichannel time-series observations to compact latent trajectories with a Hierarchical Linear Dynamical System (HLDS), then evaluates those trajectories for classification, separability, and stability.</span></a></div></article>
+          </div>
+        </section>
+      </div></main>
+  <footer class="footer">
+  <div class="container footer-row">
+    <div class="footer-copy">
+      <div class="footer-label">Raul Valle</div>
+      <p>Machine learning for physical and neural systems at the University of Florida.</p>
+      <div class="footer-meta">© <span id="year"></span> Raul Valle · Built for GitHub Pages</div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Browse</div>
+      <div class="footer-links">
+        <a href="../index.html">Home</a>
+        <a href="../about.html">About</a>
+        <a href="../cv.html">CV</a>
+        <a href="../research.html">Research</a>
+        <a href="../blog.html">Writing</a>
+        <a href="../awards.html">Awards</a>
+        <a href="../photography.html">Photography</a>
+        <a href="../neurev/review/index.html">NeuRev Review</a>
+        <a href="../contact.html">Contact</a>
+      </div>
+    </div>
+
+    <div class="footer-group">
+      <div class="footer-label">Profiles</div>
+      <div class="footer-links profile-links">
+        <a class="profile-icon" href="https://github.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="GitHub" title="GitHub"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.59 2 12.25c0 4.53 2.87 8.36 6.84 9.72.5.09.68-.22.68-.49l-.01-1.89c-2.78.62-3.37-1.22-3.37-1.22-.45-1.18-1.11-1.5-1.11-1.5-.91-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.67.35-1.11.63-1.37-2.22-.26-4.55-1.14-4.55-5.05 0-1.12.39-2.03 1.03-2.74-.1-.26-.45-1.3.1-2.71 0 0 .84-.28 2.75 1.05A9.3 9.3 0 0 1 12 7.01c.85 0 1.7.12 2.5.34 1.9-1.33 2.74-1.05 2.74-1.05.55 1.41.2 2.45.1 2.71.64.71 1.03 1.62 1.03 2.74 0 3.92-2.34 4.79-4.57 5.04.36.32.68.94.68 1.9l-.01 2.79c0 .27.18.59.69.49A10.08 10.08 0 0 0 22 12.25C22 6.59 17.52 2 12 2Z"/></svg><span class="sr-only">GitHub</span></a><a class="profile-icon" href="https://www.linkedin.com/in/raul-valle1/" target="_blank" rel="me noreferrer" aria-label="LinkedIn" title="LinkedIn"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M6.94 8.95H3.57V20h3.37V8.95ZM5.25 4C4.17 4 3.3 4.86 3.3 5.92c0 1.08.87 1.94 1.95 1.94s1.95-.86 1.95-1.94C7.2 4.86 6.33 4 5.25 4Zm15.45 9.76c0-3.17-1.69-4.64-3.94-4.64-1.82 0-2.63 1-3.08 1.71V8.95h-3.37V20h3.37v-6.14c0-1.65.31-3.24 2.35-3.24 2 0 2.03 1.88 2.03 3.34V20h3.37v-6.24Z"/></svg><span class="sr-only">LinkedIn</span></a><a class="profile-icon" href="https://x.com/Jibby2k1" target="_blank" rel="me noreferrer" aria-label="X" title="X"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M14.4 10.55 21.48 2h-1.68l-6.15 7.43L8.75 2H3.1l7.42 11.23L3.1 22h1.68l6.49-7.65L16.45 22h5.65l-7.7-11.45Zm-2.3 2.78-.75-1.12-5.98-8.9h2.57l4.83 7.19.75 1.12 6.28 9.35h-2.57l-5.13-7.64Z"/></svg><span class="sr-only">X</span></a><a class="profile-icon" href="https://orcid.org/0009-0004-0487-0086" target="_blank" rel="me noreferrer" aria-label="ORCID" title="ORCID"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20ZM8.43 16.66H6.92V9.38h1.51v7.28ZM7.67 8.39a.88.88 0 1 1 0-1.76.88.88 0 0 1 0 1.76Zm5.24 8.27h-2.74V7.11h2.74c3.53 0 5.08 2.52 5.08 4.78 0 2.46-1.92 4.77-5.08 4.77Zm-.23-8.18h-.99v6.81h.99c3.11 0 3.75-2.36 3.75-3.4 0-1.69-1.08-3.41-3.75-3.41Z"/></svg><span class="sr-only">ORCID</span></a><a class="profile-icon" href="https://scholar.google.com/citations?user=v5_9hm8AAAAJ&hl=en" target="_blank" rel="me noreferrer" aria-label="Google Scholar" title="Google Scholar"><svg aria-hidden="true" focusable="false" viewBox="0 0 24 24"><path d="M12 3 2 9l10 6 8.18-4.91V16h1.5V9L12 3Zm0 13.74L5.5 12.9v3.07c0 1.55 2.91 3.03 6.5 3.03s6.5-1.48 6.5-3.03V12.9L12 16.74Z"/></svg><span class="sr-only">Google Scholar</span></a>
+      </div>
+    </div>
+  </div>
+</footer>
+  <script src="../assets/js/site.js"></script>
+</body>
+</html>

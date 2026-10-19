@@ -58,7 +58,7 @@
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/latent-signal-dynamical-classification.html</loc>
-    <lastmod>2026-10-13</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/projects/zebrafish-voltage-imaging-detection.html</loc>
@@ -115,6 +115,22 @@
   <url>
     <loc>https://www.raulv.dev/neurev/review/index.html</loc>
     <lastmod>2026-10-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/a-gate-that-could-not-fail-for-the-right-reason.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/redesigning-a-model-so-its-latents-count.html</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/notes/when-the-static-model-is-the-honest-baseline.html</loc>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</loc>

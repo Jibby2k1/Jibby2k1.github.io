@@ -7,6 +7,34 @@
     <description>Raul Valle is a University of Florida Ph.D. student in Electrical and Computer Engineering building machine learning for physical and neural systems: surrogate models for computational fluid dynamics, neural-imaging analysis, and research software.</description>
     
     <item>
+      <title>A gate that could not fail for the right reason</title>
+      <link>https://www.raulv.dev/notes/a-gate-that-could-not-fail-for-the-right-reason.html</link>
+      <guid>https://www.raulv.dev/notes/a-gate-that-could-not-fail-for-the-right-reason.html</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <description>A synthetic check on a label-trained latent failed because the effect it planted was too weak for the input's own trial mean to detect, and fixing it after the fact took a new dated section, a frozen calibration rule and one shot.</description>
+    </item>
+    <item>
+      <title>Does a hidden layer know more than its input?</title>
+      <link>https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html</link>
+      <guid>https://www.raulv.dev/notes/does-a-hidden-layer-know-more-than-its-input.html</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <description>A pre-registered protocol for asking whether the latent layers of a hierarchical linear dynamical system carry condition information beyond the signal they filter, and three rounds in which none showed any.</description>
+    </item>
+    <item>
+      <title>Redesigning a model so its latents count</title>
+      <link>https://www.raulv.dev/notes/redesigning-a-model-so-its-latents-count.html</link>
+      <guid>https://www.raulv.dev/notes/redesigning-a-model-so-its-latents-count.html</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Three pre-registered redesigns of a hierarchical linear dynamical system, a label-free gate on whether its latent layers had stopped collapsing, and what happened when two of them reached a labelled screen.</description>
+    </item>
+    <item>
+      <title>When the static model is the honest baseline</title>
+      <link>https://www.raulv.dev/notes/when-the-static-model-is-the-honest-baseline.html</link>
+      <guid>https://www.raulv.dev/notes/when-the-static-model-is-the-honest-baseline.html</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Classifying held-out trials by which per-condition hierarchical linear dynamical system explains them best, the controls that question needed, and why a static Gaussian did at least as well.</description>
+    </item>
+    <item>
       <title>A research loop across two clusters</title>
       <link>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</link>
       <guid>https://www.raulv.dev/notes/a-research-loop-across-two-clusters.html</guid>

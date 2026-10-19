@@ -419,6 +419,30 @@
     "width": 1517,
     "height": 602
   },
+  "assets/img/research/hlds/layers-versus-input.webp": {
+    "width": 1800,
+    "height": 885
+  },
+  "assets/img/research/hlds/plant-calibration.webp": {
+    "width": 1600,
+    "height": 832
+  },
+  "assets/img/research/hlds/planted-dynamics-check.webp": {
+    "width": 1600,
+    "height": 704
+  },
+  "assets/img/research/hlds/planted-gate-bars.webp": {
+    "width": 1600,
+    "height": 832
+  },
+  "assets/img/research/hlds/redesign-participation.webp": {
+    "width": 1740,
+    "height": 710
+  },
+  "assets/img/research/hlds/static-vs-hlds-ladder.webp": {
+    "width": 1600,
+    "height": 896
+  },
   "assets/img/research/source-separation/budget-recall-curves.svg": {
     "width": 1600,
     "height": 1000

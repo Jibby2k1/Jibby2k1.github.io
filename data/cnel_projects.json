@@ -250,7 +250,7 @@
         "collaborators": [
           "Computational NeuroEngineering Lab (CNEL), University of Florida"
         ],
-        "status": "Active research / ongoing iteration.",
+        "status": "Four pre-registered phases through October 2026, written up in the research log: no latent layer carried condition information beyond its own input; the next phase is in design.",
         "writeup": {
           "lead": "A state-space pipeline for turning noisy multichannel observations into latent trajectories that a classifier can evaluate.",
           "sections": [
