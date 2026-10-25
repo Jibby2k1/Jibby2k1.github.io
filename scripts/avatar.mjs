@@ -28,7 +28,7 @@ export function avatarPage({ prefix }) {
 
       <section id="play" class="card reveal avatar-play" data-avatar-viewer data-base="${prefix}assets/avatar/">
         <div class="avatar-stage">
-          <canvas width="247" height="240" role="img" aria-label="The avatar, rendered by the model. Drag sideways to turn it."></canvas>
+          <canvas width="206" height="240" role="img" aria-label="The avatar, rendered by the model. Drag sideways to turn it."></canvas>
           <noscript><p>The playground needs JavaScript. The video further down shows the avatar in motion.</p></noscript>
         </div>
         <div class="avatar-controls">
@@ -36,9 +36,9 @@ export function avatarPage({ prefix }) {
             ${moves.map(([key, name]) => `<button type="button" class="filter-btn" data-move="${key}" aria-pressed="false">${name}</button>`).join('\n            ')}
           </div>
           <label class="avatar-turn">Turn
-            <input type="range" min="0" max="6" step="1" value="3" data-avatar-turn aria-describedby="avatar-turn-hint" />
+            <input type="range" min="0" max="8" step="1" value="4" data-avatar-turn aria-describedby="avatar-turn-hint" />
           </label>
-          <p id="avatar-turn-hint" class="filter-hint">Drag the avatar or use the slider to turn it up to 30° either way.</p>
+          <p id="avatar-turn-hint" class="filter-hint">Drag the avatar or use the slider to turn it up to 60° either way.</p>
           <div class="cta-row">
             <button type="button" class="btn small" data-avatar-play aria-pressed="false">Play</button>
           </div>
@@ -55,14 +55,14 @@ export function avatarPage({ prefix }) {
           </article>
           <article class="card reveal">
             <h3>Every frame is a real render</h3>
-            <p>Each frame here was rendered by the model on my GPU, at seven turn angles and fourteen moments per move. The page just plays them back, so it is fast on any phone. The colours and shading are the model's own; nothing is drawn by hand.</p>
+            <p>Each frame here was rendered by the model on my GPU, at nine turn angles and fourteen moments per move. The page just plays them back, so it is fast on any phone. The colours and shading are the model's own; nothing is drawn by hand.</p>
           </article>
         </div>
         <figure class="card reveal avatar-video">
           <video controls muted loop playsinline preload="none" poster="${prefix}assets/avatar/avatar-copies-me-poster.webp" width="720" height="360">
             <source src="${prefix}assets/avatar/avatar-copies-me.mp4" type="video/mp4" />
           </video>
-          <figcaption>Left: a clip of me the model never trained on. Right: the avatar copying it, posed from the motion tracked in that clip.</figcaption>
+          <figcaption>Left: the second half of my motion clip, which the model never trained on. Right: the avatar copying it, posed from the motion tracked in that clip.</figcaption>
         </figure>
       </section>
 
@@ -71,15 +71,15 @@ export function avatarPage({ prefix }) {
         <div class="grid two">
           <article class="card reveal">
             <h3>1 · Two short videos</h3>
-            <p>A slow turn in place (about 30 seconds) for appearance, and a few seconds of free movement to copy. Phone camera, plain wall, no markers or special suit.</p>
+            <p>A slow turn in place (about 30 seconds) and a few seconds of free movement, on a phone, against a plain wall, with no markers or special suit. Plus four numbers: my height and my chest, waist and hip measurements.</p>
           </article>
           <article class="card reveal">
             <h3>2 · Tracking the body</h3>
-            <p>Every frame is cut out automatically, and a standard body model (SMPL) is fitted to it using the silhouette and 17 detected joints. The result is a skeleton pose for every frame.</p>
+            <p>Every frame is cut out automatically, and a standard body model (SMPL) is fitted to it using the silhouette and detected joints, nose, eyes and ears. The body's shape is fitted to views from all sides and to my measurements, and kept inside the outline of my clothes rather than inflated to fill it.</p>
           </article>
           <article class="card reveal">
             <h3>3 · Learning the appearance</h3>
-            <p>Following Gaussian Shell Maps (Abdal et al., CVPR 2024), five thin shells around the body each carry a texture of 3-D Gaussians. Their colour, opacity, size and orientation are adjusted until renders match the video, which takes about two minutes on one consumer GPU.</p>
+            <p>Following Gaussian Shell Maps (Abdal et al., CVPR 2024), five thin shells around the body each carry a texture of 3-D Gaussians. Their colour, opacity, size and orientation are adjusted until renders match the turn and the first half of the motion clip, which takes about two minutes on one consumer GPU.</p>
           </article>
           <article class="card reveal">
             <h3>4 · Posing it</h3>
@@ -92,12 +92,12 @@ export function avatarPage({ prefix }) {
         <h2 class="section-title reveal">Honest limits</h2>
         <div class="grid two">
           <article class="card reveal">
-            <h3>The front is sharp, the back is not</h3>
-            <p>Tracking was accurate while I faced the camera and much worse side-on or from behind. So this avatar was trained only on the well-tracked front-facing frames, which is why turning is limited to 30°.</p>
+            <h3>Sharpest from the front</h3>
+            <p>The first version tracked me well only while I faced the camera. Holding my position during the turn, fitting my shape from every side, and adding my real measurements cut the tracking error from about 42 to 9 pixels, so the sides and back are now learned too. They are still softer than the front.</p>
           </article>
           <article class="card reveal">
-            <h3>Raised arms smear</h3>
-            <p>The undersides of my arms were barely visible in the turn, so arms raised far from where they were filmed show streaks. Better tracking and a longer capture are the next steps.</p>
+            <h3>Poses far from anything filmed</h3>
+            <p>Training on part of the waving clip fixed most of the streaks on raised arms, but the undersides of my arms and deep poses like a squat were never seen, so they are still blurrier. A longer capture with more varied movement is the next step.</p>
           </article>
         </div>
       </section>

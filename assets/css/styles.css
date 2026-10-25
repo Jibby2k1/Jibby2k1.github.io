@@ -1912,7 +1912,7 @@ kbd{
 /* Avatar playground (avatar/index.html) */
 .avatar-play{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:center; }
 .avatar-stage{ display:flex; justify-content:center; background:var(--paper-2); border:1px solid var(--line); min-height:300px; }
-.avatar-stage canvas{ width:100%; max-width:420px; height:auto; aspect-ratio:247 / 240; touch-action:pan-y; cursor:grab; }
+.avatar-stage canvas{ width:100%; max-width:420px; height:auto; aspect-ratio:206 / 240; touch-action:pan-y; cursor:grab; }
 .avatar-stage canvas:active{ cursor:grabbing; }
 .avatar-controls{ display:grid; gap:14px; }
 .avatar-moves{ display:flex; flex-wrap:wrap; gap:8px; }
