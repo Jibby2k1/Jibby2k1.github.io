@@ -1,0 +1,45 @@
+{
+ "frame_w": 247,
+ "frame_h": 240,
+ "yaws_deg": [
+  -30,
+  -20,
+  -10,
+  0,
+  10,
+  20,
+  30
+ ],
+ "moves": {
+  "stand": {
+   "file": "avatar-stand.webp",
+   "frames": 1,
+   "bytes": 29392
+  },
+  "wave": {
+   "file": "avatar-wave.webp",
+   "frames": 14,
+   "bytes": 346842
+  },
+  "squat": {
+   "file": "avatar-squat.webp",
+   "frames": 14,
+   "bytes": 411526
+  },
+  "jacks": {
+   "file": "avatar-jacks.webp",
+   "frames": 14,
+   "bytes": 428760
+  },
+  "march": {
+   "file": "avatar-march.webp",
+   "frames": 14,
+   "bytes": 323208
+  },
+  "arms": {
+   "file": "avatar-arms.webp",
+   "frames": 14,
+   "bytes": 327284
+  }
+ }
+}

@@ -1908,3 +1908,17 @@ kbd{
 .arc-track-head{ margin-top:36px; }
 .arc-track-head .section-subtitle{ margin-top:10px; }
 .arc-track-head .section-title{ margin:6px 0 0; padding-top:0; border-top:0; }
+
+/* Avatar playground (avatar/index.html) */
+.avatar-play{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:24px; align-items:center; }
+.avatar-stage{ display:flex; justify-content:center; background:var(--paper-2); border:1px solid var(--line); min-height:300px; }
+.avatar-stage canvas{ width:100%; max-width:420px; height:auto; aspect-ratio:247 / 240; touch-action:pan-y; cursor:grab; }
+.avatar-stage canvas:active{ cursor:grabbing; }
+.avatar-controls{ display:grid; gap:14px; }
+.avatar-moves{ display:flex; flex-wrap:wrap; gap:8px; }
+.avatar-turn{ display:grid; gap:6px; color:var(--ink-soft); font-family:var(--serif); }
+.avatar-turn input{ width:100%; accent-color:var(--accent); }
+.avatar-status{ margin:0; color:var(--muted); font-size:0.95rem; min-height:1.4em; }
+.avatar-video{ margin-top:24px; }
+.avatar-video video{ width:100%; height:auto; display:block; background:var(--paper-2); }
+@media (max-width: 760px){ .avatar-play{ grid-template-columns:1fr; } }

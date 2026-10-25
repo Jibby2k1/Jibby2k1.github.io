@@ -4,6 +4,7 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 import { aboutPage, cvPage, contactPage } from './pages.mjs';
 import { neurevReviewPage } from './neurev-review.mjs';
+import { avatarPage } from './avatar.mjs';
 
 const root = process.cwd();
 const site = JSON.parse(await fs.readFile(path.join(root, 'data/site.json'), 'utf8'));
@@ -638,7 +639,7 @@ function markCard(project, prefix = '') {
   <p>${escapeHtml(project.description)}</p>
   <div class="cta-row">
     ${project.url ? `<a class="btn small primary" href="${project.url}" target="_blank" rel="me noreferrer">Open ${escapeHtml(project.name)}</a>` : ''}
-    <a class="btn small${project.url ? '' : ' primary'}" href="${prefix}projects/${project.slug}.html">Project page</a>
+    <a class="btn small${project.url ? '' : ' primary'}" href="${prefix}${project.page || `projects/${project.slug}.html`}">${escapeHtml(project.pageLabel || 'Project page')}</a>
   </div>
 </article>`;
 }
@@ -887,6 +888,15 @@ async function main() {
       description: 'A reasoning-mastery platform for rigorous STEM courses: attempt a problem, get a deterministic diagnosis of the exact idea you missed, repair the gap, and prove it in a new context.'
     },
     {
+      name: 'Avatar',
+      slug: 'avatar',
+      url: null,
+      page: 'avatar/',
+      pageLabel: 'Play with my avatar',
+      label: 'Hackathon project',
+      description: 'A 3-D Gaussian-splat avatar of me, built from two phone videos: drag to turn it and make it wave, squat, or do jumping jacks it was never filmed doing.'
+    },
+    {
       name: 'Media Cull Suite',
       slug: 'media-cull-suite',
       url: null,
@@ -937,6 +947,13 @@ async function main() {
     description: 'NeuRev Review is a browser tool for labelling calcium events in zebrafish light-sheet recordings: decide ranked candidate clips one at a time, privately, at your own pace.',
     pageType: 'WebPage',
     main: neurevReviewPage({ imgTag, prefix: prefixFor('neurev/review/index.html') })
+  }));
+  await writePage('avatar/index.html', pageShell({
+    outputPath: 'avatar/index.html',
+    title: 'Avatar: a 3-D Gaussian avatar from two phone videos | Raul Valle',
+    description: 'Play with a 3-D avatar of Raul Valle built from two phone videos with Gaussian Shell Maps: turn it, and make it wave, squat, or do jumping jacks it was never filmed doing.',
+    pageType: 'WebPage',
+    main: avatarPage({ prefix: prefixFor('avatar/index.html') })
   }));
   await writePage('neurev/review/app.html', readFileSync(path.join(root, 'vendor/neurev-review/app.html.vendored'), 'utf8'));
 
@@ -1045,7 +1062,7 @@ async function main() {
         item: {
           '@type': 'CreativeWork',
           name: item.name,
-          url: item.url || `${site.siteUrl}/projects/${item.slug}.html`,
+          url: item.url || `${site.siteUrl}/${item.page || `projects/${item.slug}.html`}`,
           description: item.description
         }
       }))
@@ -1588,6 +1605,7 @@ async function main() {
     'photography.html',
     ...projects.map((project) => `projects/${project.slug}.html`),
     'neurev/review/index.html',
+    'avatar/index.html',
     ...writing.map((post) => post.url)
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>

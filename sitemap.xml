@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://www.raulv.dev/</loc>
-    <lastmod>2026-10-15</lastmod>
+    <lastmod>2026-10-19</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/about.html</loc>
@@ -115,6 +115,10 @@
   <url>
     <loc>https://www.raulv.dev/neurev/review/index.html</loc>
     <lastmod>2026-10-13</lastmod>
+  </url>
+  <url>
+    <loc>https://www.raulv.dev/avatar/index.html</loc>
+    <lastmod>2026-10-19</lastmod>
   </url>
   <url>
     <loc>https://www.raulv.dev/notes/a-gate-that-could-not-fail-for-the-right-reason.html</loc>
