@@ -16,32 +16,32 @@
   "stand": {
    "file": "avatar-stand.webp",
    "frames": 1,
-   "bytes": 25314
+   "bytes": 25320
   },
   "wave": {
    "file": "avatar-wave.webp",
    "frames": 16,
-   "bytes": 418836
+   "bytes": 418138
   },
   "squat": {
    "file": "avatar-squat.webp",
    "frames": 16,
-   "bytes": 432730
+   "bytes": 438682
   },
   "jacks": {
    "file": "avatar-jacks.webp",
    "frames": 16,
-   "bytes": 489912
+   "bytes": 489604
   },
   "march": {
    "file": "avatar-march.webp",
    "frames": 16,
-   "bytes": 316772
+   "bytes": 319458
   },
   "arms": {
    "file": "avatar-arms.webp",
    "frames": 16,
-   "bytes": 428474
+   "bytes": 427810
   }
  }
 }
