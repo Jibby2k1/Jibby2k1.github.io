@@ -28,7 +28,7 @@ export function avatarPage({ prefix }) {
 
       <section id="play" class="card reveal avatar-play" data-avatar-viewer data-base="${prefix}assets/avatar/">
         <div class="avatar-stage">
-          <canvas width="206" height="240" role="img" aria-label="The avatar, rendered by the model. Drag sideways to turn it."></canvas>
+          <canvas width="189" height="220" role="img" aria-label="The avatar, rendered by the model. Drag sideways to turn it."></canvas>
           <noscript><p>The playground needs JavaScript. The video further down shows the avatar in motion.</p></noscript>
         </div>
         <div class="avatar-controls">
@@ -51,11 +51,11 @@ export function avatarPage({ prefix }) {
         <div class="grid two">
           <article class="card reveal">
             <h3>Moves I never filmed</h3>
-            <p>I never waved both hands at once, squatted or did jumping jacks on camera. Each move is typed in as joint angles for the skeleton, and the learned appearance follows it. That is the point of an avatar: it can do things the person was never recorded doing.</p>
+            <p>I never waved both hands at once, squatted or did jumping jacks on camera. Each move is written as joint rotations for the skeleton, with smooth timing and follow-through (elbows trail shoulders, the trunk leans into a squat), and the feet stay planted on the floor. The learned appearance follows. That is the point of an avatar: it can do things the person was never recorded doing.</p>
           </article>
           <article class="card reveal">
             <h3>Every frame is a real render</h3>
-            <p>Each frame here was rendered by the model on my GPU, at nine turn angles and fourteen moments per move. The page just plays them back, so it is fast on any phone. The colours and shading are the model's own; nothing is drawn by hand.</p>
+            <p>Each frame here was rendered by the model on my GPU, at nine turn angles and sixteen moments per move. The page just plays them back, so it is fast on any phone. The colours and shading are the model's own; nothing is drawn by hand.</p>
           </article>
         </div>
         <figure class="card reveal avatar-video">
