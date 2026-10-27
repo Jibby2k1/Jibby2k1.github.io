@@ -75,7 +75,7 @@
         <div class="cta-row">
           <a class="btn primary" href="#play">Play with the avatar</a>
           <a class="btn" href="#how">How it works</a>
-          <a class="btn" href="https://github.com/Jibby2k1/Avatar" target="_blank" rel="noreferrer">Code on GitHub</a>
+          <a class="btn" href="#tools">The two-camera pipeline</a>
         </div>
       </section>
 
@@ -169,18 +169,50 @@
           </article>
           <article class="card reveal">
             <h3>A fair test</h3>
-            <p>One take from that session will be set aside unopened and scored only once, after every choice about the model is final. Today's held-out score comes from later in the same clip the model learned from, and I used it to choose between versions, so it is a development number, not a sealed test. The full protocol is <a href="https://github.com/Jibby2k1/Avatar/blob/main/docs/CAPTURE_PROTOCOL.md" target="_blank" rel="noreferrer">on GitHub</a>.</p>
+            <p>One take from that session will be set aside unopened and scored only once, after every choice about the model is final. Today's held-out score comes from later in the same clip the model learned from, and I used it to choose between versions, so it is a development number, not a sealed test.</p>
           </article>
         </div>
+      </section>
+
+      <section id="tools" class="accent-cool">
+        <h2 class="section-title reveal">Built for the next recording</h2>
+        <p class="lead reveal">The software for that session is already written. The core pieces were tested on synthetic data where the right answer is known exactly, against pass marks set before the code existed. Several failed at first; each failure and what changed because of it is written down. None of it has met a real recording yet.</p>
+        <div class="grid two">
+          <article class="card reveal">
+            <h3>Measuring each lens</h3>
+            <p>A short video of a printed checkerboard gives each camera's focal length, centre and lens distortion, replacing today's guessed field of view. The tests taught me a practical rule: the board has to visit all four corners of the frame, or the lens model there is a guess, so the tool now warns when a corner was missed.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Lining up two cameras with a clap</h3>
+            <p>A sharp clap at the start and end of every take is found in both soundtracks, which aligns the two cameras to within a fraction of a millisecond in tests, corrects for one clock running slightly fast, and pairs frames by their own timestamps (phones do not record at a perfectly steady rate).</p>
+          </article>
+          <article class="card reveal">
+            <h3>Where the second camera stands</h3>
+            <p>Holding the board where both cameras see it gives the second camera's position and angle relative to the first; laying it on the floor gives the floor. On a simulated version of the planned setup, both come out within a twentieth of a degree and a few millimetres.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Tracking from two views at once</h3>
+            <p>The body is fitted to both cameras' outlines and joints together. On a simulated turn in place, the average joint error fell from 29 to 66 millimetres with one camera to 5 to 7 millimetres with two, with front, side and back views all improving by a similar amount.</p>
+          </article>
+          <article class="card reveal">
+            <h3>Thirty-six tape measurements</h3>
+            <p>Lengths such as shoulder to elbow and girths such as calf and wrist are defined on the body model the way a tape sees them, so a measured body can be fitted to them directly. On simulated bodies they pin the shape to about 5 millimetres, against 11 with the four numbers I gave last time.</p>
+          </article>
+          <article class="card reveal">
+            <h3>A fix that helped the avatar today</h3>
+            <p>Building the two-camera tracker exposed a flaw in the one I already had: it compared my outline at a scale where its own rendering of the body was blurry and full of gaps. Comparing it in a close crop around me fixed that, and re-tracking the existing videos with the fix is what made the avatar above better on the held-out clip.</p>
+          </article>
+        </div>
+        <article class="card reveal">
+          <h3>How the session will run</h3>
+          <p>Two cameras on tripods, about three metres away and seventy-five degrees apart, with focus, exposure and white balance locked and stabilisation off. First the checkerboard for each lens, then for both cameras together, then flat on the floor. Then a helper walks a slow circle around me at chest height, overhead and knee height while I hold still, arms out and then raised; I turn in place for both cameras; I perform each playground move for real; the helper films my face and hands up close; and one final take of mixed movement is set aside unopened as the sealed test. Every take starts and ends with a clap, and I take about thirty-six body measurements, arms and legs on both sides, twice each.</p>
+        </article>
       </section>
 
       <section class="accent-mint">
         <h2 class="section-title reveal">Credits</h2>
         <article class="card reveal">
-          <p>Built on <a href="https://github.com/computational-imaging/GSM" target="_blank" rel="noreferrer">Gaussian Shell Maps</a> (Abdal et al., CVPR 2024) and 3D Gaussian Splatting (Kerbl et al., SIGGRAPH 2023), with the SMPL body model (Loper et al., 2015), torchvision's Mask R-CNN and Keypoint R-CNN (He et al., 2017) and PyTorch3D. The fitting and tracking layer that turns two phone videos into this avatar is ours, written with help from Claude Code.</p>
-          <div class="cta-row">
-            <a class="btn" href="https://github.com/Jibby2k1/Avatar" target="_blank" rel="noreferrer">Code and benchmark results</a>
-          </div>
+          <p>Built on <a href="https://github.com/computational-imaging/GSM" target="_blank" rel="noreferrer">Gaussian Shell Maps</a> (Abdal et al., CVPR 2024) and 3D Gaussian Splatting (Kerbl et al., SIGGRAPH 2023), with the SMPL body model (Loper et al., 2015), torchvision's Mask R-CNN and Keypoint R-CNN (He et al., 2017) and PyTorch3D. The calibration, synchronisation and measurement tools use OpenCV, SciPy and FFmpeg. The fitting, tracking and evaluation layer that turns phone videos into this avatar is ours, written with help from Claude Code and OpenAI Codex; the code is kept in a private repository.</p>
         </article>
       </section>
     </div>
