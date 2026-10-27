@@ -75,7 +75,7 @@ export function avatarPage({ prefix }) {
           </article>
           <article class="card reveal">
             <h3>2 · Tracking the body</h3>
-            <p>Every frame is cut out automatically, and a standard body model (SMPL) is fitted to it using the silhouette and detected joints, nose, eyes and ears. The body's shape is fitted to views from all sides and to my measurements, and kept inside the outline of my clothes rather than inflated to fill it.</p>
+            <p>Every frame is cut out automatically, and a standard body model (SMPL) is fitted to it using the silhouette and detected joints, nose, eyes and ears. The body's shape is fitted to views from all sides and to my measurements, and kept inside the outline of my clothes rather than inflated to fill it. Only frames used for training inform the shape, so the held-out half of the motion clip stays a fair test.</p>
           </article>
           <article class="card reveal">
             <h3>3 · Learning the appearance</h3>
