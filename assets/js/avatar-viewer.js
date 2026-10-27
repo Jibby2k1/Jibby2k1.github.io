@@ -38,8 +38,8 @@
   function draw() {
     if (!idx) return;
     var img = sheet(move);
+    if (!img.complete || !img.naturalWidth) return;   // keep the last frame until the sheet arrives
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (!img.complete || !img.naturalWidth) return;
     var n = idx.moves[move].frames;
     var f = n > 1 ? frame % n : 0;
     ctx.drawImage(img, f * idx.frame_w, row * idx.frame_h, idx.frame_w, idx.frame_h, 0, 0, idx.frame_w, idx.frame_h);
@@ -78,6 +78,7 @@
 
   function setMove(name) {
     if (!idx) return;
+    sheet(name);                                       // start the download now, so a queued move is ready at the wrap
     if (playing && name === move) { pending = null; say(); return; }   // re-clicking the playing move keeps it going
     moveBtns.forEach(function (b) {
       var on = b.getAttribute('data-move') === name;
