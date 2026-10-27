@@ -93,11 +93,25 @@ export function avatarPage({ prefix }) {
         <div class="grid two">
           <article class="card reveal">
             <h3>Sharpest from the front</h3>
-            <p>The first version tracked me well only while I faced the camera. Holding my position during the turn, fitting my shape from every side, and adding my real measurements cut the tracking error from about 42 to 9 pixels, so the sides and back are now learned too. They are still softer than the front.</p>
+            <p>The first version tracked me well only while I faced the camera. Holding my position during the turn, fitting my shape from every side, and adding my real measurements cut the tracking error from about 40 pixels side-on to about 10 across the whole turn, so the sides and back are now learned too. They are still softer than the front.</p>
           </article>
           <article class="card reveal">
             <h3>Poses far from anything filmed</h3>
-            <p>Training on part of the waving clip fixed most of the streaks on raised arms. Surfaces the camera never saw, like the undersides of my arms and my armpits, are now coloured from their well-seen neighbours instead of being left grey, but that colour is an educated guess, and deep poses like a squat are still blurrier. A longer capture with more varied movement is the next step.</p>
+            <p>Training on part of the waving clip fixed most of the streaks on raised arms. Surfaces the camera never saw, like the undersides of my arms and my armpits, are now coloured from their well-seen neighbours instead of being left grey, but that colour is an educated guess, and deep poses like a squat are still blurrier.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="accent-amber">
+        <h2 class="section-title reveal">Next: a proper capture session</h2>
+        <div class="grid two">
+          <article class="card reveal">
+            <h3>What is planned</h3>
+            <p>Most of what still limits this avatar is the recording, not the model: one 720p phone with a guessed lens, loose clothes, and arms that were never raised during the turn. The next session uses two cameras calibrated with a checkerboard and synced with a clap, and a helper who films me holding still from every side at three heights, with my arms down and then raised. I will wear fitted clothes, record a library of the playground moves for real, and take a full set of body measurements.</p>
+          </article>
+          <article class="card reveal">
+            <h3>A fair test</h3>
+            <p>One take from that session will be set aside unopened and scored only once, after every choice about the model is final. Today's held-out score comes from later in the same clip the model learned from, and I used it to choose between versions, so it is a development number, not a sealed test. The full protocol is <a href="${REPO}/blob/main/docs/CAPTURE_PROTOCOL.md" target="_blank" rel="noreferrer">on GitHub</a>.</p>
           </article>
         </div>
       </section>
