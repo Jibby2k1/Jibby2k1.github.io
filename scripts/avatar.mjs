@@ -92,7 +92,7 @@ export function avatarPage({ prefix }) {
         <div class="grid two">
           <article class="card reveal">
             <h3>Sharpest from the front</h3>
-            <p>The first version tracked me well only while I faced the camera. Holding my position during the turn, fitting my shape from every side, and adding my real measurements cut the tracking error from about 40 pixels side-on to about 10 across the whole turn, so the sides and back are now learned too. Comparing my outline in a close crop around me, instead of across the whole frame, tightened the fit again, and the avatar now matches the held-out half of the motion clip noticeably better. The sides and back are still softer than the front.</p>
+            <p>The first version tracked me well only while I faced the camera. Holding my position during the turn, fitting my shape from every side, and adding my real measurements cut the tracking error from about 40 pixels side-on to about 10 across the whole turn, so the sides and back are now learned too. Comparing my outline in a close crop around me, instead of across the whole frame, tightened the fit again, and the avatar now matches the held-out half of the motion clip noticeably better. A last per-frame touch-up of every pose, matched to my outline as the avatar itself draws it with the clothes included, added a little more. The sides and back are still softer than the front.</p>
           </article>
           <article class="card reveal">
             <h3>Poses far from anything filmed</h3>

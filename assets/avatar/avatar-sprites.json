@@ -13,16 +13,16 @@
   60
  ],
  "crop_px": [
-  109,
+  111,
   499,
-  100,
-  425
+  101,
+  424
  ],
  "union_px": [
-  109,
+  111,
   499,
-  100,
-  425
+  101,
+  424
  ],
  "zpush": 1.35,
  "motion": "3",
@@ -32,44 +32,44 @@
  "fx": 395.63674840146564,
  "moves": {
   "stand": {
-   "file": "avatar-stand-m6.webp",
+   "file": "avatar-stand-m7.webp",
    "frames": 1,
-   "bytes": 24634,
+   "bytes": 24742,
    "q": 56,
    "fps": 9
   },
   "wave": {
-   "file": "avatar-wave-m6.webp",
+   "file": "avatar-wave-m7.webp",
    "frames": 16,
-   "bytes": 401520,
+   "bytes": 404980,
    "q": 56,
    "fps": 9
   },
   "squat": {
-   "file": "avatar-squat-m6.webp",
+   "file": "avatar-squat-m7.webp",
    "frames": 16,
-   "bytes": 387544,
+   "bytes": 394284,
    "q": 56,
    "fps": 9
   },
   "jacks": {
-   "file": "avatar-jacks-m6.webp",
+   "file": "avatar-jacks-m7.webp",
    "frames": 16,
-   "bytes": 402750,
+   "bytes": 409166,
    "q": 56,
    "fps": 12
   },
   "march": {
-   "file": "avatar-march-m6.webp",
+   "file": "avatar-march-m7.webp",
    "frames": 16,
-   "bytes": 312216,
+   "bytes": 316338,
    "q": 56,
    "fps": 12
   },
   "arms": {
-   "file": "avatar-arms-m6.webp",
+   "file": "avatar-arms-m7.webp",
    "frames": 16,
-   "bytes": 387168,
+   "bytes": 391758,
    "q": 56,
    "fps": 9
   }
