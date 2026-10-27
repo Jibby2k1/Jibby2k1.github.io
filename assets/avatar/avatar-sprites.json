@@ -32,42 +32,42 @@
  "fx": 395.63674840146564,
  "moves": {
   "stand": {
-   "file": "avatar-stand.webp",
+   "file": "avatar-stand-m3.webp",
    "frames": 1,
    "bytes": 25288,
    "q": 56,
    "fps": 9
   },
   "wave": {
-   "file": "avatar-wave.webp",
+   "file": "avatar-wave-m3.webp",
    "frames": 16,
    "bytes": 405754,
    "q": 56,
    "fps": 9
   },
   "squat": {
-   "file": "avatar-squat.webp",
+   "file": "avatar-squat-m3.webp",
    "frames": 16,
    "bytes": 396272,
    "q": 56,
    "fps": 9
   },
   "jacks": {
-   "file": "avatar-jacks.webp",
+   "file": "avatar-jacks-m3.webp",
    "frames": 16,
    "bytes": 410848,
    "q": 56,
    "fps": 12
   },
   "march": {
-   "file": "avatar-march.webp",
+   "file": "avatar-march-m3.webp",
    "frames": 16,
    "bytes": 321038,
    "q": 56,
    "fps": 12
   },
   "arms": {
-   "file": "avatar-arms.webp",
+   "file": "avatar-arms-m3.webp",
    "frames": 16,
    "bytes": 391810,
    "q": 56,
