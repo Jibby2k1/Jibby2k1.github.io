@@ -191,7 +191,7 @@ export function capturePage({ prefix }) {
             ${list([
               '<strong>Ready, proven on real footage:</strong> the single-camera pipeline that built the current avatar from a turn in place and a short movement clip, with a guessed lens.',
               '<strong>Built, not yet run on real footage:</strong> the checkerboard calibration and the step that prepares frames with the real lens. On simulated recordings the calibration finds the focal length to within 0.15 %, but it meets its accuracy target across the whole image only when the board reaches all four corners, and its strictest test, at the very corners, failed; that is recorded, not hidden. Take 0 is its first real test.',
-              '<strong>Not built yet:</strong> a fit made for the orbit, with the body fixed and the camera moving, and the scoring of this session’s sealed take. Until the orbit fit exists, the orbit is tracked as a turn in place, which has not yet been tried on an orbit.',
+              '<strong>Not working yet:</strong> a fit made for the orbit, with the body fixed and the camera moving, and the scoring of this session’s sealed take. A first orbit fit exists but failed its simulated test: on two of five simulated sessions it turned a whole pass back to front, and on the other three its body angle was off by as much as 6–8°, against a 3° target. Tracking the orbit as a turn in place, the earlier fallback, did worse on the same test. The orbits are still worth filming; the fit has to catch up.',
               '<strong>No helper?</strong> A tripod with takes 0 and 3–6 still works: the earlier method, now with a real lens model, fitted clothes, the arms-up turn and full measurements.'
             ])}
           </article>
