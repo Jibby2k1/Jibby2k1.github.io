@@ -5,6 +5,7 @@ import { execSync } from 'node:child_process';
 import { aboutPage, cvPage, contactPage } from './pages.mjs';
 import { neurevReviewPage } from './neurev-review.mjs';
 import { avatarPage } from './avatar.mjs';
+import { capturePage } from './capture.mjs';
 
 const root = process.cwd();
 const site = JSON.parse(await fs.readFile(path.join(root, 'data/site.json'), 'utf8'));
@@ -955,6 +956,13 @@ async function main() {
     pageType: 'WebPage',
     main: avatarPage({ prefix: prefixFor('avatar/index.html') })
   }));
+  await writePage('avatar/capture/index.html', pageShell({
+    outputPath: 'avatar/capture/index.html',
+    title: 'Recording guide: filming a 3-D avatar with one camera | Raul Valle',
+    description: 'Step-by-step protocol for filming a person for a 3-D Gaussian avatar with one phone and a helper: settings, checkerboard calibration, orbits, moves and measurements.',
+    pageType: 'WebPage',
+    main: capturePage({ prefix: prefixFor('avatar/capture/index.html') })
+  }));
   await writePage('neurev/review/app.html', readFileSync(path.join(root, 'vendor/neurev-review/app.html.vendored'), 'utf8'));
 
   await writePage('publications.html', `<!DOCTYPE html>
@@ -1606,6 +1614,7 @@ async function main() {
     ...projects.map((project) => `projects/${project.slug}.html`),
     'neurev/review/index.html',
     'avatar/index.html',
+    'avatar/capture/index.html',
     ...writing.map((post) => post.url)
   ];
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
