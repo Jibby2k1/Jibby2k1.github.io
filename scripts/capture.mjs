@@ -97,7 +97,7 @@ export function capturePage({ prefix }) {
             <h3>The room</h3>
             ${list([
               '<strong>Even, diffuse light</strong> from several sides. Avoid a window whose light changes and hard shadows, and keep the helper’s shadow off the subject during the orbits.',
-              '<strong>The whole room is background</strong>, because the orbit films every direction. No mirrors, TV screens or reflections, and nobody else in frame: the person detector must only ever see the subject. Walls that contrast with the clothes help.',
+              '<strong>The whole room is background</strong>, because the orbit films every direction. No mirrors, TV screens or reflections, and nobody else in frame: the person detector must only ever see the subject. Walls that contrast with the clothes help. So do a few still, textured things in view, like bookshelves, posters or a rug: they give a second, independent way to work out where the camera was. Nothing in the room should move during an orbit.',
               '<strong>Floor marks</strong>: a tape cross where the subject stands, and two foot marks hip-width apart, so every take starts from the same spot.'
             ])}
           </article>
