@@ -95,7 +95,11 @@
         <h3>SmartDATA Lab, University of Florida</h3>
         <div class="meta">Graduate researcher · Advisor: Dr. Joel B. Harley · Fall 2025–present</div>
         <ul class="cv-list">
-          <li>Surrogate modeling for computational fluid dynamics: learned stand-ins for expensive CFD solvers spanning neural operators (FNO/DeepONet), mesh-based graph networks, physics-informed training, and reduced-order latent dynamics, evaluated on rollout stability, physical consistency, and generalization.</li>
+          <li>Surrogate models for particle-resolved simulations of settling suspensions (up to 1,000 particles): one shared E(3)-equivariant network learns the velocity disturbance a single particle induces, and the fluid velocity anywhere is the sum of those disturbances over the nearest particles, with an optional self-consistent update of the particle states.</li>
+          <li>Pre-registered evaluation on 46 simulation cases with locked test snapshots: architecture comparisons (the original network against invariant-attention transformers), held-out density ratio, volume fraction and Reynolds number, and leave-one-case-out transfer.</li>
+          <li>Model analysis: attention probes and neighbour-removal tests of what the network learns, and a stability analysis of the state-refinement loop (spectral radius of its Jacobian, damping and stopping rules).</li>
+          <li>Ongoing: extending the same superposition model to the pressure field and to a velocity that conserves mass by construction, toward physically consistent particle forces.</li>
+          <li>Large GPU experiment campaigns on UF HiPerGator.</li>
         </ul>
       </article>
       <article class="card reveal">
@@ -166,7 +170,7 @@
           <h3>Methods</h3>
           <div class="pill-row">
             <span class="pill">Surrogate modeling</span>
-            <span class="pill">Physics-informed ML</span>
+            <span class="pill">Equivariant deep learning</span>
             <span class="pill">Signal processing</span>
             <span class="pill">State-space modeling</span>
             <span class="pill">Time-series ML</span>
