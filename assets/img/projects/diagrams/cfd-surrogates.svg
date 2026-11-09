@@ -1,47 +1,49 @@
 <svg class="diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="cfdsurrogates-title cfdsurrogates-desc">
-  <title id="cfdsurrogates-title">CFD surrogate modeling pipeline</title>
-  <desc id="cfdsurrogates-desc">High-fidelity CFD solver runs and PDE constraints train a family of learned surrogates — neural operators, mesh graph networks, and latent dynamics — yielding a fast surrogate that answers in milliseconds per case and is then audited for rollout stability and conservation behavior.</desc>
+  <title id="cfdsurrogates-title">Particle-superposition surrogate for settling suspensions</title>
+  <desc id="cfdsurrogates-desc">Each particle's state (its velocity relative to the fluid, density ratio and local volume fraction) and its offset to a fluid point go into one shared equivariant network, which returns that particle's disturbance at the point. The fluid velocity and pressure at the point are the sums over the nearest particles. The model is trained on particle-resolved simulation snapshots and audited on held-out snapshots and held-out flow regimes, and its surface forces are compared with full-resolution simulation fields.</desc>
   <defs>
     <marker id="cfdsurrogates-arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="userSpaceOnUse"><path class="d-arrow" d="M0,0 L10,5 L0,10 Z"/></marker>
   </defs>
 
   <!-- inputs -->
   <rect class="d-box" x="40" y="128" width="232" height="72" rx="1"/>
-  <text class="d-label" x="156" y="159" text-anchor="middle">CFD solver runs</text>
-  <text class="d-sub" x="156" y="183" text-anchor="middle">hours per case</text>
+  <text class="d-label" x="156" y="159" text-anchor="middle">particle state j</text>
+  <text class="d-sub" x="156" y="183" text-anchor="middle">slip · density ratio · φ</text>
 
   <rect class="d-box" x="40" y="308" width="232" height="72" rx="1"/>
-  <text class="d-label" x="156" y="339" text-anchor="middle">PDE constraints</text>
-  <text class="d-sub" x="156" y="363" text-anchor="middle">residual losses</text>
+  <text class="d-label" x="156" y="339" text-anchor="middle">fluid point x</text>
+  <text class="d-sub" x="156" y="363" text-anchor="middle">offset x − x_j</text>
 
-  <!-- surrogate families (group) -->
+  <!-- shared network, applied per neighbour -->
   <rect class="d-soft" x="308" y="86" width="308" height="308" rx="1"/>
-  <text class="d-sub" x="462" y="112" text-anchor="middle">learned surrogate families</text>
+  <text class="d-sub" x="462" y="112" text-anchor="middle">applied to each nearby particle</text>
 
   <rect class="d-box" x="322" y="128" width="280" height="72" rx="1"/>
-  <text class="d-label" x="462" y="159" text-anchor="middle">neural operators</text>
-  <text class="d-sub" x="462" y="183" text-anchor="middle">FNO · DeepONet</text>
+  <text class="d-label" x="462" y="159" text-anchor="middle">one shared network</text>
+  <text class="d-sub" x="462" y="183" text-anchor="middle">rotation / reflection equivariant</text>
 
   <rect class="d-box" x="322" y="218" width="280" height="72" rx="1"/>
-  <text class="d-label" x="462" y="249" text-anchor="middle">mesh graph networks</text>
-  <text class="d-sub" x="462" y="273" text-anchor="middle">unstructured geometry</text>
+  <text class="d-label" x="462" y="249" text-anchor="middle">one-particle disturbance</text>
+  <text class="d-sub" x="462" y="273" text-anchor="middle">velocity (and pressure) at x</text>
 
   <rect class="d-box" x="322" y="308" width="280" height="72" rx="1"/>
-  <text class="d-label" x="462" y="339" text-anchor="middle">latent dynamics</text>
-  <text class="d-sub" x="462" y="363" text-anchor="middle">reduced-order states</text>
+  <text class="d-label" x="462" y="339" text-anchor="middle">sum over neighbours</text>
+  <text class="d-sub" x="462" y="363" text-anchor="middle">superposition</text>
 
-  <!-- trained surrogate (highlighted) and its audit -->
+  <!-- prediction and its audit -->
   <rect class="d-accent" x="652" y="128" width="268" height="72" rx="1"/>
-  <text class="d-label" x="786" y="159" text-anchor="middle">fast surrogate</text>
-  <text class="d-sub" x="786" y="183" text-anchor="middle">milliseconds per case</text>
+  <text class="d-label" x="786" y="159" text-anchor="middle">flow at x</text>
+  <text class="d-sub" x="786" y="183" text-anchor="middle">no solver run needed</text>
 
   <rect class="d-box" x="652" y="308" width="268" height="72" rx="1"/>
-  <text class="d-label" x="786" y="339" text-anchor="middle">physics audit</text>
-  <text class="d-sub" x="786" y="363" text-anchor="middle">stability · conservation</text>
+  <text class="d-label" x="786" y="339" text-anchor="middle">audit</text>
+  <text class="d-sub" x="786" y="363" text-anchor="middle">held-out regimes · forces</text>
 
   <!-- connectors -->
-  <path class="d-line" d="M272,164 H306" marker-end="url(#cfdsurrogates-arr)"/>
-  <path class="d-line" d="M272,344 H306" marker-end="url(#cfdsurrogates-arr)"/>
-  <path class="d-line accent" d="M616,164 H650" marker-end="url(#cfdsurrogates-arr)"/>
+  <path class="d-line" d="M272,164 H320" marker-end="url(#cfdsurrogates-arr)"/>
+  <path class="d-line" d="M272,344 H290 V164 H320" marker-end="url(#cfdsurrogates-arr)"/>
+  <path class="d-line" d="M462,200 V216" marker-end="url(#cfdsurrogates-arr)"/>
+  <path class="d-line" d="M462,290 V306" marker-end="url(#cfdsurrogates-arr)"/>
+  <path class="d-line accent" d="M602,344 H630 V164 H650" marker-end="url(#cfdsurrogates-arr)"/>
   <path class="d-line" d="M786,200 V306" marker-end="url(#cfdsurrogates-arr)"/>
 </svg>

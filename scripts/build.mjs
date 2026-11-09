@@ -138,7 +138,7 @@ const trackMeta = {
     label: 'SmartDATA Lab',
     name: 'Physics & simulation projects',
     kicker: 'SmartDATA Lab · Smart Diagnostics, Acoustics, and Time-Series Analysis',
-    description: 'Machine-learning surrogates for computational fluid dynamics and physics simulation with the SmartDATA Lab at UF: neural operators, mesh-based networks, and physics-informed training.'
+    description: 'Machine-learning surrogates for particle-resolved simulations of settling suspensions with the SmartDATA Lab at UF: equivariant one-particle networks, superposition, and pre-registered evaluation.'
   },
   cnel: {
     slug: 'research-cnel.html',
@@ -303,9 +303,8 @@ function personSchema() {
     knowsAbout: [
       'Scientific machine learning',
       'Computational fluid dynamics (CFD) surrogate modeling',
-      'Physics-informed machine learning',
-      'Neural operators',
-      'Reduced-order modeling',
+      'Equivariant deep learning',
+      'Particle-laden flows',
       'Signal processing',
       'Time-series machine learning',
       'Neuroengineering',
