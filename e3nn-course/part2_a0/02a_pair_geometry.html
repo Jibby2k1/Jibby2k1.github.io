@@ -1,0 +1,1410 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Pair geometry: what one neighbour tells a query point &#8212; Equivariant surrogates for particle-laden flow</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part2_a0/02a_pair_geometry';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Scalar and vector branches" href="02b_two_branches.html" />
+    <link rel="prev" title="Frames: what velocity do we subtract?" href="../part1_problem/01c_frames.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Equivariant surrogates for particle-laden flow</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Equivariant surrogates for particle-laden flow
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up and a first equivariance check</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01a_settling_particles.html">Settling particles and what a simulation gives us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01b_superposition.html">One-particle disturbances and superposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01c_frames.html">Frames: what velocity do we subtract?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II · The A0 model</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Pair geometry: what one neighbour tells a query point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02b_two_branches.html">Scalar and vector branches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02c_span_property.html">Every message lies in span(x, e)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02d_e3nn_vs_pytorch.html">e3nn and plain PyTorch compute the same function</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III · Self-consistent refinement</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03a_fixed_point.html">States as unknowns: refinement as a fixed-point problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03b_picard_anderson.html">Picard, damping and Anderson acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03c_residuals_stopping.html">Residuals and stopping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03d_replay_vs_frozen.html">Replay versus frozen-model inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV · Training and evaluation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04a_splits.html">Splits: snapshots, not points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04b_metrics.html">NRMSE versus R²</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04c_seeds_paired.html">Seeds and paired comparisons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04d_worked_case.html">A worked toy case: fixed versus refined</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V · Beyond pairwise: attention and model B</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05a_shielding.html">Shielding: why a sum of pairs falls short</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05b_attention_from_scratch.html">Attention from scratch: queries, keys, values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05c_multihead_masking.html">Multiple heads and masking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05d_permutation.html">Why attention suits sets of particles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05e_transformer_block.html">The transformer block: residuals, LayerNorm and the feed-forward network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05f_invariant_attention.html">Invariant attention with a pair-geometry bias: model B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05g_negative_results.html">Negative results as worked lessons</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part VI · Practice</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06a_speed.html">Speed: layout, compile and TF32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06b_profiling.html">Profiling and memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06c_hpc.html">Running on a cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part2_a0/02a_pair_geometry.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Pair geometry: what one neighbour tells a query point</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-query-point-and-its-m-nearest-particles">1. A query point and its <span class="math notranslate nohighlight">\(M\)</span> nearest particles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scalars-and-vectors-checking-the-input-types">2. Scalars and vectors: checking the input types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-a-plain-mlp-on-raw-coordinates">3. Failure first: a plain MLP on raw coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-at-a-glance-two-branches-one-product-one-sum">4. A0 at a glance: two branches, one product, one sum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#every-message-lies-in-the-plane-of-mathbf-x-fj-and-mathbf-e-j">5. Every message lies in the plane of <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-neighbours-are-enough">6. How many neighbours are enough?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="pair-geometry-what-one-neighbour-tells-a-query-point">
+<h1>Pair geometry: what one neighbour tells a query point<a class="headerlink" href="#pair-geometry-what-one-neighbour-tells-a-query-point" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>How to build every input the A0 model sees for a query point: the offsets <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span>, the state
+directions <span class="math notranslate nohighlight">\(\mathbf e_j\)</span> and the scalars <span class="math notranslate nohighlight">\([\lvert\mathbf q_j\rvert, \rho, \phi_j]\)</span> of its <span class="math notranslate nohighlight">\(M\)</span> nearest particles.</p></li>
+<li><p>Which inputs are scalars (<code class="docutils literal notranslate"><span class="pre">0e</span></code>) and which are vectors (<code class="docutils literal notranslate"><span class="pre">1o</span></code>), and how to check that numerically under
+rotations, reflections, translations and relabelling.</p></li>
+<li><p>Why a plain MLP on raw coordinates fails, first as a numerical check and then as a drop in accuracy on a
+test set that is rotated and reflected.</p></li>
+<li><p>How A0 puts the pieces together: scalar branch, vector branch, channel product, head and sum. You will
+check that its output is a polar vector (<code class="docutils literal notranslate"><span class="pre">1o</span></code>) and that every message lies in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span>.</p></li>
+<li><p>How much of the flow the <span class="math notranslate nohighlight">\(M\)</span> nearest particles explain, and how fast the truncation error falls with <span class="math notranslate nohighlight">\(M\)</span>.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part0_setup/00_setup.html"><span class="std std-doc">Lesson 00</span></a> (the one-line equivariance check) and Part I,
+especially <a class="reference internal" href="../part1_problem/01b_superposition.html"><span class="std std-doc">Lesson 01b</span></a> on superposition and the slip state. For irreps,
+<code class="docutils literal notranslate"><span class="pre">0e</span></code>/<code class="docutils literal notranslate"><span class="pre">1o</span></code> and why vectors transform as <span class="math notranslate nohighlight">\(\mathbf v \mapsto g\mathbf v\)</span>, see the
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a> <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id11" title="The Molecular Sciences Software Institute (MolSSI). E3nn course. https://molssi-ai.github.io/e3nn-course/book/intro.html, 2024.">The Molecular Sciences Software Institute (MolSSI), 2024</a>]</span>.</p>
+<p>This lesson opens Part II. It gives an overview of the whole A0 model. The next lessons go into more depth:
+<a class="reference internal" href="02b_two_branches.html"><span class="std std-doc">02b</span></a> builds each layer by hand, <a class="reference internal" href="02c_span_property.html"><span class="std std-doc">02c</span></a> proves the span property, and
+<a class="reference internal" href="02d_e3nn_vs_pytorch.html"><span class="std std-doc">02d</span></a> shows that the e3nn and plain-PyTorch versions compute the same function.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">toy_data</span> <span class="k">as</span> <span class="n">td</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">apply</span><span class="p">,</span> <span class="n">check_equivariance</span><span class="p">,</span> <span class="n">check_invariance</span><span class="p">,</span> <span class="n">check_permutation</span><span class="p">,</span>
+                                       <span class="n">check_translation</span><span class="p">,</span> <span class="n">random_o3</span><span class="p">,</span> <span class="n">report</span><span class="p">,</span> <span class="n">span_residual</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MiniA0</span><span class="p">,</span> <span class="n">neighbour_invariants</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">PALETTE</span><span class="p">,</span> <span class="n">INK</span>
+
+<span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">()))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="a-query-point-and-its-m-nearest-particles">
+<h2>1. A query point and its <span class="math notranslate nohighlight">\(M\)</span> nearest particles<a class="headerlink" href="#a-query-point-and-its-m-nearest-particles" title="Link to this heading">#</a></h2>
+<p>The surrogate predicts the fluid velocity <span class="math notranslate nohighlight">\(\mathbf u(\mathbf x_f)\)</span> at a <strong>query point</strong> <span class="math notranslate nohighlight">\(\mathbf x_f\)</span> outside the
+particles. It looks only at the <span class="math notranslate nohighlight">\(M\)</span> particles nearest to <span class="math notranslate nohighlight">\(\mathbf x_f\)</span>. For each neighbour <span class="math notranslate nohighlight">\(j\)</span> it receives
+three things:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>input</p></th>
+<th class="head"><p>definition</p></th>
+<th class="head"><p>type</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>offset</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbf x_{fj} = \mathbf x_f - \mathbf r_j\)</span>, from the centre of <span class="math notranslate nohighlight">\(j\)</span> to the query point</p></td>
+<td><p>vector (<code class="docutils literal notranslate"><span class="pre">1o</span></code>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>state direction</p></td>
+<td><p><span class="math notranslate nohighlight">\(\mathbf e_j = \mathbf q_j / \lvert\mathbf q_j\rvert\)</span>, the direction of <span class="math notranslate nohighlight">\(j\)</span>’s slip</p></td>
+<td><p>vector (<code class="docutils literal notranslate"><span class="pre">1o</span></code>)</p></td>
+</tr>
+<tr class="row-even"><td><p>state scalars</p></td>
+<td><p><span class="math notranslate nohighlight">\([\lvert\mathbf q_j\rvert,\ \rho,\ \phi_j]\)</span>: slip speed, density ratio, local volume fraction</p></td>
+<td><p>3 scalars (<code class="docutils literal notranslate"><span class="pre">0e</span></code>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The research model’s first scalar is the particle Reynolds number <span class="math notranslate nohighlight">\(\lvert\mathrm{Re}_j\rvert = \lvert\mathbf q_j\rvert d/\nu\)</span>.
+The toy uses units with diameter <span class="math notranslate nohighlight">\(d = 1\)</span> and viscosity <span class="math notranslate nohighlight">\(\nu = 1\)</span>, so there it is simply the slip speed.</p>
+<p>The state <span class="math notranslate nohighlight">\(\mathbf q_j\)</span> is the particle’s velocity relative to the surrounding fluid, its <strong>slip</strong> (Lesson 01b).
+Here we use the toy’s exact slip <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> as the state. This is an <em>oracle</em>: in practice the exact slip is
+unknown, and Part III shows how the model estimates it.</p>
+<p>Velocities need a reference frame. When particles settle, the fluid as a whole moves up to keep the net volume
+flux zero; this uniform <strong>backflow</strong> <span class="math notranslate nohighlight">\(\mathbf U_b\)</span> is known exactly in the toy. In this lesson the target is the
+velocity minus <span class="math notranslate nohighlight">\(\mathbf U_b\)</span>, because that frame rotates exactly with the suspension. The research instead
+subtracts the exterior mean fluid velocity <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span> measured in each snapshot; Lesson 01c
+compares the two frames.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">snap</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                     <span class="c1"># 96 spheres in an 8 x 8 x 8 box</span>
+<span class="n">q</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">slip</span>                                       <span class="c1"># oracle state (Part III estimates it)</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">sample_exterior</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>              <span class="c1"># five query points</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">neighbour_inputs</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">phi_local</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">density_ratio</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inp</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">:</span><span class="s2">8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">dtype</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scalars  (5, 8, 3)  torch.float64
+e_j      (5, 8, 3)  torch.float64
+x_fj     (5, 8, 3)  torch.float64
+idx      (5, 8)  torch.int64
+</pre></div>
+</div>
+</div>
+</div>
+<p>The shapes are (query points, neighbours, 3). Neighbours are sorted nearest first. We now rebuild these
+tensors by hand for one query point and compare them with the library function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">p</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">nbr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">d</span><span class="p">)[:</span><span class="n">M</span><span class="p">]</span>                                       <span class="c1"># the M nearest particles</span>
+<span class="n">x_fj</span> <span class="o">=</span> <span class="n">p</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span>                                <span class="c1"># offsets, centre -&gt; query</span>
+<span class="n">qn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">q</span><span class="p">[</span><span class="n">nbr</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">e_j</span> <span class="o">=</span> <span class="n">q</span><span class="p">[</span><span class="n">nbr</span><span class="p">]</span> <span class="o">/</span> <span class="n">qn</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>                                    <span class="c1"># unit state directions</span>
+<span class="n">scal</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">qn</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">density_ratio</span><span class="p">),</span> <span class="n">snap</span><span class="o">.</span><span class="n">phi_local</span><span class="p">[</span><span class="n">nbr</span><span class="p">]],</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">err</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x_fj</span> <span class="o">-</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">e_j</span> <span class="o">-</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span>
+          <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">scal</span> <span class="o">-</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"hand-built inputs vs neighbour_inputs"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"distances to the neighbours:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">nbr</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  hand-built inputs vs neighbour_inputs: max error 0.0e+00 (tol 1e-12)
+distances to the neighbours: [0.73 1.3  1.47 1.65 1.7  2.12 2.12 2.24]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The figure shows what one query point sees. Particles and arrows are <strong>projected</strong> onto the <span class="math notranslate nohighlight">\(x\)</span>-<span class="math notranslate nohighlight">\(y\)</span> plane, and
+gravity points down (<span class="math notranslate nohighlight">\(-y\)</span>). Gray arrows are the offsets <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and orange arrows are the state
+directions <span class="math notranslate nohighlight">\(\mathbf e_j\)</span>. Each <span class="math notranslate nohighlight">\(\mathbf e_j\)</span> is a 3D unit vector, so its projected arrow looks shorter when it
+tilts out of the page. For the same reason the star can appear to sit on top of a disc: that particle lies
+above or below the query point in <span class="math notranslate nohighlight">\(z\)</span>.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">5.2</span><span class="p">))</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">radius</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">fill</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">nbr</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">nbr</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Circle</span><span class="p">(</span><span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">a</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="n">p</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">xytext</span><span class="o">=</span><span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">"-|&gt;"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.1</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="s2">""</span><span class="p">,</span> <span class="n">xy</span><span class="o">=</span><span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">e_j</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="n">nbr</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">j</span><span class="p">),</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">xytext</span><span class="o">=</span><span class="n">c</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span>
+                <span class="n">arrowprops</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">arrowstyle</span><span class="o">=</span><span class="s2">"-|&gt;"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.6</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"*"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"query point $\mathbf</span><span class="si">{x}</span><span class="s2">_f$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"its M = </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2"> nearest particles"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"offset $\mathbf</span><span class="si">{x}</span><span class="s2">_</span><span class="si">{fj}</span><span class="s2">$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([],</span> <span class="p">[],</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"state direction $\mathbf</span><span class="si">{e}</span><span class="s2">_j$"</span><span class="p">)</span>
+<span class="n">lo</span><span class="p">,</span> <span class="n">hi</span> <span class="o">=</span> <span class="n">p</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">3.2</span><span class="p">,</span> <span class="n">p</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="mf">3.2</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">lo</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hi</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">lo</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">hi</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"what one query point sees (projection on x-y)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/c456e783377313d846c536ca2f0d2e11f7e9e2d170be1e3403963b83387eda20.png" src="../_images/c456e783377313d846c536ca2f0d2e11f7e9e2d170be1e3403963b83387eda20.png" />
+</div>
+</div>
+</section>
+<section id="scalars-and-vectors-checking-the-input-types">
+<h2>2. Scalars and vectors: checking the input types<a class="headerlink" href="#scalars-and-vectors-checking-the-input-types" title="Link to this heading">#</a></h2>
+<p>Suppose we rotate or reflect the whole suspension by an orthogonal matrix <span class="math notranslate nohighlight">\(g\in O(3)\)</span>. Positions, velocities and
+query points all transform as <span class="math notranslate nohighlight">\(\mathbf r\mapsto g\mathbf r\)</span>. Then:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf x_{fj} \mapsto g\,\mathbf x_{fj},\qquad
+\mathbf e_j \mapsto g\,\mathbf e_j,\qquad
+\big[\lvert\mathbf q_j\rvert, \rho, \phi_j\big] \mapsto \big[\lvert\mathbf q_j\rvert, \rho, \phi_j\big].
+\]</div>
+<p>In e3nn’s language, the two vectors are <code class="docutils literal notranslate"><span class="pre">1o</span></code> irreps (polar vectors, which flip under inversion) and the
+scalars are <code class="docutils literal notranslate"><span class="pre">0e</span></code>. The MolSSI course explains the notation. Here we only check it. We wrap the input
+construction as a function of the raw data, <code class="docutils literal notranslate"><span class="pre">(query</span> <span class="pre">points,</span> <span class="pre">centres,</span> <span class="pre">states)</span></code>, and let
+<code class="docutils literal notranslate"><span class="pre">check_equivariance</span></code> transform all three. <code class="docutils literal notranslate"><span class="pre">build_inputs</span></code> also recomputes the local volume fraction <span class="math notranslate nohighlight">\(\phi_j\)</span>
+from the transformed positions, so this check, and the translation and relabelling checks below, cover
+<span class="math notranslate nohighlight">\(\phi_j\)</span> too.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pts64</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">sample_exterior</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">M</span> <span class="o">=</span> <span class="mi">16</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_inputs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">td</span><span class="o">.</span><span class="n">local_volume_fraction</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">phi_radius</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">neighbour_inputs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">phi</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">density_ratio</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">build_inputs</span><span class="p">,</span> <span class="p">(</span><span class="n">pts64</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span>
+                   <span class="n">out_kind</span><span class="o">=</span><span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"inputs (scalars, e_j, x_fj)"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  inputs (scalars, e_j, x_fj): max error 8.0e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The check passes for rotations and reflections (<span class="math notranslate nohighlight">\(\det g = \pm 1\)</span>). The neighbour lists do not change, because
+<span class="math notranslate nohighlight">\(g\)</span> preserves distances.</p>
+<p><strong>Translations.</strong> The inputs contain only differences of positions and the states. Shifting every point by the
+same vector therefore changes nothing:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">inputs_flat</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">build_inputs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">check_translation</span><span class="p">(</span><span class="n">inputs_flat</span><span class="p">,</span> <span class="n">pts64</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"inputs under translation"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  inputs under translation: max error 4.9e-16 (tol 1e-12)  [3 random translations]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Relabelling.</strong> Particle numbers are arbitrary. If we shuffle the order in which the particles are stored, the
+inputs must not change, because the neighbours are sorted by distance and not by label:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">perm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="p">)</span>
+<span class="n">s0</span><span class="p">,</span> <span class="n">e0</span><span class="p">,</span> <span class="n">x0</span> <span class="o">=</span> <span class="n">build_inputs</span><span class="p">(</span><span class="n">pts64</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span>
+<span class="n">s1</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">x1</span> <span class="o">=</span> <span class="n">build_inputs</span><span class="p">(</span><span class="n">pts64</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">perm</span><span class="p">],</span> <span class="n">q</span><span class="p">[</span><span class="n">perm</span><span class="p">])</span>
+<span class="n">err</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s0</span> <span class="o">-</span> <span class="n">s1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">e0</span> <span class="o">-</span> <span class="n">e1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x0</span> <span class="o">-</span> <span class="n">x1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"inputs under relabelling of the particles"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  inputs under relabelling of the particles: max error 0.0e+00 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Pair invariants.</strong> From one neighbour alone we can form these rotation-invariant numbers: the three state
+scalars, the distance <span class="math notranslate nohighlight">\(r_j = \lvert\mathbf x_{fj}\rvert\)</span>, the cosine <span class="math notranslate nohighlight">\(\hat{\mathbf x}_{fj}\cdot\mathbf e_j\)</span> and
+<span class="math notranslate nohighlight">\(\lvert\mathbf e_j\rvert\)</span>, which is 1 unless the state is zero. <code class="docutils literal notranslate"><span class="pre">models.neighbour_invariants</span></code> returns them. They
+are what a hand-made invariant model would use (<code class="docutils literal notranslate"><span class="pre">PairMLP</span></code> in Part V):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">s0</span><span class="p">);</span> <span class="n">E</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">e0</span><span class="p">);</span> <span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">x0</span><span class="p">)</span>
+<span class="n">check_invariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">neighbour_invariants</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span>
+                 <span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"pair invariants I_j"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  pair invariants I_j: max error 4.8e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Does the data obey the symmetry?</strong> All of these checks are about the inputs. The <em>targets</em> must transform
+in the same way, or no equivariant model could fit them. <code class="docutils literal notranslate"><span class="pre">snap.rotated(g)</span></code> builds the suspension transformed by <span class="math notranslate nohighlight">\(g\)</span> (the name says “rotated”, but <span class="math notranslate nohighlight">\(g\)</span> may include a reflection) and
+recomputes the true flow from scratch, including the self-consistent slip. It applies <span class="math notranslate nohighlight">\(g\)</span> about the box centre
+<span class="math notranslate nohighlight">\(\mathbf c\)</span>, so we map the query points as <span class="math notranslate nohighlight">\(\mathbf c + g(\mathbf x - \mathbf c)\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">box</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">gs</span> <span class="o">=</span> <span class="n">random_o3</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"det g:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">gs</span><span class="p">))</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+    <span class="n">snap_g</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">rotated</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">u_rot</span> <span class="o">=</span> <span class="n">snap_g</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">c</span> <span class="o">+</span> <span class="p">(</span><span class="n">pts64</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>              <span class="c1"># truth recomputed in the transformed world</span>
+    <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_rot</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">pts64</span><span class="p">)</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"toy truth: u_g(g x) = g u(x)"</span><span class="p">,</span> <span class="n">worst</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">gs</span><span class="p">)</span><span class="si">}</span><span class="s2"> random g in O(3)"</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>det g: [ 1  1  1 -1]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  toy truth: u_g(g x) = g u(x): max error 2.1e-15 (tol 1e-12)  [4 random g in O(3)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="failure-first-a-plain-mlp-on-raw-coordinates">
+<h2>3. Failure first: a plain MLP on raw coordinates<a class="headerlink" href="#failure-first-a-plain-mlp-on-raw-coordinates" title="Link to this heading">#</a></h2>
+<p>The obvious first model takes the nine numbers of each neighbour, <span class="math notranslate nohighlight">\([\text{scalars}, \mathbf x_{fj}, \mathbf e_j]\)</span>,
+and feeds them to an MLP that outputs a 3-vector message. It then sums the messages. Summing makes the model
+independent of neighbour order, but nothing in it knows that the last six numbers are vectors:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">RawMLP</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Per-neighbour MLP on the 9 raw numbers [s_j, x_fj, e_j] -&gt; 3-vector message; sum over j.</span>
+<span class="sd">    Permutation-invariant, but NOT rotation-equivariant."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="n">layers</span><span class="p">,</span> <span class="n">n_in</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">9</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">depth</span><span class="p">):</span>
+            <span class="n">layers</span> <span class="o">+=</span> <span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">n_in</span><span class="p">,</span> <span class="n">width</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">GELU</span><span class="p">()]</span>
+            <span class="n">n_in</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">net</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Sequential</span><span class="p">(</span><span class="o">*</span><span class="n">layers</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">messages</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalars</span><span class="p">,</span> <span class="n">e_j</span><span class="p">,</span> <span class="n">x_fj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">net</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">scalars</span><span class="p">,</span> <span class="n">x_fj</span><span class="p">,</span> <span class="n">e_j</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scalars</span><span class="p">,</span> <span class="n">e_j</span><span class="p">,</span> <span class="n">x_fj</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">scalars</span><span class="p">,</span> <span class="n">e_j</span><span class="p">,</span> <span class="n">x_fj</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">KINDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">RawMLP</span><span class="p">()</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"RawMLP"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">raw</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"RawMLP (neighbour order)"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FAIL  RawMLP: max error 2.3e+00 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+caught: RawMLP: equivariance error 2.300e+00 &gt;= tol 1.0e-12
+PASS  RawMLP (neighbour order): max error 3.6e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The error is of order one: the model gives an unrelated answer for a transformed input. Training could in principle
+teach it the symmetry. Let us see what it actually learns. We train <code class="docutils literal notranslate"><span class="pre">RawMLP</span></code> and A0 on the same small toy data
+(four training snapshots, two test snapshots). <code class="docutils literal notranslate"><span class="pre">RawMLP</span></code> gets 100 epochs, which is enough for it to fit the
+training data well; A0 gets 25 epochs (each A0 epoch costs more). Then we evaluate both on the test set as it
+is, and on the <strong>same test set transformed</strong> by one random <span class="math notranslate nohighlight">\(g\in O(3)\)</span>. The cell prints <span class="math notranslate nohighlight">\(\det g\)</span>; here it is a
+reflection combined with a rotation. Section 2 showed that the transformed data is exactly what the transformed
+suspension would produce.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">train</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">split_by_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2</span>
+
+<span class="n">snaps</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_snapshots</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">seed0</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_dataset</span><span class="p">(</span><span class="n">snaps</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s2">"backflow"</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"true"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+                       <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">split_by_snapshot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"train rows"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">tr</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]),</span> <span class="s2">" test rows"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]))</span>
+
+<span class="n">g</span> <span class="o">=</span> <span class="n">random_o3</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>                          <span class="c1"># one fixed element of O(3)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"det g ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">g</span><span class="p">))))</span>
+<span class="n">te_rot</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">te</span><span class="p">,</span> <span class="s2">"e_j"</span><span class="p">:</span> <span class="n">apply</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">te</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">]),</span> <span class="s2">"x_fj"</span><span class="p">:</span> <span class="n">apply</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">te</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">]),</span> <span class="s2">"y"</span><span class="p">:</span> <span class="n">apply</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])}</span>
+
+<span class="n">models</span><span class="p">,</span> <span class="n">epochs</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{</span><span class="s2">"RawMLP"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"A0"</span><span class="p">:</span> <span class="mi">25</span><span class="p">}</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">models</span><span class="p">[</span><span class="s2">"RawMLP"</span><span class="p">]</span> <span class="o">=</span> <span class="n">RawMLP</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">);</span> <span class="n">models</span><span class="p">[</span><span class="s2">"A0"</span><span class="p">]</span> <span class="o">=</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">48</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">te</span><span class="p">),</span> <span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])),</span> <span class="nb">float</span><span class="p">(</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">te_rot</span><span class="p">),</span> <span class="n">te_rot</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">7s</span><span class="si">}</span><span class="s2"> train R2 </span><span class="si">{</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">tr</span><span class="p">),</span><span class="w"> </span><span class="n">tr</span><span class="p">[</span><span class="s1">'y'</span><span class="p">])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">   test R2 </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
+          <span class="sa">f</span><span class="s2">"   transformed test R2 </span><span class="si">{</span><span class="n">results</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">   (</span><span class="si">{</span><span class="n">epochs</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="si">}</span><span class="s2"> epochs, </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>train rows 2400  test rows 1200
+det g = -1
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>RawMLP  train R2 0.815   test R2 0.762   transformed test R2 -3.567   (100 epochs, 3 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>A0      train R2 0.861   test R2 0.865   transformed test R2 0.865   (25 epochs, 2 s)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.4</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">))</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">results</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">0.36</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>                                           <span class="c1"># R^2 below this is drawn clipped and labelled</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">off</span><span class="p">,</span> <span class="n">lab</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([(</span><span class="o">-</span><span class="n">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"test set"</span><span class="p">),</span> <span class="p">(</span><span class="n">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="sa">r</span><span class="s2">"same test set, transformed by $g$"</span><span class="p">)]):</span>
+    <span class="n">vals</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xs</span> <span class="o">+</span> <span class="n">off</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">vals</span><span class="p">,</span> <span class="n">floor</span><span class="p">),</span> <span class="n">w</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">lab</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span> <span class="o">+</span> <span class="n">off</span><span class="p">,</span> <span class="n">vals</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">floor</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.04</span> <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="o">-</span><span class="mf">0.04</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="n">floor</span> <span class="k">else</span>
+                <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">val</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="se">\n</span><span class="s2">(off scale)"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"bottom"</span> <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"top"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">results</span><span class="p">)),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$R^2$"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">floor</span> <span class="o">-</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">1.15</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">rf</span><span class="s2">"accuracy before and after applying $g$ ($\det g=</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">g</span><span class="p">)))</span><span class="si">}</span><span class="s2">$)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper left"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/89146b8e145461f9dada678016dad9e4a324fac22ac722b34cdd92154ac21953.png" src="../_images/89146b8e145461f9dada678016dad9e4a324fac22ac722b34cdd92154ac21953.png" />
+</div>
+</div>
+<p>In the training orientation <code class="docutils literal notranslate"><span class="pre">RawMLP</span></code> does well: given enough epochs it fits the toy almost as well as A0. But
+what it learns is tied to that orientation (for example, that gravity points along <span class="math notranslate nohighlight">\(-y\)</span>). On the transformed
+test set its <span class="math notranslate nohighlight">\(R^2\)</span> is far below zero. <span class="math notranslate nohighlight">\(R^2 = 0\)</span> means “as good as always predicting the test set’s mean flow”,
+so a negative <span class="math notranslate nohighlight">\(R^2\)</span> means it does worse than that constant guess. A0 gives the same <span class="math notranslate nohighlight">\(R^2\)</span> on both test sets, up
+to float32 round-off. It never saw a transformed example; the symmetry comes from the architecture.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls loop muted playsinline preload="metadata" poster="../_static/media/S1_equivariance/S1_equivariance.png" aria-label="Two panels of spheres rotating together with their state arrows; on the left the prediction turns with the input, on the right it drifts away from the expected rotated answer." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/S1_equivariance/S1_equivariance.webm" type="video/webm">
+<source src="../_static/media/S1_equivariance/S1_equivariance.mp4" type="video/mp4">
+Your browser cannot play this video. <a href="../_static/media/S1_equivariance/S1_equivariance.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation S1, equivariance.</strong> The whole input, positions and states, rotates by <span class="math notranslate nohighlight">\(R\)</span> while the camera stays fixed. Left: an A0-style model. Its prediction (teal) turns with the input and covers the expected answer <span class="math notranslate nohighlight">\(R\,\mathbf f(\mathbf x)\)</span> (white sleeve) for the whole turn. Right: a plain MLP on raw coordinates, fit in one pose, like <code class="docutils literal notranslate"><span class="pre">RawMLP</span></code> above. Its prediction and the expected answer separate, and the gap is drawn in orange. The end card states the identity <span class="math notranslate nohighlight">\(\mathbf f(R\mathbf x) = R\,\mathbf f(\mathbf x)\)</span>: rotate then predict equals predict then rotate. The clip shows rotations only; the checks in this lesson also include reflections. The clip is drawn on a dark stage in both page themes. Explore the same toy in 3D: <a href="../_static/media/S1_equivariance/interactive.html" target="_blank" rel="noopener">open the interactive version</a> in a new tab, or show it here:</p>
+<details class="course-anim-interactive" style="margin:0.2em 0 1.4em">
+<summary>Interactive 3D version: equivariant model versus plain MLP under rotation (toy)</summary>
+<iframe src="../_static/media/S1_equivariance/interactive.html" loading="lazy" title="equivariant model versus plain MLP under rotation (toy)" style="display:block;width:100%;height:620px;border:0;border-radius:14px;background:#0f1419;margin-top:0.6em"></iframe>
+</details>
+</section>
+<section id="a0-at-a-glance-two-branches-one-product-one-sum">
+<h2>4. A0 at a glance: two branches, one product, one sum<a class="headerlink" href="#a0-at-a-glance-two-branches-one-product-one-sum" title="Link to this heading">#</a></h2>
+<p>A0 respects the symmetry by construction. For each neighbour <span class="math notranslate nohighlight">\(j\)</span> it computes:</p>
+<ol class="arabic simple">
+<li><p><strong>Scalar branch.</strong> An MLP on the invariant scalars, with a ReLU after <em>every</em> layer, including the last:
+<span class="math notranslate nohighlight">\(\;y_u = \mathrm{MLP}\big([\lvert\mathbf q_j\rvert,\rho,\phi_j]\big)_u \ge 0,\; u = 1\dots C.\)</span></p></li>
+<li><p><strong>Vector branch.</strong> Equivariant linear layers on the two input vectors <span class="math notranslate nohighlight">\((\mathbf x_{fj}, \mathbf e_j)\)</span>. Each
+layer mixes channels with a weight matrix and has <strong>no bias</strong>:
+<span class="math notranslate nohighlight">\(\mathbf h_w = C_{\text{in}}^{-1/2}\sum_u W_{uw}\,\mathbf v_u\)</span>. A <strong>norm activation</strong> follows, which keeps
+each direction up to sign and squashes each length:
+<span class="math notranslate nohighlight">\(\mathbf v_w = \tanh(\lvert\mathbf h_w\rvert + b_w)\,\mathbf h_w/\lvert\mathbf h_w\rvert\)</span>, so
+<span class="math notranslate nohighlight">\(\lvert\mathbf v_w\rvert &lt; 1\)</span>. The learned bias <span class="math notranslate nohighlight">\(b_w\)</span> can be negative, and when <span class="math notranslate nohighlight">\(\lvert\mathbf h_w\rvert &lt; -b_w\)</span>
+the factor is negative and the vector flips. Either way it stays on the same line.</p></li>
+<li><p><strong>Product.</strong> Channel by channel, the invariant <span class="math notranslate nohighlight">\(y_u\)</span> scales the vector <span class="math notranslate nohighlight">\(\mathbf v_u\)</span>. A linear head then
+mixes the channels into one vector: <span class="math notranslate nohighlight">\(\;\mathbf m_j = C^{-1/2}\sum_u w_u\, y_u\,\mathbf v_u.\)</span></p></li>
+<li><p><strong>Sum.</strong> The prediction is <span class="math notranslate nohighlight">\(\;\mathbf u(\mathbf x_f) = \sum_{j=1}^{M} \mathbf m_j\)</span> (in the chosen frame).</p></li>
+</ol>
+<p><a class="reference internal" href="02b_two_branches.html"><span class="std std-doc">Lesson 02b</span></a> builds each layer by hand and shows what goes wrong with a vector bias or a
+ReLU on vector components. Here we use <code class="docutils literal notranslate"><span class="pre">course_utils.models.MiniA0</span></code> and look at its intermediate outputs:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">a0</span> <span class="o">=</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">scalar_branch</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>                    <span class="c1"># (B, M, C)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">vector_branch</span><span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>                 <span class="c1"># (B, M, C, 3)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>                   <span class="c1"># (B, M, 3)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">a0</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>                            <span class="c1"># (B, 3)</span>
+    <span class="n">w_head</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">final_lin_vec</span><span class="o">.</span><span class="n">matrix</span><span class="p">()[:,</span> <span class="mi">0</span><span class="p">]</span>   <span class="c1"># (C,) head weights, C^-1/2 folded in</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"scalar branch y :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="sa">f</span><span class="s2">" min </span><span class="si">{</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (ReLU at the end, so y &gt;= 0)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"vector branch v :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="sa">f</span><span class="s2">" max |v_u| </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> (&lt; 1 from tanh)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"messages m_j    :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"output u        :"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+<span class="c1"># the four steps above, recomputed from the pieces</span>
+<span class="n">m_hand</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"bmc,bmci,c-&gt;bmi"</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w_head</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"messages from the pieces vs MiniA0.messages"</span><span class="p">,</span> <span class="nb">float</span><span class="p">((</span><span class="n">m_hand</span> <span class="o">-</span> <span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"sum of messages vs MiniA0.forward"</span><span class="p">,</span> <span class="nb">float</span><span class="p">((</span><span class="n">m_hand</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>scalar branch y : (200, 16, 16)  min 0.00 (ReLU at the end, so y &gt;= 0)
+vector branch v : (200, 16, 16, 3)  max |v_u| 0.9723 (&lt; 1 from tanh)
+messages m_j    : (200, 16, 3)
+output u        : (200, 3)
+PASS  messages from the pieces vs MiniA0.messages: max error 0.0e+00 (tol 1e-12)
+PASS  sum of messages vs MiniA0.forward: max error 0.0e+00 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Each piece has a type we can check. The scalar branch sees only the scalars, which Section 2 showed are
+invariant, so <span class="math notranslate nohighlight">\(y_u\)</span> is invariant trivially and needs no separate test. Each vector channel is equivariant, and
+so are the messages and their sum:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">a0</span><span class="o">.</span><span class="n">vector_branch</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="p">(</span><span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span>
+                   <span class="n">name</span><span class="o">=</span><span class="s2">"vector branch v_u (every channel)"</span><span class="p">);</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">a0</span><span class="o">.</span><span class="n">messages</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"messages m_j"</span><span class="p">);</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"A0 output u"</span><span class="p">);</span>
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"A0 output u (neighbour order)"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  vector branch v_u (every channel): max error 7.9e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  messages m_j: max error 1.1e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  A0 output u: max error 4.4e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  A0 output u (neighbour order): max error 2.2e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>A polar vector, not a pseudovector.</strong> A rotation cannot tell a polar vector (<code class="docutils literal notranslate"><span class="pre">1o</span></code>) from a pseudovector (<code class="docutils literal notranslate"><span class="pre">1e</span></code>).
+Only a reflection can. Because our checks include reflections, we can test the claim that <span class="math notranslate nohighlight">\(\mathbf u\)</span> is <code class="docutils literal notranslate"><span class="pre">1o</span></code>
+by checking that it <em>fails</em> as a pseudovector:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"pseudovector"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"A0 output as 1e"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"pseudovector"</span><span class="p">,</span> <span class="n">proper</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                   <span class="n">name</span><span class="o">=</span><span class="s2">"A0 output as 1e, rotations only"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FAIL  A0 output as 1e: max error 1.7e+00 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+caught: A0 output as 1e: equivariance error 1.710e+00 &gt;= tol 1.0e-12
+PASS  A0 output as 1e, rotations only: max error 5.6e-16 (tol 1e-12)  [5 random g in SO(3), det = [1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>With rotations only, the pseudovector check passes too. This is why every check in the course includes
+reflections by default. Section 5 shows that this distinction also decides what shape the messages can take.</p>
+</section>
+<section id="every-message-lies-in-the-plane-of-mathbf-x-fj-and-mathbf-e-j">
+<h2>5. Every message lies in the plane of <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span><a class="headerlink" href="#every-message-lies-in-the-plane-of-mathbf-x-fj-and-mathbf-e-j" title="Link to this heading">#</a></h2>
+<p>The vector branch only ever takes linear combinations of vectors and rescales them by invariant numbers. It
+starts from <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span>, so it can never leave the plane they span:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf m_j = a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j \quad\text{for some invariant numbers } a_j, b_j .
+\]</div>
+<p><a class="reference internal" href="02c_span_property.html"><span class="std std-doc">Lesson 02c</span></a> proves this layer by layer. Here we measure it in two ways:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">span_residual</span></code> gives the distance of <span class="math notranslate nohighlight">\(\mathbf m_j\)</span> from the plane, relative to <span class="math notranslate nohighlight">\(\lvert\mathbf m_j\rvert\)</span>.</p></li>
+<li><p>The normalised triple product <span class="math notranslate nohighlight">\(\mathbf m_j\cdot(\mathbf x_{fj}\times\mathbf e_j) / (\lvert\mathbf m_j\rvert
+\lvert\mathbf x_{fj}\rvert\lvert\mathbf e_j\rvert)\)</span> is zero exactly when <span class="math notranslate nohighlight">\(\mathbf m_j\)</span> lies in the plane.</p></li>
+</ul>
+<p>We skip messages that are exactly zero, which happens when the ReLU switches off every channel. We also skip
+pairs where <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span> are nearly parallel, because the plane is then poorly defined.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">plane_stats</span><span class="p">(</span><span class="n">msgs</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">mag</span> <span class="o">=</span> <span class="n">msgs</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sin_xe</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="p">(</span><span class="n">mag</span> <span class="o">&gt;</span> <span class="mf">1e-8</span> <span class="o">*</span> <span class="n">mag</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">sin_xe</span> <span class="o">&gt;</span> <span class="mf">1e-2</span><span class="p">)</span>
+    <span class="n">res</span> <span class="o">=</span> <span class="n">span_residual</span><span class="p">(</span><span class="n">msgs</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">)[</span><span class="n">keep</span><span class="p">]</span>
+    <span class="n">trip</span> <span class="o">=</span> <span class="p">((</span><span class="n">msgs</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">mag</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)))[</span><span class="n">keep</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">res</span><span class="p">,</span> <span class="n">trip</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">keep</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="n">keep</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">res_a0</span><span class="p">,</span> <span class="n">trip_a0</span><span class="p">,</span> <span class="n">n_keep</span><span class="p">,</span> <span class="n">n_all</span> <span class="o">=</span> <span class="n">plane_stats</span><span class="p">(</span><span class="n">a0</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">res_raw</span><span class="p">,</span> <span class="n">trip_raw</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">plane_stats</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"messages checked: </span><span class="si">{</span><span class="n">n_keep</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">n_all</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"A0: distance of m_j from span(x_fj, e_j)"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">res_a0</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"A0: normalised triple product"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">trip_a0</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"RawMLP: median distance from the plane </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">res_raw</span><span class="o">.</span><span class="n">median</span><span class="p">())</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (|m| = 1 would be fully off-plane)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>messages checked: 3200 of 3200
+PASS  A0: distance of m_j from span(x_fj, e_j): max error 4.9e-15 (tol 1e-12)
+PASS  A0: normalised triple product: max error 5.2e-16 (tol 1e-12)
+RawMLP: median distance from the plane 0.49 (|m| = 1 would be fully off-plane)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The same holds for the trained A0 of Section 3, which was trained in float32. We cast it to float64 and also
+confirm that training did not affect its equivariance:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a0_trained</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s2">"A0"</span><span class="p">]</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">res_t</span><span class="p">,</span> <span class="n">trip_t</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">plane_stats</span><span class="p">(</span><span class="n">a0_trained</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"trained A0: distance of m_j from the plane"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">res_t</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">a0_trained</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"trained A0 output u"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  trained A0: distance of m_j from the plane: max error 1.6e-13 (tol 1e-12)
+PASS  trained A0 output u: max error 2.2e-15 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The left panel compares the two models over every message. On the right, three A0 messages are drawn in the
+plane’s own coordinates: the first axis is along <span class="math notranslate nohighlight">\(\hat{\mathbf x}_{fj}\)</span> and the second is the part of
+<span class="math notranslate nohighlight">\(\mathbf e_j\)</span> perpendicular to it.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="n">ax0</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="mf">1e-17</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">logspace</span><span class="p">(</span><span class="o">-</span><span class="mi">17</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">res_a0</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">floor</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"A0"</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">res_raw</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">floor</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"RawMLP"</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">),</span> <span class="n">ax0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"distance from the plane / |m|"</span><span class="p">),</span> <span class="n">ax0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"messages"</span><span class="p">)</span>
+<span class="n">ax0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">mm</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+<span class="n">sin_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">E</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">mag_all</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">wide</span> <span class="o">=</span> <span class="p">[(</span><span class="nb">int</span><span class="p">(</span><span class="n">b</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">j</span><span class="p">))</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">((</span><span class="n">sin_all</span> <span class="o">&gt;</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">mag_all</span> <span class="o">&gt;</span> <span class="mf">1e-3</span> <span class="o">*</span> <span class="n">mag_all</span><span class="o">.</span><span class="n">max</span><span class="p">()))]</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wide</span><span class="p">[::</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">wide</span><span class="p">)</span> <span class="o">//</span> <span class="mi">3</span><span class="p">)][:</span><span class="mi">3</span><span class="p">]):</span>    <span class="c1"># three pairs with a wide x-e angle</span>
+    <span class="n">xv</span><span class="p">,</span> <span class="n">ev</span><span class="p">,</span> <span class="n">mv</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">E</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="n">mm</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="n">u1</span> <span class="o">=</span> <span class="n">xv</span> <span class="o">/</span> <span class="n">xv</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+    <span class="n">e_perp</span> <span class="o">=</span> <span class="n">ev</span> <span class="o">-</span> <span class="p">(</span><span class="n">ev</span> <span class="o">@</span> <span class="n">u1</span><span class="p">)</span> <span class="o">*</span> <span class="n">u1</span>
+    <span class="n">u2</span> <span class="o">=</span> <span class="n">e_perp</span> <span class="o">/</span> <span class="n">e_perp</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+    <span class="n">to2d</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">w</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">u1</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">w</span> <span class="o">@</span> <span class="n">u2</span><span class="p">)])</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">mm</span><span class="p">[</span><span class="n">b</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span> <span class="o">*</span> <span class="mf">0.9</span>
+    <span class="n">out_of_plane</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mv</span> <span class="o">@</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">u1</span><span class="p">,</span> <span class="n">u2</span><span class="p">))</span> <span class="o">*</span> <span class="n">scale</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">axk</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">draw_vectors_2d</span><span class="p">({</span><span class="sa">r</span><span class="s2">"$\hat x$"</span><span class="p">:</span> <span class="n">to2d</span><span class="p">(</span><span class="n">u1</span><span class="p">),</span> <span class="sa">r</span><span class="s2">"$e$"</span><span class="p">:</span> <span class="n">to2d</span><span class="p">(</span><span class="n">ev</span><span class="p">),</span> <span class="sa">r</span><span class="s2">"$m$"</span><span class="p">:</span> <span class="n">to2d</span><span class="p">(</span><span class="n">mv</span><span class="p">)</span> <span class="o">*</span> <span class="n">scale</span><span class="p">},</span>
+                                         <span class="n">ax</span><span class="o">=</span><span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">k</span> <span class="o">+</span> <span class="mi">2</span><span class="p">),</span>
+                                         <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"neighbour </span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2">: off-plane </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">out_of_plane</span><span class="p">)</span><span class="si">:</span><span class="s2">.0e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">axk</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"along $\hat</span><span class="si">{x}</span><span class="s2">_</span><span class="si">{fj}</span><span class="s2">$"</span><span class="p">),</span> <span class="n">axk</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"along $e_\perp$"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/d66d844b1ff6960fcd0b9c51a203db5efbdb9c1edfdff11e6ad537c0cfd010d5.png" src="../_images/d66d844b1ff6960fcd0b9c51a203db5efbdb9c1edfdff11e6ad537c0cfd010d5.png" />
+</div>
+</div>
+<p>Each A0 message is a combination of two known vectors. This restriction is not a weakness of A0. A polar
+vector built from two polar vectors and invariant numbers must have this form under the full group <span class="math notranslate nohighlight">\(O(3)\)</span>
+(Lesson 02c), and the transformer B of Part V uses it too. The reflections matter here: with rotations only,
+the cross product <span class="math notranslate nohighlight">\(\mathbf x_{fj}\times\mathbf e_j\)</span> would also be allowed. It rotates like a vector but does
+not flip under inversion, so it is a pseudovector (<code class="docutils literal notranslate"><span class="pre">1e</span></code>), exactly the type the output failed as in Section 4.
+Requiring <span class="math notranslate nohighlight">\(O(3)\)</span> rather than <span class="math notranslate nohighlight">\(SO(3)\)</span> is what rules it out.
+What A0 cannot do is let neighbour <span class="math notranslate nohighlight">\(j\)</span>’s coefficients depend on where the <em>other</em> neighbours are. Part V returns
+to this.</p>
+</section>
+<section id="how-many-neighbours-are-enough">
+<h2>6. How many neighbours are enough?<a class="headerlink" href="#how-many-neighbours-are-enough" title="Link to this heading">#</a></h2>
+<p>A0 sums over the <span class="math notranslate nohighlight">\(M\)</span> nearest particles and ignores the rest. In the toy, the true flow is itself a sum over
+<strong>all</strong> <span class="math notranslate nohighlight">\(N\)</span> particles of the disturbance of one sphere, <span class="math notranslate nohighlight">\(G(\mathbf x - \mathbf r_j)\,\mathbf s_j\)</span> (Lesson 01b),
+plus the uniform backflow. First we check that identity. Then we truncate the sum to the <span class="math notranslate nohighlight">\(M\)</span> nearest particles
+and measure the error relative to the size of the disturbance flow:</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon(M) = \frac{\big\lVert \sum_{j\le M} G(\mathbf x_{fj})\mathbf s_j - \sum_{j\le N} G(\mathbf x_{fj})\mathbf s_j \big\rVert}
+{\big\lVert \sum_{j\le N} G(\mathbf x_{fj})\mathbf s_j \big\rVert}.
+\]</div>
+<p>This is the error of <strong>truncating the exact pair sum</strong>: a model that knows the exact per-pair formula and the
+exact states, but simply drops particles beyond the <span class="math notranslate nohighlight">\(M\)</span>-th. A learned model can do somewhat better. The far
+particles also settle roughly downward, so their flow is correlated with what the <span class="math notranslate nohighlight">\(M\)</span> neighbours look like, and
+a model can absorb that correlated part into its near-neighbour messages. The part of the far field that is not
+correlated with the <span class="math notranslate nohighlight">\(M\)</span> neighbours stays out of reach. The simplest such correction, multiplying the truncated
+sum by one constant <span class="math notranslate nohighlight">\(c(M)\)</span> fitted by least squares on the same query points, already lowers the error; we plot it as a dashed line.</p>
+<p>The toy’s disturbance of one sphere is the Stokes solution multiplied by a screening factor
+<span class="math notranslate nohighlight">\(\exp(-(r-a)/L)\)</span>, with <span class="math notranslate nohighlight">\(a\)</span> the radius and <span class="math notranslate nohighlight">\(L\)</span> the <strong>screening length</strong>. The factor is a toy stand-in for the
+way neighbours hinder long-range flow in a suspension, not a physical model.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">truncation_curve</span><span class="p">(</span><span class="n">snap</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">Ms</span><span class="p">):</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">config</span>
+    <span class="n">xf</span> <span class="o">=</span> <span class="n">points</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>                               <span class="c1"># (P, N, 3)</span>
+    <span class="n">contrib</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"pnij,nj-&gt;pni"</span><span class="p">,</span> <span class="n">td</span><span class="o">.</span><span class="n">stokes_sphere_matrix</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">screening_length</span><span class="p">),</span>
+                        <span class="n">snap</span><span class="o">.</span><span class="n">slip</span><span class="p">)</span>                                                 <span class="c1"># (P, N, 3)</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">xf</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">contrib</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">contrib</span><span class="p">,</span> <span class="n">order</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>                <span class="c1"># nearest first</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">contrib</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">ident</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">full</span> <span class="o">+</span> <span class="n">snap</span><span class="o">.</span><span class="n">backflow</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">points</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="n">csum</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">contrib</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">eps</span><span class="p">,</span> <span class="n">eps_c</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">Ms</span><span class="p">:</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">csum</span><span class="p">[:,</span> <span class="n">m</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="n">full</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="p">(</span><span class="n">t</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>                    <span class="c1"># best single scale factor (least squares)</span>
+        <span class="n">eps</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="n">full</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">full</span><span class="p">))</span>
+        <span class="n">eps_c</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="n">t</span> <span class="o">-</span> <span class="n">full</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">full</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eps</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">eps_c</span><span class="p">),</span> <span class="n">ident</span>
+
+<span class="n">Ms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">96</span><span class="p">]</span>
+<span class="n">pts_t</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">sample_exterior</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">curves</span><span class="p">,</span> <span class="n">curves_c</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="n">L</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"L = 1 (course default)"</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="s2">"L = 3"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)]:</span>
+    <span class="n">s_L</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">screening_length</span><span class="o">=</span><span class="n">L</span><span class="p">)</span>
+    <span class="n">curves</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">curves_c</span><span class="p">[</span><span class="n">label</span><span class="p">],</span> <span class="n">ident</span> <span class="o">=</span> <span class="n">truncation_curve</span><span class="p">(</span><span class="n">s_L</span><span class="p">,</span> <span class="n">pts_t</span><span class="p">,</span> <span class="n">Ms</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="sa">f</span><span class="s2">"U_b + sum over all N reproduces snap.field (</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span> <span class="n">ident</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">curves</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> truncated:"</span><span class="p">,</span> <span class="s2">"  "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M=</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">curves</span><span class="p">[</span><span class="n">label</span><span class="p">])</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">)),</span>
+          <span class="s2">"   rescaled:"</span><span class="p">,</span> <span class="s2">"  "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M=</span><span class="si">{</span><span class="n">m</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">curves_c</span><span class="p">[</span><span class="n">label</span><span class="p">])</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  U_b + sum over all N reproduces snap.field (L = 1 (course default)): max error 1.8e-15 (tol 1e-12)
+PASS  U_b + sum over all N reproduces snap.field (L = 3): max error 1.3e-15 (tol 1e-12)
+L = 1 (course default)   truncated: M=4: 0.48  M=16: 0.18  M=32: 0.07    rescaled: M=4: 0.32  M=16: 0.10  M=32: 0.05
+L = 3                    truncated: M=4: 0.78  M=16: 0.51  M=32: 0.34    rescaled: M=4: 0.74  M=16: 0.38  M=32: 0.21
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">eps</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">curves</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">Ms</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">eps</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, truncated"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">loglog</span><span class="p">(</span><span class="n">Ms</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">curves_c</span><span class="p">[</span><span class="n">label</span><span class="p">][:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">k</span><span class="p">],</span>
+              <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, rescaled by $c(M)$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"neighbours M"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"relative error"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"how much flow the M nearest particles miss"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/2bcebfc067b752c0f6823e2ab1e8adebe7c3fbeb8636d0347e28f88d3e15ebdf.png" src="../_images/2bcebfc067b752c0f6823e2ab1e8adebe7c3fbeb8636d0347e28f88d3e15ebdf.png" />
+</div>
+</div>
+<p>With the default screening the error falls steadily with <span class="math notranslate nohighlight">\(M\)</span>, but slowly: even 16 neighbours miss a noticeable
+part of the flow. A longer screening length makes the disturbance reach further, so more neighbours are needed.
+The dashed curves show that a single learned scale factor recovers part of the missing far field, but not all
+of it. Without screening, the Stokes disturbance decays only as <span class="math notranslate nohighlight">\(1/r\)</span>
+and <span class="math notranslate nohighlight">\(M\)</span> would matter even more. This is one reason the choice of <span class="math notranslate nohighlight">\(M\)</span> is a real modelling decision. In the
+research, the data came from particle-resolved simulations by collaborators, where wakes and long-range effects
+play this role. The research model also differs in size and bookkeeping: it is wider (a few hundred channels),
+and because those simulations use a periodic box, its offsets <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> use the minimum-image
+convention (the nearest periodic copy of each particle).</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A0 sees, for each of the <span class="math notranslate nohighlight">\(M\)</span> nearest particles, two vectors (<span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span>, both <code class="docutils literal notranslate"><span class="pre">1o</span></code>)
+and three scalars (<span class="math notranslate nohighlight">\(\lvert\mathbf q_j\rvert, \rho, \phi_j\)</span>, all <code class="docutils literal notranslate"><span class="pre">0e</span></code>). The inputs are rotation- and
+reflection-equivariant, translation-invariant and independent of particle labels, and we checked each of
+these numerically.</p></li>
+<li><p>A plain MLP on the raw nine numbers per neighbour fails the equivariance check. After training, it fits the
+training orientation well but does worse than a constant mean-flow guess once the test set is transformed by
+an element of O(3).</p></li>
+<li><p>A0 combines an invariant scalar MLP (<span class="math notranslate nohighlight">\(y_u\ge0\)</span>) with an equivariant, bias-free vector stack
+(<span class="math notranslate nohighlight">\(\lvert\mathbf v_u\rvert&lt;1\)</span>) by a channel-wise product, a linear head and a sum over neighbours. Its output
+passes the O(3) check as a polar vector and fails as a pseudovector.</p></li>
+<li><p>Every A0 message lies in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span>, to float64 round-off. Reflection
+symmetry is what excludes the pseudovector <span class="math notranslate nohighlight">\(\mathbf x_{fj}\times\mathbf e_j\)</span>.</p></li>
+<li><p>Truncating the exact pair sum to <span class="math notranslate nohighlight">\(M\)</span> neighbours loses part of the flow. A learned model can recover the part
+of the far field that correlates with its neighbours, but not the rest. How much is lost depends on how far
+the disturbance of one particle reaches.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>A hidden axis.</strong> Replace <span class="math notranslate nohighlight">\(\phi_j\)</span> in the scalars by the neighbour’s height <span class="math notranslate nohighlight">\(r_{j,y}\)</span>, a number that looks
+like a scalar. Build the inputs with this change and run the input check of Section 2. Which part fails, and
+why?</p></li>
+<li><p><strong>A third vector.</strong> Suppose the model also received the gravity direction <span class="math notranslate nohighlight">\(\hat{\mathbf g}\)</span> as a vector
+input for every neighbour. Would messages still lie in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span>? Test it
+with <code class="docutils literal notranslate"><span class="pre">span_residual</span></code> using a toy linear map <span class="math notranslate nohighlight">\(\mathbf m = a\,\mathbf x + b\,\mathbf e + c\,\hat{\mathbf g}\)</span>.
+What changes if you also rotate <span class="math notranslate nohighlight">\(\hat{\mathbf g}\)</span> in the check?</p></li>
+<li><p><strong>Data augmentation instead of structure.</strong> Retrain <code class="docutils literal notranslate"><span class="pre">RawMLP</span></code> with <code class="docutils literal notranslate"><span class="pre">augment=cu.models.augment</span></code> in
+<code class="docutils literal notranslate"><span class="pre">train(...)</span></code>, which applies an independent random O(3) element to every query row (each row’s offsets,
+state directions and target together), drawn afresh for each minibatch. Compare its test and transformed-test <span class="math notranslate nohighlight">\(R^2\)</span>
+with Section 3. Is it now exactly equivariant?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_inputs_bad</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">states</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">neighbour_inputs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">,</span> <span class="n">states</span><span class="p">,</span> <span class="n">positions</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">snap</span><span class="o">.</span><span class="n">density_ratio</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">out</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">build_inputs_bad</span><span class="p">,</span> <span class="p">(</span><span class="n">pts64</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span>
+                       <span class="n">out_kind</span><span class="o">=</span><span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"inputs with height"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The scalars fail. A height is one component of a position, so it changes under rotation and is not an
+invariant. A0 has no way to know which way is up except through the vectors it is given. In the problem, the
+direction of gravity enters only through the states <span class="math notranslate nohighlight">\(\mathbf q_j\)</span>, which point roughly downward.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">gvec</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">expand_as</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">m3</span> <span class="o">=</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">X</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">E</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">gvec</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"distance from span(x, e):"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">span_residual</span><span class="p">(</span><span class="n">m3</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span><span class="o">.</span><span class="n">median</span><span class="p">()))</span>
+<span class="n">f</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">gvec</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"fixed gravity vector"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="n">f2</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">gv</span><span class="p">:</span> <span class="p">(</span><span class="mf">0.3</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">e</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">gv</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">f2</span><span class="p">,</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">gvec</span><span class="p">),</span> <span class="n">KINDS</span> <span class="o">+</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"gravity as an input vector"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The messages leave the plane: with three input vectors the span is all of 3D. If <span class="math notranslate nohighlight">\(\hat{\mathbf g}\)</span> is a fixed
+constant, the model is no longer equivariant, which is the same failure as the bias in Lesson 00. If
+<span class="math notranslate nohighlight">\(\hat{\mathbf g}\)</span> is treated as an input that rotates with the system, equivariance is restored. Each message
+then lies in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j, \hat{\mathbf g})\)</span>.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">raw_aug</span> <span class="o">=</span> <span class="n">RawMLP</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">train</span><span class="p">(</span><span class="n">raw_aug</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">2e-3</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">128</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">augment</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">augment</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"test"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">raw_aug</span><span class="p">,</span> <span class="n">te</span><span class="p">),</span> <span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])),</span>
+      <span class="s2">"transformed"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">raw_aug</span><span class="p">,</span> <span class="n">te_rot</span><span class="p">),</span> <span class="n">te_rot</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])))</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">raw_aug</span><span class="o">.</span><span class="n">double</span><span class="p">(),</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">E</span><span class="p">,</span> <span class="n">X</span><span class="p">),</span> <span class="n">KINDS</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"RawMLP + augmentation"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Augmentation closes the gap between the two test sets: the model has now seen many orientations, so a
+transformation no longer surprises it. On this small toy, with 100 epochs, both <span class="math notranslate nohighlight">\(R^2\)</span> values come out close to
+A0’s (we measured about 0.85 and 0.84). It still fails the exact check, with an error of order 0.1 instead of 1e-15: the symmetry is learned
+only approximately, on the kind of inputs it was shown, and it took four times as many epochs as A0. Part V compares this “learned symmetry” approach with built-in
+symmetry for transformers.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>MolSSI e3nn course, <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/book/intro.html">Introduction</a>
+<span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id11" title="The Molecular Sciences Software Institute (MolSSI). E3nn course. https://molssi-ai.github.io/e3nn-course/book/intro.html, 2024.">The Molecular Sciences Software Institute (MolSSI), 2024</a>]</span>: irreps (<code class="docutils literal notranslate"><span class="pre">0e</span></code>, <code class="docutils literal notranslate"><span class="pre">1o</span></code>, <code class="docutils literal notranslate"><span class="pre">1e</span></code>), equivariance, and e3nn’s linear layers and gates.</p></li>
+<li><p>M. Geiger and T. Smidt, <em>e3nn: Euclidean Neural Networks</em> <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id12" title="Mario Geiger and Tess Smidt. E3nn: euclidean neural networks. arXiv preprint arXiv:2207.09453, 2022.">Geiger and Smidt, 2022</a>]</span>: the library A0 is built
+with, including <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> and <code class="docutils literal notranslate"><span class="pre">NormActivation</span></code>.</p></li>
+<li><p>M. Zaheer et al., <em>Deep Sets</em> <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id15" title="Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabas Poczos, Ruslan R. Salakhutdinov, and Alexander J. Smola. Deep sets. In Advances in Neural Information Processing Systems, volume 30. 2017.">Zaheer <em>et al.</em>, 2017</a>]</span>: why a sum over a set of neighbours gives
+permutation invariance.</p></li>
+<li><p>V. G. Satorras, E. Hoogeboom and M. Welling, <em>E(n) Equivariant Graph Neural Networks</em>
+<span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id20" title="Víctor Garcia Satorras, Emiel Hoogeboom, and Max Welling. E(n) equivariant graph neural networks. In Proceedings of the 38th International Conference on Machine Learning, 9323–9332. 2021.">Satorras <em>et al.</em>, 2021</a>]</span>: another model whose vector outputs are invariant-weighted sums of relative
+positions.</p></li>
+<li><p>J. Happel and H. Brenner, <em>Low Reynolds Number Hydrodynamics</em> <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id17" title="John Happel and Howard Brenner. Low Reynolds Number Hydrodynamics. Martinus Nijhoff, 1983.">Happel and Brenner, 1983</a>]</span>: the Stokes disturbance
+of a translating sphere used by the toy.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part2_a0"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part1_problem/01c_frames.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Frames: what velocity do we subtract?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02b_two_branches.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Scalar and vector branches</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-query-point-and-its-m-nearest-particles">1. A query point and its <span class="math notranslate nohighlight">\(M\)</span> nearest particles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scalars-and-vectors-checking-the-input-types">2. Scalars and vectors: checking the input types</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-a-plain-mlp-on-raw-coordinates">3. Failure first: a plain MLP on raw coordinates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a0-at-a-glance-two-branches-one-product-one-sum">4. A0 at a glance: two branches, one product, one sum</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#every-message-lies-in-the-plane-of-mathbf-x-fj-and-mathbf-e-j">5. Every message lies in the plane of <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-many-neighbours-are-enough">6. How many neighbours are enough?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The u1e3nn project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>Companion to the <a href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a>.</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

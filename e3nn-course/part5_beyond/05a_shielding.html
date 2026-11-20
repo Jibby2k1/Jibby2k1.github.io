@@ -1,0 +1,1401 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Shielding: why a sum of pairs falls short &#8212; Equivariant surrogates for particle-laden flow</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part5_beyond/05a_shielding';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Attention from scratch: queries, keys, values" href="05b_attention_from_scratch.html" />
+    <link rel="prev" title="A worked toy case: fixed versus refined" href="../part4_training/04d_worked_case.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Equivariant surrogates for particle-laden flow</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Equivariant surrogates for particle-laden flow
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up and a first equivariance check</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01a_settling_particles.html">Settling particles and what a simulation gives us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01b_superposition.html">One-particle disturbances and superposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01c_frames.html">Frames: what velocity do we subtract?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II · The A0 model</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02a_pair_geometry.html">Pair geometry: what one neighbour tells a query point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02b_two_branches.html">Scalar and vector branches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02c_span_property.html">Every message lies in span(x, e)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02d_e3nn_vs_pytorch.html">e3nn and plain PyTorch compute the same function</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III · Self-consistent refinement</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03a_fixed_point.html">States as unknowns: refinement as a fixed-point problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03b_picard_anderson.html">Picard, damping and Anderson acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03c_residuals_stopping.html">Residuals and stopping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03d_replay_vs_frozen.html">Replay versus frozen-model inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV · Training and evaluation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04a_splits.html">Splits: snapshots, not points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04b_metrics.html">NRMSE versus R²</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04c_seeds_paired.html">Seeds and paired comparisons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04d_worked_case.html">A worked toy case: fixed versus refined</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V · Beyond pairwise: attention and model B</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Shielding: why a sum of pairs falls short</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05b_attention_from_scratch.html">Attention from scratch: queries, keys, values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05c_multihead_masking.html">Multiple heads and masking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05d_permutation.html">Why attention suits sets of particles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05e_transformer_block.html">The transformer block: residuals, LayerNorm and the feed-forward network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05f_invariant_attention.html">Invariant attention with a pair-geometry bias: model B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05g_negative_results.html">Negative results as worked lessons</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part VI · Practice</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06a_speed.html">Speed: layout, compile and TF32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06b_profiling.html">Profiling and memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06c_hpc.html">Running on a cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part5_beyond/05a_shielding.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Shielding: why a sum of pairs falls short</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-three-body-effect-shielding">1. A three-body effect: shielding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shielding-in-the-full-toy">1.1 Shielding in the full toy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-a-sum-of-pairs-cannot-let-k-change-j">2. What goes wrong: a sum of pairs cannot let <span class="math notranslate nohighlight">\(k\)</span> change <span class="math notranslate nohighlight">\(j\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-in-brief">3. Attention in brief</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-plateau-in-training">4. The plateau in training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-transformer-learned-and-its-symmetries">5. What the transformer learned, and its symmetries</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-keeps-the-symmetries">5.1 Attention keeps the symmetries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-leaves-a0">5.2 Where this leaves A0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="shielding-why-a-sum-of-pairs-falls-short">
+<h1>Shielding: why a sum of pairs falls short<a class="headerlink" href="#shielding-why-a-sum-of-pairs-falls-short" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What a <em>three-body</em> effect is, using the toy’s “shielding” rule: a particle <span class="math notranslate nohighlight">\(k\)</span> between particle <span class="math notranslate nohighlight">\(j\)</span> and
+the query point weakens <span class="math notranslate nohighlight">\(j\)</span>’s contribution there.</p></li>
+<li><p>Why no model of the form <span class="math notranslate nohighlight">\(\sum_j \mathbf m(\text{pair } j)\)</span> can represent it. A0 and the pairwise MLP both
+have this form, whatever their weights, and we check the reason numerically.</p></li>
+<li><p>Attention in brief: queries, keys, values, the softmax weights, heads and the transformer block, enough
+to read model B.</p></li>
+<li><p>How to see the limit in training: pairwise models plateau on a shielded target, while a small transformer
+(attention between neighbours) does much better.</p></li>
+<li><p>That attention keeps every symmetry we care about (permutation of neighbours, rotations and reflections),
+checked to round-off.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part2_a0/02a_pair_geometry.html"><span class="std std-doc">Lesson 02a</span></a> (the inputs <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span>, <span class="math notranslate nohighlight">\(\mathbf e_j\)</span>
+and the scalars), <a class="reference internal" href="../part2_a0/02b_two_branches.html"><span class="std std-doc">Lesson 02b</span></a> (A0’s two branches) and
+<a class="reference internal" href="../part2_a0/02c_span_property.html"><span class="std std-doc">Lesson 02c</span></a> (every message lies in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span>).
+No transformer background is needed: Section 3 gives a compact introduction, and Lessons
+<a class="reference internal" href="05b_attention_from_scratch.html"><span class="std std-doc">05b</span></a> to <a class="reference internal" href="05e_transformer_block.html"><span class="std std-doc">05e</span></a> take each piece further.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">copy</span><span class="o">,</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">toy_data</span> <span class="k">as</span> <span class="n">T</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">PALETTE</span><span class="p">,</span> <span class="n">INK</span><span class="p">,</span> <span class="n">CMAP_SEQUENTIAL</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">PairMLP</span><span class="p">,</span> <span class="n">MiniA0</span><span class="p">,</span> <span class="n">MiniB</span><span class="p">,</span> <span class="n">param_count</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.training</span><span class="w"> </span><span class="kn">import</span> <span class="n">train</span><span class="p">,</span> <span class="n">predict</span><span class="p">,</span> <span class="n">split_by_snapshot</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.metrics</span><span class="w"> </span><span class="kn">import</span> <span class="n">r2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_equivariance</span><span class="p">,</span> <span class="n">check_permutation</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.shielding</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">local_shielding_factor</span><span class="p">,</span> <span class="n">shielding_weights</span><span class="p">,</span>
+                                    <span class="n">shielded_contributions</span><span class="p">,</span> <span class="n">shielded_target</span><span class="p">)</span>
+
+<span class="n">t_start</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>   <span class="c1"># small models train fastest on a few threads; more threads only contend</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="a-three-body-effect-shielding">
+<h2>1. A three-body effect: shielding<a class="headerlink" href="#a-three-body-effect-shielding" title="Link to this heading">#</a></h2>
+<p>Every model in Part II predicts the velocity at a query point <span class="math notranslate nohighlight">\(\mathbf x_f\)</span> as a <strong>sum of messages</strong>, one
+per neighbour <span class="math notranslate nohighlight">\(j\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf u(\mathbf x_f) \;=\; \sum_{j=1}^{M} \mathbf m\big(\boldsymbol\xi_j,\; \mathbf e_j,\; \mathbf x_{fj}\big),
+\qquad \mathbf x_{fj} = \mathbf x_f - \mathbf r_j ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\boldsymbol\xi_j = (|\mathbf q_j|, \rho, \phi_j)\)</span> collects neighbour <span class="math notranslate nohighlight">\(j\)</span>’s scalars (the code calls
+them <code class="docutils literal notranslate"><span class="pre">scalars</span></code>). Message <span class="math notranslate nohighlight">\(j\)</span> sees the query point and particle <span class="math notranslate nohighlight">\(j\)</span>, and nothing else. This is a
+<strong>two-body</strong> (pairwise) model: query plus one particle. <em>Given the particle states</em>, the toy’s exact Stokes
+disturbance is of this kind, so a pairwise model can represent it. (The states themselves are a many-body
+quantity: Part III is about getting them right.)</p>
+<p>Real suspensions are not that simple. The toy adds a made-up but symmetric rule, called <strong>shielding</strong>:
+when a particle <span class="math notranslate nohighlight">\(k\)</span> sits between particle <span class="math notranslate nohighlight">\(j\)</span> and the point <span class="math notranslate nohighlight">\(\mathbf x_f\)</span>, it weakens how <span class="math notranslate nohighlight">\(j\)</span>’s
+disturbance reaches <span class="math notranslate nohighlight">\(\mathbf x_f\)</span>. Particle <span class="math notranslate nohighlight">\(j\)</span>’s contribution is multiplied by a factor</p>
+<div class="math notranslate nohighlight">
+\[
+S_j(\mathbf x_f) \;=\; \prod_{k \neq j} \big(1 - \sigma\, w_k(j)\big),
+\qquad
+w_k(j) = \exp\!\Big(-\frac{d_\perp^2}{\ell^2}\Big)\,
+\mathrm{sig}\!\Big(\frac{t}{\tau}\Big)\,\mathrm{sig}\!\Big(\frac{1-t}{\tau}\Big),
+\]</div>
+<p>where</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(t = \dfrac{(\mathbf r_k - \mathbf r_j)\cdot(\mathbf x_f - \mathbf r_j)}{|\mathbf x_f - \mathbf r_j|^2}\)</span>
+says how far along the segment from <span class="math notranslate nohighlight">\(j\)</span> to <span class="math notranslate nohighlight">\(\mathbf x_f\)</span> particle <span class="math notranslate nohighlight">\(k\)</span> sits (between 0 and 1 means “in
+between”), and <span class="math notranslate nohighlight">\(d_\perp\)</span> is <span class="math notranslate nohighlight">\(k\)</span>’s distance from that line;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\mathrm{sig}(z) = 1/(1 + e^{-z})\)</span> is the logistic function, so the two <span class="math notranslate nohighlight">\(\mathrm{sig}\)</span> factors form a soft
+window that is close to 1 for <span class="math notranslate nohighlight">\(0 &lt; t &lt; 1\)</span>; <span class="math notranslate nohighlight">\(\tau = 0.1\)</span> sets how sharp its edges are;</p></li>
+<li><p><span class="math notranslate nohighlight">\(\ell\)</span> is the width of the “shadow” and <span class="math notranslate nohighlight">\(\sigma \in [0, 1)\)</span> is its strength.</p></li>
+</ul>
+<p>The factor <span class="math notranslate nohighlight">\(S_j\)</span> depends on three points at once (the query <span class="math notranslate nohighlight">\(\mathbf x_f\)</span>, particle <span class="math notranslate nohighlight">\(j\)</span> and particle <span class="math notranslate nohighlight">\(k\)</span>),
+so it is a <strong>three-body</strong> effect.</p>
+<div class="warning admonition">
+<p class="admonition-title">Occlusion, not hydrodynamics</p>
+<p>This rule is line-of-sight occlusion, chosen for teaching. It is unrelated to the toy’s <span class="math notranslate nohighlight">\(e^{-r/L}\)</span>
+screening of each disturbance (Lesson 01b) and to Brinkman-type hydrodynamic screening. Real many-body
+effects in Stokes flow come from reflections between particles and from screening, not from one particle
+casting a shadow. What the rule shares with real physics is the one property this lesson needs: the effect
+of <span class="math notranslate nohighlight">\(j\)</span> at <span class="math notranslate nohighlight">\(\mathbf x_f\)</span> depends on where <em>other</em> particles are.</p>
+</div>
+<p>Let us draw <span class="math notranslate nohighlight">\(1 - \sigma w_k\)</span> for one pair: particle <span class="math notranslate nohighlight">\(j\)</span> at the origin, the query point at <span class="math notranslate nohighlight">\((4, 0)\)</span>, and
+particle <span class="math notranslate nohighlight">\(k\)</span> moved over the plane. <code class="docutils literal notranslate"><span class="pre">local_shielding_factor</span></code> takes the course’s network inputs, so we pass two
+“neighbours” (<span class="math notranslate nohighlight">\(j\)</span> and <span class="math notranslate nohighlight">\(k\)</span>) per query, written as offsets from the query point.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sigma</span><span class="p">,</span> <span class="n">width</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">1.0</span>          <span class="c1"># the shielding strength and width used in this lesson (tau = 0.1)</span>
+
+<span class="n">x_q</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>                       <span class="c1"># query point; particle j sits at the origin</span>
+<span class="n">g1</span><span class="p">,</span> <span class="n">g2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mi">141</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mi">101</span><span class="p">)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">g1</span><span class="p">,</span> <span class="n">g2</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">r_k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">K</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="mi">1</span><span class="p">))],</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># particle k on the plane z = 0</span>
+<span class="n">x_fj</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">x_q</span><span class="p">,</span> <span class="n">r_k</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="n">x_q</span> <span class="o">-</span> <span class="n">r_k</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># (B, 2, 3): offsets of j and k</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">local_shielding_factor</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">x_fj</span><span class="p">),</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>  <span class="c1"># factor on j's term</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.2</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">g2</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">g1</span><span class="p">)),</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="n">g1</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">g2</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">g2</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span>
+               <span class="n">cmap</span><span class="o">=</span><span class="n">CMAP_SEQUENTIAL</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_q</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"#f2f2f2"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.3</span><span class="p">)</span>       <span class="c1"># light: visible inside the dark band</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">mfc</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">mec</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"particle j"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="o">*</span><span class="n">x_q</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"query point"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"position of particle k along the segment"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"lateral position of k"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">r</span><span class="s2">"factor $1-\sigma w_k$ on $j$'s contribution, as a function of where $k$ sits"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$1-\sigma w_k$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/fd60ec03e3e50c5cbb6acda000c59fc14d0b070a724e7ed4e7a2d9ce65b383bf.png" src="../_images/fd60ec03e3e50c5cbb6acda000c59fc14d0b070a724e7ed4e7a2d9ce65b383bf.png" />
+</div>
+</div>
+<p>When <span class="math notranslate nohighlight">\(k\)</span> sits in the dark band around the dashed segment between <span class="math notranslate nohighlight">\(j\)</span> and the query point, it removes most
+of <span class="math notranslate nohighlight">\(j\)</span>’s contribution. Away from the segment it does nothing.</p>
+<section id="shielding-in-the-full-toy">
+<h3>1.1 Shielding in the full toy<a class="headerlink" href="#shielding-in-the-full-toy" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">make_snapshot(shielding=...,</span> <span class="pre">shield_width=...)</span></code> applies the rule to the whole suspension, so every other
+particle can shadow every disturbance. The flow changes visibly. In particular, regions behind dense groups
+of particles become quieter.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">snap_plain</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">n_particles</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">snap_shield</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">n_particles</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">shielding</span><span class="o">=</span><span class="n">sigma</span><span class="p">,</span> <span class="n">shield_width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">4.3</span><span class="p">))</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">v0</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">field_slice</span><span class="p">(</span><span class="n">snap_plain</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"no shielding"</span><span class="p">)</span>
+<span class="n">vmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanpercentile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="n">v0</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">v0</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="mi">99</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">field_slice</span><span class="p">(</span><span class="n">snap_shield</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">vmax</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                        <span class="n">title</span><span class="o">=</span><span class="sa">rf</span><span class="s2">"shielding $\sigma=</span><span class="si">{</span><span class="n">sigma</span><span class="si">}</span><span class="s2">$, $\ell=</span><span class="si">{</span><span class="n">width</span><span class="si">}</span><span class="s2">$"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">images</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">,</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"in-plane speed"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/dece347e0cd62a61004aad9a4d68846052dce3c495484c4fda80a14d0200fcbd.png" src="../_images/dece347e0cd62a61004aad9a4d68846052dce3c495484c4fda80a14d0200fcbd.png" />
+</div>
+</div>
+<p>The full-toy field depends on particles beyond the <span class="math notranslate nohighlight">\(M\)</span> nearest, and also on the slip states. That mixes two
+questions: what a model can <em>see</em>, and what it can <em>express</em>. To isolate the second question, the rest of
+the lesson uses a <strong>neighbour-set target</strong>. The same rule is applied only among the <span class="math notranslate nohighlight">\(M\)</span> neighbours a model
+receives:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf y(\mathbf x_f) \;=\; \sum_{j=1}^{M} S_j\, G(\mathbf x_{fj})\, \mathbf s_j,
+\qquad S_j = \prod_{k \neq j,\ k \le M} \big(1 - \sigma w_k(j)\big),
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(G\)</span> the screened one-sphere Stokes matrix of Lesson 01b and <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> the slip of particle <span class="math notranslate nohighlight">\(j\)</span>.
+This target is a deterministic function of the model inputs, so any error that remains is a limit of the
+model’s structure, not missing information. The helper <code class="docutils literal notranslate"><span class="pre">course_utils.shielding.shielded_target</span></code> computes it
+from <code class="docutils literal notranslate"><span class="pre">(scalars,</span> <span class="pre">e_j,</span> <span class="pre">x_fj)</span></code>. First we check that it is the toy’s rule, by comparing it with the NumPy
+implementation in <code class="docutils literal notranslate"><span class="pre">toy_data</span></code> applied to the same <span class="math notranslate nohighlight">\(M\)</span> particles:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">M</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">snap_chk</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">n_particles</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">sample_exterior</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">inp</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">neighbour_inputs</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">slip</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">phi_local</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">density_ratio</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+<span class="n">y_torch</span> <span class="o">=</span> <span class="n">shielded_target</span><span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">],</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+
+<span class="n">err</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)):</span>
+    <span class="n">pos</span> <span class="o">=</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="n">inp</span><span class="p">[</span><span class="s2">"idx"</span><span class="p">][</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()]</span>
+    <span class="n">S_np</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">shielding_factor</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">p</span><span class="p">:</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="n">pos</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">G_np</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">stokes_sphere_matrix</span><span class="p">(</span><span class="n">pts</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">-</span> <span class="n">pos</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">screening_length</span><span class="p">)</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"j,jab,jb-&gt;a"</span><span class="p">,</span> <span class="n">S_np</span><span class="p">,</span> <span class="n">G_np</span><span class="p">,</span> <span class="n">snap_chk</span><span class="o">.</span><span class="n">slip</span><span class="p">[</span><span class="n">inp</span><span class="p">[</span><span class="s2">"idx"</span><span class="p">][</span><span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">numpy</span><span class="p">()])</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">ref</span> <span class="o">-</span> <span class="n">y_torch</span><span class="p">[</span><span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"neighbour-set target vs toy_data rule: max |difference| = </span><span class="si">{</span><span class="n">err</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>neighbour-set target vs toy_data rule: max |difference| = 1.11e-16
+</pre></div>
+</div>
+</div>
+</div>
+<p>The target must have the same symmetries as the physics: it rotates and reflects with the inputs, and it
+does not depend on the order of the neighbours. Each neighbour’s contribution is <em>permutation-equivariant</em>:
+shuffle the neighbours and the contributions are shuffled the same way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args64</span> <span class="o">=</span> <span class="p">(</span><span class="n">inp</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">inp</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">])</span>
+<span class="n">kinds</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">)</span>
+<span class="n">target_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">shielded_target</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">contrib_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">shielded_contributions</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">target_fn</span><span class="p">,</span> <span class="n">args64</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"shielded target, O(3)"</span><span class="p">)</span>
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">target_fn</span><span class="p">,</span> <span class="n">args64</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"invariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"shielded target, neighbour order"</span><span class="p">)</span>
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">contrib_fn</span><span class="p">,</span> <span class="n">args64</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"equivariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"per-neighbour contributions"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  shielded target, O(3): max error 3.3e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  shielded target, neighbour order: max error 2.2e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+PASS  per-neighbour contributions: max error 1.1e-16 (tol 1e-12)  [3 random permutations of axis 1 (equivariant)]
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="what-goes-wrong-a-sum-of-pairs-cannot-let-k-change-j">
+<h2>2. What goes wrong: a sum of pairs cannot let <span class="math notranslate nohighlight">\(k\)</span> change <span class="math notranslate nohighlight">\(j\)</span><a class="headerlink" href="#what-goes-wrong-a-sum-of-pairs-cannot-let-k-change-j" title="Link to this heading">#</a></h2>
+<p>Here is the whole argument. In a pairwise model, message <span class="math notranslate nohighlight">\(j\)</span> is a function of
+<span class="math notranslate nohighlight">\((\boldsymbol\xi_j, \mathbf e_j, \mathbf x_{fj})\)</span> only:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf m_j = \mathbf m(\boldsymbol\xi_j, \mathbf e_j, \mathbf x_{fj}) \quad\Longrightarrow\quad
+\frac{\partial \mathbf m_j}{\partial (\boldsymbol\xi_k, \mathbf e_k, \mathbf x_{fk})} = 0 \quad (k \neq j).
+\]</div>
+<p>So <strong>deleting particle <span class="math notranslate nohighlight">\(k\)</span> removes <span class="math notranslate nohighlight">\(\mathbf m_k\)</span> from the sum and leaves every other message exactly as it
+was</strong>. In the shielded target, deleting <span class="math notranslate nohighlight">\(k\)</span> also <em>restores</em> the contributions <span class="math notranslate nohighlight">\(k\)</span> was shadowing. A pairwise
+model has no term that can do that. The best it can do is the closest sum of pair functions, which behaves
+roughly like an average attenuation for each pair geometry, averaged over all the places where other
+particles might be.</p>
+<p>This holds for <strong>any weights</strong>, so we can check it on untrained models. We take one query point, pick the
+particle <span class="math notranslate nohighlight">\(k\)</span> whose removal changes the other contributions the most, and delete it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">drop</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The same neighbour set with neighbour k removed (M - 1 neighbours)."""</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">k</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">change_of_others</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""max_j |c_j(with k) - c_j(without k)| over j != k, for per-neighbour outputs f -&gt; (B, M, 3)."""</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">full</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">inputs</span><span class="p">)</span>
+        <span class="n">keep</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">inputs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">k</span><span class="p">]</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">full</span><span class="p">[:,</span> <span class="n">keep</span><span class="p">]</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">drop</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">k</span><span class="p">)))</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>   <span class="c1"># (M - 1,)</span>
+
+<span class="c1"># choose the query point and neighbour k with the largest effect on the truth</span>
+<span class="n">best</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">pts</span><span class="p">)):</span>
+    <span class="n">one</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">p</span><span class="p">:</span><span class="n">p</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args64</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">change_of_others</span><span class="p">(</span><span class="n">contrib_fn</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">d</span> <span class="o">&gt;</span> <span class="n">best</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">p_star</span><span class="p">,</span> <span class="n">k_star</span> <span class="o">=</span> <span class="n">best</span>
+<span class="n">one</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="n">p_star</span><span class="p">:</span><span class="n">p_star</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">args64</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"query point </span><span class="si">{</span><span class="n">p_star</span><span class="si">}</span><span class="s2">, deleting its neighbour number </span><span class="si">{</span><span class="n">k_star</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">untrained</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PairMLP"</span><span class="p">:</span> <span class="n">PairMLP</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">(),</span> <span class="s2">"MiniA0"</span><span class="p">:</span> <span class="n">MiniA0</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">(),</span> <span class="s2">"MiniB"</span><span class="p">:</span> <span class="n">MiniB</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()}</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"truth (shielded)"</span><span class="p">:</span> <span class="n">change_of_others</span><span class="p">(</span><span class="n">contrib_fn</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">k_star</span><span class="p">)}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">untrained</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">rows</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">change_of_others</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">messages</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">k_star</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;17</span><span class="si">}</span><span class="s2"> max over j != k of |change in message j| = </span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"PairMLP"</span><span class="p">,</span> <span class="s2">"MiniA0"</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">rows</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="n">name</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>query point 2, deleting its neighbour number 2
+truth (shielded)  max over j != k of |change in message j| = 1.33e-01
+PairMLP           max over j != k of |change in message j| = 1.73e-18
+MiniA0            max over j != k of |change in message j| = 1.10e-17
+MiniB             max over j != k of |change in message j| = 1.74e-03
+</pre></div>
+</div>
+</div>
+</div>
+<p>The pairwise models’ messages do not move: the change is zero up to float64 round-off. Mathematically it
+is exactly zero; the printed values are the last bits of floating-point arithmetic. The truth’s
+contributions change by a finite amount. So does the transformer’s (<code class="docutils literal notranslate"><span class="pre">MiniB</span></code>, introduced in Section 3), even
+untrained, because its message <span class="math notranslate nohighlight">\(j\)</span> is computed after neighbour <span class="math notranslate nohighlight">\(j\)</span> has <em>attended to</em> all the others. Per
+neighbour:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">others</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="o">!=</span> <span class="n">k_star</span><span class="p">]</span>
+<span class="n">floor</span> <span class="o">=</span> <span class="mf">1e-20</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">))</span>
+<span class="n">wbar</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">M</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">*</span> <span class="n">wbar</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">floor</span><span class="p">),</span> <span class="n">wbar</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">floor</span><span class="p">,</span> <span class="mf">1e1</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">M</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"j=</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">others</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"remaining neighbour j"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$|\mathbf</span><span class="si">{m}</span><span class="s2">_j^{\rm with\ k} - \mathbf</span><span class="si">{m}</span><span class="s2">_j^{\rm without\ k}|$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"effect of deleting neighbour k=</span><span class="si">{</span><span class="n">k_star</span><span class="si">}</span><span class="s2"> on the other messages"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper right"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/0ea510e5dff368a251255969efe71f06dd8d8376d32483f81a57578ba26c113a.png" src="../_images/0ea510e5dff368a251255969efe71f06dd8d8376d32483f81a57578ba26c113a.png" />
+</div>
+</div>
+<p>Note the logarithmic axis. The PairMLP and MiniA0 bars sit at float64 round-off, far below the truth’s
+changes and below the untrained transformer’s small but genuine ones. A change that is <em>exactly</em> zero
+cannot be drawn on a log axis, so it is clipped to the floor <span class="math notranslate nohighlight">\(10^{-20}\)</span> and its bar has no visible height.
+That is why some PairMLP and MiniA0 bars are missing: their change there is exactly zero.</p>
+<div class="note admonition">
+<p class="admonition-title">Does this contradict Lesson 02c?</p>
+<p>No. Lesson 02c showed that A0’s <em>per-pair form</em> is fully general: any O(3)-equivariant function of a single
+pair lies in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span> with invariant coefficients. Shielding does not need
+a different per-pair form. In the target, <span class="math notranslate nohighlight">\(S_j G(\mathbf x_{fj}) \mathbf s_j\)</span> still lies in
+<span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf s_j)\)</span>, and so do the transformer’s messages (the next cell checks
+both). What shielding needs is <strong>coefficients that depend on the other neighbours</strong>. The limit is the
+<em>sum of independent pairs</em>, not the span.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">span_residual</span>
+
+<span class="n">s_vec</span> <span class="o">=</span> <span class="n">args64</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">args64</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>                       <span class="c1"># s_j = |q_j| e_j</span>
+<span class="n">res_target</span> <span class="o">=</span> <span class="n">span_residual</span><span class="p">(</span><span class="n">contrib_fn</span><span class="p">(</span><span class="o">*</span><span class="n">args64</span><span class="p">),</span> <span class="n">args64</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">s_vec</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">res_B</span> <span class="o">=</span> <span class="n">span_residual</span><span class="p">(</span><span class="n">untrained</span><span class="p">[</span><span class="s2">"MiniB"</span><span class="p">]</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="o">*</span><span class="n">args64</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">args64</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">args64</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"shielded contributions: max distance from span(x_fj, s_j) = </span><span class="si">{</span><span class="n">res_target</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"MiniB messages:         max distance from span(x_fj, e_j) = </span><span class="si">{</span><span class="n">res_B</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">res_target</span> <span class="o">&lt;</span> <span class="mf">1e-12</span> <span class="ow">and</span> <span class="n">res_B</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shielded contributions: max distance from span(x_fj, s_j) = 7.1e-16
+MiniB messages:         max distance from span(x_fj, e_j) = 8.4e-16
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="attention-in-brief">
+<h2>3. Attention in brief<a class="headerlink" href="#attention-in-brief" title="Link to this heading">#</a></h2>
+<p>The cure is to let each neighbour’s coefficients depend on the other neighbours. <strong>Attention</strong> does this.
+This section gives the minimum needed to read model B; Lessons 05b to 05e build each piece from scratch.</p>
+<p><strong>Tokens.</strong> Treat the <span class="math notranslate nohighlight">\(M\)</span> neighbours as a set of <span class="math notranslate nohighlight">\(M\)</span> <em>tokens</em>. Token <span class="math notranslate nohighlight">\(j\)</span> carries a feature vector
+<span class="math notranslate nohighlight">\(\mathbf h_j \in \mathbb R^{d}\)</span>, here a small MLP applied to neighbour <span class="math notranslate nohighlight">\(j\)</span>’s invariants
+<span class="math notranslate nohighlight">\(I_j = (\boldsymbol\xi_j,\ r_j,\ \hat{\mathbf x}_{fj}\cdot\mathbf e_j,\ |\mathbf e_j|)\)</span>, where
+<span class="math notranslate nohighlight">\(r_j = |\mathbf x_{fj}|\)</span>.</p>
+<p><strong>Queries, keys and values.</strong> Three learned linear maps give each token a <em>query</em> <span class="math notranslate nohighlight">\(Q_j = W_Q \mathbf h_j\)</span>
+(“what am I looking for?”), a <em>key</em> <span class="math notranslate nohighlight">\(K_k = W_K \mathbf h_k\)</span> (“what do I offer?”) and a <em>value</em>
+<span class="math notranslate nohighlight">\(V_k = W_V \mathbf h_k\)</span> (“what I pass on”). Each has <span class="math notranslate nohighlight">\(d_h\)</span> entries.</p>
+<p><strong>Weights and the update.</strong> Token <span class="math notranslate nohighlight">\(j\)</span> scores every token <span class="math notranslate nohighlight">\(k\)</span> with a dot product, turns the scores into
+weights with a softmax, and takes the weighted average of the values:</p>
+<div class="math notranslate nohighlight">
+\[
+a_{jk} \;=\; \mathrm{softmax}_k\!\Big(\frac{Q_j\cdot K_k}{\sqrt{d_h}} + b_{jk}\Big)
+= \frac{\exp(\cdot)_{jk}}{\sum_{k'} \exp(\cdot)_{jk'}},
+\qquad
+\mathbf h_j' \;=\; \sum_{k=1}^{M} a_{jk}\, V_k .
+\]</div>
+<p>The weights in each row are positive and sum to 1, so <span class="math notranslate nohighlight">\(\mathbf h_j'\)</span> is an average of the values whose
+weights <em>depend on the data</em>. Dividing by <span class="math notranslate nohighlight">\(\sqrt{d_h}\)</span> keeps the scores of order 1 as <span class="math notranslate nohighlight">\(d_h\)</span> grows, so the
+softmax does not saturate. The term <span class="math notranslate nohighlight">\(b_{jk}\)</span> is an optional additive <strong>bias</strong> that lets known pair
+information steer the weights directly.</p>
+<p><strong>Heads.</strong> Several copies of this map (“heads”), each with its own <span class="math notranslate nohighlight">\(W_Q, W_K, W_V\)</span> and smaller <span class="math notranslate nohighlight">\(d_h\)</span>, run
+side by side; their outputs are concatenated and mixed by one more linear map. Different heads can attend to
+different things. With padding (sets of different sizes), a <em>mask</em> sets the scores of missing tokens to
+<span class="math notranslate nohighlight">\(-\infty\)</span> before the softmax; we always have exactly <span class="math notranslate nohighlight">\(M\)</span> neighbours, so no mask is needed here.</p>
+<p><strong>The transformer block.</strong> Attention is wrapped in a residual block, with layer normalisation (LN, which
+rescales each token’s features to zero mean and unit variance) before each part:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf h \leftarrow \mathbf h + \mathrm{Attention}(\mathrm{LN}(\mathbf h)),
+\qquad
+\mathbf h \leftarrow \mathbf h + \mathrm{MLP}(\mathrm{LN}(\mathbf h)),
+\]</div>
+<p>where the MLP acts on each token separately. Stacking a few blocks lets information pass between
+neighbours more than once.</p>
+<p><strong>Why it suits sets.</strong> Nothing in the formulas uses the position of a token in the list: permuting the
+tokens permutes the queries, keys, values and weights the same way, so the outputs are permuted too
+(permutation-<em>equivariant</em>). A sum over tokens at the end is then permutation-<em>invariant</em>. Section 5
+checks both.</p>
+<p><strong>Model B in one line.</strong> <code class="docutils literal notranslate"><span class="pre">MiniB</span></code> computes, for every pair <span class="math notranslate nohighlight">\((j, k)\)</span>, the invariants</p>
+<div class="math notranslate nohighlight">
+\[
+P_{jk} = \big(|\mathbf x_{fj}-\mathbf x_{fk}|,\ \mathbf e_j\!\cdot\!\mathbf e_k,\
+\hat{\mathbf x}_{fj}\!\cdot\!\mathbf e_k,\ \hat{\mathbf x}_{fk}\!\cdot\!\mathbf e_j,\
+\hat{\mathbf x}_{fj}\!\cdot\!\hat{\mathbf x}_{fk}\big),
+\]</div>
+<p>maps them through one small MLP to the biases <span class="math notranslate nohighlight">\(b_{jk}\)</span> of every block and head, runs two transformer blocks,
+and reads out two invariant coefficients per neighbour:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf m_j = \alpha_j\, \mathbf x_{fj} + \beta_j\, \mathbf e_j,
+\qquad (\alpha_j, \beta_j) = \mathrm{Linear}(\mathrm{LN}(\mathbf h_j)),
+\qquad \mathbf u = \sum_j \mathbf m_j .
+\]</div>
+<p>The learned parts see only norms and dot products, so <span class="math notranslate nohighlight">\(\alpha_j, \beta_j\)</span> are invariant and <span class="math notranslate nohighlight">\(\mathbf u\)</span> is
+exactly O(3)-equivariant, with every message in <span class="math notranslate nohighlight">\(\mathrm{span}(\mathbf x_{fj}, \mathbf e_j)\)</span> as in A0.
+The difference from A0 is that <span class="math notranslate nohighlight">\(\alpha_j, \beta_j\)</span> now depend on all the neighbours. <span class="math notranslate nohighlight">\(P_{jk}\)</span>, together
+with each token’s own invariants (which include <span class="math notranslate nohighlight">\(r_j\)</span>), carries what is needed to tell whether <span class="math notranslate nohighlight">\(k\)</span> sits
+between <span class="math notranslate nohighlight">\(j\)</span> and the query point. <code class="docutils literal notranslate"><span class="pre">MiniB</span></code> is a reduced version of the research model B: it is narrower, its
+MLPs are smaller and it feeds <span class="math notranslate nohighlight">\(r_j\)</span> in directly instead of through a radial-basis embedding.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls loop muted playsinline preload="metadata" poster="../_static/media/S5_attention/S5_attention.png" aria-label="A query particle scores four neighbours; glowing edges show softmax weights. Then twin panels: a plain sum versus attention with a pair bias, where neighbour B sits in the shadow of neighbour A." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/S5_attention/S5_attention.webm" type="video/webm">
+<source src="../_static/media/S5_attention/S5_attention.mp4" type="video/mp4">
+Your browser cannot play this video. <a href="../_static/media/S5_attention/S5_attention.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation S5, attention and shielding.</strong> First act: a particle scores each neighbour by the projection of the neighbour’s key on its own query, <span class="math notranslate nohighlight">\(\mathbf Q\cdot\mathbf K/\sqrt{d_h}\)</span>. A softmax turns the scores into positive weights that sum to 1, drawn as the brightness of the edges. The clip writes <span class="math notranslate nohighlight">\(i\)</span> for the token that looks and <span class="math notranslate nohighlight">\(j\)</span> for the token looked at, where Part V writes <span class="math notranslate nohighlight">\(j\)</span> and <span class="math notranslate nohighlight">\(k\)</span>. Second act: neighbour B sits in the shadow of the closer neighbour A. In a plain sum (left, A0) every pair term has weight 1, whatever A does. In attention (right, model B) with scores alone, the ratio of B’s weight to C’s does not depend on A. A pair bias <span class="math notranslate nohighlight">\(b(P_{BA})\)</span>, computed from the geometry of B and A, lowers that ratio, and removing A brings it back. Removing a token renormalises every weight, so the ratio, not B’s weight alone, is the evidence for shielding. The clip is drawn on a dark stage in both page themes. Explore the same toy in 3D: <a href="../_static/media/S5_attention/interactive.html" target="_blank" rel="noopener">open the interactive version</a> in a new tab, or show it here:</p>
+<details class="course-anim-interactive" style="margin:0.2em 0 1.4em">
+<summary>Interactive 3D version: shielding: attention versus a plain sum (toy)</summary>
+<iframe src="../_static/media/S5_attention/interactive.html" loading="lazy" title="shielding: attention versus a plain sum (toy)" style="display:block;width:100%;height:600px;border:0;border-radius:14px;background:#0f1419;margin-top:0.6em"></iframe>
+</details>
+</section>
+<section id="the-plateau-in-training">
+<h2>4. The plateau in training<a class="headerlink" href="#the-plateau-in-training" title="Link to this heading">#</a></h2>
+<p>Now we train. The data come from toy snapshots without full-toy shielding, using the <strong>oracle</strong> states
+<span class="math notranslate nohighlight">\(\mathbf q_j = \mathbf s_j\)</span> (the exact slip). The targets are replaced by the neighbour-set target with
+<span class="math notranslate nohighlight">\(M = 8\)</span>, so the reference frame of the original velocities plays no role. Using oracle states removes a
+different source of error: the missing self-consistency that Part III addresses. What remains is only the
+three-body effect. We build two targets on the same inputs: <span class="math notranslate nohighlight">\(\sigma = 0\)</span> (a plain sum of pair terms, the
+<strong>control</strong>) and <span class="math notranslate nohighlight">\(\sigma = 0.95\)</span>, <span class="math notranslate nohighlight">\(\ell = 1\)</span> (<strong>shielded</strong>). Four snapshots are used for training and two
+for testing, split by snapshot as in Lesson 04a.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">snaps</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">make_snapshots</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">seed0</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">T</span><span class="o">.</span><span class="n">make_dataset</span><span class="p">(</span><span class="n">snaps</span><span class="p">,</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">1500</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="n">M</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s2">"backflow"</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"true"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>  <span class="c1"># frame unused: y is replaced</span>
+<span class="n">y_pairs</span> <span class="o">=</span> <span class="n">shielded_target</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">)</span>            <span class="c1"># sigma = 0</span>
+<span class="n">y_shield</span> <span class="o">=</span> <span class="n">shielded_target</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">],</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span>  <span class="c1"># sigma = 0.95</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">as_task</span><span class="p">(</span><span class="n">y</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">data</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"scalars"</span><span class="p">,</span> <span class="s2">"e_j"</span><span class="p">,</span> <span class="s2">"x_fj"</span><span class="p">)}</span>
+    <span class="n">d</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">"snapshot"</span><span class="p">]</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">float</span><span class="p">(),</span> <span class="n">data</span><span class="p">[</span><span class="s2">"snapshot"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">split_by_snapshot</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+<span class="n">tasks</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"control"</span><span class="p">:</span> <span class="n">as_task</span><span class="p">(</span><span class="n">y_pairs</span><span class="p">),</span> <span class="s2">"shielded"</span><span class="p">:</span> <span class="n">as_task</span><span class="p">(</span><span class="n">y_shield</span><span class="p">)}</span>
+<span class="n">rel</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_shield</span> <span class="o">-</span> <span class="n">y_pairs</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">/</span> <span class="n">y_pairs</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">[</span><span class="s1">'shielded'</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">'y'</span><span class="p">])</span><span class="si">}</span><span class="s2"> training rows, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">[</span><span class="s1">'shielded'</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">'y'</span><span class="p">])</span><span class="si">}</span><span class="s2"> test rows, M = </span><span class="si">{</span><span class="n">M</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"size of the three-body part |y_shield - y_pairs| / |y_pairs| = </span><span class="si">{</span><span class="n">rel</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>6000 training rows, 3000 test rows, M = 8
+size of the three-body part |y_shield - y_pairs| / |y_pairs| = 0.37
+</pre></div>
+</div>
+</div>
+</div>
+<p>Three models, all exactly O(3)-equivariant and all with output <span class="math notranslate nohighlight">\(\sum_j a_j \mathbf x_{fj} + b_j \mathbf e_j\)</span>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">PairMLP</span></code>: an MLP on each pair’s invariants <span class="math notranslate nohighlight">\(I_j\)</span>. This is the pairwise model “A”.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniA0</span></code>: the A0 architecture of Part II.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniB</span></code>: the transformer of Section 3. Lesson <a class="reference internal" href="05f_invariant_attention.html"><span class="std std-doc">05f</span></a> builds it piece by piece.</p></li>
+</ul>
+<p>All three get the same recipe: Adam at learning rate <span class="math notranslate nohighlight">\(10^{-3}\)</span>, 40 epochs, batches of 64. The test set is
+passed as <code class="docutils literal notranslate"><span class="pre">val</span></code> only to log its error after each epoch, for the learning curves; it is never used to pick a
+model or stop training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">recipes</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PairMLP"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">PairMLP</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">"MiniA0"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">MiniA0</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">"MiniB"</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">MiniB</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)}</span>
+<span class="n">LR</span><span class="p">,</span> <span class="n">EPOCHS</span> <span class="o">=</span> <span class="mf">1e-3</span><span class="p">,</span> <span class="mi">40</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">make</span> <span class="ow">in</span> <span class="n">recipes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">param_count</span><span class="p">(</span><span class="n">make</span><span class="p">())</span><span class="si">:</span><span class="s2">&gt;6</span><span class="si">}</span><span class="s2"> parameters"</span><span class="p">)</span>
+
+<span class="n">results</span><span class="p">,</span> <span class="n">histories</span><span class="p">,</span> <span class="n">trained</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{},</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">task</span><span class="p">,</span> <span class="p">(</span><span class="n">tr</span><span class="p">,</span> <span class="n">te</span><span class="p">)</span> <span class="ow">in</span> <span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">make</span> <span class="ow">in</span> <span class="n">recipes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">make</span><span class="p">()</span>
+        <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">train</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">LR</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">te</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">te</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">r2</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span> <span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span>
+        <span class="n">histories</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span> <span class="n">name</span><span class="p">)],</span> <span class="n">trained</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span> <span class="o">=</span> <span class="n">hist</span><span class="p">,</span> <span class="n">model</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task</span><span class="si">:</span><span class="s2">&lt;9</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> test R^2 = </span><span class="si">{</span><span class="n">results</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PairMLP    8898 parameters
+MiniA0    17152 parameters
+MiniB     18730 parameters
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>control   PairMLP  test R^2 = 0.9993   (3 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>control   MiniA0   test R^2 = 0.9958   (11 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>control   MiniB    test R^2 = 0.9985   (10 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shielded  PairMLP  test R^2 = 0.9292   (2 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shielded  MiniA0   test R^2 = 0.9230   (11 s)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shielded  MiniB    test R^2 = 0.9667   (10 s)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
+<span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">recipes</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">names</span><span class="p">):</span>          <span class="c1"># one line per model: control -&gt; shielded</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">results</span><span class="p">[(</span><span class="s2">"control"</span><span class="p">,</span> <span class="n">n</span><span class="p">)],</span> <span class="n">results</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">n</span><span class="p">)]</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"control"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"shielded"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">names</span><span class="p">),</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"test $R^2$"</span><span class="p">),</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"model"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"drop from control to shielded target"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">)</span>
+
+<span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">learning_curves</span><span class="p">({</span><span class="n">n</span><span class="p">:</span> <span class="n">histories</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">n</span><span class="p">)][</span><span class="s2">"val"</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">},</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"test MSE"</span><span class="p">),</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"shielded target: test error during training"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/339b6c3f88afa1ee049f80676e990c69932a0e074c0b1a8355c905437b0a299a.png" src="../_images/339b6c3f88afa1ee049f80676e990c69932a0e074c0b1a8355c905437b0a299a.png" />
+</div>
+</div>
+<p>The left panel is a dot plot, not a bar chart, because only the <em>differences</em> matter: read the length of
+each model’s line, from its control score (blue) down to its shielded score (orange).</p>
+<ul class="simple">
+<li><p><strong>Control.</strong> On the sum-of-pairs target every model fits well. PairMLP is not weak: its structure
+matches the target. MiniA0 sits a little lower on the control, probably because its scalar branch never
+sees the distance <span class="math notranslate nohighlight">\(|\mathbf x_{fj}|\)</span> (only the vector branch does). That gap is small next to the drops
+on the shielded target.</p></li>
+<li><p><strong>Shielded.</strong> PairMLP and MiniA0 drop by about the same amount, much more than MiniB. Both sit at the
+same ceiling, the best a sum of pairs can do, and A0’s two-branch design does not change that. After the
+first few epochs their test error levels off, while MiniB’s keeps falling. Training three times longer barely moves the
+pairwise scores (we checked when writing this lesson), and more width does not close the gap either
+(Exercise 2): the missing term is not something a sum of pairs can express.</p></li>
+</ul>
+<p>Rerunning with other seeds moves each shielded score by about a hundredth or less; the gap between the
+pairwise models and MiniB stays.</p>
+<p>A sharper way to see it is to score only the part of the target that is three-body,
+<span class="math notranslate nohighlight">\(\Delta = \mathbf y_{\text{shield}} - \mathbf y_{\text{pairs}}\)</span>, which the toy lets us compute exactly. A
+pairwise model can capture only the part of <span class="math notranslate nohighlight">\(\Delta\)</span> that is itself close to a sum of pair terms.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="n">drop_</span> <span class="o">=</span> <span class="n">results</span><span class="p">[(</span><span class="s2">"control"</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span> <span class="o">-</span> <span class="n">results</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">name</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> control </span><span class="si">{</span><span class="n">results</span><span class="p">[(</span><span class="s1">'control'</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  shielded </span><span class="si">{</span><span class="n">results</span><span class="p">[(</span><span class="s1">'shielded'</span><span class="p">,</span><span class="w"> </span><span class="n">name</span><span class="p">)]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">  drop </span><span class="si">{</span><span class="n">drop_</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PairMLP  control 0.9993  shielded 0.9292  drop 0.0701
+MiniA0   control 0.9958  shielded 0.9230  drop 0.0728
+MiniB    control 0.9985  shielded 0.9667  drop 0.0318
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="s2">"shielded"</span><span class="p">]</span>
+<span class="n">test_rows</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"snapshot"</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">4</span>
+<span class="n">dy</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_shield</span> <span class="o">-</span> <span class="n">y_pairs</span><span class="p">)[</span><span class="n">test_rows</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">y0</span> <span class="o">=</span> <span class="n">y_pairs</span><span class="p">[</span><span class="n">test_rows</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">trained</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">name</span><span class="p">)],</span> <span class="n">te</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">&lt;8</span><span class="si">}</span><span class="s2"> R^2 on the three-body part only: </span><span class="si">{</span><span class="n">r2</span><span class="p">(</span><span class="n">pred</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">y0</span><span class="p">,</span><span class="w"> </span><span class="n">dy</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PairMLP  R^2 on the three-body part only: 0.592
+MiniA0   R^2 on the three-body part only: 0.556
+MiniB    R^2 on the three-body part only: 0.808
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.5</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="s2">"PairMLP"</span><span class="p">,</span> <span class="s2">"MiniB"</span><span class="p">)):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">predict</span><span class="p">(</span><span class="n">trained</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">name</span><span class="p">)],</span> <span class="n">te</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">parity_plot</span><span class="p">(</span><span class="n">pred</span> <span class="o">-</span> <span class="n">y0</span><span class="p">,</span> <span class="n">dy</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="p">(</span><span class="s2">"x-component"</span><span class="p">,</span> <span class="s2">"y-component"</span><span class="p">,</span> <span class="s2">"z-component"</span><span class="p">),</span>
+                            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: three-body part, test set"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/240232e387767598d3471f2db8baab42d774d54d17c46ca4f4df4462430abe39.png" src="../_images/240232e387767598d3471f2db8baab42d774d54d17c46ca4f4df4462430abe39.png" />
+</div>
+</div>
+</section>
+<section id="what-the-transformer-learned-and-its-symmetries">
+<h2>5. What the transformer learned, and its symmetries<a class="headerlink" href="#what-the-transformer-learned-and-its-symmetries" title="Link to this heading">#</a></h2>
+<p>Back to the query point and neighbour <span class="math notranslate nohighlight">\(k\)</span> from Section 2. After a forward pass, <code class="docutils literal notranslate"><span class="pre">attention_weights()</span></code>
+returns each block’s weights <span class="math notranslate nohighlight">\(a_{jk}\)</span>, with shape (batch, heads, M, M). Row <span class="math notranslate nohighlight">\(j\)</span> shows how much neighbour
+<span class="math notranslate nohighlight">\(j\)</span> draws on each neighbour <span class="math notranslate nohighlight">\(k\)</span>. Next to them we draw the true <strong>shading matrix</strong> <span class="math notranslate nohighlight">\(\sigma w_k(j)\)</span> for the
+same query point, in the same layout: row <span class="math notranslate nohighlight">\(j\)</span>, column <span class="math notranslate nohighlight">\(k\)</span> says how strongly <span class="math notranslate nohighlight">\(k\)</span> shades <span class="math notranslate nohighlight">\(j\)</span>’s contribution.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mB</span> <span class="o">=</span> <span class="n">trained</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="s2">"MiniB"</span><span class="p">)]</span>
+<span class="n">one32</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">one</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">mB</span><span class="p">(</span><span class="o">*</span><span class="n">one32</span><span class="p">)</span>
+<span class="n">W</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">mB</span><span class="o">.</span><span class="n">attention_weights</span><span class="p">()]</span>               <span class="c1"># head-averaged, one (M, M) matrix per block</span>
+<span class="n">shade</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">shielding_weights</span><span class="p">(</span><span class="n">one</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">width</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>               <span class="c1"># (M, M): row j, column k</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">))</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="p">)]</span>
+<span class="n">wmax</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">w</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">W</span><span class="p">)</span>                             <span class="c1"># one colour scale for both blocks</span>
+<span class="k">for</span> <span class="n">l</span><span class="p">,</span> <span class="n">ax</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">axes</span><span class="p">[:</span><span class="mi">2</span><span class="p">]):</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">attention_heatmap</span><span class="p">(</span><span class="n">W</span><span class="p">[</span><span class="n">l</span><span class="p">],</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">wmax</span><span class="p">,</span> <span class="n">colorbar</span><span class="o">=</span><span class="p">(</span><span class="n">l</span> <span class="o">==</span> <span class="mi">1</span><span class="p">),</span>
+                                  <span class="n">xlabel</span><span class="o">=</span><span class="s2">"neighbour k (attended to)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"neighbour j (attending)"</span><span class="p">,</span>
+                                  <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">"MiniB block </span><span class="si">{</span><span class="n">l</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">: $a_</span><span class="se">{{</span><span class="s2">jk</span><span class="se">}}</span><span class="s2">$, mean over heads"</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">attention_heatmap</span><span class="p">(</span><span class="n">shade</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+                              <span class="n">xlabel</span><span class="o">=</span><span class="s2">"neighbour k (shading)"</span><span class="p">,</span> <span class="n">ylabel</span><span class="o">=</span><span class="s2">"neighbour j (shaded)"</span><span class="p">,</span>
+                              <span class="n">cbar_label</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\sigma w_k(j)$"</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"truth: shading matrix $\sigma w_k(j)$"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">k_star</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/e52a1d866f27c9ecd132091689b203629ff2e013095648a34f43b592531ff1f0.png" src="../_images/e52a1d866f27c9ecd132091689b203629ff2e013095648a34f43b592531ff1f0.png" />
+</div>
+</div>
+<p>The dashed line marks column <span class="math notranslate nohighlight">\(k\)</span>, the neighbour deleted in Section 2. In the right panel that column shows
+whom <span class="math notranslate nohighlight">\(k\)</span> shades. The two attention panels share one colour scale. Attention weights do not explain a model,
+and they need not copy the shading matrix: the network can route the information through values, several
+heads and two blocks. We should not read too much into one query point either. The point is the mechanism:
+every neighbour’s representation now depends on the others, through weights built from pair geometry. That
+is the term a sum of pairs lacks.</p>
+<section id="attention-keeps-the-symmetries">
+<h3>5.1 Attention keeps the symmetries<a class="headerlink" href="#attention-keeps-the-symmetries" title="Link to this heading">#</a></h3>
+<p>Adding interactions between neighbours must not break what Part II worked for. Three checks, in float64
+on copies of the trained models:</p>
+<ol class="arabic simple">
+<li><p><strong>Neighbour order.</strong> All three models are permutation-invariant. MiniB’s per-neighbour messages are also
+permutation-<em>equivariant</em>: attention mixes tokens, but it does not care which slot a token arrives in.</p></li>
+<li><p><strong>Rotations and reflections.</strong> MiniB is O(3)-equivariant. Its learned parts see only norms and dot
+products, and the output is built from <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span>.</p></li>
+<li><p><strong>The attention block on its own</strong> (<code class="docutils literal notranslate"><span class="pre">course_utils.attention.TransformerBlock</span></code>) is permutation-equivariant
+over tokens, with and without an additive pair bias that is permuted along with the tokens.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">test64</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">te</span><span class="p">[</span><span class="n">k</span><span class="p">][:</span><span class="mi">64</span><span class="p">]</span><span class="o">.</span><span class="n">double</span><span class="p">()</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"scalars"</span><span class="p">,</span> <span class="s2">"e_j"</span><span class="p">,</span> <span class="s2">"x_fj"</span><span class="p">))</span>
+<span class="n">models64</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">trained</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">name</span><span class="p">)])</span><span class="o">.</span><span class="n">double</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">names</span><span class="p">}</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models64</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">check_permutation</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">test64</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"invariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: neighbour order (invariant)"</span><span class="p">)</span>
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">models64</span><span class="p">[</span><span class="s2">"MiniB"</span><span class="p">]</span><span class="o">.</span><span class="n">messages</span><span class="p">,</span> <span class="n">test64</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"equivariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"MiniB messages (equivariant)"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models64</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">test64</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">: O(3)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  PairMLP: neighbour order (invariant): max error 1.1e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+PASS  MiniA0: neighbour order (invariant): max error 2.2e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+PASS  MiniB: neighbour order (invariant): max error 4.4e-16 (tol 1e-12)  [3 random permutations of axis 1 (invariant)]
+PASS  MiniB messages (equivariant): max error 4.4e-16 (tol 1e-12)  [3 random permutations of axis 1 (equivariant)]
+PASS  PairMLP: O(3): max error 4.4e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  MiniA0: O(3): max error 1.8e-15 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  MiniB: O(3): max error 6.1e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.attention</span><span class="w"> </span><span class="kn">import</span> <span class="n">TransformerBlock</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">block</span> <span class="o">=</span> <span class="n">TransformerBlock</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">heads</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>           <span class="c1"># 5 sets of M tokens</span>
+<span class="n">bias</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>      <span class="c1"># one pair bias per head</span>
+
+<span class="n">check_permutation</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">block</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="p">(</span><span class="n">h</span><span class="p">,),</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"equivariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"transformer block (no bias)"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">block_with_bias</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="c1"># b is stored (B, M, M, H) so that permuting axis 1 and 2 together permutes the pairs</span>
+    <span class="k">return</span> <span class="n">block</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="n">b</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1"># check_permutation permutes axis 1 of every argument; permute axis 2 of the bias ourselves</span>
+<span class="n">gen</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">Generator</span><span class="p">()</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">b4</span> <span class="o">=</span> <span class="n">bias</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>                          <span class="c1"># (B, M, M, H)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">block_with_bias</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">b4</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randperm</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">gen</span><span class="p">)</span>
+        <span class="n">out_p</span> <span class="o">=</span> <span class="n">block_with_bias</span><span class="p">(</span><span class="n">h</span><span class="p">[:,</span> <span class="n">p</span><span class="p">],</span> <span class="n">b4</span><span class="p">[:,</span> <span class="n">p</span><span class="p">][:,</span> <span class="p">:,</span> <span class="n">p</span><span class="p">])</span>
+        <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="p">(</span><span class="n">out_p</span> <span class="o">-</span> <span class="n">out</span><span class="p">[:,</span> <span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">equivariance</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s2">"transformer block with pair bias"</span><span class="p">,</span> <span class="n">worst</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="s2">"3 random permutations of tokens and pairs"</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">worst</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  transformer block (no bias): max error 2.9e-16 (tol 1e-12)  [3 random permutations of axis 1 (equivariant)]
+PASS  transformer block with pair bias: max error 6.7e-16 (tol 1e-12)  [3 random permutations of tokens and pairs]
+</pre></div>
+</div>
+</div>
+</div>
+<p>All errors are at round-off level. Attention adds what the sum lacked, an interaction between neighbours,
+without giving up any symmetry.</p>
+</section>
+<section id="where-this-leaves-a0">
+<h3>5.2 Where this leaves A0<a class="headerlink" href="#where-this-leaves-a0" title="Link to this heading">#</a></h3>
+<p>Nothing here says A0 is a bad model. With the same training as PairMLP, it reaches the same ceiling on the
+shielded target: its weakness there is the sum-of-pairs structure it shares with every pairwise model. In
+the research, the targets came from particle-resolved simulations of settling particles provided by
+collaborators, and real wakes and near-field interactions are not pairwise either. That is why model B was
+tried. The qualitative lesson carries over: a sum of independent pairs cannot represent a neighbour that
+changes another neighbour’s influence. Attention between neighbours can. Part III’s refinement attacks a
+different gap, the particle <em>states</em>, and Lesson <a class="reference internal" href="05g_negative_results.html"><span class="std std-doc">05g</span></a> asks what refinement still
+adds once a model captures interactions.</p>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A <strong>pairwise</strong> model predicts <span class="math notranslate nohighlight">\(\mathbf u(\mathbf x_f) = \sum_j \mathbf m(\boldsymbol\xi_j, \mathbf e_j, \mathbf x_{fj})\)</span>.
+A0 and <code class="docutils literal notranslate"><span class="pre">PairMLP</span></code> both have this form, whatever their weights.</p></li>
+<li><p><strong>Shielding</strong> (particle <span class="math notranslate nohighlight">\(k\)</span> between <span class="math notranslate nohighlight">\(j\)</span> and the query point weakens <span class="math notranslate nohighlight">\(j\)</span>’s contribution) is a three-body
+effect. The toy implements it with distances and dot products only, so it keeps every symmetry. It is an
+occlusion rule for teaching, not hydrodynamic screening.</p></li>
+<li><p>In a pairwise model, deleting neighbour <span class="math notranslate nohighlight">\(k\)</span> leaves every other message <strong>exactly</strong> unchanged. We checked
+this to round-off. The truth changes, so no choice of weights can fit it.</p></li>
+<li><p><strong>Attention</strong> replaces each token by a data-dependent weighted average of value vectors, with weights
+<span class="math notranslate nohighlight">\(\mathrm{softmax}_k(Q_j\cdot K_k/\sqrt{d_h} + b_{jk})\)</span>. Wrapped in residual blocks with layer norm and a
+per-token MLP, it lets each neighbour’s coefficients depend on all the others.</p></li>
+<li><p>With the same training recipe, PairMLP and MiniA0 fit the sum-of-pairs control but <strong>plateau</strong> at the same
+level on the shielded target, and do worst on the three-body part. A small transformer drops far less.</p></li>
+<li><p>Attention with a pair-geometry bias stays <strong>permutation-invariant</strong> (equivariant per neighbour) and
+<strong>O(3)-equivariant</strong>, verified at round-off.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Trained models still cannot do it.</strong> Repeat the deletion test of Section 2 on the <em>trained</em> PairMLP and
+MiniA0 from <code class="docutils literal notranslate"><span class="pre">trained[(&quot;shielded&quot;,</span> <span class="pre">...)]</span></code>. Predict the result before running it.</p></li>
+<li><p><strong>More capacity is not the cure.</strong> Train <code class="docutils literal notranslate"><span class="pre">PairMLP(128,</span> <span class="pre">4)</span></code> on the shielded task with the main recipe. Does
+its test <span class="math notranslate nohighlight">\(R^2\)</span> approach MiniB’s? Then train it on the <span class="math notranslate nohighlight">\(\sigma = 0\)</span> control and compare again.</p></li>
+<li><p><strong>A wider shadow.</strong> Rebuild the shielded target with <span class="math notranslate nohighlight">\(\ell = 1.5\)</span> (keep <span class="math notranslate nohighlight">\(\sigma = 0.95\)</span>) and retrain
+PairMLP and MiniB. How do the two scores and the gap between them change, and why?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"PairMLP"</span><span class="p">,</span> <span class="s2">"MiniA0"</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">trained</span><span class="p">[(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="n">name</span><span class="p">)])</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">change_of_others</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">messages</span><span class="p">,</span> <span class="n">one</span><span class="p">,</span> <span class="n">k_star</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>   <span class="c1"># round-off, ~1e-17</span>
+</pre></div>
+</div>
+<p>The change is zero again, up to round-off. Training changes the function <span class="math notranslate nohighlight">\(\mathbf m\)</span>, but each message is
+still a function of one pair, so deleting <span class="math notranslate nohighlight">\(k\)</span> cannot change <span class="math notranslate nohighlight">\(\mathbf m_j\)</span> for <span class="math notranslate nohighlight">\(j \neq k\)</span>. The argument in
+Section 2 is about the <em>form</em> of the model, not its weights.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">task</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"shielded"</span><span class="p">,</span> <span class="s2">"control"</span><span class="p">):</span>
+    <span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">task</span><span class="p">]</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">big</span> <span class="o">=</span> <span class="n">PairMLP</span><span class="p">(</span><span class="mi">128</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">big</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">LR</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="n">te</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">task</span><span class="si">:</span><span class="s2">&lt;9</span><span class="si">}</span><span class="s2"> big PairMLP </span><span class="si">{</span><span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">big</span><span class="p">,</span><span class="w"> </span><span class="n">te</span><span class="p">),</span><span class="w"> </span><span class="n">te</span><span class="p">[</span><span class="s1">'y'</span><span class="p">])</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">   MiniB </span><span class="si">{</span><span class="n">results</span><span class="p">[(</span><span class="n">task</span><span class="p">,</span><span class="w"> </span><span class="s1">'MiniB'</span><span class="p">)]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>On the shielded task the bigger model scores about the same as the small one and stays clearly below MiniB.
+The small model was already close to the best sum of pair functions, which acts roughly like an average
+attenuation for each pair geometry. On the <span class="math notranslate nohighlight">\(\sigma = 0\)</span> control the target is exactly a sum of pairs, and
+the pairwise models are as good as MiniB. The gap in the shielded case comes from structure, not size.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">y_wide</span> <span class="o">=</span> <span class="n">shielded_target</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">],</span> <span class="n">sigma</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+<span class="n">tr</span><span class="p">,</span> <span class="n">te</span> <span class="o">=</span> <span class="n">as_task</span><span class="p">(</span><span class="n">y_wide</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"PairMLP"</span><span class="p">,</span> <span class="s2">"MiniB"</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">recipes</span><span class="p">[</span><span class="n">name</span><span class="p">]()</span>
+    <span class="n">train</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="n">EPOCHS</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="n">LR</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">64</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">r2</span><span class="p">(</span><span class="n">predict</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">te</span><span class="p">),</span> <span class="n">te</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>A wider shadow means more neighbours shade each contribution, so the three-body part becomes a larger
+fraction of the target. Both scores drop because the target is harder. PairMLP drops more, because a larger
+share of the target is something it cannot express. MiniB keeps a clear lead.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>MolSSI e3nn course <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id11" title="The Molecular Sciences Software Institute (MolSSI). E3nn course. https://molssi-ai.github.io/e3nn-course/book/intro.html, 2024.">The Molecular Sciences Software Institute (MolSSI), 2024</a>]</span>, for equivariance and irreps:
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/book/intro.html">https://molssi-ai.github.io/e3nn-course/book/intro.html</a>.</p></li>
+<li><p>Attention and the transformer block: <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id13" title="Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones, Aidan N. Gomez, Łukasz Kaiser, and Illia Polosukhin. Attention is all you need. In Advances in Neural Information Processing Systems, volume 30. 2017.">Vaswani <em>et al.</em>, 2017</a>]</span>.</p></li>
+<li><p>Sum aggregation over sets (Deep Sets) and attention over sets (Set Transformer):
+<span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id15" title="Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabas Poczos, Ruslan R. Salakhutdinov, and Alexander J. Smola. Deep sets. In Advances in Neural Information Processing Systems, volume 30. 2017.">Zaheer <em>et al.</em>, 2017</a>]</span>, <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id14" title="Juho Lee, Yoonho Lee, Jungtaek Kim, Adam Kosiorek, Seungjin Choi, and Yee Whye Teh. Set transformer: a framework for attention-based permutation-invariant neural networks. In Proceedings of the 36th International Conference on Machine Learning, 3744–3753. 2019.">Lee <em>et al.</em>, 2019</a>]</span>.</p></li>
+<li><p>Equivariant message passing that also mixes neighbours through many-body terms:
+<span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id20" title="Víctor Garcia Satorras, Emiel Hoogeboom, and Max Welling. E(n) equivariant graph neural networks. In Proceedings of the 38th International Conference on Machine Learning, 9323–9332. 2021.">Satorras <em>et al.</em>, 2021</a>]</span>, <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id21" title="Ilyes Batatia, David P. Kovacs, Gregor N. C. Simm, Christoph Ortner, and Gábor Csányi. Mace: higher order equivariant message passing neural networks for fast and accurate force fields. In Advances in Neural Information Processing Systems, volume 35. 2022.">Batatia <em>et al.</em>, 2022</a>]</span>.</p></li>
+<li><p>Hydrodynamic interactions in suspensions, the physics the toy only caricatures:
+<span class="bibtex-citation" id="id7">[<a class="reference internal" href="../appendix/references.html#id17" title="John Happel and Howard Brenner. Low Reynolds Number Hydrodynamics. Martinus Nijhoff, 1983.">Happel and Brenner, 1983</a>]</span>, <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../appendix/references.html#id18" title="Élisabeth Guazzelli and Jeffrey F. Morris. A Physical Introduction to Suspension Dynamics. Cambridge University Press, 2011.">Guazzelli and Morris, 2011</a>]</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part5_beyond"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part4_training/04d_worked_case.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">A worked toy case: fixed versus refined</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05b_attention_from_scratch.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Attention from scratch: queries, keys, values</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-three-body-effect-shielding">1. A three-body effect: shielding</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shielding-in-the-full-toy">1.1 Shielding in the full toy</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-a-sum-of-pairs-cannot-let-k-change-j">2. What goes wrong: a sum of pairs cannot let <span class="math notranslate nohighlight">\(k\)</span> change <span class="math notranslate nohighlight">\(j\)</span></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-in-brief">3. Attention in brief</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-plateau-in-training">4. The plateau in training</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-transformer-learned-and-its-symmetries">5. What the transformer learned, and its symmetries</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attention-keeps-the-symmetries">5.1 Attention keeps the symmetries</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-this-leaves-a0">5.2 Where this leaves A0</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The u1e3nn project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>Companion to the <a href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a>.</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

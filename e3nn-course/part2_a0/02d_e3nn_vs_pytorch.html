@@ -1,0 +1,1520 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>e3nn and plain PyTorch compute the same function &#8212; Equivariant surrogates for particle-laden flow</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part2_a0/02d_e3nn_vs_pytorch';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="States as unknowns: refinement as a fixed-point problem" href="../part3_refinement/03a_fixed_point.html" />
+    <link rel="prev" title="Every message lies in span(x, e)" href="02c_span_property.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Equivariant surrogates for particle-laden flow</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Equivariant surrogates for particle-laden flow
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up and a first equivariance check</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01a_settling_particles.html">Settling particles and what a simulation gives us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01b_superposition.html">One-particle disturbances and superposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01c_frames.html">Frames: what velocity do we subtract?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II · The A0 model</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02a_pair_geometry.html">Pair geometry: what one neighbour tells a query point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02b_two_branches.html">Scalar and vector branches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02c_span_property.html">Every message lies in span(x, e)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">e3nn and plain PyTorch compute the same function</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III · Self-consistent refinement</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03a_fixed_point.html">States as unknowns: refinement as a fixed-point problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03b_picard_anderson.html">Picard, damping and Anderson acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03c_residuals_stopping.html">Residuals and stopping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03d_replay_vs_frozen.html">Replay versus frozen-model inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV · Training and evaluation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04a_splits.html">Splits: snapshots, not points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04b_metrics.html">NRMSE versus R²</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04c_seeds_paired.html">Seeds and paired comparisons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04d_worked_case.html">A worked toy case: fixed versus refined</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V · Beyond pairwise: attention and model B</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05a_shielding.html">Shielding: why a sum of pairs falls short</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05b_attention_from_scratch.html">Attention from scratch: queries, keys, values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05c_multihead_masking.html">Multiple heads and masking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05d_permutation.html">Why attention suits sets of particles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05e_transformer_block.html">The transformer block: residuals, LayerNorm and the feed-forward network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05f_invariant_attention.html">Invariant attention with a pair-geometry bias: model B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05g_negative_results.html">Negative results as worked lessons</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part VI · Practice</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06a_speed.html">Speed: layout, compile and TF32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06b_profiling.html">Profiling and memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06c_hpc.html">Running on a cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part2_a0/02d_e3nn_vs_pytorch.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>e3nn and plain PyTorch compute the same function</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-an-ordinary-linear-layer-on-vector-components">1. Failure first: an ordinary linear layer on vector components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o3-linear-on-vectors-is-one-weight-matrix-per-irrep-type">2. <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> on vectors is one weight matrix per irrep type</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-the-block-structure">2.1 Seeing the block structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-other-two-e3nn-modules-written-out">3. The other two e3nn modules, written out</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normactivation-keep-the-direction-squash-the-length">3.1 <code class="docutils literal notranslate"><span class="pre">NormActivation</span></code>: keep the direction, squash the length</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elementwisetensorproduct-0e-x-1o-two-sqrt3-factors-cancel">3.2 <code class="docutils literal notranslate"><span class="pre">ElementwiseTensorProduct</span></code> 0e x 1o: two <span class="math notranslate nohighlight">\(\sqrt3\)</span> factors cancel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whole-model-e3nn-modules-versus-plain-formulas">4. Whole model: e3nn modules versus plain formulas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-a-component-wise-bias">4.1 Failure first: a component-wise bias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#success-same-weights-same-function">4.2 Success: same weights, same function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-plain-version-stores-vectors-as-3-rows-c">4.3 Why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-timing-on-this-machine">4.4 A quick timing on this machine</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-do-you-actually-need-a-tensor-product">5. When do you actually need a tensor product?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-a-linear-layer-cannot-make-an-invariant-from-vectors">5.1 Failure: a linear layer cannot make an invariant from vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fix-1o-x-1o-0e-1e-2e">5.2 The fix: <code class="docutils literal notranslate"><span class="pre">1o</span> <span class="pre">x</span> <span class="pre">1o</span> <span class="pre">=</span> <span class="pre">0e</span> <span class="pre">+</span> <span class="pre">1e</span> <span class="pre">+</span> <span class="pre">2e</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a0-does-without-one">5.3 Why A0 does without one</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="e3nn-and-plain-pytorch-compute-the-same-function">
+<h1>e3nn and plain PyTorch compute the same function<a class="headerlink" href="#e3nn-and-plain-pytorch-compute-the-same-function" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> does when every feature is a vector (<code class="docutils literal notranslate"><span class="pre">1o</span></code>): it mixes channels with one weight matrix and
+never mixes the x, y, z components. We prove it by reading off its dense matrix.</p></li>
+<li><p>How to build A0 from e3nn modules (<code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code>, <code class="docutils literal notranslate"><span class="pre">NormActivation</span></code>, <code class="docutils literal notranslate"><span class="pre">ElementwiseTensorProduct</span></code>), copy its
+weights into the plain-PyTorch <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code>, and show that the two agree to float64 round-off, message by message.</p></li>
+<li><p>Where e3nn’s normalisation constants come from: the path weight <span class="math notranslate nohighlight">\(C_{\rm in}^{-1/2}\)</span> and a pair of <span class="math notranslate nohighlight">\(\sqrt 3\)</span>
+factors that cancel. You will also see why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code>.</p></li>
+<li><p>When you actually need an e3nn <strong>tensor product</strong>, and why A0’s vector branch can do without one.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> the A0 message from the course introduction (scalar branch <span class="math notranslate nohighlight">\(y_u\)</span>, vector branch <span class="math notranslate nohighlight">\(v_u\)</span>, product
+<span class="math notranslate nohighlight">\(y_u v_u\)</span>, linear head, sum over neighbours). <a class="reference internal" href="02b_two_branches.html"><span class="std std-doc">Lesson 02b</span></a> builds the two
+branches step by step and <a class="reference internal" href="02c_span_property.html"><span class="std std-doc">Lesson 02c</span></a> proves the span property, but this lesson
+restates everything it needs and can be read on its own. From the MolSSI e3nn course:
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/02a_irreps_in_e3nn.html">02a, irreps</a>,
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03a_tensor_products_theory.html">03a, tensor products in theory</a>,
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03b_tensor_products_e3nn.html">03b, tensor products in e3nn</a>
+and <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/04_nonlinearities_and_gates.html">04, norm activations</a>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">e3nn</span><span class="w"> </span><span class="kn">import</span> <span class="n">o3</span><span class="p">,</span> <span class="n">nn</span> <span class="k">as</span> <span class="n">enn</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.models</span><span class="w"> </span><span class="kn">import</span> <span class="n">MiniA0</span><span class="p">,</span> <span class="n">MiniA0E3nn</span><span class="p">,</span> <span class="n">copy_parameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">check_equivariance</span><span class="p">,</span> <span class="n">check_invariance</span><span class="p">,</span> <span class="n">report</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.plotting</span><span class="w"> </span><span class="kn">import</span> <span class="n">PALETTE</span><span class="p">,</span> <span class="n">INK</span><span class="p">,</span> <span class="n">CMAP_DIVERGING</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">set_default_dtype</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>   <span class="c1"># every identity and symmetry check in this lesson is float64</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The original research model in this repository (<code class="docutils literal notranslate"><span class="pre">src/u1_e3nn_no_pressure.py</span></code>) is written with e3nn. A
+faster version of the same network can be written in plain PyTorch, and the course’s <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code> is such a version.
+Before trusting it, we have to know that both compute <strong>the same function</strong>, and understand <em>why</em> they can.</p>
+<section id="failure-first-an-ordinary-linear-layer-on-vector-components">
+<h2>1. Failure first: an ordinary linear layer on vector components<a class="headerlink" href="#failure-first-an-ordinary-linear-layer-on-vector-components" title="Link to this heading">#</a></h2>
+<p>A0’s vector branch takes two vectors per neighbour, <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span>, and maps them to <span class="math notranslate nohighlight">\(C\)</span> new vectors. The
+obvious way to write that in PyTorch is to flatten the 6 components and apply <code class="docutils literal notranslate"><span class="pre">torch.nn.Linear(6,</span> <span class="pre">12)</span></code>, a
+linear map with 72 weights and a bias. It mixes x into y and has a preferred direction, and the symmetry check
+catches it:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">dense</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">dense_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">dense</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">dense_fn</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span>
+                       <span class="n">name</span><span class="o">=</span><span class="s2">"nn.Linear on flattened components"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FAIL  nn.Linear on flattened components: max error 2.0e+00 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+caught: nn.Linear on flattened components: equivariance error 1.993e+00 &gt;= tol 1.0e-12
+</pre></div>
+</div>
+</div>
+</div>
+<p>What constrains a linear layer so that it <em>does</em> pass this check? That is the next section.</p>
+</section>
+<section id="o3-linear-on-vectors-is-one-weight-matrix-per-irrep-type">
+<h2>2. <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> on vectors is one weight matrix per irrep type<a class="headerlink" href="#o3-linear-on-vectors-is-one-weight-matrix-per-irrep-type" title="Link to this heading">#</a></h2>
+<p>Take <span class="math notranslate nohighlight">\(C_{\rm in}\)</span> input vectors <span class="math notranslate nohighlight">\(v_1,\dots,v_{C_{\rm in}}\)</span> (irreps <code class="docutils literal notranslate"><span class="pre">C_in</span> <span class="pre">x</span> <span class="pre">1o</span></code>) and ask for <span class="math notranslate nohighlight">\(C_{\rm out}\)</span> output
+vectors. An equivariant linear map must satisfy <span class="math notranslate nohighlight">\(L(g v) = g\,L(v)\)</span> for every <span class="math notranslate nohighlight">\(g\in O(3)\)</span>. Schur’s lemma
+(see MolSSI <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/01b_group_representations.html">01b</a>) says
+the only such maps between copies of the same irrep are multiples of the identity on each copy. So, up to
+e3nn’s choice of normalisation constant, the most general equivariant linear layer is</p>
+<div class="math notranslate nohighlight">
+\[
+v'_w \;=\; \frac{1}{\sqrt{C_{\rm in}}}\sum_{u=1}^{C_{\rm in}} W_{uw}\, v_u ,
+\qquad w = 1,\dots,C_{\rm out}.
+\]</div>
+<p>Each output vector is a weighted sum of input vectors, and the <em>same</em> weight multiplies the x, y and z component.
+The factor <span class="math notranslate nohighlight">\(C_{\rm in}^{-1/2}\)</span> is not part of Schur’s result; it is e3nn’s <strong>path normalisation</strong>, a convention
+that keeps the output variance close to the input
+variance when the weights are standard normal. There is no bias term, because a bias vector would point in one
+fixed direction.</p>
+<p>Let us build the layer A0 uses first (<code class="docutils literal notranslate"><span class="pre">2x1o</span></code>, i.e. <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span>, to <code class="docutils literal notranslate"><span class="pre">4x1o</span></code>) and compare it with the
+formula.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lin</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="s2">"2x1o"</span><span class="p">,</span> <span class="s2">"4x1o"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lin</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"instructions:"</span><span class="p">,</span> <span class="n">lin</span><span class="o">.</span><span class="n">instructions</span><span class="p">)</span>
+
+<span class="n">v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)</span>                              <span class="c1"># 10 rows, e3nn layout [v_1 (3), v_2 (3)]</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">lin</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>                       <span class="c1"># (C_in, C_out), the same flat vector as in MiniA0</span>
+<span class="n">by_hand</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"rui,uw-&gt;rwi"</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">W</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="n">lin</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">by_hand</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"o3.Linear == C_in^-1/2 * sum_u W_uw v_u"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"path weight"</span><span class="p">,</span> <span class="n">lin</span><span class="o">.</span><span class="n">instructions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path_weight</span><span class="p">,</span> <span class="s2">"= 1/sqrt(C_in) ="</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear(2x1o -&gt; 4x1o | 8 weights)
+instructions: [Instruction(i_in=0, i_out=0, path_shape=(2, 4), path_weight=0.7071067811865476)]
+PASS  o3.Linear == C_in^-1/2 * sum_u W_uw v_u: max error 8.9e-16 (tol 1e-12)
+path weight 0.7071067811865476 = 1/sqrt(C_in) = 0.7071067811865475
+</pre></div>
+</div>
+</div>
+</div>
+<p>The printed path weight is <span class="math notranslate nohighlight">\(1/\sqrt 2\)</span> for <span class="math notranslate nohighlight">\(C_{\rm in}=2\)</span>. There are <span class="math notranslate nohighlight">\(C_{\rm in} C_{\rm out}=8\)</span> weights, not
+<span class="math notranslate nohighlight">\(6\times 12 = 72\)</span> as a general linear map on the 6 numbers would have.</p>
+<section id="seeing-the-block-structure">
+<h3>2.1 Seeing the block structure<a class="headerlink" href="#seeing-the-block-structure" title="Link to this heading">#</a></h3>
+<p>A linear map is a matrix, and we can read it off by feeding the identity. Here we use a layer with both scalars
+and vectors (<code class="docutils literal notranslate"><span class="pre">2x0e+2x1o</span> <span class="pre">-&gt;</span> <span class="pre">3x0e+3x1o</span></code>) so that every kind of block appears.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mixed</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="s2">"2x0e+2x1o"</span><span class="p">,</span> <span class="s2">"3x0e+3x1o"</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">mixed</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">mixed</span><span class="o">.</span><span class="n">irreps_in</span><span class="o">.</span><span class="n">dim</span><span class="p">))</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">contiguous</span><span class="p">()</span>   <span class="c1"># (out dim, in dim) = (12, 8)</span>
+
+<span class="n">w</span> <span class="o">=</span> <span class="n">mixed</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">W_s</span> <span class="o">=</span> <span class="n">w</span><span class="p">[:</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                          <span class="c1"># scalar path   0e -&gt; 0e</span>
+<span class="n">W_v</span> <span class="o">=</span> <span class="n">w</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                          <span class="c1"># vector path   1o -&gt; 1o</span>
+<span class="n">checks</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"scalar block == W_s^T"</span><span class="p">:</span> <span class="p">(</span><span class="n">D</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">W_s</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+    <span class="s2">"vector block == kron(W_v^T, I_3)"</span><span class="p">:</span> <span class="p">(</span><span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="mi">2</span><span class="p">:]</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">kron</span><span class="p">(</span><span class="n">W_v</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">contiguous</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+    <span class="s2">"0e &lt;- 1o block is zero"</span><span class="p">:</span> <span class="n">D</span><span class="p">[:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">:]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+    <span class="s2">"1o &lt;- 0e block is zero"</span><span class="p">:</span> <span class="n">D</span><span class="p">[</span><span class="mi">3</span><span class="p">:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span>
+<span class="p">}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">checks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">e</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  scalar block == W_s^T: max error 1.1e-16 (tol 1e-12)
+PASS  vector block == kron(W_v^T, I_3): max error 2.2e-16 (tol 1e-12)
+PASS  0e &lt;- 1o block is zero: max error 0.0e+00 (tol 1e-12)
+PASS  1o &lt;- 0e block is zero: max error 0.0e+00 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The vector block is a <strong>Kronecker product</strong> <span class="math notranslate nohighlight">\(W^\top\otimes I_3\)</span>. Every <span class="math notranslate nohighlight">\(3\times 3\)</span> sub-block is a multiple of the
+identity, so components are never mixed. That has a useful consequence. e3nn orders the components of an <code class="docutils literal notranslate"><span class="pre">l=1</span></code>
+feature as <span class="math notranslate nohighlight">\((y, z, x)\)</span>, but a map that never mixes components does not care about the order. So we can feed
+Cartesian <span class="math notranslate nohighlight">\((x, y, z)\)</span> straight into <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> on <code class="docutils literal notranslate"><span class="pre">1o</span></code> features and stay equivariant. Here is the numerical check,
+reflections included:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">lin</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                   <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">)),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"o3.Linear 2x1o-&gt;4x1o"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  o3.Linear 2x1o-&gt;4x1o: max error 2.8e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here is the <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> matrix next to the <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code> one from Section 1 and the mixed layer above:</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">D_lin</span> <span class="o">=</span> <span class="n">lin</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">6</span><span class="p">))</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">D_dense</span> <span class="o">=</span> <span class="n">dense</span><span class="o">.</span><span class="n">weight</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">4.2</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">width_ratios</span><span class="o">=</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">]))</span>
+<span class="n">lim</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">for</span> <span class="n">M</span> <span class="ow">in</span> <span class="p">(</span><span class="n">D_lin</span><span class="p">,</span> <span class="n">D_dense</span><span class="p">,</span> <span class="n">D</span><span class="p">))</span>      <span class="c1"># one colour scale for all three panels</span>
+<span class="n">cmap_z</span> <span class="o">=</span> <span class="n">CMAP_DIVERGING</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">cmap_z</span><span class="o">.</span><span class="n">set_bad</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>                                      <span class="c1"># masked (exactly zero) cells are see-through</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="p">[(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">D_lin</span><span class="p">,</span> <span class="s2">"o3.Linear 2x1o -&gt; 4x1o</span><span class="se">\n</span><span class="s2">(8 weights)"</span><span class="p">),</span>
+                     <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">D_dense</span><span class="p">,</span> <span class="s2">"nn.Linear(6, 12)</span><span class="se">\n</span><span class="s2">(72 weights + bias)"</span><span class="p">),</span>
+                     <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">D</span><span class="p">,</span> <span class="s2">"o3.Linear 2x0e+2x1o -&gt; 3x0e+3x1o</span><span class="se">\n</span><span class="s2">(12 weights)"</span><span class="p">)]:</span>
+    <span class="n">Mz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ma</span><span class="o">.</span><span class="n">masked_equal</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">)</span>                 <span class="c1"># exact zeros -&gt; masked -&gt; transparent</span>
+    <span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">Mz</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap_z</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="n">lim</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="n">lim</span><span class="p">,</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">"nearest"</span><span class="p">)</span>
+    <span class="n">zr</span><span class="p">,</span> <span class="n">zc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">zc</span><span class="p">,</span> <span class="n">zr</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">linewidths</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>   <span class="c1"># a small dot marks each structural zero</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"input component"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"output component"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">labelsize</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">shrink</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"matrix entry"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/f4e41a82b3b38b0ed56021b6ee3b99a95127e07b3705e7df326d58be68fcade1.png" src="../_images/f4e41a82b3b38b0ed56021b6ee3b99a95127e07b3705e7df326d58be68fcade1.png" />
+</div>
+</div>
+<p>Cells that are <strong>exactly zero</strong> are left blank (see-through) and marked with a small dot; every coloured cell,
+even a gray-looking one, holds a nonzero number. On the left, every <span class="math notranslate nohighlight">\(3\times 3\)</span> tile is a scaled identity: only its
+diagonal is coloured. In the middle every entry is free and nonzero. On the right, the scalar and vector blocks sit
+on the diagonal and the off-diagonal blocks are blank, as the checks in Section 2.1 showed.</p>
+</section>
+</section>
+<section id="the-other-two-e3nn-modules-written-out">
+<h2>3. The other two e3nn modules, written out<a class="headerlink" href="#the-other-two-e3nn-modules-written-out" title="Link to this heading">#</a></h2>
+<p>A0’s vector branch also uses a <strong>norm activation</strong>, and the scalar and vector branches meet in an
+<strong>element-wise tensor product</strong>. Both turn out to be simple formulas.</p>
+<section id="normactivation-keep-the-direction-squash-the-length">
+<h3>3.1 <code class="docutils literal notranslate"><span class="pre">NormActivation</span></code>: keep the direction, squash the length<a class="headerlink" href="#normactivation-keep-the-direction-squash-the-length" title="Link to this heading">#</a></h3>
+<p>For each channel <span class="math notranslate nohighlight">\(u\)</span> the norm activation computes</p>
+<div class="math notranslate nohighlight">
+\[
+v_u \;\mapsto\; \tanh\!\big(\lVert v_u\rVert_\epsilon + b_u\big)\,\frac{v_u}{\lVert v_u\rVert_\epsilon},
+\qquad \lVert v\rVert_\epsilon = \sqrt{\max(\lVert v\rVert^2, \epsilon^2)} .
+\]</div>
+<p>The direction is kept, and the new length is <span class="math notranslate nohighlight">\(|\tanh(\cdot)| &lt; 1\)</span>. A length is invariant, so this is equivariant
+for any scalar function of the length (MolSSI
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/04_nonlinearities_and_gates.html">04</a> gives the general
+argument).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">C</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">na</span> <span class="o">=</span> <span class="n">enn</span><span class="o">.</span><span class="n">NormActivation</span><span class="p">(</span><span class="n">o3</span><span class="o">.</span><span class="n">Irreps</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x1o"</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">,</span> <span class="n">epsilon</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">,</span> <span class="n">bias</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">na</span><span class="o">.</span><span class="n">biases</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">C</span><span class="p">))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">norm_act_by_hand</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""v (..., C, 3) -&gt; same shape."""</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="n">eps</span> <span class="o">*</span> <span class="n">eps</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">b</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span> <span class="o">*</span> <span class="n">v</span> <span class="o">/</span> <span class="n">r</span>
+
+<span class="n">vv</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">vv</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.0</span>                                   <span class="c1"># include an exactly-zero vector to exercise epsilon</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="n">na</span><span class="p">(</span><span class="n">vv</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">C</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">norm_act_by_hand</span><span class="p">(</span><span class="n">vv</span><span class="p">,</span> <span class="n">na</span><span class="o">.</span><span class="n">biases</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"NormActivation == tanh(|v|+b) v/|v|"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">:</span> <span class="n">na</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">view_as</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="p">(</span><span class="n">vv</span><span class="p">,),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"NormActivation"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  NormActivation == tanh(|v|+b) v/|v|: max error 1.1e-16 (tol 1e-12)
+PASS  NormActivation: max error 5.6e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.4</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">b</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"bias b = </span><span class="si">{</span><span class="n">b</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"identity (no activation)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"input length $\|v_u\|$"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"output signed length $\tanh(\|v_u\|+b_u)$"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"norm activation: lengths are bounded by 1"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># clear of curves and the y = -1 line</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/d9716bbe447d9ab4ddedda350e121324f488a94c83b1e0e6858307e36d90f206.png" src="../_images/d9716bbe447d9ab4ddedda350e121324f488a94c83b1e0e6858307e36d90f206.png" />
+</div>
+</div>
+<p>A negative output length means the vector flips direction. That is still equivariant, because the flip depends only
+on an invariant. Note the other end of the curve too: with a positive bias, an input of nearly zero length still
+gets an output length of about <span class="math notranslate nohighlight">\(\tanh(b_u)\)</span>, in the direction of a vector that is mostly rounding noise. That is
+the numerical sensitivity Section 4.3 comes back to.</p>
+</section>
+<section id="elementwisetensorproduct-0e-x-1o-two-sqrt3-factors-cancel">
+<h3>3.2 <code class="docutils literal notranslate"><span class="pre">ElementwiseTensorProduct</span></code> 0e x 1o: two <span class="math notranslate nohighlight">\(\sqrt3\)</span> factors cancel<a class="headerlink" href="#elementwisetensorproduct-0e-x-1o-two-sqrt3-factors-cancel" title="Link to this heading">#</a></h3>
+<p>Combining a scalar <span class="math notranslate nohighlight">\(y_u\)</span> with a vector <span class="math notranslate nohighlight">\(v_u\)</span> is a tensor product <span class="math notranslate nohighlight">\(0e\otimes 1o\to 1o\)</span>. e3nn builds it from a
+Clebsch-Gordan coefficient (MolSSI
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03a_tensor_products_theory.html">03a</a>). For this path the
+coefficient is <span class="math notranslate nohighlight">\(1/\sqrt3\)</span> times the identity, because e3nn normalises the coefficients to unit Frobenius norm. The
+module then multiplies by a path weight of <span class="math notranslate nohighlight">\(\sqrt{3}\)</span> (component normalisation), so the result is just <span class="math notranslate nohighlight">\(y_u v_u\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cg</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">wigner_3j</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>                     <span class="c1"># (3, 3) Clebsch-Gordan block for 0 x 1 -&gt; 1</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"wigner_3j(0, 1, 1):</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">cg</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">cg_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">cg</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"CG coefficient == I / sqrt(3)"</span><span class="p">,</span> <span class="n">cg_err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">),</span> <span class="s2">"| Frobenius norm:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">cg</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">cg_err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+
+<span class="n">C</span> <span class="o">=</span> <span class="mi">6</span>
+<span class="n">ep</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">ElementwiseTensorProduct</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x0e"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x1o"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">ep</span><span class="p">,</span> <span class="s2">"| path weight:"</span><span class="p">,</span> <span class="n">ep</span><span class="o">.</span><span class="n">instructions</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path_weight</span><span class="p">,</span> <span class="s2">"= sqrt(3) ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+<span class="n">y</span><span class="p">,</span> <span class="n">vv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">C</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="n">ep</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">vv</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">C</span><span class="p">))</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">C</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">vv</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"ElementwiseTensorProduct(y, v) == y_u * v_u"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>wigner_3j(0, 1, 1):
+ [[0.5774 0.     0.    ]
+ [0.     0.5774 0.    ]
+ [0.     0.     0.5774]]
+PASS  CG coefficient == I / sqrt(3): max error 1.1e-16 (tol 1e-12) | Frobenius norm: 1.000000
+ElementwiseTensorProduct(6x0e x 6x1o -&gt; 6x1o | 6 paths | 0 weights) | path weight: 1.7320508075688772 = sqrt(3) = 1.7320508075688772
+PASS  ElementwiseTensorProduct(y, v) == y_u * v_u: max error 0.0e+00 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The plain-PyTorch code can therefore write <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">*</span> <span class="pre">v</span></code> and never mention <span class="math notranslate nohighlight">\(\sqrt 3\)</span>.</p>
+</section>
+</section>
+<section id="whole-model-e3nn-modules-versus-plain-formulas">
+<h2>4. Whole model: e3nn modules versus plain formulas<a class="headerlink" href="#whole-model-e3nn-modules-versus-plain-formulas" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">MiniA0E3nn</span></code> is the A0 structure written with the three modules above, as in the repository’s
+<code class="docutils literal notranslate"><span class="pre">src/u1_e3nn_no_pressure.py</span></code>. <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code> writes out the formulas. Their parameters have the same names and shapes,
+so the weights of one can be copied into the other.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">width</span><span class="p">,</span> <span class="n">depth</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">m_e3nn</span> <span class="o">=</span> <span class="n">MiniA0E3nn</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>                           <span class="c1"># make the norm-activation biases nonzero so they are tested too</span>
+    <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m_e3nn</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+        <span class="k">if</span> <span class="s2">"non_lin.biases"</span> <span class="ow">in</span> <span class="n">n</span><span class="p">:</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">normal_</span><span class="p">()</span>
+<span class="n">m_plain</span> <span class="o">=</span> <span class="n">copy_parameters</span><span class="p">(</span><span class="n">m_e3nn</span><span class="p">,</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">())</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'parameter'</span><span class="si">:</span><span class="s2">&lt;34</span><span class="si">}{</span><span class="s1">'shape'</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">&lt;34</span><span class="si">}{</span><span class="nb">str</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>parameter                              shape
+lyr_list1.0.weight                   (16, 3)
+lyr_list1.0.bias                       (16,)
+lyr_list1.1.weight                  (16, 16)
+lyr_list1.1.bias                       (16,)
+lyr_list1.2.weight                  (16, 16)
+lyr_list1.2.bias                       (16,)
+lyr_list2.0.lin.weight                 (32,)
+lyr_list2.0.non_lin.biases             (16,)
+lyr_list2.1.lin.weight                (256,)
+lyr_list2.1.non_lin.biases             (16,)
+lyr_list2.2.lin.weight                (256,)
+lyr_list2.2.non_lin.biases             (16,)
+final_lin_vec.weight                   (16,)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Real inputs come from a toy snapshot (Part I). We use 400 query points with <span class="math notranslate nohighlight">\(M=16\)</span> neighbours each.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">snap</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_snapshot</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ds</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_dataset</span><span class="p">([</span><span class="n">snap</span><span class="p">],</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s2">"exterior"</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"base"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">args</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">ds</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">({</span><span class="n">k</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">((</span><span class="s2">"scalars"</span><span class="p">,</span> <span class="s2">"e_j"</span><span class="p">,</span> <span class="s2">"x_fj"</span><span class="p">),</span> <span class="n">args</span><span class="p">)})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{'scalars': (400, 16, 3), 'e_j': (400, 16, 3), 'x_fj': (400, 16, 3)}
+</pre></div>
+</div>
+</div>
+</div>
+<section id="failure-first-a-component-wise-bias">
+<h3>4.1 Failure first: a component-wise bias<a class="headerlink" href="#failure-first-a-component-wise-bias" title="Link to this heading">#</a></h3>
+<p>A natural “improvement” to the plain vector stack is to add a learnable bias to each component, as <code class="docutils literal notranslate"><span class="pre">nn.Linear</span></code>
+would. It runs and has the same shapes, but it breaks equivariance. To make sure the failure comes from the bias and
+not from a slip in re-writing the forward pass, we first run the re-written model with the bias set to zero and
+check that it reproduces <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code> exactly:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">outputs_with_component_bias</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">comp_bias</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""MiniA0's forward pass (summed over neighbours) with a per-component bias added after the first linear layer."""</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">scalar_branch</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">vv</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">B</span> <span class="o">*</span> <span class="n">M</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">lyr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">m_plain</span><span class="o">.</span><span class="n">lyr_list2</span><span class="p">):</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">vv</span><span class="p">,</span> <span class="n">lyr</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">matrix</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">h</span> <span class="o">=</span> <span class="n">h</span> <span class="o">+</span> <span class="n">comp_bias</span><span class="o">.</span><span class="n">T</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>                   <span class="c1"># the bug: one fixed vector per channel</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">clamp_min</span><span class="p">(</span><span class="n">h</span><span class="o">.</span><span class="n">square</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">lyr</span><span class="o">.</span><span class="n">non_lin</span><span class="o">.</span><span class="n">eps2</span><span class="p">))</span>
+        <span class="n">vv</span> <span class="o">=</span> <span class="n">h</span> <span class="o">*</span> <span class="p">(</span><span class="n">lyr</span><span class="o">.</span><span class="n">non_lin</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="n">r</span> <span class="o">+</span> <span class="n">lyr</span><span class="o">.</span><span class="n">non_lin</span><span class="o">.</span><span class="n">biases</span><span class="p">)</span> <span class="o">/</span> <span class="n">r</span><span class="p">)</span>
+    <span class="n">vv</span> <span class="o">=</span> <span class="n">vv</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">width</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"bmc,bmci,c-&gt;bmi"</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">vv</span><span class="p">,</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">final_lin_vec</span><span class="o">.</span><span class="n">matrix</span><span class="p">()[:,</span> <span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">kinds</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"scalar"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">ref</span> <span class="o">=</span> <span class="n">m_plain</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">err0</span> <span class="o">=</span> <span class="p">((</span><span class="n">outputs_with_component_bias</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="o">-</span> <span class="n">ref</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">ref</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"re-written forward, zero bias == MiniA0 (relative)"</span><span class="p">,</span> <span class="n">err0</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err0</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">comp_bias</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">outputs_with_component_bias</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">comp_bias</span><span class="p">),</span> <span class="n">args</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span>
+                       <span class="n">name</span><span class="o">=</span><span class="s2">"A0 + component-wise vector bias"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  re-written forward, zero bias == MiniA0 (relative): max error 0.0e+00 (tol 1e-12)
+FAIL  A0 + component-wise vector bias: max error 6.5e-01 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+caught: A0 + component-wise vector bias: equivariance error 6.470e-01 &gt;= tol 1.0e-12
+</pre></div>
+</div>
+</div>
+</div>
+<p>The bias is a fixed vector per channel. It does not rotate with the inputs, so the outputs of a rotated
+configuration are no longer the rotated outputs. The zero-bias line above shows that the rest of the re-written
+code is right, so the bias alone is to blame.</p>
+</section>
+<section id="success-same-weights-same-function">
+<h3>4.2 Success: same weights, same function<a class="headerlink" href="#success-same-weights-same-function" title="Link to this heading">#</a></h3>
+<p>Without the bias, the e3nn model and the plain one should compute the same thing, message by message. They do:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">msg_e3nn</span><span class="p">,</span> <span class="n">msg_plain</span> <span class="o">=</span> <span class="n">m_e3nn</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">messages</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+    <span class="n">out_e3nn</span><span class="p">,</span> <span class="n">out_plain</span> <span class="o">=</span> <span class="n">m_e3nn</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">),</span> <span class="n">m_plain</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+<span class="n">scale</span> <span class="o">=</span> <span class="n">msg_e3nn</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">err_msg</span> <span class="o">=</span> <span class="p">((</span><span class="n">msg_e3nn</span> <span class="o">-</span> <span class="n">msg_plain</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">err_out</span> <span class="o">=</span> <span class="p">((</span><span class="n">out_e3nn</span> <span class="o">-</span> <span class="n">out_plain</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">out_e3nn</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"messages: e3nn vs plain (relative)"</span><span class="p">,</span> <span class="n">err_msg</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">msg_e3nn</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="mi">3</span><span class="si">}</span><span class="s2"> messages"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"outputs:  e3nn vs plain (relative)"</span><span class="p">,</span> <span class="n">err_out</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err_msg</span> <span class="o">&lt;</span> <span class="mf">1e-12</span> <span class="ow">and</span> <span class="n">err_out</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  messages: e3nn vs plain (relative): max error 1.6e-15 (tol 1e-12)  [6400 messages]
+PASS  outputs:  e3nn vs plain (relative): max error 4.4e-16 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both are exactly O(3)-equivariant, reflections included:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check_equivariance</span><span class="p">(</span><span class="n">m_e3nn</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"MiniA0E3nn"</span><span class="p">)</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">m_plain</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"MiniA0 (copied weights)"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  MiniA0E3nn: max error 1.4e-15 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  MiniA0 (copied weights): max error 1.0e-15 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The construction order of the two classes is also identical. So building both from the same seed already gives the
+same weights, with no copying:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span> <span class="n">a</span> <span class="o">=</span> <span class="n">MiniA0E3nn</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">7</span><span class="p">);</span> <span class="n">b</span> <span class="o">=</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">depth</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="p">((</span><span class="n">a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-</span> <span class="n">b</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">a</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"same seed, no copy: e3nn vs plain"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  same seed, no copy: e3nn vs plain: max error 6.3e-16 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">msg_e3nn</span> <span class="o">-</span> <span class="n">msg_plain</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">/</span> <span class="n">scale</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="n">nz</span> <span class="o">=</span> <span class="n">d</span><span class="p">[</span><span class="n">d</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">nz</span><span class="o">.</span><span class="n">numpy</span><span class="p">()),</span> <span class="n">bins</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">finfo</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span><span class="o">.</span><span class="n">eps</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"float64 machine epsilon"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$\log_</span><span class="si">{10}</span><span class="s2">$ |difference| / max |message|"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"count of message components"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"e3nn vs plain: </span><span class="si">{</span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> of components agree bit for bit"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">frameon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/aa185450f5c59ff19da48b300a8338ae08fbb66d832ebb339944c77eecf47bd8.png" src="../_images/aa185450f5c59ff19da48b300a8338ae08fbb66d832ebb339944c77eecf47bd8.png" />
+</div>
+</div>
+<p>The remaining differences sit at the level of float64 rounding. They come from summing the same numbers in a
+different order.</p>
+</section>
+<section id="why-the-plain-version-stores-vectors-as-3-rows-c">
+<h3>4.3 Why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code><a class="headerlink" href="#why-the-plain-version-stores-vectors-as-3-rows-c" title="Link to this heading">#</a></h3>
+<p>e3nn stores a <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">x</span> <span class="pre">1o</span></code> feature as one row of <span class="math notranslate nohighlight">\(3C\)</span> numbers, channel by channel: <span class="math notranslate nohighlight">\([v_1^{(1)}, v_1^{(2)}, v_1^{(3)},
+v_2^{(1)}, \dots]\)</span>. <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code> instead keeps the three components in separate slabs of shape <code class="docutils literal notranslate"><span class="pre">(rows,</span> <span class="pre">C)</span></code>. In that
+layout the equivariant linear layer is a single batched matrix product <code class="docutils literal notranslate"><span class="pre">v</span> <span class="pre">&#64;</span> <span class="pre">W</span></code> of shape <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C_in)</span> <span class="pre">x</span> <span class="pre">(C_in,</span> <span class="pre">C_out)</span></code>. The norm is a sum over the leading axis of length 3, and the channel product is a plain broadcast. There
+is no reshaping and no interleaving.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cdemo</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">comp</span><span class="p">,</span> <span class="n">chan</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"e3nn layout: one row of 3C numbers, channel-major"</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="mi">3</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Cdemo</span><span class="p">)],</span>
+     <span class="p">[</span><span class="n">k</span> <span class="o">//</span> <span class="mi">3</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Cdemo</span><span class="p">)]),</span>
+    <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"plain layout: 3 slabs of C numbers, component-major"</span><span class="p">,</span> <span class="p">[</span><span class="n">k</span> <span class="o">//</span> <span class="n">Cdemo</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Cdemo</span><span class="p">)],</span>
+     <span class="p">[</span><span class="n">k</span> <span class="o">%</span> <span class="n">Cdemo</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">Cdemo</span><span class="p">)])]:</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">u</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span> <span class="n">chan</span><span class="p">)):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">add_patch</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">))</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">k</span> <span class="o">+</span> <span class="mf">0.47</span><span class="p">,</span> <span class="mf">0.47</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"$v_</span><span class="si">{</span><span class="n">u</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">^</span><span class="se">{{</span><span class="si">{</span><span class="s1">'xyz'</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="si">}</span><span class="se">}}</span><span class="s2">$"</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span>
+                <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">"bold"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">Cdemo</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">"off"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">handles</span> <span class="o">=</span> <span class="p">[</span><span class="n">plt</span><span class="o">.</span><span class="n">Rectangle</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.95</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x component"</span><span class="p">,</span> <span class="s2">"y component"</span><span class="p">,</span> <span class="s2">"z component"</span><span class="p">],</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">(</span><span class="n">rect</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.12</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/4829e95081f0e49ed1740ff2344727c47ecd374872e928ae4959c7de41810be0.png" src="../_images/4829e95081f0e49ed1740ff2344727c47ecd374872e928ae4959c7de41810be0.png" />
+</div>
+</div>
+<p>The two layouts hold the same numbers. We check that layer by layer, giving both codes <strong>the same input</strong> at
+every layer (the e3nn activations, re-laid out for the plain code), so that each check tests one layer and nothing
+accumulates:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">to_plain</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>            <span class="c1"># e3nn (B, M, 3C) channel-major -&gt; plain (3, B*M, C) component-major</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">B</span> <span class="o">*</span> <span class="n">M</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">to_e3nn</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>             <span class="c1"># plain (3, B*M, C) -&gt; e3nn (B, M, 3C)</span>
+    <span class="k">return</span> <span class="n">v</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">B</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">B</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">v_e3nn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">args</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">args</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>                       <span class="c1"># "2x1o": [x_fj, e_j]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"input: plain layout round trip"</span><span class="p">,</span> <span class="p">(</span><span class="n">to_e3nn</span><span class="p">(</span><span class="n">to_plain</span><span class="p">(</span><span class="n">v_e3nn</span><span class="p">))</span> <span class="o">-</span> <span class="n">v_e3nn</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="mf">1e-12</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">le</span><span class="p">,</span> <span class="n">lp</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">m_e3nn</span><span class="o">.</span><span class="n">lyr_list2</span><span class="p">,</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">lyr_list2</span><span class="p">)):</span>
+        <span class="n">h_e3nn</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">lin</span><span class="p">(</span><span class="n">v_e3nn</span><span class="p">)</span>                                      <span class="c1"># e3nn linear</span>
+        <span class="n">h_plain</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">matmul</span><span class="p">(</span><span class="n">to_plain</span><span class="p">(</span><span class="n">v_e3nn</span><span class="p">),</span> <span class="n">lp</span><span class="o">.</span><span class="n">lin</span><span class="o">.</span><span class="n">matrix</span><span class="p">())</span>    <span class="c1"># plain linear, same input</span>
+        <span class="n">out_e3nn</span><span class="p">,</span> <span class="n">out_plain</span> <span class="o">=</span> <span class="n">le</span><span class="o">.</span><span class="n">non_lin</span><span class="p">(</span><span class="n">h_e3nn</span><span class="p">),</span> <span class="n">lp</span><span class="p">(</span><span class="n">to_plain</span><span class="p">(</span><span class="n">v_e3nn</span><span class="p">))</span>
+        <span class="n">e_lin</span> <span class="o">=</span> <span class="p">(</span><span class="n">h_e3nn</span> <span class="o">-</span> <span class="n">to_e3nn</span><span class="p">(</span><span class="n">h_plain</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="n">e_out</span> <span class="o">=</span> <span class="p">(</span><span class="n">out_e3nn</span> <span class="o">-</span> <span class="n">to_e3nn</span><span class="p">(</span><span class="n">out_plain</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="sa">f</span><span class="s2">"layer </span><span class="si">{</span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> linear   (3, rows, C) == e3nn"</span><span class="p">,</span> <span class="n">e_lin</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="sa">f</span><span class="s2">"layer </span><span class="si">{</span><span class="n">k</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> + norm activation      == e3nn"</span><span class="p">,</span> <span class="n">e_out</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">e_lin</span> <span class="o">&lt;</span> <span class="mf">1e-12</span> <span class="ow">and</span> <span class="n">e_out</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+        <span class="n">v_e3nn</span> <span class="o">=</span> <span class="n">out_e3nn</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"max output length over all channels:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">v_e3nn</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">B</span><span class="p">,</span><span class="w"> </span><span class="n">M</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"(&lt; 1)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  input: plain layout round trip: max error 0.0e+00 (tol 1e-12)
+PASS  layer 1 linear   (3, rows, C) == e3nn: max error 1.8e-15 (tol 1e-12)
+PASS  layer 1 + norm activation      == e3nn: max error 1.4e-15 (tol 1e-12)
+PASS  layer 2 linear   (3, rows, C) == e3nn: max error 4.4e-16 (tol 1e-12)
+PASS  layer 2 + norm activation      == e3nn: max error 3.0e-15 (tol 1e-12)
+PASS  layer 3 linear   (3, rows, C) == e3nn: max error 4.4e-16 (tol 1e-12)
+PASS  layer 3 + norm activation      == e3nn: max error 2.8e-15 (tol 1e-12)
+max output length over all channels: 0.995 (&lt; 1)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Every layer agrees to round-off. One caution if you ever compare the two stacks end to end instead: the activation
+divides by <span class="math notranslate nohighlight">\(\lVert v\rVert\)</span> to get the direction, so a vector with a very short pre-activation length amplifies
+rounding by roughly <span class="math notranslate nohighlight">\(1/\lVert v\rVert\)</span>. Individual intermediate entries can then differ by more than machine epsilon
+even though the final messages agree, as in Section 4.2. (This is also why e3nn clamps the length at <span class="math notranslate nohighlight">\(\epsilon\)</span>:
+without the clamp, an exactly zero vector would give <span class="math notranslate nohighlight">\(0/0\)</span>.)</p>
+</section>
+<section id="a-quick-timing-on-this-machine">
+<h3>4.4 A quick timing on this machine<a class="headerlink" href="#a-quick-timing-on-this-machine" title="Link to this heading">#</a></h3>
+<p>The plain version does less bookkeeping, so it is usually faster. The size of the gap depends on hardware, width
+and batch size, so measure it yourself. The numbers below are printed by this notebook on the build machine and
+are not research results.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">time_forward</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">reps</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">7</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Best of `repeats` timings, each the mean of `reps` calls (the minimum is the least noisy estimate)."""</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>                       <span class="c1"># one-off warm-up (TorchScript optimisation, memory allocator)</span>
+        <span class="n">best</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"inf"</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repeats</span><span class="p">):</span>
+            <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">reps</span><span class="p">):</span>
+                <span class="n">model</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+            <span class="n">best</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">)</span> <span class="o">/</span> <span class="n">reps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best</span>
+
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ds32</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_dataset</span><span class="p">([</span><span class="n">snap</span><span class="p">],</span> <span class="n">n_points</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">M</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="s2">"exterior"</span><span class="p">,</span> <span class="n">state</span><span class="o">=</span><span class="s2">"base"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">args32</span> <span class="o">=</span> <span class="p">(</span><span class="n">ds32</span><span class="p">[</span><span class="s2">"scalars"</span><span class="p">],</span> <span class="n">ds32</span><span class="p">[</span><span class="s2">"e_j"</span><span class="p">],</span> <span class="n">ds32</span><span class="p">[</span><span class="s2">"x_fj"</span><span class="p">])</span>
+<span class="n">old_threads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">old_threads</span><span class="p">))</span>             <span class="c1"># restored at the end of this cell</span>
+<span class="n">timings</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">w_</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mi">64</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">e_</span> <span class="o">=</span> <span class="n">MiniA0E3nn</span><span class="p">(</span><span class="n">w_</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+    <span class="n">p_</span> <span class="o">=</span> <span class="n">copy_parameters</span><span class="p">(</span><span class="n">e_</span><span class="p">,</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">w_</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">())</span>
+    <span class="n">timings</span><span class="p">[</span><span class="n">w_</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">time_forward</span><span class="p">(</span><span class="n">e_</span><span class="p">,</span> <span class="n">args32</span><span class="p">),</span> <span class="n">time_forward</span><span class="p">(</span><span class="n">p_</span><span class="p">,</span> <span class="n">args32</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"width </span><span class="si">{</span><span class="n">w_</span><span class="si">:</span><span class="s2">&gt;3</span><span class="si">}</span><span class="s2">: e3nn </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">timings</span><span class="p">[</span><span class="n">w_</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2"> ms   plain </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">timings</span><span class="p">[</span><span class="n">w_</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2"> ms   "</span>
+          <span class="sa">f</span><span class="s2">"ratio </span><span class="si">{</span><span class="n">timings</span><span class="p">[</span><span class="n">w_</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">timings</span><span class="p">[</span><span class="n">w_</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">   (2000 points x 16 neighbours, float32, CPU)"</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="n">old_threads</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>width  16: e3nn    6.12 ms   plain    2.41 ms   ratio 2.54   (2000 points x 16 neighbours, float32, CPU)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>width  64: e3nn   40.36 ms   plain   25.25 ms   ratio 1.60   (2000 points x 16 neighbours, float32, CPU)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.2</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">))</span>
+<span class="n">xs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">timings</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xs</span> <span class="o">-</span> <span class="mf">0.18</span><span class="p">,</span> <span class="p">[</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timings</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="mf">0.36</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"e3nn modules"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">xs</span> <span class="o">+</span> <span class="mf">0.18</span><span class="p">,</span> <span class="p">[</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timings</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="mf">0.36</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"plain PyTorch"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"width </span><span class="si">{</span><span class="n">w_</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">w_</span> <span class="ow">in</span> <span class="n">timings</span><span class="p">]),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"forward time (ms)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"same function, different bookkeeping (this machine)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/be146a8c9d17df7915311169d8dc5a85864e44c14dc3ce46a17739c03e4d9402.png" src="../_images/be146a8c9d17df7915311169d8dc5a85864e44c14dc3ce46a17739c03e4d9402.png" />
+</div>
+</div>
+<p>Part VI returns to speed, including profiling and GPU kernels.</p>
+</section>
+</section>
+<section id="when-do-you-actually-need-a-tensor-product">
+<h2>5. When do you actually need a tensor product?<a class="headerlink" href="#when-do-you-actually-need-a-tensor-product" title="Link to this heading">#</a></h2>
+<p>Everything in A0’s vector branch is <strong>linear in the vectors</strong>, apart from the norm activation, which only rescales
+each vector by a function of its own length. This works because every feature is a <code class="docutils literal notranslate"><span class="pre">1o</span></code> vector and the output is a
+<code class="docutils literal notranslate"><span class="pre">1o</span></code> vector.</p>
+<section id="failure-a-linear-layer-cannot-make-an-invariant-from-vectors">
+<h3>5.1 Failure: a linear layer cannot make an invariant from vectors<a class="headerlink" href="#failure-a-linear-layer-cannot-make-an-invariant-from-vectors" title="Link to this heading">#</a></h3>
+<p>Suppose we want the invariant <span class="math notranslate nohighlight">\(x_{fj}\cdot e_j\)</span> as a feature. <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> cannot produce it. Asking for
+<code class="docutils literal notranslate"><span class="pre">2x1o</span> <span class="pre">-&gt;</span> <span class="pre">3x0e</span></code> gives a layer with <strong>no weights at all</strong>, whose output is always zero:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lin_bad</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="s2">"2x1o"</span><span class="p">,</span> <span class="s2">"3x0e"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lin_bad</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"output on random input:"</span><span class="p">,</span> <span class="n">lin_bad</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">)))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Linear(2x1o -&gt; 3x0e | 0 weights)
+output on random input: tensor([[0., 0., 0.],
+        [0., 0., 0.]])
+</pre></div>
+</div>
+</div>
+</div>
+<p>By Schur’s lemma there is no nonzero equivariant <em>linear</em> map between different irreps. Getting from <code class="docutils literal notranslate"><span class="pre">1o</span></code> to <code class="docutils literal notranslate"><span class="pre">0e</span></code>
+takes a product of two features, which is exactly what a tensor product is.</p>
+</section>
+<section id="the-fix-1o-x-1o-0e-1e-2e">
+<h3>5.2 The fix: <code class="docutils literal notranslate"><span class="pre">1o</span> <span class="pre">x</span> <span class="pre">1o</span> <span class="pre">=</span> <span class="pre">0e</span> <span class="pre">+</span> <span class="pre">1e</span> <span class="pre">+</span> <span class="pre">2e</span></code><a class="headerlink" href="#the-fix-1o-x-1o-0e-1e-2e" title="Link to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tp</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">FullTensorProduct</span><span class="p">(</span><span class="s2">"1x1o"</span><span class="p">,</span> <span class="s2">"1x1o"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">tp</span><span class="p">,</span> <span class="s2">"-&gt;"</span><span class="p">,</span> <span class="n">tp</span><span class="o">.</span><span class="n">irreps_out</span><span class="p">)</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">tp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">dot_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="n">a</span> <span class="o">*</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="n">cross_err</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"0e part == a.b / sqrt(3)"</span><span class="p">,</span> <span class="n">dot_err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"1e part == (a x b) / sqrt(2)"</span><span class="p">,</span> <span class="n">cross_err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">dot_err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span> <span class="ow">and</span> <span class="n">cross_err</span> <span class="o">&lt;</span> <span class="mf">1e-12</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FullTensorProduct(1x1o x 1x1o -&gt; 1x0e+1x1e+1x2e | 3 paths | 0 weights) -&gt; 1x0e+1x1e+1x2e
+PASS  0e part == a.b / sqrt(3): max error 2.2e-16 (tol 1e-12)
+PASS  1e part == (a x b) / sqrt(2): max error 8.9e-16 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<p>We fed Cartesian <span class="math notranslate nohighlight">\((x, y, z)\)</span> components, while e3nn reads an <code class="docutils literal notranslate"><span class="pre">l=1</span></code> feature as <span class="math notranslate nohighlight">\((y, z, x)\)</span>. That relabelling is a
+cyclic permutation, which is a proper rotation, and dot and cross products commute with proper rotations, so the
+identities above hold in Cartesian order too. The <code class="docutils literal notranslate"><span class="pre">0e</span></code> part is the dot product, an invariant. The <code class="docutils literal notranslate"><span class="pre">1e</span></code> part is the cross product, a <strong>pseudovector</strong>: it flips sign
+under a reflection relative to an ordinary vector. (The <code class="docutils literal notranslate"><span class="pre">2e</span></code> part lives in e3nn’s own basis ordering, so we check
+only its length, which must be invariant.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">check_invariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"TP 0e part (dot)"</span><span class="p">)</span>
+<span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"pseudovector"</span><span class="p">,</span>
+                   <span class="n">name</span><span class="o">=</span><span class="s2">"TP 1e part as pseudovector"</span><span class="p">)</span>
+<span class="n">check_invariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)[:,</span> <span class="mi">4</span><span class="p">:]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span>
+                 <span class="n">name</span><span class="o">=</span><span class="s2">"TP |2e part|"</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="k">lambda</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">tp</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">],</span> <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="p">(</span><span class="s2">"vector"</span><span class="p">,</span> <span class="s2">"vector"</span><span class="p">),</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"vector"</span><span class="p">,</span>
+                       <span class="n">name</span><span class="o">=</span><span class="s2">"TP 1e part as polar vector"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  TP 0e part (dot): max error 4.0e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  TP 1e part as pseudovector: max error 5.9e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+PASS  TP |2e part|: max error 3.5e-16 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+FAIL  TP 1e part as polar vector: max error 2.1e+00 (tol 1e-12)  [5 random g in O(3), det = [-1, 1]]
+caught: TP 1e part as polar vector: equivariance error 2.069e+00 &gt;= tol 1.0e-12
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="why-a0-does-without-one">
+<h3>5.3 Why A0 does without one<a class="headerlink" href="#why-a0-does-without-one" title="Link to this heading">#</a></h3>
+<p>With only two input vectors, <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span>, a tensor product adds <strong>no new output directions</strong>.
+Any O(3)-equivariant polar vector built from them lies in <span class="math notranslate nohighlight">\(\mathrm{span}(x_{fj}, e_j)\)</span>
+(<a class="reference internal" href="02c_span_property.html"><span class="std std-doc">Lesson 02c</span></a> proves this in full). The quick argument: the reflection through the plane of <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span> leaves
+both inputs unchanged, so it must also leave a polar output unchanged, and only vectors in that plane are unchanged
+by it. The cross product <span class="math notranslate nohighlight">\(x_{fj}\times e_j\)</span> is normal to the plane, which is allowed only because it is a
+pseudovector. What a tensor product <em>would</em> add is the invariant <span class="math notranslate nohighlight">\(x_{fj}\cdot e_j\)</span>
+as an explicit input to the coefficients. A0 already sees it implicitly. The first norm activation looks at the
+length of the first linear layer’s output,</p>
+<div class="math notranslate nohighlight">
+\[
+\lVert \tilde W_{1w} x_{fj} + \tilde W_{2w} e_j\rVert^2 = \tilde W_{1w}^2 \lVert x_{fj}\rVert^2
++ 2 \tilde W_{1w}\tilde W_{2w}\, x_{fj}\cdot e_j + \tilde W_{2w}^2 ,
+\qquad \tilde W_{uw} = W_{uw}/\sqrt 2 ,
+\]</div>
+<p>where the tilde absorbs the path weight <span class="math notranslate nohighlight">\(C_{\rm in}^{-1/2} = 1/\sqrt2\)</span>, and the last term uses <span class="math notranslate nohighlight">\(\lVert e_j\rVert = 1\)</span>
+(<span class="math notranslate nohighlight">\(e_j = q_j/\lVert q_j\rVert\)</span> is a unit vector in the toy data). This formula is for the first layer only; deeper
+layers see lengths of combinations of earlier outputs, which are nonlinear functions of the same invariants. So
+the angle between <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span> enters every channel’s length. Exercise 2 checks this numerically.</p>
+<p>The <em>directions</em> are therefore complete, but that does not make A0’s coefficients general functions. Writing the
+vector branch’s output as <span class="math notranslate nohighlight">\(v_u = a_u\,x_{fj} + b_u\,e_j\)</span>, with <span class="math notranslate nohighlight">\(a_u, b_u\)</span> functions of the geometry invariants
+only, one message is</p>
+<div class="math notranslate nohighlight">
+\[
+m_j \;=\; \sum_{u=1}^{C} w_u\, y_u(s_j)\, v_u(x_{fj}, e_j)
+\;=\; \Big[\sum_u w_u\, y_u(s_j)\, a_u\Big] x_{fj} + \Big[\sum_u w_u\, y_u(s_j)\, b_u\Big] e_j ,
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(w_u\)</span> the head weights. The scalar branch <span class="math notranslate nohighlight">\(y_u\)</span> never sees the geometry, and the geometry invariants
+(<span class="math notranslate nohighlight">\(\lVert x_{fj}\rVert\)</span>, <span class="math notranslate nohighlight">\(x_{fj}\cdot e_j\)</span>) reach the coefficients only through the norm-activation lengths. Each
+coefficient is a sum of <span class="math notranslate nohighlight">\(C\)</span> products of a state-only function and a geometry-only function. Adding a tensor product
+to the vector branch would not change that structure, and it would not touch A0’s real limit either: the output is
+a plain sum of independent per-pair messages, so no message can depend on a third particle. Part V is about that
+limit.</p>
+<p>You <em>do</em> need tensor products when:</p>
+<ul class="simple">
+<li><p><strong>features have <span class="math notranslate nohighlight">\(l\ge 2\)</span>.</strong> NequIP, MACE and similar models embed directions with spherical harmonics up to
+some <span class="math notranslate nohighlight">\(l_{\max}\)</span> and must couple them (MolSSI
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/02b_spherical_harmonics.html">02b</a> and
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03b_tensor_products_e3nn.html">03b</a>).</p></li>
+<li><p><strong>the output is not a polar vector</strong>, for example a vorticity or torque (<code class="docutils literal notranslate"><span class="pre">1e</span></code>) or a stress tensor
+(<code class="docutils literal notranslate"><span class="pre">0e</span> <span class="pre">+</span> <span class="pre">2e</span></code>).</p></li>
+<li><p><strong>many vector features must interact multiplicatively</strong>, for example messages that couple neighbour <span class="math notranslate nohighlight">\(j\)</span>’s
+geometry with neighbour <span class="math notranslate nohighlight">\(k\)</span>’s. That is a higher body order, as in MACE
+(MolSSI <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/10b_mace_theory.html">10b</a>). Part V takes a different
+route to neighbour-neighbour interaction: attention on invariants.</p></li>
+</ul>
+<p>For A0, then, e3nn is a clear and safe way to <em>write</em> the network, and plain PyTorch is a faster way to <em>run</em> it.
+The checks in this lesson show the two compute the same function.</p>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>On features made only of <code class="docutils literal notranslate"><span class="pre">1o</span></code> vectors, <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> is <span class="math notranslate nohighlight">\(C_{\rm in}^{-1/2}\,W\)</span> applied channel-wise, <span class="math notranslate nohighlight">\(W^\top\otimes
+I_3\)</span> as a matrix. It never mixes components and has no bias, so e3nn’s <span class="math notranslate nohighlight">\((y,z,x)\)</span> ordering does not matter there.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NormActivation</span></code> is <span class="math notranslate nohighlight">\(\tanh(\lVert v\rVert+b)\,v/\lVert v\rVert\)</span>, and <code class="docutils literal notranslate"><span class="pre">ElementwiseTensorProduct</span></code> <span class="math notranslate nohighlight">\(0e\times 1o\)</span> is
+<span class="math notranslate nohighlight">\(y_u v_u\)</span>, because its <span class="math notranslate nohighlight">\(\sqrt3\)</span> path weight cancels the <span class="math notranslate nohighlight">\(1/\sqrt3\)</span> Clebsch-Gordan coefficient.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">MiniA0E3nn</span></code> and <code class="docutils literal notranslate"><span class="pre">MiniA0</span></code> share parameter names, shapes and construction order. With the same weights they agree
+to float64 round-off, message by message, and both pass the O(3) check with reflections.</p></li>
+<li><p>The plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code>, so each layer is one matrix product. That layout holds the same
+numbers as e3nn’s interleaved one.</p></li>
+<li><p>A linear layer cannot turn vectors into invariants or pseudovectors, which takes a tensor product. A0 does not
+need one for its output <em>directions</em>, which already span every allowed direction, and the norm activation sees
+<span class="math notranslate nohighlight">\(x\cdot e\)</span>. Its coefficients are still restricted: sums of <span class="math notranslate nohighlight">\(C\)</span> (state-only) x (geometry-only) products, and the
+model as a whole is a sum of independent pairs (Part V).</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Write a plain-PyTorch version of <code class="docutils literal notranslate"><span class="pre">o3.Linear(&quot;2x0e+2x1o&quot;,</span> <span class="pre">&quot;3x0e+3x1o&quot;)</span></code> from its flat <code class="docutils literal notranslate"><span class="pre">weight</span></code> vector and
+check it against the e3nn module in float64. (Hint: the weight vector holds one block per instruction, in order.)</p></li>
+<li><p>Show numerically that a single vector-branch channel of A0 depends on the angle between <span class="math notranslate nohighlight">\(x_{fj}\)</span> and <span class="math notranslate nohighlight">\(e_j\)</span>, even
+though no dot product is ever computed. Keep <span class="math notranslate nohighlight">\(\lVert x_{fj}\rVert\)</span> fixed, rotate <span class="math notranslate nohighlight">\(e_j\)</span> from parallel to
+antiparallel, and plot the channel’s output length.</p></li>
+<li><p>Replace A0’s head by a tensor product so that the model predicts a <strong>pseudovector</strong> (for example a particle
+rotation rate). Use <code class="docutils literal notranslate"><span class="pre">o3.FullyConnectedTensorProduct(f&quot;{C}x1o&quot;,</span> <span class="pre">f&quot;{C}x1o&quot;,</span> <span class="pre">&quot;1x1e&quot;)</span></code> on two copies of the vector
+features. Check that the result passes <code class="docutils literal notranslate"><span class="pre">out_kind=&quot;pseudovector&quot;</span></code> and fails <code class="docutils literal notranslate"><span class="pre">out_kind=&quot;vector&quot;</span></code>. Could a
+plain <code class="docutils literal notranslate"><span class="pre">o3.Linear(f&quot;{C}x1o&quot;,</span> <span class="pre">&quot;1x1e&quot;)</span></code> do the same job?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mixed_linear_by_hand</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">c_in</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">c_out</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)):</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:</span><span class="n">c_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">c_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]:]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">c_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">n0</span> <span class="o">=</span> <span class="n">c_in</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">c_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">W_s</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[:</span><span class="n">n0</span><span class="p">]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">c_in</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">c_out</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">c_in</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">W_v</span> <span class="o">=</span> <span class="n">weight</span><span class="p">[</span><span class="n">n0</span><span class="p">:]</span><span class="o">.</span><span class="n">view</span><span class="p">(</span><span class="n">c_in</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">c_out</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">c_in</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">((</span><span class="n">s</span> <span class="o">@</span> <span class="n">W_s</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"rui,uw-&gt;rwi"</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">W_v</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="n">mixed</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span> <span class="n">mixed_linear_by_hand</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mixed</span><span class="o">.</span><span class="n">weight</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"plain mixed linear == o3.Linear"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Each irrep type gets its own weight matrix and its own <span class="math notranslate nohighlight">\(C_{\rm in}^{-1/2}\)</span>. Scalars never feed vectors, and vectors
+never feed scalars. These are the blank blocks in the figure of Section 2.1.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">layer</span> <span class="o">=</span> <span class="n">m_plain</span><span class="o">.</span><span class="n">lyr_list2</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>                 <span class="c1"># first vector layer, input (x_fj, e_j)</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">181</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">theta</span><span class="p">)),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">v_in</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>        <span class="c1"># (3, rows, 2)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="n">layer</span><span class="p">(</span><span class="n">v_in</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>                  <span class="c1"># (rows, C)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">lengths</span><span class="p">[:,</span> <span class="n">c</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"channel </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"angle between x_fj and e_j (degrees)"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"output length"</span><span class="p">),</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>The lengths change with the angle, because <span class="math notranslate nohighlight">\(\lVert W_1 x + W_2 e\rVert^2\)</span> contains <span class="math notranslate nohighlight">\(2W_1W_2\,x\cdot e\)</span>. Because the
+length enters through <span class="math notranslate nohighlight">\(\tanh\)</span>, later layers see a nonlinear function of <span class="math notranslate nohighlight">\(x\cdot e\)</span>, which is what a tensor product’s
+<code class="docutils literal notranslate"><span class="pre">0e</span></code> output would have supplied.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">C</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">manual_seed</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">vec</span> <span class="o">=</span> <span class="n">MiniA0</span><span class="p">(</span><span class="n">C</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="n">head</span> <span class="o">=</span> <span class="n">o3</span><span class="o">.</span><span class="n">FullyConnectedTensorProduct</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x1o"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x1o"</span><span class="p">,</span> <span class="s2">"1x1e"</span><span class="p">)</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pseudo_head</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">vec</span><span class="o">.</span><span class="n">scalar_branch</span><span class="p">(</span><span class="n">s</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>               <span class="c1"># (B, M, C, 1)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">*</span> <span class="n">vec</span><span class="o">.</span><span class="n">vector_branch</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="mi">2</span><span class="p">],</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">C</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">head</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                          <span class="c1"># 1o x 1o -&gt; 1e, summed over neighbours</span>
+
+<span class="n">check_equivariance</span><span class="p">(</span><span class="n">pseudo_head</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"pseudovector"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"pseudovector head"</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">check_equivariance</span><span class="p">(</span><span class="n">pseudo_head</span><span class="p">,</span> <span class="n">args</span><span class="p">,</span> <span class="n">kinds</span><span class="p">,</span> <span class="n">out_kind</span><span class="o">=</span><span class="s2">"vector"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"pseudovector head as vector"</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">AssertionError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"caught:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">o3</span><span class="o">.</span><span class="n">Linear</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">C</span><span class="si">}</span><span class="s2">x1o"</span><span class="p">,</span> <span class="s2">"1x1e"</span><span class="p">))</span>                   <span class="c1"># 0 weights: no linear path from 1o to 1e</span>
+</pre></div>
+</div>
+<p>The tensor product builds cross products <span class="math notranslate nohighlight">\(v_u\times v_w\)</span> of pairs of channels, which are pseudovectors. Since every
+<span class="math notranslate nohighlight">\(v_u\)</span> lies in <span class="math notranslate nohighlight">\(\mathrm{span}(x_{fj}, e_j)\)</span> (Section 5.3), each of those cross products, and so each neighbour’s
+pseudovector, is parallel to <span class="math notranslate nohighlight">\(x_{fj}\times e_j\)</span>. A linear
+layer has no path from <code class="docutils literal notranslate"><span class="pre">1o</span></code> to <code class="docutils literal notranslate"><span class="pre">1e</span></code> (0 weights), so it cannot. Feeding Cartesian components is safe for the reason
+given in Section 5.2.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>MolSSI e3nn course: <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/02a_irreps_in_e3nn.html">02a, irreps</a>,
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03a_tensor_products_theory.html">03a, tensor products in theory</a>,
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/03b_tensor_products_e3nn.html">03b, tensor products in e3nn</a>,
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/notebooks/04_nonlinearities_and_gates.html">04, nonlinearities and gates</a>.</p></li>
+<li><p>M. Geiger and T. Smidt, <em>e3nn: Euclidean Neural Networks</em>, arXiv:2207.09453 (2022) <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id12" title="Mario Geiger and Tess Smidt. E3nn: euclidean neural networks. arXiv preprint arXiv:2207.09453, 2022.">Geiger and Smidt, 2022</a>]</span>.</p></li>
+<li><p>e3nn documentation: <a class="reference external" href="https://docs.e3nn.org/en/stable/">overview</a>,
+<a class="reference external" href="https://docs.e3nn.org/en/stable/api/o3/o3_tp.html"><code class="docutils literal notranslate"><span class="pre">o3.TensorProduct</span></code></a>,
+<a class="reference external" href="https://docs.e3nn.org/en/stable/api/nn/nn_normact.html"><code class="docutils literal notranslate"><span class="pre">nn.NormActivation</span></code></a>.</p></li>
+<li><p>The repository’s e3nn model: <code class="docutils literal notranslate"><span class="pre">src/u1_e3nn_no_pressure.py</span></code>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part2_a0"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02c_span_property.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Every message lies in span(x, e)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../part3_refinement/03a_fixed_point.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">States as unknowns: refinement as a fixed-point problem</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-an-ordinary-linear-layer-on-vector-components">1. Failure first: an ordinary linear layer on vector components</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#o3-linear-on-vectors-is-one-weight-matrix-per-irrep-type">2. <code class="docutils literal notranslate"><span class="pre">o3.Linear</span></code> on vectors is one weight matrix per irrep type</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seeing-the-block-structure">2.1 Seeing the block structure</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-other-two-e3nn-modules-written-out">3. The other two e3nn modules, written out</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#normactivation-keep-the-direction-squash-the-length">3.1 <code class="docutils literal notranslate"><span class="pre">NormActivation</span></code>: keep the direction, squash the length</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#elementwisetensorproduct-0e-x-1o-two-sqrt3-factors-cancel">3.2 <code class="docutils literal notranslate"><span class="pre">ElementwiseTensorProduct</span></code> 0e x 1o: two <span class="math notranslate nohighlight">\(\sqrt3\)</span> factors cancel</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#whole-model-e3nn-modules-versus-plain-formulas">4. Whole model: e3nn modules versus plain formulas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-a-component-wise-bias">4.1 Failure first: a component-wise bias</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#success-same-weights-same-function">4.2 Success: same weights, same function</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-plain-version-stores-vectors-as-3-rows-c">4.3 Why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-timing-on-this-machine">4.4 A quick timing on this machine</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-do-you-actually-need-a-tensor-product">5. When do you actually need a tensor product?</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-a-linear-layer-cannot-make-an-invariant-from-vectors">5.1 Failure: a linear layer cannot make an invariant from vectors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fix-1o-x-1o-0e-1e-2e">5.2 The fix: <code class="docutils literal notranslate"><span class="pre">1o</span> <span class="pre">x</span> <span class="pre">1o</span> <span class="pre">=</span> <span class="pre">0e</span> <span class="pre">+</span> <span class="pre">1e</span> <span class="pre">+</span> <span class="pre">2e</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-a0-does-without-one">5.3 Why A0 does without one</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The u1e3nn project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>Companion to the <a href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a>.</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

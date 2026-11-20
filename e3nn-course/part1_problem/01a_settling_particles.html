@@ -1,0 +1,1256 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Settling particles and what a simulation gives us &#8212; Equivariant surrogates for particle-laden flow</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part1_problem/01a_settling_particles';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="One-particle disturbances and superposition" href="01b_superposition.html" />
+    <link rel="prev" title="Setting up and a first equivariance check" href="../part0_setup/00_setup.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Equivariant surrogates for particle-laden flow</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Equivariant surrogates for particle-laden flow
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up and a first equivariance check</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part I · The problem</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Settling particles and what a simulation gives us</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01b_superposition.html">One-particle disturbances and superposition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="01c_frames.html">Frames: what velocity do we subtract?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part II · The A0 model</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02a_pair_geometry.html">Pair geometry: what one neighbour tells a query point</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02b_two_branches.html">Scalar and vector branches</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02c_span_property.html">Every message lies in span(x, e)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_a0/02d_e3nn_vs_pytorch.html">e3nn and plain PyTorch compute the same function</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part III · Self-consistent refinement</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03a_fixed_point.html">States as unknowns: refinement as a fixed-point problem</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03b_picard_anderson.html">Picard, damping and Anderson acceleration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03c_residuals_stopping.html">Residuals and stopping</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_refinement/03d_replay_vs_frozen.html">Replay versus frozen-model inference</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part IV · Training and evaluation</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04a_splits.html">Splits: snapshots, not points</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04b_metrics.html">NRMSE versus R²</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04c_seeds_paired.html">Seeds and paired comparisons</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_training/04d_worked_case.html">A worked toy case: fixed versus refined</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part V · Beyond pairwise: attention and model B</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05a_shielding.html">Shielding: why a sum of pairs falls short</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05b_attention_from_scratch.html">Attention from scratch: queries, keys, values</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05c_multihead_masking.html">Multiple heads and masking</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05d_permutation.html">Why attention suits sets of particles</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05e_transformer_block.html">The transformer block: residuals, LayerNorm and the feed-forward network</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05f_invariant_attention.html">Invariant attention with a pair-geometry bias: model B</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_beyond/05g_negative_results.html">Negative results as worked lessons</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part VI · Practice</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06a_speed.html">Speed: layout, compile and TF32</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06b_profiling.html">Profiling and memory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_practice/06c_hpc.html">Running on a cluster</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/part1_problem/01a_settling_particles.md" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.md</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Settling particles and what a simulation gives us</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-spheres-falling-through-a-fluid">1. Many spheres falling through a fluid</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-a-particle-resolved-simulation-provides">1.1 What a particle-resolved simulation provides</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-surrogate-s-task">1.2 The surrogate’s task</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-toy-snapshot">2. A toy snapshot</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-particles">2.1 The particles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fluid">2.2 The fluid</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-far-does-one-particle-s-influence-reach">2.3 How far does one particle’s influence reach?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetries-the-surrogate-may-rely-on">3. Symmetries the surrogate may rely on</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-rotating-only-half-the-input">3.1 Failure first: rotating only half the input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rotations-and-reflections-done-right">3.2 Rotations and reflections, done right</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#translations-and-relabelling">3.3 Translations and relabelling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#an-identity-on-average-the-fluid-moves-with-each-sphere">3.4 An identity: on average, the fluid moves with each sphere</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-toy-keeps-and-what-it-drops">4. What the toy keeps and what it drops</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-next">4.1 Coming next</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="settling-particles-and-what-a-simulation-gives-us">
+<h1>Settling particles and what a simulation gives us<a class="headerlink" href="#settling-particles-and-what-a-simulation-gives-us" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What a particle-resolved simulation of settling spheres contains: particle positions, particle velocities
+and a fluid velocity field.</p></li>
+<li><p>The surrogate’s task: predict the fluid velocity at any point outside the particles from the particles alone.</p></li>
+<li><p>How to generate, plot and inspect a toy snapshot with <code class="docutils literal notranslate"><span class="pre">course_utils.toy_data</span></code>, and which of its symmetries
+(rotations, reflections, translations, relabelling) a surrogate may rely on, each checked numerically.</p></li>
+<li><p>Why a model that sees only the <span class="math notranslate nohighlight">\(M\)</span> nearest particles needs a few tens of them, measured on the toy.</p></li>
+<li><p>The surface-average identity that ties each particle’s state to the flow around it, and where it stops
+being exact.</p></li>
+<li><p>How the toy differs from real simulations, so you know what carries over and what does not.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part0_setup/00_setup.html"><span class="std std-doc">Lesson 00</span></a>. Equivariance is used here only as an idea
+(“rotate the input, the output rotates with it”); the
+<a class="reference external" href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a> introduces it properly.</p>
+<section id="many-spheres-falling-through-a-fluid">
+<h2>1. Many spheres falling through a fluid<a class="headerlink" href="#many-spheres-falling-through-a-fluid" title="Link to this heading">#</a></h2>
+<p>Picture a box of fluid with many solid spheres in it, all heavier than the fluid. Gravity pulls them down,
+the fluid resists, and each sphere soon settles at roughly steady speed. A moving sphere drags the fluid
+next to it along (the <em>no-slip</em> condition: on the surface, fluid and sphere move together). That disturbance
+spreads into the surrounding fluid and pushes on the neighbouring spheres, which in turn disturb the fluid
+around them. The flow anywhere in the box is a combined result of every particle and of how the particles
+affect one another.</p>
+<p>A suspension like this is controlled by three dimensionless numbers <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id18" title="Élisabeth Guazzelli and Jeffrey F. Morris. A Physical Introduction to Suspension Dynamics. Cambridge University Press, 2011.">Guazzelli and Morris, 2011</a>]</span>: the
+Galileo (or Archimedes) number, which compares gravity, buoyancy and viscosity for one sphere; the density
+ratio; and the volume fraction. The surrogate does not take the Galileo number directly. It takes three
+<em>per-particle</em> quantities:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>quantity</p></th>
+<th class="head"><p>meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>particle Reynolds number <span class="math notranslate nohighlight">\(\mathrm{Re}_p = \lvert\mathbf q\rvert d/\nu\)</span></p></td>
+<td><p>how fast a sphere moves relative to the nearby fluid (<span class="math notranslate nohighlight">\(\mathbf q\)</span>, the <em>slip</em>), compared with viscous diffusion over its diameter <span class="math notranslate nohighlight">\(d\)</span>; a response of the suspension, not a control parameter</p></td>
+</tr>
+<tr class="row-odd"><td><p>density ratio <span class="math notranslate nohighlight">\(\rho = \rho_p/\rho_f\)</span></p></td>
+<td><p>how heavy the particles are compared with the fluid</p></td>
+</tr>
+<tr class="row-even"><td><p>volume fraction <span class="math notranslate nohighlight">\(\phi\)</span></p></td>
+<td><p>the fraction of the box occupied by particles, globally or locally around one particle</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>These three are the scalar inputs of the A0 model in Part II.</p>
+<section id="what-a-particle-resolved-simulation-provides">
+<h3>1.1 What a particle-resolved simulation provides<a class="headerlink" href="#what-a-particle-resolved-simulation-provides" title="Link to this heading">#</a></h3>
+<p>The research behind this course used <strong>particle-resolved direct numerical simulation</strong> (PR-DNS) from
+collaborators. “Particle-resolved” means that many grid cells span each sphere’s diameter. The no-slip condition is
+imposed on every sphere’s actual surface, and no model of the drag is assumed. One <em>snapshot</em> (a single
+instant in time) contains:</p>
+<ul class="simple">
+<li><p>the <strong>particles</strong>: centre <span class="math notranslate nohighlight">\(\mathbf r_j\)</span>, translational velocity <span class="math notranslate nohighlight">\(\mathbf v_j\)</span> (also angular velocity,
+which we do not use), for every particle <span class="math notranslate nohighlight">\(j = 1,\dots,N\)</span>;</p></li>
+<li><p>the <strong>fluid</strong>: velocity <span class="math notranslate nohighlight">\(\mathbf u(\mathbf x)\)</span> (and pressure) at mesh points <span class="math notranslate nohighlight">\(\mathbf x\)</span> that lie outside
+the particles;</p></li>
+<li><p>the <strong>parameters</strong>: density ratio, volume fraction, fluid viscosity and box size.</p></li>
+</ul>
+<p>These simulations are accurate and expensive. One simulation can take a large amount of supercomputer time
+(it produces a sequence of snapshots), and it covers only one combination of parameters. We do not ship any of that data. Every lesson instead
+uses a small toy problem with the same structure.</p>
+</section>
+<section id="the-surrogate-s-task">
+<h3>1.2 The surrogate’s task<a class="headerlink" href="#the-surrogate-s-task" title="Link to this heading">#</a></h3>
+<p>A <strong>surrogate</strong> is a fast learned stand-in for the simulation. Our surrogate answers one question:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{given the particles } \{(\mathbf r_j, \mathbf q_j, \rho, \phi_j)\}_{j=1}^N
+\text{ and a query point } \mathbf x_f \text{ in the fluid, what is } \mathbf u(\mathbf x_f)\,?
+\]</div>
+<p>There is a catch in this question. The state <span class="math notranslate nohighlight">\(\mathbf q_j\)</span>, the particle’s velocity relative to the fluid
+around it, is <strong>not</strong> in the snapshot: the snapshot gives <span class="math notranslate nohighlight">\(\mathbf v_j\)</span>, and “the fluid around it” is
+itself part of the answer. What we can compute directly is a starting guess, the particle velocity relative
+to the measured mean fluid velocity, <span class="math notranslate nohighlight">\(\mathbf q_j^{\text{base}} = \mathbf v_j - \langle\mathbf u_f\rangle\)</span>.
+Part III shows how the model corrects that guess by using its own predicted flow (<em>self-consistent
+refinement</em>). Here, the sign convention is <span class="math notranslate nohighlight">\(\mathbf q = \mathbf v - (\text{fluid seen by the particle})\)</span>.</p>
+<p>Particle-laden flow models that track particles but not the fluid around each one need exactly this, the
+fluid velocity “seen” by a particle, and they usually take it from a closure. A surrogate trained on PR-DNS
+can supply it at any point and costs far less than the simulation.</p>
+<p>One training example is therefore a pair: <em>(query point plus the particles near it)</em> → <em>velocity at the
+query point</em>. Section 3 lists the physical symmetries that this map must respect.</p>
+</section>
+</section>
+<section id="a-toy-snapshot">
+<h2>2. A toy snapshot<a class="headerlink" href="#a-toy-snapshot" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">course_utils.toy_data</span></code> builds a suspension that is small enough to compute exactly on a laptop:</p>
+<ul class="simple">
+<li><p><span class="math notranslate nohighlight">\(N\)</span> non-overlapping spheres of radius <span class="math notranslate nohighlight">\(a = 0.5\)</span> (diameter <span class="math notranslate nohighlight">\(d = 1\)</span>) at random positions in a cube;</p></li>
+<li><p>each sphere has a prescribed lab velocity <span class="math notranslate nohighlight">\(\mathbf v_j\)</span>, pointing mostly down (settling along <span class="math notranslate nohighlight">\(-y\)</span>) with a
+random spread in speed and direction;</p></li>
+<li><p>each sphere radiates the Stokes flow of a translating sphere <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id17" title="John Happel and Howard Brenner. Low Reynolds Number Hydrodynamics. Martinus Nijhoff, 1983.">Happel and Brenner, 1983</a>]</span> (Lesson 01b builds
+it), using its slip <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> as the velocity. That flow is multiplied by a <strong>screening factor</strong>
+<span class="math notranslate nohighlight">\(e^{-(r-a)/L}\)</span> with <span class="math notranslate nohighlight">\(L = 1\)</span> by default, a crude stand-in for the way a crowd of particles damps a
+disturbance. The factor equals 1 on the sphere’s own surface, so the no-slip value there is unchanged, but it
+makes every disturbance die off within a few diameters and shapes every figure below;</p></li>
+<li><p>the slips are solved <em>self-consistently</em>, so each sphere feels the flow made by the others (Lesson 01b
+explains why this is necessary, Part III how a model does it). The slip <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> is the toy’s exact
+value of the state <span class="math notranslate nohighlight">\(\mathbf q_j\)</span> from Section 1.2;</p></li>
+<li><p>a uniform <em>backflow</em> <span class="math notranslate nohighlight">\(\mathbf U_b\)</span> represents the fluid moving up as the particles move down (Lesson 01c).</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">plotting</span> <span class="k">as</span> <span class="n">cp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.toy_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToyConfig</span><span class="p">,</span> <span class="n">make_snapshot</span>
+
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">ToyConfig</span><span class="p">()</span>                       <span class="c1"># 96 spheres in a box of side 8, settling along -y</span>
+<span class="n">snap</span> <span class="o">=</span> <span class="n">make_snapshot</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"N = </span><span class="si">{</span><span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2"> spheres, box side </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">box</span><span class="si">}</span><span class="s2">, radius </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"global volume fraction phi = </span><span class="si">{</span><span class="n">cfg</span><span class="o">.</span><span class="n">volume_fraction</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"array shapes:"</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">snap</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"positions"</span><span class="p">,</span> <span class="s2">"velocity"</span><span class="p">,</span> <span class="s2">"slip"</span><span class="p">,</span> <span class="s2">"phi_local"</span><span class="p">)})</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"mean particle velocity &lt;v&gt; ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>N = 96 spheres, box side 8.0, radius 0.5
+global volume fraction phi = 0.098
+array shapes: {'positions': (96, 3), 'velocity': (96, 3), 'slip': (96, 3), 'phi_local': (96,)}
+mean particle velocity &lt;v&gt; = [-0.04  -0.864  0.038]
+</pre></div>
+</div>
+</div>
+</div>
+<p>All arrays are float64 NumPy. <code class="docutils literal notranslate"><span class="pre">snap.positions</span></code> and <code class="docutils literal notranslate"><span class="pre">snap.velocity</span></code> hold what a simulation reports about
+the particles, and <code class="docutils literal notranslate"><span class="pre">snap.field(points)</span></code> returns the true fluid velocity at any point. This is the toy version
+of the simulation’s fluid data, except that it can be evaluated anywhere, not just on a mesh.</p>
+<section id="the-particles">
+<h3>2.1 The particles<a class="headerlink" href="#the-particles" title="Link to this heading">#</a></h3>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">4.4</span><span class="p">))</span>
+<span class="n">ax1</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="s2">"3d"</span><span class="p">)</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">particles_3d</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">box</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">box</span><span class="p">,</span>
+                <span class="n">title</span><span class="o">=</span><span class="s2">"particle centres and velocities $</span><span class="se">\\</span><span class="s2">mathbf</span><span class="si">{v}</span><span class="s2">_j$"</span><span class="p">)</span>
+
+<span class="n">speed</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">gdir</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">settling_direction</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>       <span class="c1"># direction of gravity (unit)</span>
+<span class="n">tilt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span> <span class="o">@</span> <span class="n">gdir</span> <span class="o">/</span> <span class="n">speed</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">ax2</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">speed</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"particle speed $|</span><span class="se">\\</span><span class="s2">mathbf</span><span class="si">{v}</span><span class="s2">_j|$"</span><span class="p">),</span> <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
+<span class="n">ax3</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">add_subplot</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">tilt</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.85</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"angle between $</span><span class="se">\\</span><span class="s2">mathbf</span><span class="si">{v}</span><span class="s2">_j$ and gravity (degrees)"</span><span class="p">),</span> <span class="n">ax3</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"count"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/69fb573bf6e353e5fa035d898a473c3231ed127145c517f24460317d02993dd2.png" src="../_images/69fb573bf6e353e5fa035d898a473c3231ed127145c517f24460317d02993dd2.png" />
+</div>
+</div>
+<p>The arrows (left) point mostly down. The histograms (right) show the spread: speeds scatter around the mean,
+and directions tilt by tens of degrees. In a real suspension this spread comes from the interactions between
+particles. In the toy it is prescribed, so the particles provide varied inputs.</p>
+</section>
+<section id="the-fluid">
+<h3>2.2 The fluid<a class="headerlink" href="#the-fluid" title="Link to this heading">#</a></h3>
+<p>We slice the box through its centre plane <span class="math notranslate nohighlight">\(z = 4\)</span> and evaluate the true field on a grid. Spheres cut by the
+plane are drawn as grey discs.</p>
+<div class="warning admonition">
+<p class="admonition-title">A toy artifact to keep in mind</p>
+<p>In the default toy the fluid as a whole drifts <strong>down</strong>. Each screened disturbance drags fluid along with
+its sphere, and their sum carries a net downward volume flux that nothing in the toy removes. The backflow
+<span class="math notranslate nohighlight">\(\mathbf U_b\)</span> is sized only to balance the particles’ own volume, which is far too small to cancel it. In a
+real suspension in a periodic box, the mean pressure gradient enforces zero net volume flux, so the fluid as a
+whole flows <em>up</em> while the particles settle. The research does not rely on either picture: it measures the
+mean exterior fluid velocity <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span> in every snapshot and works relative to it
+(Lesson 01c). The figure therefore shows both frames.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">u_f</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">exterior_mean</span><span class="p">()</span>                                   <span class="c1"># measured mean over exterior points</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"measured exterior mean &lt;u_f&gt; ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">u_f</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"toy backflow U_b             ="</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">backflow</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>measured exterior mean &lt;u_f&gt; = [-0.046 -0.672  0.018]
+toy backflow U_b             = [ 0.004  0.094 -0.004]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mf">4.6</span><span class="p">))</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">vals</span> <span class="o">=</span> <span class="n">cp</span><span class="o">.</span><span class="n">field_slice</span><span class="p">(</span><span class="n">snap</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">component</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+                            <span class="n">title</span><span class="o">=</span><span class="s2">"lab frame: $u_y$ (negative = down)"</span><span class="p">)</span>
+<span class="n">cp</span><span class="o">.</span><span class="n">field_slice</span><span class="p">(</span><span class="n">snap</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="n">vals</span> <span class="o">-</span> <span class="n">u_f</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">n</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">streamlines</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+               <span class="n">title</span><span class="o">=</span><span class="sa">r</span><span class="s2">"$\mathbf</span><span class="si">{u}</span><span class="s2"> - \langle\mathbf</span><span class="si">{u}</span><span class="s2">_f\rangle$: in-plane speed"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>              <span class="c1"># interior, away from the open edges</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/e7e04ea856c90576cbfa860efe34ce7611ac23bd0dc46a1ab8742ec5e8d5d090.png" src="../_images/e7e04ea856c90576cbfa860efe34ce7611ac23bd0dc46a1ab8742ec5e8d5d090.png" />
+</div>
+</div>
+<p>On the left, in the lab frame, the whole plane is the “down” colour. That is the drift described in the
+warning, not structure. On the right we subtract <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span> and zoom into the interior,
+away from the open box edges. What remains is organised around the particles. The strongest disturbance
+surrounds the sphere near <span class="math notranslate nohighlight">\((x, y) = (2.5, 4.6)\)</span>, the one that drags the fluid around it down hardest (dark blue
+on the left). Elsewhere
+the fluctuations are weaker, and the streamlines bend around the spheres and curl between them.</p>
+</section>
+<section id="how-far-does-one-particle-s-influence-reach">
+<h3>2.3 How far does one particle’s influence reach?<a class="headerlink" href="#how-far-does-one-particle-s-influence-reach" title="Link to this heading">#</a></h3>
+<p>The surrogate in Part II looks only at the <span class="math notranslate nohighlight">\(M\)</span> nearest particles of each query point. How large must <span class="math notranslate nohighlight">\(M\)</span> be?
+The toy answers this exactly, because its field is a sum of one term per particle. For random interior
+points we compute every particle’s contribution, sort them by distance and keep only the <span class="math notranslate nohighlight">\(M\)</span> nearest. Any
+constant offset is absorbed by the frame (Lesson 01c), so we measure what is left after removing the mean
+of the dropped part, relative to the RMS of <span class="math notranslate nohighlight">\(\mathbf u - \langle\mathbf u_f\rangle\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.toy_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">stokes_sphere_matrix</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">report</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">pts</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">sample_exterior</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>       <span class="c1"># random points outside every sphere, &gt;= 1 from the box edges</span>
+<span class="n">offsets</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">[</span><span class="kc">None</span><span class="p">]</span>                           <span class="c1"># (P, N, 3)</span>
+<span class="n">G</span> <span class="o">=</span> <span class="n">stokes_sphere_matrix</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">screening_length</span><span class="p">)</span>        <span class="c1"># (P, N, 3, 3), screened</span>
+<span class="n">contrib</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"pnij,nj-&gt;pni"</span><span class="p">,</span> <span class="n">G</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">slip</span><span class="p">)</span>                          <span class="c1"># one term per particle</span>
+<span class="n">u</span> <span class="o">=</span> <span class="n">contrib</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">snap</span><span class="o">.</span><span class="n">backflow</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"sum of per-particle terms == snap.field"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">pts</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">1e-12</span><span class="p">))</span>
+
+<span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>               <span class="c1"># nearest first</span>
+<span class="n">contrib</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take_along_axis</span><span class="p">(</span><span class="n">contrib</span><span class="p">,</span> <span class="n">order</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fluct</span> <span class="o">=</span> <span class="n">u</span> <span class="o">-</span> <span class="n">u_f</span>
+<span class="n">rms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">fluct</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">Ms</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">48</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">80</span><span class="p">]</span>
+<span class="n">err_mean_removed</span><span class="p">,</span> <span class="n">err_lab</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">M</span> <span class="ow">in</span> <span class="n">Ms</span><span class="p">:</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="n">contrib</span><span class="p">[:,</span> <span class="n">M</span><span class="p">:]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>                                           <span class="c1"># what an M-nearest model cannot see</span>
+    <span class="n">err_mean_removed</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(((</span><span class="n">tail</span> <span class="o">-</span> <span class="n">tail</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">rms</span><span class="p">)</span>
+    <span class="n">err_lab</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">tail</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">rms</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">M</span><span class="p">,</span> <span class="n">e1</span><span class="p">,</span> <span class="n">e2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">err_mean_removed</span><span class="p">,</span> <span class="n">err_lab</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"M = </span><span class="si">{</span><span class="n">M</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">   truncation error: mean removed </span><span class="si">{</span><span class="n">e1</span><span class="si">:</span><span class="s2">6.1%</span><span class="si">}</span><span class="s2">   lab frame </span><span class="si">{</span><span class="n">e2</span><span class="si">:</span><span class="s2">7.1%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  sum of per-particle terms == snap.field: max error 0.0e+00 (tol 1e-12)
+M =  1   truncation error: mean removed  73.9%   lab frame  248.5%
+M =  2   truncation error: mean removed  59.4%   lab frame  203.1%
+M =  4   truncation error: mean removed  47.2%   lab frame  153.9%
+M =  8   truncation error: mean removed  35.6%   lab frame  103.1%
+M = 16   truncation error: mean removed  24.9%   lab frame   58.0%
+M = 24   truncation error: mean removed  18.0%   lab frame   36.5%
+M = 32   truncation error: mean removed  13.0%   lab frame   24.3%
+M = 48   truncation error: mean removed   6.6%   lab frame   10.9%
+M = 64   truncation error: mean removed   3.1%   lab frame    4.6%
+M = 80   truncation error: mean removed   1.0%   lab frame    1.4%
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dist</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">err_mean_removed</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"mean removed"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">Ms</span><span class="p">,</span> <span class="n">err_lab</span><span class="p">,</span> <span class="s2">"s--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"lab frame (mean kept)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"$M$ (nearest particles kept)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"error / RMS of $\mathbf</span><span class="si">{u}</span><span class="s2"> - \langle\mathbf</span><span class="si">{u}</span><span class="s2">_f\rangle$"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"truncating to the $M$ nearest particles"</span><span class="p">),</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">dist</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">fluct</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">s</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cp</span><span class="o">.</span><span class="n">PALETTE</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">edgecolors</span><span class="o">=</span><span class="s2">"none"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"distance to the nearest sphere surface"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s2">"$|\mathbf</span><span class="si">{u}</span><span class="s2"> - \langle\mathbf</span><span class="si">{u}</span><span class="s2">_f\rangle|$"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"disturbance vs distance (interior points)"</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/762f3ecb2995789881115c674b0e04bb52b77729ff8bb21afc1e56e20e30b4f6.png" src="../_images/762f3ecb2995789881115c674b0e04bb52b77729ff8bb21afc1e56e20e30b4f6.png" />
+</div>
+</div>
+<p>Locality is <strong>weak</strong> in this toy. With the mean removed, a handful of neighbours misses a large part of the
+fluctuation, and the error falls below roughly a tenth only once a few tens of particles are kept (the
+printed table gives the values). Without removing the mean (dashed), truncation is much worse, because a
+model would also have to rebuild the collective drift of the distant particles from its few neighbours. This
+is a first reason to measure targets relative to <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span>. On the right, points right
+next to a sphere tend to move a little faster, but beyond a few tenths of a diameter the distance to the
+nearest sphere says little about the disturbance. Each velocity is a sum over many particles, not the echo
+of the closest one.</p>
+<div class="note admonition">
+<p class="admonition-title">What this means for later lessons</p>
+<p>The “mean removed” curve is the error of simply dropping the distant particles from the exact sum. It is a
+reference level, not a hard bound: a learned model can partly guess the dropped contribution from the shape of
+the neighbourhood (and, in this open box, from how close the point is to an edge), or do worse if its particle
+states are inaccurate. At the course’s default <span class="math notranslate nohighlight">\(M = 32\)</span> the reference is the value printed above for
+<span class="math notranslate nohighlight">\(M = 32\)</span>. Keep it in mind when you read the accuracy numbers in Parts II and IV.</p>
+</div>
+</section>
+</section>
+<section id="symmetries-the-surrogate-may-rely-on">
+<h2>3. Symmetries the surrogate may rely on<a class="headerlink" href="#symmetries-the-surrogate-may-rely-on" title="Link to this heading">#</a></h2>
+<p>Before building any network we ask which transformations of a snapshot leave the physics unchanged. Each
+symmetry of the true map <span class="math notranslate nohighlight">\(\{\text{particles}\}, \mathbf x_f \mapsto \mathbf u(\mathbf x_f)\)</span> is a constraint
+that the surrogate can build in rather than learn. Like every symmetry claim in this course, each one is
+checked numerically.</p>
+<section id="failure-first-rotating-only-half-the-input">
+<h3>3.1 Failure first: rotating only half the input<a class="headerlink" href="#failure-first-rotating-only-half-the-input" title="Link to this heading">#</a></h3>
+<p>Rotate the suspension about the box centre <span class="math notranslate nohighlight">\(\mathbf c\)</span> by some <span class="math notranslate nohighlight">\(g \in O(3)\)</span>. The velocity at the rotated
+query point should be the rotated velocity:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf u'\bigl(\mathbf c + g(\mathbf x - \mathbf c)\bigr) = g\,\mathbf u(\mathbf x).
+\]</div>
+<p>But which inputs are rotated? Suppose we move the particle <em>positions</em> and forget their <em>velocities</em>. This is
+easy to do, because gravity points “down” and it is tempting to keep it fixed. To build snapshots from arrays
+we write a small builder out of the toy’s public pieces and confirm that it reproduces <code class="docutils literal notranslate"><span class="pre">make_snapshot</span></code>
+exactly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.toy_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">ToySnapshot</span><span class="p">,</span> <span class="n">solve_slip</span><span class="p">,</span> <span class="n">local_volume_fraction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.equivariance</span><span class="w"> </span><span class="kn">import</span> <span class="n">random_o3</span><span class="p">,</span> <span class="n">check_translation</span><span class="p">,</span> <span class="n">check_permutation</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">build_snapshot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The toy's truth for given particle arrays (same steps as make_snapshot; solve_slip</span>
+<span class="sd">    honours cfg.self_consistent)."""</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="n">grid</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">cfg</span><span class="o">.</span><span class="n">volume_fraction</span>
+    <span class="n">ub</span> <span class="o">=</span> <span class="o">-</span><span class="n">phi</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">phi</span><span class="p">)</span> <span class="o">*</span> <span class="n">velocity</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">cfg</span><span class="o">.</span><span class="n">backflow</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>   <span class="c1"># backflow</span>
+    <span class="n">slip</span> <span class="o">=</span> <span class="n">solve_slip</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>        <span class="c1"># self-consistent slip</span>
+    <span class="k">return</span> <span class="n">ToySnapshot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocity</span><span class="p">,</span> <span class="n">slip</span><span class="p">,</span> <span class="n">ub</span><span class="p">,</span>
+                       <span class="n">local_volume_fraction</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">phi_radius</span><span class="p">),</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">grid</span><span class="p">)</span>
+
+<span class="n">same</span> <span class="o">=</span> <span class="n">build_snapshot</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"build_snapshot == make_snapshot (slip)"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">same</span><span class="o">.</span><span class="n">slip</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">slip</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"build_snapshot == make_snapshot (field)"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">same</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">pts</span><span class="p">)</span> <span class="o">-</span> <span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">1e-12</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  build_snapshot == make_snapshot (slip): max error 0.0e+00 (tol 1e-12)
+PASS  build_snapshot == make_snapshot (field): max error 0.0e+00 (tol 1e-12)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">c</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">box</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">move</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="n">c</span> <span class="o">+</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">c</span><span class="p">)</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span>                           <span class="c1"># rotate/reflect points about the centre</span>
+
+<span class="n">gs</span> <span class="o">=</span> <span class="n">random_o3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+<span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">build_snapshot</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">g</span><span class="p">),</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">cfg</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>   <span class="c1"># velocities NOT rotated</span>
+    <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">half</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span> <span class="o">-</span> <span class="n">u</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"positions rotated, velocities not"</span><span class="p">,</span> <span class="n">worst</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="s2">"5 random g in O(3)"</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>FAIL  positions rotated, velocities not: max error 2.0e+00 (tol 1e-12)  [5 random g in O(3)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The error is of order one, so the check fails. The flow is not “rotate the box and nothing changes”, because
+the particles carry vectors. In this map (and in the surrogate’s inputs), the direction of gravity enters
+<em>only</em> through the particle velocities, so they have to rotate with everything else. (In a real simulation
+gravity also acts as a body force and sets the mean pressure gradient, but neither is an input here.)</p>
+</section>
+<section id="rotations-and-reflections-done-right">
+<h3>3.2 Rotations and reflections, done right<a class="headerlink" href="#rotations-and-reflections-done-right" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">ToySnapshot.rotated(g)</span></code> transforms positions <strong>and</strong> velocities (and the surface grid used for the
+self-consistent solve, see Exercise 3) and recomputes the truth from scratch. The test therefore exercises the
+whole generator, not a formula we already trust.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="n">dets</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+    <span class="n">snap_g</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">rotated</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">snap_g</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span> <span class="o">-</span> <span class="n">u</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">dets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">g</span><span class="p">))))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"toy field, O(3) equivariance"</span><span class="p">,</span> <span class="n">worst</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"5 random g, det = </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">dets</span><span class="p">))</span><span class="si">}</span><span class="s2">"</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  toy field, O(3) equivariance: max error 2.3e-15 (tol 1e-12)  [5 random g, det = [-1, 1]]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The error is at round-off level, reflections (<span class="math notranslate nohighlight">\(\det g = -1\)</span>) included. In the language of irreps, the
+velocity field is a polar vector field (<code class="docutils literal notranslate"><span class="pre">1o</span></code>). The offsets <span class="math notranslate nohighlight">\(\mathbf x_f - \mathbf r_j\)</span> and the particle
+velocities are polar vectors (<code class="docutils literal notranslate"><span class="pre">1o</span></code>), and <span class="math notranslate nohighlight">\(\rho\)</span> and <span class="math notranslate nohighlight">\(\phi\)</span> are scalars (<code class="docutils literal notranslate"><span class="pre">0e</span></code>). Part II builds a network with exactly these input and output types.</p>
+</section>
+<section id="translations-and-relabelling">
+<h3>3.3 Translations and relabelling<a class="headerlink" href="#translations-and-relabelling" title="Link to this heading">#</a></h3>
+<p>Shifting every particle and every query point by the same vector changes nothing, because only offsets
+<span class="math notranslate nohighlight">\(\mathbf x_f - \mathbf r_j\)</span> enter. Renumbering the particles changes nothing either, because the particles
+are a <em>set</em>, not a list. <code class="docutils literal notranslate"><span class="pre">check_translation</span></code> and <code class="docutils literal notranslate"><span class="pre">check_permutation</span></code> test both. <code class="docutils literal notranslate"><span class="pre">check_permutation</span></code> works on
+torch tensors along an axis, so we wrap the NumPy generator.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_pts</span> <span class="o">=</span> <span class="n">pts</span><span class="p">[:</span><span class="mi">200</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">field_from</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">positions</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">build_snapshot</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+
+<span class="n">check_translation</span><span class="p">(</span><span class="n">field_from</span><span class="p">,</span> <span class="n">q_pts</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"toy field, translation"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">field_of_set</span><span class="p">(</span><span class="n">positions</span><span class="p">,</span> <span class="n">velocity</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">build_snapshot</span><span class="p">(</span><span class="n">positions</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">velocity</span><span class="o">.</span><span class="n">numpy</span><span class="p">(),</span> <span class="n">cfg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">q_pts</span><span class="p">))</span>
+
+<span class="n">check_permutation</span><span class="p">(</span><span class="n">field_of_set</span><span class="p">,</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">)),</span>
+                  <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"invariant"</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"toy field, relabelling particles"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  toy field, translation: max error 1.7e-15 (tol 1e-12)  [3 random translations]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  toy field, relabelling particles: max error 1.3e-15 (tol 1e-12)  [3 random permutations of axis 0 (invariant)]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Translation invariance is why the A0 inputs are offsets <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span>, not absolute positions.
+Permutation invariance is why A0 <em>sums</em> over neighbours (Lesson 02a).</p>
+</section>
+<section id="an-identity-on-average-the-fluid-moves-with-each-sphere">
+<h3>3.4 An identity: on average, the fluid moves with each sphere<a class="headerlink" href="#an-identity-on-average-the-fluid-moves-with-each-sphere" title="Link to this heading">#</a></h3>
+<p>The no-slip condition says that the fluid on a sphere’s surface moves with the sphere. The toy does not
+impose this point by point, because it skips the near-field corrections (Section 4). It imposes a weaker,
+averaged version: the self-consistent slip is chosen so that the field averaged over each sphere’s surface
+equals that sphere’s velocity, where “averaged” means a specific 50-point Lebedev quadrature
+<span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id19" title="V. I. Lebedev and D. N. Laikov. A quadrature formula for the sphere of the 131st algebraic order of accuracy. Doklady Mathematics, 59(3):477–481, 1999.">Lebedev and Laikov, 1999</a>]</span>, <span class="math notranslate nohighlight">\(\langle\cdot\rangle_i^{50}\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\bigl\langle \mathbf u \bigr\rangle^{50}_{i} = \mathbf U_b + \mathbf s_i + \widetilde W_i(\mathbf s) = \mathbf v_i .
+\]</div>
+<p>The sphere’s own disturbance equals <span class="math notranslate nohighlight">\(\mathbf s_i\)</span> everywhere on its surface, and <span class="math notranslate nohighlight">\(\widetilde W_i\)</span> is the
+quadrature average of all the other spheres’ exact disturbances. (The tilde marks the toy’s exact
+interaction. In Part III and the <a class="reference internal" href="../appendix/notation.html"><span class="std std-doc">notation page</span></a>, <span class="math notranslate nohighlight">\(W_i\)</span> is the <em>model’s</em> predicted
+flow, averaged the same way.) Rearranged, <span class="math notranslate nohighlight">\(\mathbf s = (\mathbf v - \mathbf U_b) - \widetilde W(\mathbf s)\)</span>:
+the state is a fixed point of a map built from the flow it creates. This is the toy’s version of the fixed
+point that Part III’s refinement looks for. The research version differs in two ways: it is written relative
+to the measured <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span> rather than <span class="math notranslate nohighlight">\(\mathbf U_b\)</span> (Lesson 01c), and it uses the model’s
+predicted flow from the <span class="math notranslate nohighlight">\(M\)</span> nearest neighbours rather than the exact interaction.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">course_utils.toy_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">surface_points</span>
+
+<span class="n">spts</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">surface_points</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">lebedev_order</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">snap</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>   <span class="c1"># (N, 50, 3)</span>
+<span class="n">u_surf</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">spts</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">u_avg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"l,nlc-&gt;nc"</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">u_surf</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"50-point surface average == particle velocity"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_avg</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">1e-12</span><span class="p">,</span>
+             <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="si">}</span><span class="s2"> spheres x </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="si">}</span><span class="s2"> Lebedev points, the grid that defines the slip"</span><span class="p">))</span>
+
+<span class="c1"># the same average with a much finer rule: close to the true continuous surface average</span>
+<span class="n">spts31</span><span class="p">,</span> <span class="n">w31</span> <span class="o">=</span> <span class="n">surface_points</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">cfg</span><span class="o">.</span><span class="n">radius</span><span class="p">,</span> <span class="mi">31</span><span class="p">,</span> <span class="n">grid</span><span class="o">=</span><span class="n">snap</span><span class="o">.</span><span class="n">grid</span><span class="p">)</span>        <span class="c1"># 350 points</span>
+<span class="n">u_avg31</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"l,nlc-&gt;nc"</span><span class="p">,</span> <span class="n">w31</span><span class="p">,</span> <span class="n">snap</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">spts31</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">w31</span><span class="p">)</span><span class="si">}</span><span class="s2">-point surface average vs particle velocity: max error "</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u_avg31</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">   (quadrature level, not round-off)"</span><span class="p">)</span>
+<span class="n">pointwise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">u_surf</span> <span class="o">-</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">velocity</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"for contrast, the largest pointwise mismatch on a surface is </span><span class="si">{</span><span class="n">pointwise</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> (relative)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PASS  50-point surface average == particle velocity: max error 1.3e-15 (tol 1e-12)  [96 spheres x 50 Lebedev points, the grid that defines the slip]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>350-point surface average vs particle velocity: max error 1.9e-05   (quadrature level, not round-off)
+for contrast, the largest pointwise mismatch on a surface is 0.28 (relative)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The 50-point average matches to round-off, but that check is close to a tautology: the slip was solved to
+make exactly this average match. With a much finer rule, which approximates the true continuous surface
+average, the identity holds only to a small quadrature-level error (printed above). Exercise 3 meets the same
+quadrature error from another angle. Point by point the identity fails badly, which is one of the
+simplifications listed below. All of this holds with shielding off (the default). The optional shielding of
+Part V changes each sphere’s own term.</p>
+</section>
+</section>
+<section id="what-the-toy-keeps-and-what-it-drops">
+<h2>4. What the toy keeps and what it drops<a class="headerlink" href="#what-the-toy-keeps-and-what-it-drops" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>real PR-DNS</p></th>
+<th class="head"><p>toy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>one-particle disturbance</p></td>
+<td><p>resolved Navier-Stokes, wakes at finite <span class="math notranslate nohighlight">\(\mathrm{Re}_p\)</span></p></td>
+<td><p>exact Stokes sphere (no inertia, fore-aft symmetric)</p></td>
+</tr>
+<tr class="row-odd"><td><p>interactions</p></td>
+<td><p>full, including lubrication</p></td>
+<td><p>self-consistent slip on surface averages; no near-field reflections</p></td>
+</tr>
+<tr class="row-even"><td><p>no-slip</p></td>
+<td><p>exact on every surface</p></td>
+<td><p>only on average: exact for the 50-point Lebedev average that defines the slip, quadrature-level error for the true surface average (Section 3.4)</p></td>
+</tr>
+<tr class="row-odd"><td><p>domain</p></td>
+<td><p>periodic box</p></td>
+<td><p>open box; exponential screening <span class="math notranslate nohighlight">\(e^{-(r-a)/L}\)</span> (equal to 1 on each surface) keeps sums bounded</p></td>
+</tr>
+<tr class="row-even"><td><p>particle velocities</p></td>
+<td><p>come out of the dynamics</p></td>
+<td><p>prescribed (random spread around settling)</p></td>
+</tr>
+<tr class="row-odd"><td><p>mean fluid velocity</p></td>
+<td><p>zero net volume flux, enforced by the mean pressure gradient</p></td>
+<td><p>uniform backflow term plus an unremoved net downward drift (Section 2.2, Lesson 01c)</p></td>
+</tr>
+<tr class="row-even"><td><p>symmetries</p></td>
+<td><p>E(3), permutation</p></td>
+<td><p>the same, checked in Section 3</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>What carries over: the <em>structure</em> of the problem (a vector field that is a sum of disturbances from
+particles that each carry a vector state and interact), and all its symmetries. What does not: magnitudes,
+wake shapes and anything quantitative. Numbers you see in this course describe the toy, not real suspensions.</p>
+<section id="coming-next">
+<h3>4.1 Coming next<a class="headerlink" href="#coming-next" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Lesson 01b</strong> builds the one-sphere disturbance and adds many of them together. Using the lab velocities
+<span class="math notranslate nohighlight">\(\mathbf v_j\)</span> fails visibly; using the slips <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> works. This explains why a particle’s state is
+its slip and why the model needs self-consistency.</p></li>
+<li><p><strong>Lesson 01c</strong> asks which frame the targets should be measured in. It explains why the research subtracts
+the measured mean exterior fluid velocity <span class="math notranslate nohighlight">\(\langle\mathbf u_f\rangle\)</span> in every snapshot.</p></li>
+</ul>
+</section>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A settling suspension is described by particle positions and velocities plus a fluid velocity field. A
+particle-resolved simulation provides all three, at high cost.</p></li>
+<li><p>The surrogate maps <em>(query point, nearby particles)</em> to the fluid velocity at that point. Each
+particle’s state <span class="math notranslate nohighlight">\(\mathbf q_j\)</span> is not measured; only the guess <span class="math notranslate nohighlight">\(\mathbf v_j - \langle\mathbf u_f\rangle\)</span> is.</p></li>
+<li><p>Locality is weak: on the toy, a model that keeps only the <span class="math notranslate nohighlight">\(M\)</span> nearest particles needs a few tens of them,
+and the error is far smaller once the measured mean is removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">make_snapshot</span></code> generates a toy suspension. <code class="docutils literal notranslate"><span class="pre">snap.field(points)</span></code> is its exact fluid velocity, and
+<code class="docutils literal notranslate"><span class="pre">snap.rotated(g)</span></code> recomputes it for a transformed suspension.</p></li>
+<li><p>The true map is O(3)-equivariant only if the particle velocities rotate too, because gravity lives in
+them. It is also translation-invariant and invariant to relabelling particles. All were checked at
+round-off level.</p></li>
+<li><p>The toy satisfies no-slip only on average: exactly for the 50-point Lebedev average that defines the slip,
+and to quadrature-level error for the true surface average. That identity is the toy’s version of the fixed
+point that self-consistent refinement solves for.</p></li>
+<li><p>The toy keeps the structure and the symmetries of the real problem, but not its quantitative physics.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Crowding.</strong> Generate snapshots with <code class="docutils literal notranslate"><span class="pre">n_particles</span></code> = 32, 96 and 160 (same box). For each, print the
+volume fraction and the mean of <span class="math notranslate nohighlight">\(\lvert\mathbf s_j - (\mathbf v_j - \mathbf U_b)\rvert\)</span>, which measures how
+much the other spheres change each slip. How does the interaction effect grow with crowding?</p></li>
+<li><p><strong>A mirror.</strong> Take <span class="math notranslate nohighlight">\(g = \mathrm{diag}(1, -1, 1)\)</span>, the mirror that flips “up” and “down”. Check that
+<code class="docutils literal notranslate"><span class="pre">snap.rotated(g)</span></code> satisfies the equivariance relation of Section 3.2. What happens to the settling
+direction, and why is the result still a valid suspension?</p></li>
+<li><p><strong>A fixed quadrature grid.</strong> Repeat the check of Section 3.2 with <code class="docutils literal notranslate"><span class="pre">build_snapshot(move(snap.positions,</span> <span class="pre">g),</span> <span class="pre">snap.velocity</span> <span class="pre">&#64;</span> <span class="pre">g.T,</span> <span class="pre">cfg)</span></code>, which leaves the Lebedev grid unrotated. How large is the error now, and where
+does it come from?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="mi">160</span><span class="p">):</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">make_snapshot</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">n_particles</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">effect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">slip</span> <span class="o">-</span> <span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">velocity</span> <span class="o">-</span> <span class="n">s</span><span class="o">.</span><span class="n">backflow</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"N = </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">3d</span><span class="si">}</span><span class="s2">  phi = </span><span class="si">{</span><span class="n">s</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">volume_fraction</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">  mean |s - (v - U_b)| = </span><span class="si">{</span><span class="n">effect</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The interaction effect grows with the volume fraction. With more neighbours within a few screening lengths,
+each sphere sits in a stronger flow made by the others, and its slip departs further from its lab velocity.
+This is why pure superposition with lab velocities gets worse in denser suspensions (Lesson 01b).</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">s_g</span> <span class="o">=</span> <span class="n">snap</span><span class="o">.</span><span class="n">rotated</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+<span class="n">err</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">s_g</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span> <span class="o">-</span> <span class="n">u</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="p">(</span><span class="s2">"mirror y -&gt; -y"</span><span class="p">,</span> <span class="n">err</span><span class="p">,</span> <span class="mf">1e-12</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"new mean particle velocity:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">s_g</span><span class="o">.</span><span class="n">velocity</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The particles now “settle” upwards. Physically this is the same suspension of heavy particles with gravity
+pointing up. The equations do not care which way gravity points. Gravity is carried by the
+particle velocities, and those were mirrored too. A model that hard-coded “down” as <span class="math notranslate nohighlight">\(-y\)</span> would break this
+symmetry.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">gs</span><span class="p">:</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="n">build_snapshot</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">snap</span><span class="o">.</span><span class="n">positions</span><span class="p">,</span> <span class="n">g</span><span class="p">),</span> <span class="n">snap</span><span class="o">.</span><span class="n">velocity</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>        <span class="c1"># grid not rotated</span>
+    <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fixed</span><span class="o">.</span><span class="n">field</span><span class="p">(</span><span class="n">move</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">g</span><span class="p">))</span> <span class="o">-</span> <span class="n">u</span> <span class="o">@</span> <span class="n">g</span><span class="o">.</span><span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">u</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fixed-grid error: </span><span class="si">{</span><span class="n">worst</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The error is printed by the code. It is many orders of magnitude above round-off, yet far below the order-one
+failure of Section 3.1. The self-consistent slip uses a surface average
+computed with a <em>finite</em> set of Lebedev points. Rotating the suspension without rotating those points
+samples the sphere surfaces at different relative positions. The quadrature is exact only for polynomials up
+to some degree on the sphere, and the disturbance is not such a polynomial, so the two averages differ
+slightly. The error is of the same order as the quadrature gap printed in Section 3.4, for the same reason.
+Rotating the grid with the suspension removes the discrepancy. Part III returns to this when the
+model, not the toy, computes the surface averages.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>MolSSI e3nn course, <a class="reference external" href="https://molssi-ai.github.io/e3nn-course/book/intro.html">Introduction</a>: irreps and
+equivariance.</p></li>
+<li><p><span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id18" title="Élisabeth Guazzelli and Jeffrey F. Morris. A Physical Introduction to Suspension Dynamics. Cambridge University Press, 2011.">Guazzelli and Morris, 2011</a>]</span>: settling suspensions, volume fraction, hindered settling.</p></li>
+<li><p><span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id17" title="John Happel and Howard Brenner. Low Reynolds Number Hydrodynamics. Martinus Nijhoff, 1983.">Happel and Brenner, 1983</a>]</span>: the Stokes solution for a translating sphere used by the toy.</p></li>
+<li><p><span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id19" title="V. I. Lebedev and D. N. Laikov. A quadrature formula for the sphere of the 131st algebraic order of accuracy. Doklady Mathematics, 59(3):477–481, 1999.">Lebedev and Laikov, 1999</a>]</span>: the quadrature rule for surface averages.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part1_problem"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part0_setup/00_setup.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Setting up and a first equivariance check</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="01b_superposition.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">One-particle disturbances and superposition</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#many-spheres-falling-through-a-fluid">1. Many spheres falling through a fluid</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-a-particle-resolved-simulation-provides">1.1 What a particle-resolved simulation provides</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-surrogate-s-task">1.2 The surrogate’s task</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-toy-snapshot">2. A toy snapshot</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-particles">2.1 The particles</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fluid">2.2 The fluid</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-far-does-one-particle-s-influence-reach">2.3 How far does one particle’s influence reach?</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#symmetries-the-surrogate-may-rely-on">3. Symmetries the surrogate may rely on</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-rotating-only-half-the-input">3.1 Failure first: rotating only half the input</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#rotations-and-reflections-done-right">3.2 Rotations and reflections, done right</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#translations-and-relabelling">3.3 Translations and relabelling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#an-identity-on-average-the-fluid-moves-with-each-sphere">3.4 An identity: on average, the fluid moves with each sphere</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-toy-keeps-and-what-it-drops">4. What the toy keeps and what it drops</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#coming-next">4.1 Coming next</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The u1e3nn project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+<div class="extra_footer">
+  <p>Companion to the <a href="https://molssi-ai.github.io/e3nn-course/book/intro.html">MolSSI e3nn course</a>.</p>
+
+</div>
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
