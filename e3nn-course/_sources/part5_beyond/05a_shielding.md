@@ -389,9 +389,10 @@ between $j$ and the query point. `MiniB` is a reduced version of the research mo
 MLPs are smaller and it feeds $r_j$ in directly instead of through a radial-basis embedding.
 
 <div class="course-anim" style="margin:1.2em 0 0.4em">
-<video controls loop muted playsinline preload="metadata" poster="../_static/media/S5_attention/S5_attention.png" aria-label="A query particle scores four neighbours; glowing edges show softmax weights. Then twin panels: a plain sum versus attention with a pair bias, where neighbour B sits in the shadow of neighbour A." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<video controls playsinline preload="metadata" poster="../_static/media/S5_attention/S5_attention.png" aria-label="A query particle scores four neighbours; glowing edges show softmax weights. Then twin panels: a plain sum versus attention with a pair bias, where neighbour B sits in the shadow of neighbour A." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
 <source src="../_static/media/S5_attention/S5_attention.webm" type="video/webm">
 <source src="../_static/media/S5_attention/S5_attention.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/S5_attention/S5_attention.vtt" srclang="en" label="English">
 Your browser cannot play this video. <a href="../_static/media/S5_attention/S5_attention.mp4">Download the MP4</a>.
 </video>
 </div>

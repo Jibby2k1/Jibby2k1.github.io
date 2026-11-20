@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.487
+Particle i checks every neighbour's key.
+
+00:00:03.800 --> 00:00:05.170
+Each projection is a score.
+
+00:00:06.100 --> 00:00:08.917
+Softmax weights sum to one, shown as edge brightness.
+
+00:00:10.100 --> 00:00:11.755
+Next, B hides in A's shadow.
+
+00:00:12.900 --> 00:00:14.988
+A pair bias lowers B's weight ratio.
+
+00:00:16.000 --> 00:00:19.567
+Remove A, the ratio returns. A plain sum cannot shield.

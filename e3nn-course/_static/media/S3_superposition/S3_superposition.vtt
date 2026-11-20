@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:01.750
+Flow wraps one sphere.
+
+00:00:02.450 --> 00:00:05.825
+Subtract the stream, and leftover flow fades with distance.
+
+00:00:06.250 --> 00:00:09.162
+As spheres appear, their flows add up at the marked point.
+
+00:00:11.150 --> 00:00:13.286
+Each sphere also sits in its neighbors' flow.
+
+00:00:15.050 --> 00:00:17.107
+Ignoring this, error peaks at the pair.
+
+00:00:18.000 --> 00:00:19.993
+Part Three fixes this with refinement.

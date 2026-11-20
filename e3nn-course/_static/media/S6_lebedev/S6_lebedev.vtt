@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.415
+Particle i, between two neighbours.
+
+00:00:02.800 --> 00:00:04.516
+Twenty six weighted surface points.
+
+00:00:04.900 --> 00:00:06.180
+Sample the flow at each.
+
+00:00:07.300 --> 00:00:08.899
+The arrows gather tail to tail.
+
+00:00:10.000 --> 00:00:13.026
+They merge into one weighted average, W sub i.
+
+00:00:13.400 --> 00:00:18.201
+Single points vary widely. Even the centre misses the exact average slightly.

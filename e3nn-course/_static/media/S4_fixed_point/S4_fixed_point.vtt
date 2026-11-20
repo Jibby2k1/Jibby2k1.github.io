@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:01.727
+Nine particles settle.
+
+00:00:01.900 --> 00:00:04.408
+The neighbors' flow sets one particle's target.
+
+00:00:05.200 --> 00:00:06.224
+It moves partway.
+
+00:00:06.850 --> 00:00:09.829
+Taking half steps, the states settle and the error falls.
+
+00:00:11.150 --> 00:00:14.285
+From the same start, a bigger step overshoots and diverges.
+
+00:00:15.900 --> 00:00:18.925
+If the multiplier's size exceeds one, the error grows.

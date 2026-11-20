@@ -218,9 +218,10 @@ plt.tight_layout(); plt.show()
 ```
 
 <div class="course-anim" style="margin:1.2em 0 0.4em">
-<video controls loop muted playsinline preload="metadata" poster="../_static/media/S6_lebedev/S6_lebedev.png" aria-label="A glass sphere between two settling neighbours; flow arrows sampled at points on its surface gather into one averaged arrow W_i." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<video controls playsinline preload="metadata" poster="../_static/media/S6_lebedev/S6_lebedev.png" aria-label="A glass sphere between two settling neighbours; flow arrows sampled at points on its surface gather into one averaged arrow W_i." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
 <source src="../_static/media/S6_lebedev/S6_lebedev.webm" type="video/webm">
 <source src="../_static/media/S6_lebedev/S6_lebedev.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/S6_lebedev/S6_lebedev.vtt" srclang="en" label="English">
 Your browser cannot play this video. <a href="../_static/media/S6_lebedev/S6_lebedev.mp4">Download the MP4</a>.
 </video>
 </div>
@@ -439,9 +440,10 @@ learned map's spectrum is unknown, it changes with the snapshot and during train
 so a margin costs extra updates but protects against divergence. Lesson 03b looks at this trade-off.
 
 <div class="course-anim" style="margin:1.2em 0 0.4em">
-<video controls loop muted playsinline preload="metadata" poster="../_static/media/S4_fixed_point/S4_fixed_point.png" aria-label="A cluster of spheres with yellow state arrows; a callout builds one damped update; then a split view where step 0.5 converges and step 0.8 diverges, with residual curves." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<video controls playsinline preload="metadata" poster="../_static/media/S4_fixed_point/S4_fixed_point.png" aria-label="A cluster of spheres with yellow state arrows; a callout builds one damped update; then a split view where step 0.5 converges and step 0.8 diverges, with residual curves." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
 <source src="../_static/media/S4_fixed_point/S4_fixed_point.webm" type="video/webm">
 <source src="../_static/media/S4_fixed_point/S4_fixed_point.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/S4_fixed_point/S4_fixed_point.vtt" srclang="en" label="English">
 Your browser cannot play this video. <a href="../_static/media/S4_fixed_point/S4_fixed_point.mp4">Download the MP4</a>.
 </video>
 </div>
