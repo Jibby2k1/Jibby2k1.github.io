@@ -1,0 +1,1167 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>When is the body in the air, and can you trust a smoothness number? &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part7_motion/07b_flight_and_metrics';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Why does cloth need memory?" href="07c_secondary_motion.html" />
+    <link rel="prev" title="Why do the feet slide, and how does leg IK pin them?" href="07a_contact_and_ik.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>When is the body in the air, and can you trust a smoothness number?</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-jump-must-not-be-pinned">1. A jump must not be pinned</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#free-fall-is-the-test">2. Free fall is the test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pelvis-is-not-the-body">3. The pelvis is not the body</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-the-whole-arc">4. Fit the whole arc</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-smoothness-metric-that-cannot-see-shaking">5. A smoothness metric that cannot see shaking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-flawed-metric-did-to-a-real-comparison">6. What the flawed metric did to a real comparison</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="when-is-the-body-in-the-air-and-can-you-trust-a-smoothness-number">
+<h1>When is the body in the air, and can you trust a smoothness number?<a class="headerlink" href="#when-is-the-body-in-the-air-and-can-you-trust-a-smoothness-number" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>Why a foot fix must know when the body is in flight, and how free fall gives a test for it.</p></li>
+<li><p>Why the pelvis is a fragile stand-in for the body in that test, and how a mass-weighted centre of mass
+and a least-squares ballistic fit repair it.</p></li>
+<li><p>How a smoothness metric built from rotation <em>angles</em> reports zero for a joint that shakes, and how a
+<em>vector</em> angular acceleration with elapsed time fixes it.</p></li>
+<li><p>How to read a published number after its metric has been corrected.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="07a_contact_and_ik.html"><span class="std std-doc">Lesson 7a</span></a> (contact, root lock, leg IK) and
+<a class="reference internal" href="../part3_body/03a_skeleton.html"><span class="std std-doc">Lesson 3a</span></a> (joint rotations).</p>
+<p>This lesson has two halves. Both are about a measurement that looked reasonable, was used for a while in the
+real project, and turned out to answer a different question from the one asked.</p>
+<section id="a-jump-must-not-be-pinned">
+<h2>1. A jump must not be pinned<a class="headerlink" href="#a-jump-must-not-be-pinned" title="Link to this heading">#</a></h2>
+<p><a class="reference internal" href="07a_contact_and_ik.html"><span class="std std-doc">Lesson 7a</span></a> put planted soles on the floor. A tracker also produces frames in which
+<em>no</em> foot is near the floor. There are two very different reasons for that:</p>
+<ul class="simple">
+<li><p>the person <strong>jumped</strong>, and the frames are right;</p></li>
+<li><p>the tracker <strong>floated</strong> the body by a few centimetres, and the frames are wrong.</p></li>
+</ul>
+<p>A pipeline that grounds every airborne frame deletes jumps. A pipeline that grounds none keeps floats. The
+toy <code class="docutils literal notranslate"><span class="pre">jump</span></code> shows the first failure.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">FPS</span><span class="p">,</span> <span class="n">G</span> <span class="o">=</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">9.81</span>
+<span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"jump"</span><span class="p">,</span> <span class="mi">48</span><span class="p">)</span>
+<span class="n">f_jump</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="n">low</span> <span class="o">=</span> <span class="n">f_jump</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>                                  <span class="c1"># lowest sole of both feet, per frame</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">trans_flat</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ground</span><span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span><span class="p">)</span>                        <span class="c1"># "always grounded": every frame onto the floor</span>
+<span class="n">low_flat</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_flat</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">5.4</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">show</span> <span class="o">=</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">26</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">poses_j</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans_j</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">show</span><span class="p">]</span>
+               <span class="o">+</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">poses_j</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans_flat</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">show</span><span class="p">],</span>
+               <span class="p">[</span><span class="sa">f</span><span class="s2">"jump, frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">show</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"grounded, frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">show</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.9</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"highest sole in the jump </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">low</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> cm, after grounding every frame </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">low_flat</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">low</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mf">0.2</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">low_flat</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>highest sole in the jump 38 cm, after grounding every frame 0.0 cm
+</pre></div>
+</div>
+<img alt="../_images/dc747e3e796f948c0d545a48979c405b9188845c0a943a696db2ef6e22c60617.png" src="../_images/dc747e3e796f948c0d545a48979c405b9188845c0a943a696db2ef6e22c60617.png" />
+</div>
+</div>
+<p>The grounded version stretches its legs and stays on the floor: the jump is gone. So for every run of
+airborne frames the pipeline has to decide: flight or float?</p>
+</section>
+<section id="free-fall-is-the-test">
+<h2>2. Free fall is the test<a class="headerlink" href="#free-fall-is-the-test" title="Link to this heading">#</a></h2>
+<p>Physics offers a clean criterion. Once the feet leave the floor, the only force on the body is gravity, so
+the body’s height follows</p>
+<div class="math notranslate nohighlight">
+\[
+y(t) = y_0 + v_0\, t - \tfrac{1}{2}\, g\, t^2 , \qquad \ddot y = -g = -9.81\ \text{m/s}^2 .
+\]</div>
+<p>If something holds the body up (a foot the tracker missed), the acceleration is nowhere near <span class="math notranslate nohighlight">\(-g\)</span>. The test is
+therefore: over each airborne window, measure the vertical acceleration <span class="math notranslate nohighlight">\(a\)</span>, and call the window a flight when
+<span class="math notranslate nohighlight">\(a &lt; -0.7\, g\)</span>. The threshold leaves room for noise.</p>
+<p>Which height, and how to get an acceleration from it? The first version used the simplest answers: the
+<strong>pelvis</strong> height <span class="math notranslate nohighlight">\(y_p\)</span>, and four samples. The mean acceleration over a window of frames <span class="math notranslate nohighlight">\(a \ldots b-1\)</span> is the
+last velocity inside the window minus the first, divided by the time between them (the “chord” estimate):</p>
+<div class="math notranslate nohighlight">
+\[
+\bar a = \frac{\bigl(y_p[b-1] - y_p[b-2]\bigr) - \bigl(y_p[a+1] - y_p[a]\bigr)}{(b - a - 2)\, \Delta t^2} .
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">chord</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mean acceleration over frames a .. b-1 from the first and last step inside the window."""</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(((</span><span class="n">y</span><span class="p">[</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">b</span> <span class="o">-</span> <span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="n">a</span><span class="p">]))</span> <span class="o">/</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">a</span> <span class="o">-</span> <span class="mi">2</span><span class="p">))</span> <span class="o">*</span> <span class="n">fps</span> <span class="o">*</span> <span class="n">fps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pelvis_height</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">mo</span><span class="o">.</span><span class="n">fk</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">windows</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">f_jump</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>                <span class="c1"># runs with both soles more than 2 cm up</span>
+<span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">=</span> <span class="n">windows</span>
+<span class="n">acc</span> <span class="o">=</span> <span class="n">chord</span><span class="p">(</span><span class="n">pelvis_height</span><span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span><span class="p">),</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"airborne window: frames </span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> | pelvis acceleration </span><span class="si">{</span><span class="n">acc</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">G</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> g -&gt; flight: </span><span class="si">{</span><span class="n">acc</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">G</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">acc</span> <span class="o">-</span> <span class="n">mo</span><span class="o">.</span><span class="n">chord_acceleration</span><span class="p">(</span><span class="n">pelvis_height</span><span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span><span class="p">),</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">FPS</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+<span class="k">assert</span> <span class="n">acc</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.9</span> <span class="o">*</span> <span class="n">G</span>
+
+<span class="c1"># a float: the same person standing in a slow squat, with a tracking error that lifts the root by 5 cm for 10 frames</span>
+<span class="n">poses_s</span><span class="p">,</span> <span class="n">trans_s</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"squat"</span><span class="p">,</span> <span class="mi">48</span><span class="p">)</span>
+<span class="n">bump</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+<span class="n">bump</span><span class="p">[</span><span class="mi">20</span><span class="p">:</span><span class="mi">30</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+<span class="n">trans_float</span> <span class="o">=</span> <span class="n">trans_s</span><span class="o">.</span><span class="n">clone</span><span class="p">();</span> <span class="n">trans_float</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">bump</span>
+<span class="p">(</span><span class="n">af</span><span class="p">,</span> <span class="n">bf</span><span class="p">),</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_s</span><span class="p">,</span> <span class="n">trans_float</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">acc_f</span> <span class="o">=</span> <span class="n">chord</span><span class="p">(</span><span class="n">pelvis_height</span><span class="p">(</span><span class="n">poses_s</span><span class="p">,</span> <span class="n">trans_float</span><span class="p">),</span> <span class="n">af</span><span class="p">,</span> <span class="n">bf</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"float window:    frames </span><span class="si">{</span><span class="n">af</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="n">bf</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> | pelvis acceleration </span><span class="si">{</span><span class="n">acc_f</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">G</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> g -&gt; flight: </span><span class="si">{</span><span class="n">acc_f</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">G</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">acc_f</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">0.7</span> <span class="o">*</span> <span class="n">G</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>airborne window: frames 18 to 33 | pelvis acceleration -1.00 g -&gt; flight: True
+float window:    frames 22 to 27 | pelvis acceleration -0.18 g -&gt; flight: False
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both answers are right. The jump is in free fall and is left alone. The float is not, so it would be grounded.
+On these two examples the pelvis test looks finished.</p>
+</section>
+<section id="the-pelvis-is-not-the-body">
+<h2>3. The pelvis is not the body<a class="headerlink" href="#the-pelvis-is-not-the-body" title="Link to this heading">#</a></h2>
+<p>Newton’s law applies to the <strong>centre of mass</strong>, not to any particular joint. In the toy jump the body is
+rigid while it is in the air, so the pelvis and the centre of mass move together and the difference does not
+show. People do not jump like that. They pull their knees up. When the legs rise relative to the trunk, the
+centre of mass moves up <em>inside</em> the body, and because the centre of mass is the point that must follow the
+parabola, the pelvis is pushed down relative to it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mo.tucked_hop</span></code> makes a small hop with an adjustable tuck. Its centre of mass follows an exact parabola
+whatever the legs do. First the centre of mass itself: every body part <span class="math notranslate nohighlight">\(p\)</span> has a centre <span class="math notranslate nohighlight">\(\mathbf{c}_p\)</span> (the
+middle of its capsule) and a share <span class="math notranslate nohighlight">\(m_p\)</span> of the body mass (<code class="docutils literal notranslate"><span class="pre">cu.body.SEGMENT_MASS</span></code>, rough values in the spirit
+of the tables in <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id54" title="David A. Winter. Biomechanics and Motor Control of Human Movement. Wiley, 4 edition, 2009.">Winter, 2009</a>]</span>), and</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{c}_\text{com} = \sum_p m_p\, \mathbf{c}_p , \qquad \sum_p m_p = 1 .
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">centre_of_mass</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mass-weighted mean of the part centres, for one frame."""</span>
+    <span class="n">A</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">skinning_transforms</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>                     <span class="c1"># rest pose -&gt; posed, per joint</span>
+    <span class="n">seg_a</span><span class="p">,</span> <span class="n">seg_b</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">bone_segments</span><span class="p">()</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">seg_a</span> <span class="o">+</span> <span class="n">seg_b</span><span class="p">)</span>                                    <span class="c1"># (P, 3) part centres in the rest pose</span>
+    <span class="n">Ap</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">PART_JOINT</span><span class="p">)]</span>                       <span class="c1"># each part's joint transform</span>
+    <span class="n">posed</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"pab,pb-&gt;pa"</span><span class="p">,</span> <span class="n">Ap</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">mid</span><span class="p">)</span> <span class="o">+</span> <span class="n">Ap</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">SEGMENT_MASS</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">posed</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">poses_h</span><span class="p">,</span> <span class="n">trans_h</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="mf">35.0</span><span class="p">)</span>
+<span class="n">com_inline</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">poses_h</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans_h</span><span class="p">[</span><span class="n">t</span><span class="p">])</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">poses_h</span><span class="p">))])</span>
+<span class="n">com_h</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">poses_h</span><span class="p">,</span> <span class="n">trans_h</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"inline vs library centre of mass, max difference:"</span><span class="p">,</span> <span class="nb">float</span><span class="p">((</span><span class="n">com_inline</span> <span class="o">-</span> <span class="n">com_h</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()))</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">com_inline</span> <span class="o">-</span> <span class="n">com_h</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+<span class="n">mass</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">SEGMENT_MASS</span>
+<span class="n">legs</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">mass</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="p">)])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="s2">"lr"</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"thigh"</span><span class="p">,</span> <span class="s2">"shin"</span><span class="p">,</span> <span class="s2">"foot"</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the two legs carry </span><span class="si">{</span><span class="n">legs</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> of the mass"</span><span class="p">)</span>
+
+<span class="n">cam_h</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">plain</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam_h</span><span class="p">,</span> <span class="n">plain</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">t</span><span class="p">],</span> <span class="n">plain</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">)]</span>
+               <span class="o">+</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam_h</span><span class="p">,</span> <span class="n">poses_h</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans_h</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">15</span><span class="p">)],</span>
+               <span class="p">[</span><span class="s2">"plain hop, take-off"</span><span class="p">,</span> <span class="s2">"plain hop, top"</span><span class="p">,</span> <span class="s2">"tucked hop, take-off"</span><span class="p">,</span> <span class="s2">"tucked hop, top"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.9</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>inline vs library centre of mass, max difference: 1.1920928955078125e-07
+the two legs carry 33% of the mass
+</pre></div>
+</div>
+<img alt="../_images/2681ea64d7858f26f184c75c9125005964ea5e98f766472b4523008b59473189.png" src="../_images/2681ea64d7858f26f184c75c9125005964ea5e98f766472b4523008b59473189.png" />
+</div>
+</div>
+<p>Now run the flight test on hops with more and more tuck, once with the pelvis and once with the centre of
+mass.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tucks</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">15.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">25.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">]</span>
+<span class="n">acc_pelvis</span><span class="p">,</span> <span class="n">acc_com</span><span class="p">,</span> <span class="n">drop</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">tuck</span> <span class="ow">in</span> <span class="n">tucks</span><span class="p">:</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="n">tuck</span><span class="p">)</span>
+    <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">y_p</span><span class="p">,</span> <span class="n">y_c</span> <span class="o">=</span> <span class="n">pelvis_height</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">acc_pelvis</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chord</span><span class="p">(</span><span class="n">y_p</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">G</span><span class="p">)</span>
+    <span class="n">acc_com</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">chord</span><span class="p">(</span><span class="n">y_c</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">/</span> <span class="n">G</span><span class="p">)</span>
+    <span class="n">rel</span> <span class="o">=</span> <span class="n">y_p</span> <span class="o">-</span> <span class="n">y_c</span>
+    <span class="n">drop</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">rel</span><span class="p">[</span><span class="n">a</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">rel</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()))</span>          <span class="c1"># how far the pelvis sinks relative to the COM, cm</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">p35</span><span class="p">,</span> <span class="n">t35</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="mf">35.0</span><span class="p">)</span>
+<span class="n">k</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">p35</span><span class="p">)))</span>
+<span class="n">y_p</span><span class="p">,</span> <span class="n">y_c</span> <span class="o">=</span> <span class="n">pelvis_height</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">),</span> <span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"airborne"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">y_c</span> <span class="o">-</span> <span class="n">y_c</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"centre of mass"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">y_p</span> <span class="o">-</span> <span class="n">y_p</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pelvis"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"height change (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"hop with a 35° tuck"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">drop</span><span class="p">,</span> <span class="n">acc_com</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"centre of mass"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">drop</span><span class="p">,</span> <span class="n">acc_pelvis</span><span class="p">,</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"pelvis"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"flight threshold"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"pelvis drop relative to the centre of mass (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"measured acceleration (g)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">flip</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">acc</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">drop</span><span class="p">,</span> <span class="n">acc_pelvis</span><span class="p">)</span> <span class="k">if</span> <span class="n">acc</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the pelvis test stops calling the hop a flight once the pelvis has sunk </span><span class="si">{</span><span class="n">flip</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm relative to the centre of mass"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">flip</span> <span class="o">&lt;</span> <span class="mf">2.5</span> <span class="ow">and</span> <span class="n">acc_pelvis</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.9</span> <span class="ow">and</span> <span class="nb">max</span><span class="p">(</span><span class="n">acc_com</span><span class="p">)</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.95</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>the pelvis test stops calling the hop a flight once the pelvis has sunk 1.2 cm relative to the centre of mass
+</pre></div>
+</div>
+<img alt="../_images/b0c4fb2c6494108a796e173d4f37023b1978846c84933c0c2277544e860ea45f.png" src="../_images/b0c4fb2c6494108a796e173d4f37023b1978846c84933c0c2277544e860ea45f.png" />
+</div>
+</div>
+<p>The left panel shows why. In the air the centre of mass draws a parabola. The pelvis starts on the same curve,
+is pulled down as the knees come up, and is flatter on top: less curvature means less measured acceleration.
+The right panel is the result. With the centre of mass, every hop measures <span class="math notranslate nohighlight">\(-1\,g\)</span>. With the pelvis, the
+measured acceleration climbs with the tuck and crosses the threshold when the pelvis has moved by a centimetre
+or two. Beyond that point this real hop is classified as a float.</p>
+<p>What follows from the wrong label is what Section 1 showed. A pipeline that grounds everything that is not a
+flight pulls this hop down to the floor:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">ground_unless_flight</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">signal</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Put the lowest sole on the floor in every airborne window that fails the free-fall test."""</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">trans</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="n">wins</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">acc_g</span><span class="p">,</span> <span class="n">is_flight</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">flight_test</span><span class="p">(</span><span class="n">signal</span><span class="p">,</span> <span class="n">wins</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"chord"</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">is_flight</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">]</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ground</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="n">b</span><span class="p">])[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="n">peak</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">trans</span><span class="p">:</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">by_pelvis</span> <span class="o">=</span> <span class="n">ground_unless_flight</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">,</span> <span class="n">pelvis_height</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">))</span>
+<span class="n">by_com</span> <span class="o">=</span> <span class="n">ground_unless_flight</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">p35</span><span class="p">,</span> <span class="n">t35</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"highest sole: original </span><span class="si">{</span><span class="n">peak</span><span class="p">(</span><span class="n">t35</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm | pelvis classifier </span><span class="si">{</span><span class="n">peak</span><span class="p">(</span><span class="n">by_pelvis</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm | centre-of-mass classifier </span><span class="si">{</span><span class="n">peak</span><span class="p">(</span><span class="n">by_com</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">peak</span><span class="p">(</span><span class="n">by_pelvis</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.5</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">peak</span><span class="p">(</span><span class="n">by_com</span><span class="p">)</span> <span class="o">-</span> <span class="n">peak</span><span class="p">(</span><span class="n">t35</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>highest sole: original 19.2 cm | pelvis classifier 1.8 cm | centre-of-mass classifier 19.2 cm
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="fit-the-whole-arc">
+<h2>4. Fit the whole arc<a class="headerlink" href="#fit-the-whole-arc" title="Link to this heading">#</a></h2>
+<p>The chord estimate reads four samples: two at each end of the window. Tracking noise on any one of them
+moves the answer. A window of <span class="math notranslate nohighlight">\(n\)</span> frames has <span class="math notranslate nohighlight">\(n\)</span> samples, and a <strong>least-squares</strong> fit uses them all. Fit a
+parabola <span class="math notranslate nohighlight">\(y = c_0 + c_1 t + c_2 t^2\)</span> and read the acceleration as <span class="math notranslate nohighlight">\(2 c_2\)</span>. A second fit with gravity held
+fixed, <span class="math notranslate nohighlight">\(y = y_0 + v_0 t - \tfrac12 g t^2\)</span>, has only two free numbers; its residual says how well a ballistic
+arc explains the window.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">noise_trial</span><span class="p">(</span><span class="n">height</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Measured acceleration (g) of both estimators under Gaussian height noise of `sigma` metres."""</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"chord"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"lsq"</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trials</span><span class="p">):</span>
+        <span class="n">noisy</span> <span class="o">=</span> <span class="n">height</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">height</span><span class="p">),</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">method</span> <span class="ow">in</span> <span class="n">out</span><span class="p">:</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">method</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">flight_test</span><span class="p">(</span><span class="n">noisy</span><span class="p">,</span> <span class="p">[(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)],</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="n">method</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">m</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">out</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+<span class="n">cases</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"short hop"</span><span class="p">:</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span> <span class="s2">"long jump"</span><span class="p">:</span> <span class="p">(</span><span class="n">poses_j</span><span class="p">,</span> <span class="n">trans_j</span><span class="p">)}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="n">com</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">ballistic_fit</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+    <span class="n">cases</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">noise_trial</span><span class="p">(</span><span class="n">com</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.004</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">b</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">a</span><span class="si">}</span><span class="s2"> airborne frames): clean fit </span><span class="si">{</span><span class="n">fit</span><span class="p">[</span><span class="s1">'acc_over_g'</span><span class="p">]</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> g, constant-gravity residual </span><span class="si">{</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">fit</span><span class="p">[</span><span class="s1">'rms'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mm"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">method</span><span class="p">,</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">cases</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"    4 mm height noise, </span><span class="si">{</span><span class="n">method</span><span class="si">:</span><span class="s2">5s</span><span class="si">}</span><span class="s2">: spread </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">())</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> g, flights missed </span><span class="si">{</span><span class="nb">float</span><span class="p">((</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="o">-</span><span class="mf">0.7</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">cases</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">"chord"</span><span class="p">]),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"chord (4 samples)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="s2">"lsq"</span><span class="p">]),</span> <span class="n">bins</span><span class="o">=</span><span class="n">bins</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"least squares (all samples)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"flight threshold"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"measured acceleration (g)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"trials"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">cases</span><span class="p">[</span><span class="s2">"long jump"</span><span class="p">][</span><span class="s2">"lsq"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">cases</span><span class="p">[</span><span class="s2">"long jump"</span><span class="p">][</span><span class="s2">"chord"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">cases</span><span class="p">[</span><span class="s2">"short hop"</span><span class="p">][</span><span class="s2">"lsq"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span> <span class="o">&lt;</span> <span class="nb">float</span><span class="p">(</span><span class="n">cases</span><span class="p">[</span><span class="s2">"short hop"</span><span class="p">][</span><span class="s2">"chord"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>short hop (5 airborne frames): clean fit -1.000 g, constant-gravity residual 0.00 mm
+    4 mm height noise, chord: spread 0.26 g, flights missed 13%
+    4 mm height noise, lsq  : spread 0.21 g, flights missed 8%
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>long jump (16 airborne frames): clean fit -1.000 g, constant-gravity residual 0.00 mm
+    4 mm height noise, chord: spread 0.05 g, flights missed 0%
+    4 mm height noise, lsq  : spread 0.01 g, flights missed 0%
+</pre></div>
+</div>
+<img alt="../_images/836540ac7c371960974413d01f8f33c0b87ab04cd39ca8abce05204b09643186.png" src="../_images/836540ac7c371960974413d01f8f33c0b87ab04cd39ca8abce05204b09643186.png" />
+</div>
+</div>
+<p>The result deserves an honest reading. On the long jump the fit is several times tighter than the chord. On
+the short hop it is only a little tighter, and both estimators still miss some flights: a handful of samples
+carry little information about a second derivative, whichever way they are combined. Least squares is the
+better default, not a cure. A window this short needs more evidence than its own height samples, for example
+contact labels from a second source.</p>
+<p>The two repairs address different errors. The centre of mass removes a <em>systematic</em> error that comes from the
+body changing shape. The fit reduces the <em>random</em> error that comes from noise. Neither helps with the other’s
+problem.</p>
+</section>
+<section id="a-smoothness-metric-that-cannot-see-shaking">
+<h2>5. A smoothness metric that cannot see shaking<a class="headerlink" href="#a-smoothness-metric-that-cannot-see-shaking" title="Link to this heading">#</a></h2>
+<p>The second half of the lesson is about a different quantity with the same kind of flaw.
+<a class="reference internal" href="07a_contact_and_ik.html"><span class="std std-doc">Lesson 7a</span></a> ended with a warning: leg IK adds sharp corrections to the leg joints. To
+check that a fix does not make the motion twitch, pipelines report an <strong>angular acceleration</strong>: how fast the
+rotation speed of a joint changes. The first version in the real project was built like this. Let <span class="math notranslate nohighlight">\(R_k\)</span> be a
+joint’s rotation in frame <span class="math notranslate nohighlight">\(k\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+\theta_k = \angle\bigl(R_k,\, R_{k+1}\bigr) \ \ \text{(the angle between consecutive rotations)}, \qquad
+\text{scalar metric:}\ \ \bigl|\theta_{k+1} - \theta_k\bigr| .
+\]</div>
+<p>It looks like a second difference. Now take the worst twitch there is: a knee that alternates between
+0° and 10° on every frame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rotation_angle_deg</span><span class="p">(</span><span class="n">Ra</span><span class="p">,</span> <span class="n">Rb</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Angle of the rotation that takes Ra to Rb."""</span>
+    <span class="n">cos</span> <span class="o">=</span> <span class="p">((</span><span class="n">Rb</span> <span class="o">@</span> <span class="n">Ra</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">diagonal</span><span class="p">(</span><span class="n">dim1</span><span class="o">=-</span><span class="mi">2</span><span class="p">,</span> <span class="n">dim2</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">acos</span><span class="p">(</span><span class="n">cos</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">angacc_scalar</span><span class="p">(</span><span class="n">poses</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The flawed metric: the change of the per-frame rotation angle, deg/frame^2. Shape (T-2, J)."""</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">poses</span><span class="p">)</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">rotation_angle_deg</span><span class="p">(</span><span class="n">R</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">theta</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">theta</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span>
+
+<span class="n">KNEE</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="s2">"l_knee"</span><span class="p">)</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">40</span>
+<span class="n">shaky</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="n">shaky</span><span class="p">[:,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span><span class="p">)</span>        <span class="c1"># 0, 10, 0, 10, ... degrees</span>
+<span class="n">smooth</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="n">T</span><span class="p">)</span>
+<span class="n">smooth</span><span class="p">[:,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">T</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>   <span class="c1"># a slow, even bend from 0 to 10 degrees</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"slow even bend"</span><span class="p">,</span> <span class="n">smooth</span><span class="p">),</span> <span class="p">(</span><span class="s2">"alternating 0/10 deg"</span><span class="p">,</span> <span class="n">shaky</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">22s</span><span class="si">}</span><span class="s2"> scalar metric, max over frames: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">angacc_scalar</span><span class="p">(</span><span class="n">p</span><span class="p">)[:,</span><span class="w"> </span><span class="n">KNEE</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> deg/frame^2"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">angacc_scalar</span><span class="p">(</span><span class="n">shaky</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-2</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">angacc_scalar</span><span class="p">(</span><span class="n">shaky</span><span class="p">)</span> <span class="o">-</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_scalar</span><span class="p">(</span><span class="n">shaky</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>slow even bend         scalar metric, max over frames: 0.0000 deg/frame^2
+alternating 0/10 deg   scalar metric, max over frames: 0.0000 deg/frame^2
+</pre></div>
+</div>
+</div>
+</div>
+<p>The metric reports zero for a joint that shakes as hard as it can at this frame rate. The reason is in the
+definition: <span class="math notranslate nohighlight">\(\theta_k\)</span> is the <em>size</em> of each step. The knee moves by 10° in every step, so the size is
+constant and its difference vanishes. That the direction reverses each time is exactly what the metric threw
+away when it took an angle.</p>
+<p>The repair keeps the direction. The <strong>angular velocity</strong> of a joint is a vector: its direction is the rotation
+axis and its length is the speed,</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol{\omega}_{k+\frac12} = \frac{\log\bigl(R_{k+1} R_k^{\top}\bigr)}{t_{k+1} - t_k}, \qquad
+\boldsymbol{\alpha}_k = \frac{\boldsymbol{\omega}_{k+\frac12} - \boldsymbol{\omega}_{k-\frac12}}{\tfrac12\,(t_{k+1} - t_{k-1})} ,
+\]</div>
+<p>where <span class="math notranslate nohighlight">\(\log\)</span> turns a rotation matrix into its axis-angle vector. All <span class="math notranslate nohighlight">\(\boldsymbol{\omega}\)</span> of one joint are
+written in the same frame (the joint’s parent frame), so they can be subtracted, and the differences are
+divided by the elapsed time between frames, not by an assumed frame count.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">angvel_vec</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""(T-1, J, 3) angular velocity vectors in rad/s."""</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">poses</span><span class="p">)</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">matrix_to_axis_angle</span><span class="p">(</span><span class="n">R</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">@</span> <span class="n">R</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">))</span>          <span class="c1"># log(R_{k+1} R_k^T)</span>
+    <span class="k">return</span> <span class="n">step</span> <span class="o">/</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">times</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">angacc_vec</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">times</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""(T-2, J) magnitude of the angular acceleration in deg/s^2."""</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">angvel_vec</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">times</span><span class="p">)</span>
+    <span class="n">mid</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">times</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">+</span> <span class="n">times</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(((</span><span class="n">w</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">w</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">mid</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">mid</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">times</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="n">FPS</span>
+<span class="n">vec</span> <span class="o">=</span> <span class="n">angacc_vec</span><span class="p">(</span><span class="n">shaky</span><span class="p">,</span> <span class="n">times</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span> <span class="o">/</span> <span class="n">FPS</span> <span class="o">**</span> <span class="mi">2</span>                             <span class="c1"># in deg/frame^2, to compare</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alternating 0/10 deg, vector metric: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> deg/frame^2"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"slow even bend,       vector metric: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">angacc_vec</span><span class="p">(</span><span class="n">smooth</span><span class="p">,</span><span class="w"> </span><span class="n">times</span><span class="p">)[:,</span><span class="w"> </span><span class="n">KNEE</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">FPS</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> deg/frame^2"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">vec</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">-</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.1</span>                                      <span class="c1"># +10 then -10: a change of 20 per frame</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">angacc_vec</span><span class="p">(</span><span class="n">shaky</span><span class="p">,</span> <span class="n">times</span><span class="p">)</span> <span class="o">-</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">shaky</span><span class="p">,</span> <span class="n">times</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">shaky</span><span class="p">[:,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">])),</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"alternating"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">smooth</span><span class="p">[:,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">])),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"slow even bend"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"knee angle (deg)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_scalar</span><span class="p">(</span><span class="n">shaky</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"scalar metric"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">vec</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"vector metric"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"angular acceleration of the</span><span class="se">\n</span><span class="s2">alternating knee (deg/frame²)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alternating 0/10 deg, vector metric: 20.0 to 20.0 deg/frame^2
+slow even bend,       vector metric: 0.0000 deg/frame^2
+</pre></div>
+</div>
+<img alt="../_images/86359e04b0c86529bad0ed1366307689649e3e0dac452b8ad77e550204cf4403.png" src="../_images/86359e04b0c86529bad0ed1366307689649e3e0dac452b8ad77e550204cf4403.png" />
+</div>
+</div>
+<p>The vector metric reports a change of 20° per frame in every frame: +10 followed by −10.</p>
+<p>Elapsed time matters for the same reason that direction does: it is part of the definition. Suppose three
+frames of a smooth swing are lost (a dropped stretch, a cut between takes). A metric that counts frames sees a
+large step and reports a jerk that never happened.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">T2</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="n">t_full</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span> <span class="o">/</span> <span class="n">FPS</span>
+<span class="n">swing</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span>
+<span class="n">swing</span><span class="p">[:,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">t_full</span><span class="p">))</span>   <span class="c1"># a smooth 0.8 Hz swing</span>
+<span class="n">keep</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">T2</span><span class="p">)</span> <span class="k">if</span> <span class="n">i</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">22</span><span class="p">)])</span>                          <span class="c1"># three frames lost</span>
+<span class="n">by_count</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">swing</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span>                                      <span class="c1"># assumes even spacing</span>
+<span class="n">by_time</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">swing</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">times</span><span class="o">=</span><span class="n">t_full</span><span class="p">[</span><span class="n">keep</span><span class="p">])[:,</span> <span class="n">KNEE</span><span class="p">]</span>                            <span class="c1"># uses the real times</span>
+<span class="n">truth</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">swing</span><span class="p">,</span> <span class="n">times</span><span class="o">=</span><span class="n">t_full</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"peak angular acceleration, deg/s^2: all frames </span><span class="si">{</span><span class="n">truth</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> | frames lost, counted </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">by_count</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> | "</span>
+      <span class="sa">f</span><span class="s2">"frames lost, elapsed time </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">by_time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">by_count</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">truth</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">by_time</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="n">truth</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak angular acceleration, deg/s^2: all frames 504 | frames lost, counted 4484 | frames lost, elapsed time 504
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-the-flawed-metric-did-to-a-real-comparison">
+<h2>6. What the flawed metric did to a real comparison<a class="headerlink" href="#what-the-flawed-metric-did-to-a-real-comparison" title="Link to this heading">#</a></h2>
+<p>A joint that alternates perfectly is an extreme case. Does the flaw matter on a real change? Rebuild the leg
+IK result of Lesson 7a and measure the leg joints before and after with both metrics. One inequality holds
+for every sample: the size of a difference of two vectors is at least the difference of their sizes,
+<span class="math notranslate nohighlight">\(\lVert \mathbf{a} - \mathbf{b} \rVert \ge \bigl|\lVert\mathbf{a}\rVert - \lVert\mathbf{b}\rVert\bigr|\)</span>. So the
+scalar metric can only be <em>lower</em> than the vector one, and it is lowest where the motion reverses, which is
+what a correction that overshoots and comes back does.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DETECT</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">h_on</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">h_off</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">v_on</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">v_off</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">poses_w</span><span class="p">,</span> <span class="n">trans_w</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"walk"</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="n">cycles</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+<span class="n">poses_w</span><span class="p">,</span> <span class="n">trans_w</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tracker_noise</span><span class="p">(</span><span class="n">poses_w</span><span class="p">,</span> <span class="n">trans_w</span><span class="p">,</span> <span class="n">joint_deg</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">root_m</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>   <span class="c1"># the tracked walk of 7a</span>
+<span class="n">f_w</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_w</span><span class="p">,</span> <span class="n">trans_w</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="n">contact</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_w</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">f_w</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="o">**</span><span class="n">DETECT</span><span class="p">)</span>
+<span class="n">poses_lock</span><span class="p">,</span> <span class="n">trans_lock</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">root_lock</span><span class="p">(</span><span class="n">poses_w</span><span class="p">,</span> <span class="n">trans_w</span><span class="p">,</span> <span class="n">contact</span><span class="p">)</span>
+<span class="n">poses_ik</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pin_feet</span><span class="p">(</span><span class="n">poses_lock</span><span class="p">,</span> <span class="n">trans_lock</span><span class="p">,</span> <span class="n">contact</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> <span class="n">ramp</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+
+<span class="n">LEG</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">leg</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">LEGS</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">leg</span><span class="p">]</span>
+<span class="n">scal</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_scalar</span><span class="p">(</span><span class="n">p</span><span class="p">)[:,</span> <span class="n">LEG</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"before"</span><span class="p">,</span> <span class="n">poses_lock</span><span class="p">),</span> <span class="p">(</span><span class="s2">"after"</span><span class="p">,</span> <span class="n">poses_ik</span><span class="p">))}</span>
+<span class="n">vect</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)[:,</span> <span class="n">LEG</span><span class="p">]</span> <span class="o">/</span> <span class="n">FPS</span> <span class="o">**</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"before"</span><span class="p">,</span> <span class="n">poses_lock</span><span class="p">),</span> <span class="p">(</span><span class="s2">"after"</span><span class="p">,</span> <span class="n">poses_ik</span><span class="p">))}</span>
+<span class="n">ratio_scalar</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">scal</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">scal</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">ratio_vector</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">/</span> <span class="n">vect</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"peak leg angular acceleration, deg/frame^2"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  scalar metric: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">scal</span><span class="p">[</span><span class="s1">'before'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">scal</span><span class="p">[</span><span class="s1">'after'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">   (x</span><span class="si">{</span><span class="n">ratio_scalar</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  vector metric: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s1">'before'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s1">'after'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">   (x</span><span class="si">{</span><span class="n">ratio_vector</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">4.6</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">))</span>
+<span class="n">top</span> <span class="o">=</span> <span class="mf">1.05</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">top</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">top</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"equal"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"before"</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">scal</span><span class="p">[</span><span class="s2">"before"</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"before IK"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"after"</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">scal</span><span class="p">[</span><span class="s2">"after"</span><span class="p">])</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">s</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"after IK"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"vector metric (deg/frame²)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"scalar metric (deg/frame²)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="nb">bool</span><span class="p">((</span><span class="n">scal</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">vect</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">((</span><span class="n">scal</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">vect</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">vect</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="s2">"the IK should add visible corrections"</span>
+<span class="k">assert</span> <span class="n">ratio_vector</span> <span class="o">&gt;</span> <span class="n">ratio_scalar</span><span class="p">,</span> <span class="s2">"on this walk the scalar metric should understate the increase"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>peak leg angular acceleration, deg/frame^2
+  scalar metric:   5.2 -&gt;  12.0   (x2.33)
+  vector metric:   5.7 -&gt;  21.8   (x3.83)
+</pre></div>
+</div>
+<img alt="../_images/a89573161ff8187fbc1d0d66fd844aa2729650ddd6d83820d7620d4cbfab5d8c.png" src="../_images/a89573161ff8187fbc1d0d66fd844aa2729650ddd6d83820d7620d4cbfab5d8c.png" />
+</div>
+</div>
+<p>No point lies above the dotted line: the scalar metric never exceeds the vector one. After the IK, many
+points fall far below it. Those are the reversals. On this walk the scalar metric understates how much the IK
+raises the peak. That direction is not guaranteed for a ratio (both the numerator and the denominator are
+understated), which is one more reason not to argue from the flawed number at all.</p>
+<p>The IK does add twitch, and the honest metric says how much. That is not an argument against the IK. It is the
+price of pinning the feet, and blending (<a class="reference internal" href="07a_contact_and_ik.html"><span class="std std-doc">Lesson 7a</span></a>, Section 5) is what keeps it down.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>Both flaws of this lesson were found in the repository by an external review, reproduced as failing tests,
+and then fixed behind opt-in switches. The write-up is
+<span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Where</p></th>
+<th class="head"><p>Published facts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Flight or support</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/perform.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/DANCE.md</span></p></td>
+<td><p>An airborne run (lowest sole above 2 cm) is a real flight only if the mean vertical acceleration over the window is below −0.7 g; otherwise the support foot is brought down</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pelvis versus centre of mass</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tests/test_brief_flight_angacc.py</span></code></span></p></td>
+<td><p>The pelvis classifier flips with under 2 cm of pelvis motion. The fix is a segment-mass-weighted centre of mass and a least-squares ballistic fit, both opt-in</p></td>
+</tr>
+<tr class="row-even"><td><p>Did the fix change results?</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">RESULTS.md</span></p></td>
+<td><p>On the one solo clip that was rerun, median foot slide went from 1.853 to 1.885 mm/s and the 90th percentile stayed at 9.22 mm/s: no material change on that take</p></td>
+</tr>
+<tr class="row-odd"><td><p>Angular acceleration</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/leg_ik.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span></p></td>
+<td><p>The old metric differenced rotation-angle magnitudes; a joint alternating 0° / 10° scored zero. The vector metric uses a common frame and elapsed time</p></td>
+</tr>
+<tr class="row-even"><td><p>The corrected number</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span>, <span class="private-repo" title="in the project's private repository">docs/plus-feet.md</span></p></td>
+<td><p>On one solo clip, leg IK raises the peak leg angular acceleration from 16.1 to 39.1 deg/frame² (×2.4). The old metric had reported 16.0 to 28.0 (×1.75)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Three things to take from that record. First, the centre-of-mass fix changed almost nothing on the clip that
+was rerun, and the project says so; a correct method does not have to move a number to be worth having.
+Second, the four-avatar angular-acceleration tables in
+<span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span> were <em>not</em> recomputed, and the
+document labels them as lower bounds instead of leaving them to be misread. Third, the pelvis test alone could
+not separate a slightly mis-timed cross-step from a small hop, so the real classifier also asks whether two
+independent sets of contact labels agree that both feet are planted
+(<span class="private-repo" title="in the project's private repository">docs/DANCE.md</span>). That is the “more evidence”
+Section 4 asked for.</p>
+<p>The real code computes the centre of mass from mesh vertices with published segment mass fractions; the toy
+uses one point per capsule and rough shares.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A foot fix must separate flight from float. In flight the body is in free fall, so its vertical
+acceleration is <span class="math notranslate nohighlight">\(-g\)</span>; that is a test.</p></li>
+<li><p>The law holds for the centre of mass. The pelvis follows it only while the body keeps its shape, and a tuck
+of a couple of centimetres is enough to flip a pelvis-based test.</p></li>
+<li><p>A least-squares parabola over the whole window is less noisy than an estimate from its end points, clearly
+so for long flights and only slightly for short hops.</p></li>
+<li><p>A metric made from rotation angles has lost the direction. It reports zero for a joint that reverses on
+every frame. Difference angular-velocity vectors in one frame, over elapsed time.</p></li>
+<li><p>When a metric is corrected, recompute what you can and label what you cannot.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>In the tucked hop, the test window is the run where both soles are more than 2 cm up. Repeat the tuck
+sweep with the pelvis and the least-squares fit (<code class="docutils literal notranslate"><span class="pre">method=&quot;lsq&quot;</span></code>) instead of the chord. Does the fit rescue
+the pelvis?</p></li>
+<li><p>Build a signal in which a joint rotates by 10° per frame about the x axis for 20 frames and then by 10° per
+frame about the y axis. What do the two metrics report at the switch, and why?</p></li>
+<li><p>The scalar metric is zero for the alternating knee. Find a second, different motion for which it is zero
+although the joint is not moving at a constant angular velocity.</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">tuck</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">):</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tucked_hop</span><span class="p">(</span><span class="n">tuck_deg</span><span class="o">=</span><span class="n">tuck</span><span class="p">)</span>
+    <span class="n">wins</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">airborne_runs</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">air</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">tuck</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">flight_test</span><span class="p">(</span><span class="n">pelvis_height</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">),</span> <span class="n">wins</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"lsq"</span><span class="p">),</span>
+          <span class="n">mo</span><span class="o">.</span><span class="n">flight_test</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">centre_of_mass</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">wins</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"lsq"</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>No. The fit reduces random error, and the pelvis error is systematic: the pelvis really does follow a flatter
+curve than a parabola under gravity. A better estimator applied to the wrong signal gives a more precise wrong
+answer.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">step_x</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span>
+<span class="n">step_y</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">]))</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+    <span class="n">p</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">KNEE</span><span class="p">]</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">matrix_to_axis_angle</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="p">(</span><span class="n">step_x</span> <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;</span> <span class="mi">20</span> <span class="k">else</span> <span class="n">step_y</span><span class="p">)</span> <span class="o">@</span> <span class="n">R</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_scalar</span><span class="p">(</span><span class="n">p</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">ang_acc_vec</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)[:,</span> <span class="n">KNEE</span><span class="p">]</span> <span class="o">/</span> <span class="n">FPS</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The step size is 10° before and after, so the scalar metric stays at zero. The angular velocity vector turns
+by 90°, and the vector metric reports <span class="math notranslate nohighlight">\(10\sqrt{2} \approx 14\)</span> deg/frame² at the switch. A change of axis is
+invisible to the scalar metric for the same reason a reversal is.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<p>Any motion with a constant step <em>size</em> works: for example a joint whose rotation axis sweeps around a cone
+while the per-frame angle stays fixed (a wobble). Its angular velocity has constant length and a direction
+that changes all the time, so the vector metric is positive in every frame and the scalar one is zero.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Segment masses and the centre of mass of the human body: <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id54" title="David A. Winter. Biomechanics and Motor Control of Human Movement. Wiley, 4 edition, 2009.">Winter, 2009</a>]</span>.</p></li>
+<li><p>The audit that found both flaws, and the corrected numbers:
+<span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>,
+<span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span>,
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>.</p></li>
+<li><p>The flight and support rules of the dance pipeline:
+<span class="private-repo" title="in the project's private repository">docs/DANCE.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part7_motion"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07a_contact_and_ik.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Why do the feet slide, and how does leg IK pin them?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07c_secondary_motion.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Why does cloth need memory?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-jump-must-not-be-pinned">1. A jump must not be pinned</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#free-fall-is-the-test">2. Free fall is the test</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pelvis-is-not-the-body">3. The pelvis is not the body</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fit-the-whole-arc">4. Fit the whole arc</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-smoothness-metric-that-cannot-see-shaking">5. A smoothness metric that cannot see shaking</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-flawed-metric-did-to-a-real-comparison">6. What the flawed metric did to a real comparison</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

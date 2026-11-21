@@ -10,7 +10,7 @@ const root = process.cwd();
 // Recursive, matching check-links.mjs. A top-level-only readdir scanned 14 pages
 // and skipped the 26 under projects/ and notes/, so anything rendered only on a
 // project or note page was never audited at all.
-const SKIP = new Set(['node_modules', '.git', '.cache', 'ieee-sps-uf-site', 'e3nn-course']);
+const SKIP = new Set(['node_modules', '.git', '.cache', 'ieee-sps-uf-site', 'e3nn-course', 'avatar-course']);
 async function htmlPages(dir = root, prefix = '') {
   const out = [];
   for (const entry of await fs.readdir(dir, { withFileTypes: true })) {

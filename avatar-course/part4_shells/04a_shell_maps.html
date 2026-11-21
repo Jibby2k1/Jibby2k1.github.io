@@ -1,0 +1,1304 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Gaussian Shell Maps: where do the Gaussians live? &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part4_shells/04a_shell_maps';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Sampling and density: how many Gaussians, and where?" href="04b_sampling_density.html" />
+    <link rel="prev" title="Skinning: making a surface follow the skeleton" href="../part3_body/03b_skinning.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Gaussian Shell Maps: where do the Gaussians live?</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-question-a-representation-has-to-answer">1. The question a representation has to answer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-limb-step-by-step">2. One limb, step by step</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-points-and-positions">2.1 Sample points and positions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-texture-and-the-lookup">2.2 The texture and the lookup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-one-shell-on-the-body-surface">2.3 Failure first: one shell on the body surface</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fix-several-shells">2.4 The fix: several shells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-whole-body-and-cu-shellavatar">3. The whole body, and <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-shell-against-four-on-the-whole-actor">3.1 One shell against four on the whole actor</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-gaussians-stay-attached-when-the-body-moves">4. Why the Gaussians stay attached when the body moves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="gaussian-shell-maps-where-do-the-gaussians-live">
+<h1>Gaussian Shell Maps: where do the Gaussians live?<a class="headerlink" href="#gaussian-shell-maps-where-do-the-gaussians-live" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What a shell map is: a template surface, copies of it pushed out along the normal, and one texture per
+copy whose channels are Gaussian attributes.</p></li>
+<li><p>How to build one from <code class="docutils literal notranslate"><span class="pre">cu.capsule_surface</span></code>, first on one limb and then on the whole body, and how it
+matches <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code>.</p></li>
+<li><p>Why one shell on the body surface cannot represent loose clothing, and what several shells do about it.</p></li>
+<li><p>Why the Gaussians stay attached to the body when it moves.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part2_splatting/02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a> (rendering 3D Gaussians with
+<code class="docutils literal notranslate"><span class="pre">cu.render</span></code>), <a class="reference internal" href="../part3_body/03a_skeleton.html"><span class="std std-doc">Lesson 3a</span></a> (forward kinematics) and
+<a class="reference internal" href="../part3_body/03b_skinning.html"><span class="std std-doc">Lesson 3b</span></a> (linear blend skinning with <code class="docutils literal notranslate"><span class="pre">cu.lbs</span></code>).</p>
+<section id="the-question-a-representation-has-to-answer">
+<h2>1. The question a representation has to answer<a class="headerlink" href="#the-question-a-representation-has-to-answer" title="Link to this heading">#</a></h2>
+<p>Part 2 gave us a renderer: hand it Gaussians and a camera and it returns a picture. Part 3 gave us a body that
+moves. An avatar needs both, so it has to answer two questions.</p>
+<ul class="simple">
+<li><p><em>Where are the Gaussians?</em> They must follow the body, or the avatar cannot be re-posed.</p></li>
+<li><p><em>Where are their colours, opacities and sizes stored?</em> That storage is what a fit to a video will learn.</p></li>
+</ul>
+<p>Free-floating Gaussians, as in the original splatting method <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>, answer neither question
+for a moving person: nothing ties a Gaussian to an arm. Gaussian Shell Maps <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span> answer both
+with three ingredients.</p>
+<ol class="arabic">
+<li><p>A <strong>template surface</strong> <span class="math notranslate nohighlight">\(S(u, v)\)</span>: a body surface with two surface coordinates. On our toy body every part
+is a capsule; <span class="math notranslate nohighlight">\(u \in [0, 1)\)</span> runs around the limb and <span class="math notranslate nohighlight">\(v \in [0, 1]\)</span> runs along it.</p></li>
+<li><p><strong>Shells</strong>: copies of the template pushed along the unit normal <span class="math notranslate nohighlight">\(n(u, v)\)</span> by fixed offsets
+<span class="math notranslate nohighlight">\(d_1 &lt; d_2 &lt; \dots &lt; d_K\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[S_k(u, v) = S(u, v) + d_k \, n(u, v).\]</div>
+</li>
+<li><p>A <strong>texture per shell</strong>, <span class="math notranslate nohighlight">\(T_k\)</span>: an image over <span class="math notranslate nohighlight">\((u, v)\)</span> with seven channels. Three are a colour, one is an
+opacity and three are sizes. A Gaussian sits at a fixed sample point <span class="math notranslate nohighlight">\((u_i, v_i)\)</span> on shell <span class="math notranslate nohighlight">\(k_i\)</span>. Its
+position is <span class="math notranslate nohighlight">\(S_{k_i}(u_i, v_i)\)</span> and its attributes are read from the texture at the same coordinates,
+<span class="math notranslate nohighlight">\(T_{k_i}(u_i, v_i)\)</span>.</p></li>
+</ol>
+<p>The positions are fixed by the body. Only the textures are learned. The next cell draws the first two
+ingredients on one body part, the abdomen.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">P</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"abdomen"</span><span class="p">)</span>
+<span class="n">offsets</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span>                    <span class="c1"># metres along the normal: 1 cm inside to 5 cm outside</span>
+
+<span class="n">u_ring</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">121</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">:</span>                                       <span class="c1"># a horizontal cut (v = 0.5) and a vertical cut (u = 0.25)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">u_ring</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">u_ring</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">),</span> <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">a0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"shell"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"shell d = </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">uu</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">u_ring</span><span class="p">,</span> <span class="n">uu</span><span class="p">),</span> <span class="n">u_ring</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">a1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"shell"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.3</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">u_ring</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">u_ring</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"template S(u, v)"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span><span class="p">):</span>                             <span class="c1"># normals</span>
+    <span class="n">a0</span><span class="o">.</span><span class="n">arrow</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="mi">2</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"shell"</span><span class="p">],</span>
+             <span class="n">width</span><span class="o">=</span><span class="mf">0.0008</span><span class="p">,</span> <span class="n">head_width</span><span class="o">=</span><span class="mf">0.006</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.6</span><span class="p">)</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (m)"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"z (m), the front is up"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"cut across the limb"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (m)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (m)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"cut along the limb"</span><span class="p">)</span>
+<span class="n">handles</span><span class="p">,</span> <span class="n">labels</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">()</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">legend</span><span class="p">([</span><span class="n">handles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">handles</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="s2">"shells"</span><span class="p">,</span> <span class="n">labels</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"center"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b82b86c03451253802a531f57a2111fa845a47be7d68f541e673d4f9990a8ed3.png" src="../_images/b82b86c03451253802a531f57a2111fa845a47be7d68f541e673d4f9990a8ed3.png" />
+</div>
+</div>
+<p>The dashed line is the template, and the arrows are its normals. Each shell is the same shape, a little
+smaller or larger. The innermost shell is inside the body, which is deliberate: the true surface of a fitted
+person is not exactly the template, and it may be on either side of it.</p>
+<div class="course-anim">
+<video controls playsinline preload="metadata" width="100%" poster="../_static/media/S3_shells/S3_shells.png">
+<source src="../_static/media/S3_shells/S3_shells.webm" type="video/webm">
+<source src="../_static/media/S3_shells/S3_shells.mp4" type="video/mp4">
+</video>
+<p class="course-anim-caption">Shells are copies of the template surface pushed out along the normal, here at -1, +1, +3 and +5 cm. Each shell unrolls into its own texture, and Gaussians at fixed (u, v) points read their colour and opacity from it. A loose shirt that one surface cannot reach is picked up by an outer shell, and every layer follows the bone when the elbow bends. The textures shown are binned from the toy actor's true surface, not from a fit.</p>
+<details class="course-anim-interactive">
+<summary>Explore it in 3D</summary>
+<iframe src="../_static/media/S3_shells/interactive.html" title="Shells around the toy body, in 3D" loading="lazy" width="100%" height="560" style="border:0"></iframe>
+</details>
+</div>
+</section>
+<section id="one-limb-step-by-step">
+<h2>2. One limb, step by step<a class="headerlink" href="#one-limb-step-by-step" title="Link to this heading">#</a></h2>
+<section id="sample-points-and-positions">
+<h3>2.1 Sample points and positions<a class="headerlink" href="#sample-points-and-positions" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">cu.sample_uv</span></code> returns sample points <span class="math notranslate nohighlight">\((u_i, v_i)\)</span> on a regular grid. <a class="reference internal" href="04b_sampling_density.html"><span class="std std-doc">Lesson 4b</span></a> looks
+at this choice closely; here we take it as given. Every shell uses the same sample points, so the Gaussians
+of one <span class="math notranslate nohighlight">\((u_i, v_i)\)</span> on different shells are stacked along one normal.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">sample_uv</span><span class="p">(</span><span class="mf">900.0</span><span class="p">,</span> <span class="n">parts</span><span class="o">=</span><span class="p">[</span><span class="n">P</span><span class="p">])</span>              <span class="c1"># about 900 points per square metre</span>
+<span class="n">N1</span> <span class="o">=</span> <span class="n">u</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">limb_points</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Positions (K*N1, 3), local frames (K*N1, 3, 3) and shell index (K*N1,) on body part P."""</span>
+    <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">));</span> <span class="n">shell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">N1</span><span class="p">,),</span> <span class="n">k</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">pts</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">frames</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">shell</span><span class="p">)</span>
+
+<span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="n">limb_points</span><span class="p">(</span><span class="n">offsets</span><span class="p">)</span>
+<span class="n">base</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="p">(</span><span class="n">pts</span> <span class="o">-</span> <span class="n">base</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">N1</span><span class="p">,</span> <span class="s2">"sample points per shell,"</span><span class="p">,</span> <span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"Gaussians on"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span> <span class="s2">"shells"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">offsets</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">gap</span><span class="p">[</span><span class="n">shell</span> <span class="o">==</span> <span class="n">k</span><span class="p">],</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">N1</span><span class="p">,),</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">)),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"distance of every shell point from its template point equals |d_k|: checked"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>280 sample points per shell, 1120 Gaussians on 4 shells
+distance of every shell point from its template point equals |d_k|: checked
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">capsule_surface</span></code> also returns a local frame at every point: the tangent along <span class="math notranslate nohighlight">\(u\)</span>, the tangent along <span class="math notranslate nohighlight">\(v\)</span> and
+the normal. The frame gives each Gaussian its orientation. A Gaussian on a surface should be a flat disc lying
+<em>in</em> the surface, so two of its axes follow the tangents and the short one follows the normal.</p>
+</section>
+<section id="the-texture-and-the-lookup">
+<h3>2.2 The texture and the lookup<a class="headerlink" href="#the-texture-and-the-lookup" title="Link to this heading">#</a></h3>
+<p>The texture of one shell is a small image with 7 channels. The raw channel values are unconstrained numbers;
+fixed functions turn them into valid attributes:</p>
+<div class="math notranslate nohighlight">
+\[c = \sigma(T_{0:3}), \qquad o = \sigma(T_3), \qquad s = s_0 \odot \exp(T_{4:7}),\]</div>
+<p>where <span class="math notranslate nohighlight">\(\sigma\)</span> is the logistic function (it keeps colour and opacity in <span class="math notranslate nohighlight">\((0, 1)\)</span>) and <span class="math notranslate nohighlight">\(s_0\)</span> is a base size
+tied to the spacing between samples. The covariance of the Gaussian is built from the local frame <span class="math notranslate nohighlight">\(F\)</span> (its
+columns are the two tangents and the normal) exactly as in <a class="reference internal" href="../part2_splatting/02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a>:</p>
+<div class="math notranslate nohighlight">
+\[\Sigma = L L^\top, \qquad L = F \,\mathrm{diag}(s).\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">TH</span><span class="p">,</span> <span class="n">TW</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">16</span>                                         <span class="c1"># texture height (along v) and width (around u)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">new_texture</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">tex</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="n">TH</span><span class="p">,</span> <span class="n">TW</span><span class="p">)</span>
+    <span class="n">tex</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">TH</span><span class="p">,</span> <span class="n">TW</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>   <span class="c1"># grey with a little noise</span>
+    <span class="n">tex</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">/</span> <span class="mf">0.9</span><span class="p">)</span>                     <span class="c1"># opacity 0.1 after the logistic function</span>
+    <span class="k">return</span> <span class="n">tex</span>                                          <span class="c1"># sizes: exp(0) = 1 times the base size</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">lookup</span><span class="p">(</span><span class="n">tex</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Read every shell's texture at the sample points (u, v). Returns (K*N1, 7). Bilinear, wrapping in u."""</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">tex</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">wrapped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">tex</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="n">tex</span><span class="p">,</span> <span class="n">tex</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>         <span class="c1"># one extra texel on each side in u</span>
+    <span class="n">gx</span> <span class="o">=</span> <span class="p">(</span><span class="n">u</span> <span class="o">*</span> <span class="n">TW</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">TW</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">gx</span><span class="p">,</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">F</span><span class="o">.</span><span class="n">grid_sample</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">"border"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">limb_gaussians</span><span class="p">(</span><span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">tex</span><span class="p">)</span>
+    <span class="n">colors</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">spacing</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">L</span> <span class="o">=</span> <span class="n">frames</span> <span class="o">*</span> <span class="n">s</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">return</span> <span class="n">pts</span><span class="p">,</span> <span class="n">L</span> <span class="o">@</span> <span class="n">L</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">colors</span><span class="p">,</span> <span class="n">opacity</span>
+
+<span class="n">limb_cam</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">az</span><span class="p">,</span> <span class="n">el</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">elevation_deg</span><span class="o">=</span><span class="n">el</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.18</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                                                     <span class="n">fov_deg</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+<span class="n">tex0</span> <span class="o">=</span> <span class="n">new_texture</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">))</span>
+<span class="n">img</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">limb_gaussians</span><span class="p">(</span><span class="n">tex0</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">),</span> <span class="n">limb_cam</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">128</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"texture:"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">tex0</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="s2">"= (shells, channels, height, width) -&gt;"</span><span class="p">,</span> <span class="n">tex0</span><span class="o">.</span><span class="n">numel</span><span class="p">(),</span> <span class="s2">"numbers for"</span><span class="p">,</span> <span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"Gaussians"</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">img</span><span class="p">,</span> <span class="n">alpha</span><span class="p">],</span> <span class="p">[</span><span class="s2">"untrained shell map"</span><span class="p">,</span> <span class="s2">"its alpha"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.4</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>texture: (4, 7, 12, 16) = (shells, channels, height, width) -&gt; 5376 numbers for 1120 Gaussians
+</pre></div>
+</div>
+<img alt="../_images/18e0e094961450723750a5de2efb664a52f0d53699f35da828174585999cb052.png" src="../_images/18e0e094961450723750a5de2efb664a52f0d53699f35da828174585999cb052.png" />
+</div>
+</div>
+<p>The untrained shell map is a grey, half-transparent capsule. Every Gaussian is in the right <em>place</em> before any
+learning has happened. That is the point of the representation: geometry comes from the template, and the fit
+only has to paint it.</p>
+</section>
+<section id="failure-first-one-shell-on-the-body-surface">
+<h3>2.3 Failure first: one shell on the body surface<a class="headerlink" href="#failure-first-one-shell-on-the-body-surface" title="Link to this heading">#</a></h3>
+<p>The toy actor wears a loose shirt. Its Gaussians do not sit on the capsule. They stand off it by a few
+centimetres, and more at the hem than at the top (<code class="docutils literal notranslate"><span class="pre">actor.standoff</span></code>). We cut the abdomen out of the actor and
+use it as the target.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">on_limb</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">P</span>
+<span class="n">target</span> <span class="o">=</span> <span class="p">[</span><span class="n">g</span><span class="p">[</span><span class="n">on_limb</span><span class="p">]</span> <span class="k">for</span> <span class="n">g</span> <span class="ow">in</span> <span class="n">actor</span><span class="o">.</span><span class="n">gaussians</span><span class="p">()]</span>       <span class="c1"># the actor's Gaussians on this part: means, cov, colour, opacity</span>
+<span class="n">so</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">standoff</span><span class="p">[</span><span class="n">on_limb</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"true stand-off of the shirt on this part: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">so</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+
+<span class="n">train_cams</span> <span class="o">=</span> <span class="p">[</span><span class="n">limb_cam</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">el</span><span class="p">)</span> <span class="k">for</span> <span class="n">az</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">360</span><span class="p">,</span> <span class="mi">45</span><span class="p">)</span> <span class="k">for</span> <span class="n">el</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">)]</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">train_views</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train_cams</span><span class="p">]</span>     <span class="c1"># (premultiplied colour, mask)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">composite_on</span><span class="p">(</span><span class="o">*</span><span class="n">train_views</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">)],</span>
+               <span class="p">[</span><span class="sa">f</span><span class="s2">"training view </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">)],</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>true stand-off of the shirt on this part: 3.0 to 5.0 cm
+</pre></div>
+</div>
+<img alt="../_images/7d82bb3be2297e34a0038c9115223478c37603f2c85de790e3d8c4fefb0d1217.png" src="../_images/7d82bb3be2297e34a0038c9115223478c37603f2c85de790e3d8c4fefb0d1217.png" />
+</div>
+</div>
+<p>Now fit a shell map to these 16 views. The loop is a plain photometric fit: render, compare with the view,
+step the texture. <a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a> takes this loop apart; for now read it
+as “gradient descent on the texture”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fit_limb</span><span class="p">(</span><span class="n">offsets</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">shell</span> <span class="o">=</span> <span class="n">limb_points</span><span class="p">(</span><span class="n">offsets</span><span class="p">)</span>
+    <span class="n">tex</span> <span class="o">=</span> <span class="n">new_texture</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span> <span class="n">seed</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">tex</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_cams</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">))</span>
+        <span class="n">bg</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">limb_gaussians</span><span class="p">(</span><span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">),</span> <span class="n">train_cams</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">bg</span><span class="o">=</span><span class="n">bg</span><span class="p">)</span>
+        <span class="n">rgb</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">train_views</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">composite_on</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">bg</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">tex</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">shell</span>
+
+<span class="n">test_views</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">110</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="o">-</span><span class="mi">40</span><span class="p">),</span> <span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)]</span>        <span class="c1"># (azimuth, elevation), none in training</span>
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">limb_score</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">limb_gaussians</span><span class="p">(</span><span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">G</span><span class="p">,</span> <span class="n">limb_cam</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">el</span><span class="p">,</span> <span class="mi">128</span><span class="p">))[</span><span class="mi">0</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="n">limb_cam</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">el</span><span class="p">,</span> <span class="mi">128</span><span class="p">))[</span><span class="mi">0</span><span class="p">])</span>
+                          <span class="k">for</span> <span class="n">az</span><span class="p">,</span> <span class="n">el</span> <span class="ow">in</span> <span class="n">test_views</span><span class="p">]))</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">one</span> <span class="o">=</span> <span class="n">fit_limb</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,))</span>
+<span class="n">psnr_one</span> <span class="o">=</span> <span class="n">limb_score</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one shell on the body surface: </span><span class="si">{</span><span class="n">psnr_one</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB on new views   (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one shell on the body surface: 23.8 dB on new views   (2 s)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">limb_render</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">az</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">el</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">160</span><span class="p">):</span>
+    <span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">model</span>
+    <span class="k">return</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">limb_gaussians</span><span class="p">(</span><span class="n">tex</span><span class="p">,</span> <span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">),</span> <span class="n">limb_cam</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">el</span><span class="p">,</span> <span class="n">size</span><span class="p">))</span>
+
+<span class="n">truth_img</span><span class="p">,</span> <span class="n">truth_alpha</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="n">limb_cam</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">160</span><span class="p">))</span>
+<span class="n">img1</span><span class="p">,</span> <span class="n">alpha1</span> <span class="o">=</span> <span class="n">limb_render</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">truth_img</span><span class="p">,</span> <span class="n">img1</span><span class="p">,</span> <span class="p">(</span><span class="n">alpha1</span> <span class="o">-</span> <span class="n">truth_alpha</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()],</span> <span class="p">[</span><span class="s2">"actor (truth)"</span><span class="p">,</span> <span class="s2">"one shell"</span><span class="p">,</span> <span class="s2">"|alpha error|"</span><span class="p">],</span>
+               <span class="n">size</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4f8a18f58de76ad8bb7899d50432007d67a542b7c78f05bb1b9e6c3f4ed3fde3.png" src="../_images/4f8a18f58de76ad8bb7899d50432007d67a542b7c78f05bb1b9e6c3f4ed3fde3.png" />
+</div>
+</div>
+<p>The single shell reproduces the stripes, but its outline is soft and it is too thin: the error image is a
+bright ring where the cloth should be. The Gaussians are pinned to the body surface, and the cloth is up to
+five centimetres outside it. The only thing the fit can do is to inflate the Gaussians until they reach the
+cloth, and a big Gaussian is a blurry one. The next cell confirms that this is what happened.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">thickness_mm</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Opacity-weighted mean size of the Gaussians along the normal, in millimetres."""</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">model</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="n">s_n</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mf">30.0</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="mf">1e3</span> <span class="o">*</span> <span class="nb">float</span><span class="p">((</span><span class="n">o</span> <span class="o">*</span> <span class="n">s_n</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">o</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+<span class="n">thick_one</span> <span class="o">=</span> <span class="n">thickness_mm</span><span class="p">(</span><span class="n">one</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one shell: mean size along the normal </span><span class="si">{</span><span class="n">thick_one</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm (it started at </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">30</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mf">0.25</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">thick_one</span> <span class="o">&gt;</span> <span class="mf">1.3</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1e3</span> <span class="o">/</span> <span class="mi">30</span> <span class="o">*</span> <span class="mf">0.25</span><span class="p">),</span> <span class="s2">"the single shell was expected to inflate its Gaussians"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one shell: mean size along the normal 20.5 mm (it started at 8.3 mm)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-fix-several-shells">
+<h3>2.4 The fix: several shells<a class="headerlink" href="#the-fix-several-shells" title="Link to this heading">#</a></h3>
+<p>With four shells between 1 cm inside and 5 cm outside the template, there is a shell near the cloth wherever
+the cloth is. The fit does not move any Gaussian. It only decides, through the opacity channel, <em>which</em> of the
+stacked Gaussians are switched on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">four</span> <span class="o">=</span> <span class="n">fit_limb</span><span class="p">(</span><span class="n">offsets</span><span class="p">)</span>
+<span class="n">psnr_four</span> <span class="o">=</span> <span class="n">limb_score</span><span class="p">(</span><span class="n">four</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one shell:   </span><span class="si">{</span><span class="n">psnr_one</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB on new views"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"four shells: </span><span class="si">{</span><span class="n">psnr_four</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB on new views   (</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">psnr_four</span> <span class="o">&gt;</span> <span class="n">psnr_one</span> <span class="o">+</span> <span class="mf">1.5</span><span class="p">,</span> <span class="s2">"four shells should beat one shell clearly on the loose shirt"</span>
+
+<span class="n">img4</span><span class="p">,</span> <span class="n">alpha4</span> <span class="o">=</span> <span class="n">limb_render</span><span class="p">(</span><span class="n">four</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">truth_img</span><span class="p">,</span> <span class="n">img1</span><span class="p">,</span> <span class="n">img4</span><span class="p">,</span> <span class="p">(</span><span class="n">alpha1</span> <span class="o">-</span> <span class="n">truth_alpha</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">(),</span> <span class="p">(</span><span class="n">alpha4</span> <span class="o">-</span> <span class="n">truth_alpha</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()],</span>
+               <span class="p">[</span><span class="s2">"actor (truth)"</span><span class="p">,</span> <span class="s2">"one shell"</span><span class="p">,</span> <span class="s2">"four shells"</span><span class="p">,</span> <span class="s2">"one shell: |alpha error|"</span><span class="p">,</span> <span class="s2">"four shells: |alpha error|"</span><span class="p">],</span>
+               <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one shell:   23.8 dB on new views
+four shells: 29.3 dB on new views   (1 s)
+</pre></div>
+</div>
+<img alt="../_images/9e50344fdf453c66c484f557db0c5b025da87a533ee66296b0b8acc1bbc6bba5.png" src="../_images/9e50344fdf453c66c484f557db0c5b025da87a533ee66296b0b8acc1bbc6bba5.png" />
+</div>
+</div>
+<p>The outline is now crisp and the ring in the error image is nearly gone. Which shells did the fit switch on?
+The left panel below shows the mean opacity of every shell along the limb (<span class="math notranslate nohighlight">\(v = 0\)</span> is the hem, <span class="math notranslate nohighlight">\(v = 1\)</span> the
+top). The green line is the true stand-off of the shirt.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tex4</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">shell4</span> <span class="o">=</span> <span class="n">four</span>
+<span class="n">opacity</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">lookup</span><span class="p">(</span><span class="n">tex4</span><span class="p">)[:,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">vv</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">))</span>
+<span class="n">table</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">opacity</span><span class="p">[(</span><span class="n">shell4</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">vv</span> <span class="o">&gt;=</span> <span class="n">bins</span><span class="p">[</span><span class="n">b</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">vv</span> <span class="o">&lt;</span> <span class="n">bins</span><span class="p">[</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">])]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                                  <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">))])</span>
+<span class="c1"># the outermost shell that is switched on at each sample point is the surface a camera sees</span>
+<span class="n">on</span> <span class="o">=</span> <span class="p">(</span><span class="n">opacity</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">),</span> <span class="n">N1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">outer</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">offsets</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">N1</span><span class="p">)</span><span class="o">.</span><span class="n">masked_fill</span><span class="p">(</span><span class="o">~</span><span class="n">on</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">a0</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">table</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+               <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offsets</span><span class="p">)),</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2"> cm"</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">offsets</span><span class="p">]);</span> <span class="n">a0</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"v along the limb (0 = hem)"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"shell offset"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"mean opacity per shell"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">a0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"opacity"</span><span class="p">)</span>
+<span class="n">seen</span> <span class="o">=</span> <span class="n">outer</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">0.5</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">seen</span><span class="p">]),</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">outer</span><span class="p">[</span><span class="n">seen</span><span class="p">]),</span> <span class="n">s</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+           <span class="n">label</span><span class="o">=</span><span class="s2">"outermost opaque shell (model)"</span><span class="p">)</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">on_limb</span><span class="p">])</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">on_limb</span><span class="p">][</span><span class="n">order</span><span class="p">]),</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">so</span><span class="p">[</span><span class="n">order</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"shirt stand-off (truth)"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"v along the limb (0 = hem)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"offset from the template (cm)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">hem</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">outer</span><span class="p">[</span><span class="n">seen</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">v</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="mf">0.3</span><span class="p">)]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">top</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">outer</span><span class="p">[</span><span class="n">seen</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">v</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">v</span> <span class="o">&lt;</span> <span class="mf">0.95</span><span class="p">)]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mean offset of the outermost opaque shell: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">hem</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm near the hem, </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">top</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm near the top"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">hem</span> <span class="o">&gt;</span> <span class="n">top</span> <span class="o">+</span> <span class="mf">0.005</span><span class="p">,</span> <span class="s2">"the outer shell should be switched on at the hem, where the shirt flares out"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mean offset of the outermost opaque shell: 4.9 cm near the hem, 3.0 cm near the top
+</pre></div>
+</div>
+<img alt="../_images/bea0796721b9069e85658998b0700ab3585c8cae38619d73c5779e8dc532ada3.png" src="../_images/bea0796721b9069e85658998b0700ab3585c8cae38619d73c5779e8dc532ada3.png" />
+</div>
+</div>
+<p>The outermost shell is opaque near the hem and transparent near the top, where the shirt is closer to the
+body. The model has recovered the flare of the shirt, without any parameter that moves a Gaussian. With four
+shells the surface can only be placed at four distances, so the blue dots form steps around the green line.
+Each Gaussian’s thickness along the normal fills the gaps between the steps.</p>
+</section>
+</section>
+<section id="the-whole-body-and-cu-shellavatar">
+<h2>3. The whole body, and <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code><a class="headerlink" href="#the-whole-body-and-cu-shellavatar" title="Link to this heading">#</a></h2>
+<p>The body has 17 parts. A whole-body shell map repeats the construction for every part and stores one texture
+tile per part and shell, so the texture has the shape (shells, parts, 7, height, width). <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code> is
+this model. The next cell rebuilds its Gaussians from the pieces above and compares.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>                              <span class="c1"># 4 shells, tiles of 12 x 16 texels</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>   <span class="c1"># any texture will do</span>
+<span class="n">part</span><span class="p">,</span> <span class="n">u_all</span><span class="p">,</span> <span class="n">v_all</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">sample_uv</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>
+<span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">offsets</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tile_lookup</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Bilinear lookup in one (7, th, tw) tile, wrapping in u."""</span>
+    <span class="n">tw</span> <span class="o">=</span> <span class="n">tile</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">wrapped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">tile</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="n">tile</span><span class="p">,</span> <span class="n">tile</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="kc">None</span><span class="p">]</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([(</span><span class="n">uu</span> <span class="o">*</span> <span class="n">tw</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">tw</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">vv</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">grid_sample</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"bilinear"</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">"border"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">T</span>
+
+<span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">offsets</span><span class="p">):</span>                 <span class="c1"># shells, then parts: the order ShellAvatar uses</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">part</span> <span class="o">==</span> <span class="n">p</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">u_all</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">v_all</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">offset</span><span class="o">=</span><span class="n">d</span><span class="p">)</span>
+        <span class="n">pts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">);</span> <span class="n">frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">attrs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tile_lookup</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">u_all</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">v_all</span><span class="p">[</span><span class="n">m</span><span class="p">]))</span>
+<span class="n">pts</span><span class="p">,</span> <span class="n">frames</span><span class="p">,</span> <span class="n">attrs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">pts</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">frames</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">(</span><span class="n">attrs</span><span class="p">)</span>
+
+<span class="n">err_pts</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">pts</span> <span class="o">-</span> <span class="n">avatar</span><span class="o">.</span><span class="n">rest_points</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">err_frame</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">frames</span> <span class="o">-</span> <span class="n">avatar</span><span class="o">.</span><span class="n">rest_frame</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">err_attr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">attrs</span> <span class="o">-</span> <span class="n">avatar</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2"> Gaussians | max difference: positions </span><span class="si">{</span><span class="n">err_pts</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">, frames </span><span class="si">{</span><span class="n">err_frame</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">, attributes </span><span class="si">{</span><span class="n">err_attr</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">pts</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span> <span class="ow">and</span> <span class="n">err_pts</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="ow">and</span> <span class="n">err_frame</span> <span class="o">&lt;</span> <span class="mf">1e-6</span> <span class="ow">and</span> <span class="n">err_attr</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9308 Gaussians | max difference: positions 0.0e+00, frames 0.0e+00, attributes 0.0e+00
+</pre></div>
+</div>
+</div>
+</div>
+<p>Our construction and the library’s agree. From here on we use <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code>.</p>
+<section id="one-shell-against-four-on-the-whole-actor">
+<h3>3.1 One shell against four on the whole actor<a class="headerlink" href="#one-shell-against-four-on-the-whole-actor" title="Link to this heading">#</a></h3>
+<p>We repeat the experiment of Section 2 on the whole person, with a video of the actor turning in place at
+64 pixels. <code class="docutils literal notranslate"><span class="pre">cu.fit</span></code> is the same loop as <code class="docutils literal notranslate"><span class="pre">fit_limb</span></code>. To keep the comparison fair, the single-shell avatar gets
+four times the sampling density, so both avatars have about the same number of Gaussians.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"turn"</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"one shell"</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,),</span> <span class="n">density</span><span class="o">=</span><span class="mf">3600.0</span><span class="p">),</span> <span class="s2">"four shells"</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()}</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">hist</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">video</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">11s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians, </span><span class="si">{</span><span class="n">hist</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s, PSNR </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB, "</span>
+          <span class="sa">f</span><span class="s2">"inside the mask </span><span class="si">{</span><span class="n">scores</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'mean_psnr_fg'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">gain_body</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="s2">"four shells"</span><span class="p">][</span><span class="s2">"mean_psnr"</span><span class="p">]</span> <span class="o">-</span> <span class="n">scores</span><span class="p">[</span><span class="s2">"one shell"</span><span class="p">][</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"four shells - one shell: </span><span class="si">{</span><span class="n">gain_body</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB on the whole frame   (one limb, close up: </span><span class="si">{</span><span class="n">psnr_four</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">psnr_one</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB)"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one shell  : 9435 Gaussians, 2 s, PSNR 39.21 dB, inside the mask 32.05 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>four shells: 9308 Gaussians, 2 s, PSNR 39.21 dB, inside the mask 32.43 dB
+four shells - one shell: -0.00 dB on the whole frame   (one limb, close up: +5.52 dB)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the last line honestly. On the whole frame the gain from extra shells is much smaller than it was on the
+close-up of one limb. At 64 pixels one pixel covers about three centimetres of the person, so a shirt that
+stands five centimetres off the body is an error of one or two pixels at the outline, and most pixels are not
+at the outline. Shells matter in proportion to how closely you look. The real pipeline trains at 512 pixels
+and looks at 4K renders, where a few centimetres are many pixels.</p>
+<p>The structure the fit found is the same as on the single limb. The next figure shows the texture itself, for
+four parts: colour tiles on top, opacity tiles below, one column per shell.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">four_body</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="s2">"four shells"</span><span class="p">]</span>
+<span class="n">tex</span> <span class="o">=</span> <span class="n">four_body</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+<span class="n">show_parts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"chest"</span><span class="p">,</span> <span class="s2">"abdomen"</span><span class="p">,</span> <span class="s2">"head"</span><span class="p">,</span> <span class="s2">"l_forearm"</span><span class="p">]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">show_parts</span><span class="p">),</span> <span class="n">K</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">1.55</span> <span class="o">*</span> <span class="n">K</span> <span class="o">+</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.05</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">show_parts</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">show_parts</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">):</span>
+        <span class="n">rgb</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tex</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">permute</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="n">k</span><span class="p">];</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">rgb</span><span class="p">),</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">)</span>
+        <span class="n">ax2</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">k</span><span class="p">];</span> <span class="n">ax2</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">tex</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">3</span><span class="p">])),</span> <span class="n">origin</span><span class="o">=</span><span class="s2">"lower"</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">,</span>
+                                             <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">ax2</span><span class="p">):</span>
+            <span class="n">a</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([]);</span> <span class="n">a</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([]);</span> <span class="n">a</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"shell </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">four_body</span><span class="o">.</span><span class="n">offsets</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="se">\n</span><span class="s2">colour"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"opacity"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">supxlabel</span><span class="p">(</span><span class="s2">"u around the limb (texels)"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">);</span> <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/75b1efb9d0236d211a1c1ca43ae9608b4cd91cbf3756cebd7b6920454ebfb030.png" src="../_images/75b1efb9d0236d211a1c1ca43ae9608b4cd91cbf3756cebd7b6920454ebfb030.png" />
+</div>
+</div>
+<p>Each tile is a tiny image: 16 texels around the limb and 12 along it. The stripes of the shirt and the yellow
+logo are visible in the chest and abdomen tiles, the face and hair in the head tile. The opacity tiles (yellow
+is opaque) show where each shell is switched on. The coordinate <span class="math notranslate nohighlight">\(u = 0\)</span> is the front of the body, so the front
+logo is split between the left and right edges of its tile; Lesson 4b deals with that seam. Tiles that stay grey with low opacity were never needed, or
+were hidden behind an opaque shell and received no gradient.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">op</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">()[:,</span> <span class="mi">3</span><span class="p">])</span>
+<span class="n">per</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">op</span><span class="p">[(</span><span class="n">four_body</span><span class="o">.</span><span class="n">shell</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span>
+                   <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">)])</span>
+<span class="n">standoff</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">standoff</span><span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">per</span><span class="p">),</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">aspect</span><span class="o">=</span><span class="s2">"auto"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">),</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PART_NAMES</span><span class="p">,</span> <span class="n">standoff</span><span class="p">)],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">K</span><span class="p">),</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2"> cm"</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">four_body</span><span class="o">.</span><span class="n">offsets</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"body part, and the mean stand-off of the actor's clothing on it (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"shell offset"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"mean opacity"</span><span class="p">);</span>
+
+<span class="n">loose</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"pelvis"</span><span class="p">,</span> <span class="s2">"abdomen"</span><span class="p">)]</span>
+<span class="n">tight</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"l_forearm"</span><span class="p">,</span> <span class="s2">"r_forearm"</span><span class="p">,</span> <span class="s2">"l_shin"</span><span class="p">,</span> <span class="s2">"r_shin"</span><span class="p">)]</span>
+<span class="n">outer_loose</span><span class="p">,</span> <span class="n">outer_tight</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">per</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">loose</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">per</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">tight</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"opacity of the outermost shell: </span><span class="si">{</span><span class="n">outer_loose</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> under the loose shirt, </span><span class="si">{</span><span class="n">outer_tight</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> on bare forearms and shins"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">outer_loose</span> <span class="o">&gt;</span> <span class="n">outer_tight</span> <span class="o">+</span> <span class="mf">0.03</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>opacity of the outermost shell: 0.18 under the loose shirt, 0.06 on bare forearms and shins
+</pre></div>
+</div>
+<img alt="../_images/436786be0910f2a4f9b8cc5a92e495791dd79b7caa98261d6e9fbf366a43d829.png" src="../_images/436786be0910f2a4f9b8cc5a92e495791dd79b7caa98261d6e9fbf366a43d829.png" />
+</div>
+</div>
+<p>The outer shells hold opacity on the parts where clothing stands off the body, and stay nearly transparent on
+bare skin, where the inner shells do the work. One number per part is a coarse summary; the tiles above show
+the same thing texel by texel.</p>
+</section>
+</section>
+<section id="why-the-gaussians-stay-attached-when-the-body-moves">
+<h2>4. Why the Gaussians stay attached when the body moves<a class="headerlink" href="#why-the-gaussians-stay-attached-when-the-body-moves" title="Link to this heading">#</a></h2>
+<p>A Gaussian’s rest position is a function of <span class="math notranslate nohighlight">\((u, v)\)</span> and the shell offset. It has no free position parameter,
+so nothing can drift. To pose the avatar we skin the rest positions exactly as
+<a class="reference internal" href="../part3_body/03b_skinning.html"><span class="std std-doc">Lesson 3b</span></a> skinned surface points. Each Gaussian carries the skinning weights
+<span class="math notranslate nohighlight">\(w_{ij}\)</span> of its template point, the same for every shell, and</p>
+<div class="math notranslate nohighlight">
+\[\mu_i' = M_i \, \mu_i, \qquad M_i = \sum_j w_{ij} A_j, \qquad \Sigma_i' = (M_i L_i)(M_i L_i)^\top .\]</div>
+<p>The matrix <span class="math notranslate nohighlight">\(M_i\)</span> that moves the centre also turns and stretches the axes <span class="math notranslate nohighlight">\(L_i\)</span>, so a flat disc stays flat
+against the surface when the limb rotates.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">d_poses</span><span class="p">,</span> <span class="n">d_trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"dance"</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">pose</span><span class="p">,</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">d_poses</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">d_trans</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">A</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">skinning_transforms</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>
+
+<span class="c1"># skin the stacked Gaussians of the avatar and their template points with the same weights</span>
+<span class="n">posed</span><span class="p">,</span> <span class="n">M</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">lbs</span><span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">rest_points</span><span class="p">,</span> <span class="n">four_body</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+<span class="n">base_rest</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">four_body</span><span class="o">.</span><span class="n">u</span><span class="p">[(</span><span class="n">four_body</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">shell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)],</span>
+                                          <span class="n">four_body</span><span class="o">.</span><span class="n">v</span><span class="p">[(</span><span class="n">four_body</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">shell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)])[</span><span class="mi">0</span><span class="p">]</span>
+                       <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">base_posed</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">lbs</span><span class="p">(</span><span class="n">base_rest</span><span class="p">,</span> <span class="n">four_body</span><span class="o">.</span><span class="n">weights</span><span class="p">,</span> <span class="n">A</span><span class="p">)</span>
+<span class="n">dist</span> <span class="o">=</span> <span class="p">(</span><span class="n">posed</span> <span class="o">-</span> <span class="n">base_posed</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">want</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">four_body</span><span class="o">.</span><span class="n">offsets</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()[</span><span class="n">four_body</span><span class="o">.</span><span class="n">shell</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"distance to the posed template point, compared with |d_k|: median error </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">((</span><span class="n">dist</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">want</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">median</span><span class="p">())</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> mm, "</span>
+      <span class="sa">f</span><span class="s2">"largest </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">((</span><span class="n">dist</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">want</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">dist</span> <span class="o">-</span> <span class="n">want</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">median</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+
+<span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">four_body</span><span class="o">.</span><span class="n">gaussians</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">posed</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>          <span class="c1"># the library does the same thing</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>distance to the posed template point, compared with |d_k|: median error 0.003 mm, largest 2.9 mm
+</pre></div>
+</div>
+</div>
+</div>
+<p>For most Gaussians the distance to the template is unchanged to a fraction of a millimetre: where one joint
+dominates, <span class="math notranslate nohighlight">\(M_i\)</span> is a rigid motion, and a rigid motion preserves distances. Near joints the weights blend two
+transforms and the shells are squeezed or stretched a little, which is the linear-blend artefact of Lesson 3b
+showing up in the shells.</p>
+<p>The avatar below was fitted only to a turn in place. Here it is in a dance pose it never saw, next to the
+actor in the same pose.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">160</span><span class="p">)</span>
+<span class="n">frames_shown</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">13</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">d_poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">d_trans</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">frames_shown</span><span class="p">]</span> <span class="o">+</span> \
+           <span class="p">[</span><span class="n">four_body</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">d_poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">d_trans</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">frames_shown</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"actor, dance frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">frames_shown</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"shell avatar, frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">frames_shown</span><span class="p">],</span>
+               <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="n">drive</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">rows</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">4</span><span class="p">],</span> <span class="n">rows</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">)]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"PSNR of the avatar against the actor in these unseen poses: </span><span class="si">{</span><span class="n">drive</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">drive</span> <span class="o">&gt;</span> <span class="mf">22.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>PSNR of the avatar against the actor in these unseen poses: 29.4 dB
+</pre></div>
+</div>
+<img alt="../_images/e9749cc703ec7c1714a1352036ea0d394dcbdf376f28acddfd2b4c03ce48e4e0.png" src="../_images/e9749cc703ec7c1714a1352036ea0d394dcbdf376f28acddfd2b4c03ce48e4e0.png" />
+</div>
+</div>
+<p>This is why the representation suits a drivable avatar. Appearance is stored in surface coordinates, and
+surface coordinates do not change when the body moves. It also suits clothing better than a single textured
+surface: a stack of shells is a thin <em>volume</em> around the body, so cloth, hair and shoes can sit at their own
+distance from the skin. What shells cannot do is move the cloth independently of the body. The shirt follows
+the skeleton rigidly; <a class="reference internal" href="../part7_motion/07c_secondary_motion.html"><span class="std std-doc">Lesson 7c</span></a> returns to that.</p>
+</section>
+<section id="from-the-real-system">
+<h2>From the real system<a class="headerlink" href="#from-the-real-system" title="Link to this heading">#</a></h2>
+<link rel="stylesheet" href="../_static/compare.css"><script defer src="../_static/compare.js"></script>
+<figure class="course-real">
+<video controls muted loop playsinline preload="metadata" poster="../_static/media/real/shells-gaussians/shells_splats_render_poster.jpg" aria-label="A turntable in three panels of the same fitted avatar: its Gaussians drawn small and coloured by shell, the same small Gaussians in their own colours, and the full render."><source src="../_static/media/real/shells-gaussians/shells_splats_render.webm" type="video/webm"><source src="../_static/media/real/shells-gaussians/shells_splats_render.mp4" type="video/mp4"></video>
+</figure>
+<!-- YOUTUBE: shells-gaussians (see UPLOAD.md) -->
+<p><strong>Inside a fitted shell map.</strong> The author’s standard-track avatar in its rest pose, drawn three ways from the same model. Left: every Gaussian shrunk to 30 % of its size and coloured by the shell it is anchored on (purple is the outermost shell, yellow the innermost). Middle: the same shrunk Gaussians in their own colours. Right: the normal render. Notice that the five shells are layers a few centimetres apart around the body, that Gaussians from several layers are visible at once, and that the picture only becomes a surface when the Gaussians have their full size and overlap.</p>
+<figure class="course-real">
+<img src="../_static/media/real/shells-gaussians/shells_splats_render_strip.jpg" alt="Still of the same three views from the front: Gaussians coloured by shell, Gaussians in their own colours, and the full render.">
+</figure>
+<p>The toy shells in this lesson are capsules; the real ones are offset copies of the SMPL body surface, as described in the <span class="private-repo" title="in the project's private repository">README</span>.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The real project keeps the Gaussian Shell Maps representation and fits it to one person. The template is the
+SMPL body mesh <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span>, not capsules, and the texture is one UV atlas per shell, not a tile per
+part.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Template</p></td>
+<td><p>17 capsules with analytic <span class="math notranslate nohighlight">\((u, v)\)</span></p></td>
+<td><p>SMPL mesh with its UV layout; base shell chosen in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/shells.py</span></code></span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Shells</p></td>
+<td><p>4, from 1 cm inside to 5 cm outside</p></td>
+<td><p>5 in the standard recipe; thinner shells on the hands in the hi-fi track</p></td>
+</tr>
+<tr class="row-even"><td><p>Texture channels</p></td>
+<td><p>7: colour, opacity, 3 sizes</p></td>
+<td><p>11: colour, opacity, scale and a rotation quaternion; a twelfth channel holds a learned offset along the normal</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fit</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cu.fit</span></code></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/fit_multi.py</span></code></span>: one texture shared by all frames</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Two differences deserve a comment. First, upstream GSM was trained as a <em>generator</em>: a network produces the
+shell textures for many different people. The project uses the same shells and optimises one texture directly,
+as this lesson does. Second, the steps in the last figure of Section 2.4 are a real limitation: a fixed set of
+shells quantises the distance from the body. The project’s realism recipe adds a learned per-texel offset of up
+to ±3 cm along the shell normal, so that “cloth that stands off the body gets its own geometry”
+(<span class="private-repo" title="in the project's private repository">docs/realism_v4.md</span>). Exercise 3 asks you
+to try the same idea on the toy limb.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A shell map has a template surface, copies of it offset along the normal, and a texture per copy whose
+channels are Gaussian attributes. Gaussians sit at fixed <span class="math notranslate nohighlight">\((u, v)\)</span> points and read the texture.</p></li>
+<li><p>Geometry comes from the template; the fit only learns the texture. An untrained shell map already has the
+shape of the body.</p></li>
+<li><p>One shell on the body surface cannot represent cloth that stands off the body. It inflates its Gaussians to
+reach the cloth, and the outline turns soft. Several shells place opaque Gaussians at the right distance by
+switching shells on and off through opacity.</p></li>
+<li><p>How much the extra shells are worth depends on how closely you look: a lot on a close-up of one limb, little
+on a whole body at 64 pixels.</p></li>
+<li><p>Positions are functions of surface coordinates, and skinning moves them with the template, so the appearance
+stays attached to the body in any pose.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Fit the limb with two shells at offsets <code class="docutils literal notranslate"><span class="pre">(0.0,</span> <span class="pre">0.04)</span></code> and with eight shells from −1 cm to 6 cm. How does the
+PSNR on new views change with the number of shells? Where does it stop improving?</p></li>
+<li><p>In <code class="docutils literal notranslate"><span class="pre">limb_gaussians</span></code>, the third size (along the normal) starts at a third of the other two. Make all three
+equal and render the untrained shell map from a grazing angle. What changes at the outline, and why are
+flat Gaussians the better default for a surface?</p></li>
+<li><p>Give the single-shell limb model one more learned texture channel: an offset along the normal, limited to
+±6 cm with <code class="docutils literal notranslate"><span class="pre">0.06</span> <span class="pre">*</span> <span class="pre">torch.tanh(...)</span></code>. Does one shell with a learned offset match four fixed shells?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">offs</span> <span class="ow">in</span> <span class="p">[(</span><span class="mf">0.0</span><span class="p">,),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">),</span> <span class="n">offsets</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">offs</span><span class="p">),</span> <span class="s2">"shells:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">limb_score</span><span class="p">(</span><span class="n">fit_limb</span><span class="p">(</span><span class="n">offs</span><span class="p">)),</span> <span class="mi">1</span><span class="p">),</span> <span class="s2">"dB"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Two shells already recover most of the gap, because the second shell is close to the cloth. Beyond four the
+gain is small: the spacing between shells is then below the thickness of a Gaussian, and each added shell also
+adds Gaussians that must be rendered. The number of shells is a cost-quality trade-off, not a free parameter.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fit_limb_offset</span><span class="p">(</span><span class="n">iters</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">x0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+    <span class="n">frames</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">t_u</span><span class="p">,</span> <span class="n">t_v</span><span class="p">,</span> <span class="n">n</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">tex</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">new_texture</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">seed</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">TH</span><span class="p">,</span> <span class="n">TW</span><span class="p">)],</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>   <span class="c1"># 8 channels</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">tex</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gaussians</span><span class="p">():</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">lookup</span><span class="p">(</span><span class="n">tex</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">7</span><span class="p">])</span>
+        <span class="n">wrapped</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">tex</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">:,</span> <span class="p">:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="n">tex</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">:],</span> <span class="n">tex</span><span class="p">[:,</span> <span class="mi">7</span><span class="p">:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">1</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">grid</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([(</span><span class="n">u</span> <span class="o">*</span> <span class="n">TW</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">TW</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">v</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="mf">0.06</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tanh</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">grid_sample</span><span class="p">(</span><span class="n">wrapped</span><span class="p">,</span> <span class="n">grid</span><span class="p">,</span> <span class="n">padding_mode</span><span class="o">=</span><span class="s2">"border"</span><span class="p">,</span> <span class="n">align_corners</span><span class="o">=</span><span class="kc">False</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">])</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">30</span><span class="p">)</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">])</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">4</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">frames</span> <span class="o">*</span> <span class="n">s</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">return</span> <span class="n">x0</span> <span class="o">+</span> <span class="n">d</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span><span class="p">,</span> <span class="n">L</span> <span class="o">@</span> <span class="n">L</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">a</span><span class="p">[:,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_cams</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">));</span> <span class="n">bg</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="o">*</span><span class="n">gaussians</span><span class="p">(),</span> <span class="n">train_cams</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">bg</span><span class="o">=</span><span class="n">bg</span><span class="p">)</span>
+        <span class="n">rgb</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">train_views</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">img</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">composite_on</span><span class="p">(</span><span class="n">rgb</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">bg</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">mask</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">gaussians</span>
+</pre></div>
+</div>
+<p>The offset channel lets one shell follow the flare continuously, with a quarter of the Gaussians. It is harder
+to optimise than switching shells on and off: a Gaussian that starts far from the cloth gets little gradient
+telling it which way to move. The real recipe combines both, with several shells and a small learned offset
+on top.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span> introduced Gaussian Shell Maps: shells around a body template with Gaussian attributes
+stored in textures.</p></li>
+<li><p><span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span> is the splatting renderer the Gaussians are drawn with.</p></li>
+<li><p><span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span> is the body model the real pipeline uses as its template.</p></li>
+<li><p>Project documentation: <span class="private-repo" title="in the project's private repository">README, Method</span> and
+<span class="private-repo" title="in the project's private repository">docs/realism_v4.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part4_shells"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part3_body/03b_skinning.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Skinning: making a surface follow the skeleton</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="04b_sampling_density.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Sampling and density: how many Gaussians, and where?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-question-a-representation-has-to-answer">1. The question a representation has to answer</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-limb-step-by-step">2. One limb, step by step</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-points-and-positions">2.1 Sample points and positions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-texture-and-the-lookup">2.2 The texture and the lookup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#failure-first-one-shell-on-the-body-surface">2.3 Failure first: one shell on the body surface</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fix-several-shells">2.4 The fix: several shells</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-whole-body-and-cu-shellavatar">3. The whole body, and <code class="docutils literal notranslate"><span class="pre">cu.ShellAvatar</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-shell-against-four-on-the-whole-actor">3.1 One shell against four on the whole actor</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-gaussians-stay-attached-when-the-body-moves">4. Why the Gaussians stay attached when the body moves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

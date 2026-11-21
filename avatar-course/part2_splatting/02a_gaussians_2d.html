@@ -1,0 +1,1242 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>2D Gaussians and alpha compositing: a renderer in thirty lines &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part2_splatting/02a_gaussians_2d';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="From 3D to the image: how a camera flattens a Gaussian" href="02b_projection_3d.html" />
+    <link rel="prev" title="From one video to a drivable avatar" href="../part1_problem/01_problem.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>2D Gaussians and alpha compositing: a renderer in thirty lines</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-gaussian-is-a-soft-blob">1. A Gaussian is a soft blob</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-the-covariance-from-the-ellipse">2. Build the covariance from the ellipse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-with-raw-matrix-entries">3. What goes wrong with raw matrix entries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-blobs-to-a-picture-alpha-compositing">4. From blobs to a picture: alpha compositing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#order-matters">5. Order matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-small-constants-the-cut-off-and-the-clamp">6. Two small constants: the cut-off and the clamp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-first-fit-a-few-hundred-gaussians-paint-a-picture">7. A first fit: a few hundred Gaussians paint a picture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-lesson-as-a-clip">8. The lesson as a clip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="d-gaussians-and-alpha-compositing-a-renderer-in-thirty-lines">
+<h1>2D Gaussians and alpha compositing: a renderer in thirty lines<a class="headerlink" href="#d-gaussians-and-alpha-compositing-a-renderer-in-thirty-lines" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What a Gaussian is as a drawing primitive: a centre, a covariance, and the ellipse they describe.</p></li>
+<li><p>Why the covariance is stored as a rotation and two axis lengths, and what breaks when it is not.</p></li>
+<li><p>How overlapping Gaussians become one picture: alpha, transmittance and front-to-back compositing.</p></li>
+<li><p>That the whole renderer is differentiable, so a picture can be fitted by gradient descent.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part0_setup/00_setup.html"><span class="std std-doc">Lesson 0</span></a> and <a class="reference internal" href="../part1_problem/01_problem.html"><span class="std std-doc">Lesson 1</span></a>.
+You need matrix products and the idea of an eigenvector. Everything in this lesson is flat: there is no camera
+and no third dimension yet. <a class="reference internal" href="02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a> adds them.</p>
+<section id="a-gaussian-is-a-soft-blob">
+<h2>1. A Gaussian is a soft blob<a class="headerlink" href="#a-gaussian-is-a-soft-blob" title="Link to this heading">#</a></h2>
+<p>The avatar of this course is made of Gaussians. In an image, one Gaussian is a soft elliptical spot. It has a
+centre <span class="math notranslate nohighlight">\(\mu\)</span> (a point, in pixels) and a covariance <span class="math notranslate nohighlight">\(\Sigma\)</span> (a symmetric 2 x 2 matrix) that sets its size,
+its elongation and its direction. Its value at a pixel <span class="math notranslate nohighlight">\(x\)</span> is</p>
+<div class="math notranslate nohighlight">
+\[
+G(x) = \exp\!\left(-\tfrac12\, d^\top \Sigma^{-1} d\right), \qquad d = x - \mu .
+\]</div>
+<p>The number <span class="math notranslate nohighlight">\(m = \sqrt{d^\top \Sigma^{-1} d}\)</span> is the distance from the centre, measured in units of the blob’s
+own width along that direction. It is called the Mahalanobis distance. At the centre <span class="math notranslate nohighlight">\(m = 0\)</span> and <span class="math notranslate nohighlight">\(G = 1\)</span>. On
+the curve <span class="math notranslate nohighlight">\(m = 1\)</span> the value has dropped to <span class="math notranslate nohighlight">\(e^{-1/2} \approx 0.61\)</span>, and that curve is an ellipse. We call it
+the 1-sigma ellipse. A statistician would divide <span class="math notranslate nohighlight">\(G\)</span> by a constant so that it integrates to one. Splatting
+does not: the peak value is 1, and a separate number, the opacity, will scale it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""G(x) = exp(-0.5 d^T Sigma^-1 d) at points xy (P, 2) for one Gaussian. Returns (P,)."""</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">xy</span> <span class="o">-</span> <span class="n">mu</span>
+    <span class="n">m2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">"pi,ij,pj-&gt;p"</span><span class="p">,</span> <span class="n">d</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">Sigma</span><span class="p">),</span> <span class="n">d</span><span class="p">)</span>      <span class="c1"># squared Mahalanobis distance</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">m2</span><span class="p">)</span>
+
+<span class="n">H</span> <span class="o">=</span> <span class="n">W</span> <span class="o">=</span> <span class="mi">64</span>
+<span class="n">xy</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">pixel_grid</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>             <span class="c1"># the centre of every pixel, as (x, y); x runs right and y runs down</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"pixel grid"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">xy</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="s2">"| first centre"</span><span class="p">,</span> <span class="n">xy</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">"| last centre"</span><span class="p">,</span> <span class="n">xy</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>pixel grid (4096, 2) | first centre [0.5, 0.5] | last centre [63.5, 63.5]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Three covariances, three blobs. The white curves are the 1-, 2- and 3-sigma ellipses.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">show_blob</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">,</span> <span class="n">title</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
+        <span class="n">cu</span><span class="o">.</span><span class="n">draw_ellipse</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">mu</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">Sigma</span><span class="p">),</span> <span class="n">n_sigma</span><span class="o">=</span><span class="n">n</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">"white"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.9</span> <span class="o">-</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (pixels)"</span><span class="p">)</span>
+
+<span class="n">mu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">32.0</span><span class="p">,</span> <span class="mf">32.0</span><span class="p">])</span>
+<span class="n">examples</span> <span class="o">=</span> <span class="p">[(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">36.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">]]),</span> <span class="s2">"round</span><span class="se">\n</span><span class="s2">$</span><span class="se">\\</span><span class="s2">Sigma$ = [[36, 0], [0, 36]]"</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">150.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">]]),</span> <span class="s2">"wide</span><span class="se">\n</span><span class="s2">$</span><span class="se">\\</span><span class="s2">Sigma$ = [[150, 0], [0, 16]]"</span><span class="p">),</span>
+            <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">83.0</span><span class="p">,</span> <span class="mf">67.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">67.0</span><span class="p">,</span> <span class="mf">83.0</span><span class="p">]]),</span> <span class="s2">"tilted</span><span class="se">\n</span><span class="s2">$</span><span class="se">\\</span><span class="s2">Sigma$ = [[83, 67], [67, 83]]"</span><span class="p">)]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.4</span><span class="p">,</span> <span class="mf">3.1</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">Sigma</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">examples</span><span class="p">):</span>
+    <span class="n">show_blob</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">,</span> <span class="n">title</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (pixels)"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/b40fdd87bd8b3fd007174c0d6167cf3f08cb53185e820f71c5eacf9468105a58.png" src="../_images/b40fdd87bd8b3fd007174c0d6167cf3f08cb53185e820f71c5eacf9468105a58.png" />
+</div>
+</div>
+<p>The diagonal entries of <span class="math notranslate nohighlight">\(\Sigma\)</span> are the squared widths along x and y. The off-diagonal entry tilts the blob.
+In the image the y axis points down, so a positive off-diagonal entry leans the blob from the top left to the
+bottom right.</p>
+<p>The entries of the third matrix are not easy to read. The geometry is easier: an ellipse has two
+perpendicular axes, and each axis has a length. The axes are the eigenvectors of <span class="math notranslate nohighlight">\(\Sigma\)</span>, and the lengths
+(as standard deviations) are the square roots of its eigenvalues.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">evals</span><span class="p">,</span> <span class="n">evecs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">examples</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"axis lengths (standard deviations):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">evals</span><span class="o">.</span><span class="n">sqrt</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"axis directions (columns):"</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">evecs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>axis lengths (standard deviations): [4.0, 12.25]
+axis directions (columns):
+tensor([[ 0.7071,  0.7071],
+        [-0.7071,  0.7071]], device='cuda:0')
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="build-the-covariance-from-the-ellipse">
+<h2>2. Build the covariance from the ellipse<a class="headerlink" href="#build-the-covariance-from-the-ellipse" title="Link to this heading">#</a></h2>
+<p>So store the ellipse, not the matrix. Take two axis lengths <span class="math notranslate nohighlight">\(s = (s_1, s_2)\)</span> and an angle <span class="math notranslate nohighlight">\(\theta\)</span>. Put the
+lengths on the diagonal of a scale matrix <span class="math notranslate nohighlight">\(S\)</span> and the angle into a rotation <span class="math notranslate nohighlight">\(R\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\Sigma = R\, S\, S^\top R^\top, \qquad
+R = \begin{pmatrix}\cos\theta &amp; -\sin\theta\\ \sin\theta &amp; \cos\theta\end{pmatrix}, \qquad
+S = \begin{pmatrix}s_1 &amp; 0\\ 0 &amp; s_2\end{pmatrix}.
+\end{split}\]</div>
+<p>Read it from right to left as a recipe for the blob: start from a unit circle, stretch it by <span class="math notranslate nohighlight">\(S\)</span>, turn it by
+<span class="math notranslate nohighlight">\(R\)</span>. The matrix <span class="math notranslate nohighlight">\(M = RS\)</span> maps the unit circle onto the 1-sigma ellipse, and <span class="math notranslate nohighlight">\(\Sigma = M M^\top\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rotation_2d</span><span class="p">(</span><span class="n">theta</span><span class="p">):</span>
+    <span class="n">c</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">theta</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">c</span><span class="p">,</span> <span class="o">-</span><span class="n">s</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">s</span><span class="p">,</span> <span class="n">c</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)],</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">covariance_2d</span><span class="p">(</span><span class="n">scales</span><span class="p">,</span> <span class="n">theta</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Sigma = R S S^T R^T from axis lengths `scales` (..., 2) and angles `theta` (...)."""</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">rotation_2d</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="o">*</span> <span class="n">scales</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>          <span class="c1"># R @ diag(s): scale the columns of R</span>
+    <span class="k">return</span> <span class="n">M</span> <span class="o">@</span> <span class="n">M</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">Sigma</span> <span class="o">=</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)))</span>
+<span class="n">evals</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"Sigma ="</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">Sigma</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"eigenvalues"</span><span class="p">,</span> <span class="n">evals</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="s2">"= the squared axis lengths"</span><span class="p">,</span> <span class="p">[</span><span class="mf">4.0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">12.0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">])</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">evals</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">16.0</span><span class="p">,</span> <span class="mf">144.0</span><span class="p">]),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Sigma =
+tensor([[112.0000,  55.4256],
+        [ 55.4256,  48.0000]], device='cuda:0')
+eigenvalues [15.999998092651367, 144.0] = the squared axis lengths [16.0, 144.0]
+</pre></div>
+</div>
+</div>
+</div>
+<p>This form has a property the raw matrix does not have. A covariance must be <strong>positive definite</strong>: for every
+direction <span class="math notranslate nohighlight">\(v \neq 0\)</span> the width <span class="math notranslate nohighlight">\(v^\top \Sigma v\)</span> along it must be positive. Otherwise <span class="math notranslate nohighlight">\(\Sigma^{-1}\)</span> does not
+describe an ellipse. With the factored form this holds for any numbers at all:</p>
+<div class="math notranslate nohighlight">
+\[
+v^\top \Sigma v = v^\top M M^\top v = \lVert M^\top v \rVert^2 \ge 0 ,
+\]</div>
+<p>and it is strictly positive as long as both axis lengths are non-zero. An optimiser can move <span class="math notranslate nohighlight">\(\theta\)</span> and <span class="math notranslate nohighlight">\(s\)</span>
+anywhere and the result is still a blob.</p>
+</section>
+<section id="what-goes-wrong-with-raw-matrix-entries">
+<h2>3. What goes wrong with raw matrix entries<a class="headerlink" href="#what-goes-wrong-with-raw-matrix-entries" title="Link to this heading">#</a></h2>
+<p>It is tempting to skip the detour and let the optimiser change the three numbers of
+<span class="math notranslate nohighlight">\(\Sigma = \begin{pmatrix} a &amp; b \\ b &amp; c \end{pmatrix}\)</span> directly. Try it. The task: start from a round blob and
+match a thin, tilted one by gradient descent on the squared pixel difference.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_Sigma</span> <span class="o">=</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.9</span><span class="p">))</span>
+<span class="n">target</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">target_Sigma</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_raw</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Optimise the entries a, b, c of Sigma directly. Stops when Sigma is no longer a covariance."""</span>
+    <span class="n">abc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">16.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">16.0</span><span class="p">],</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">abc</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">min_eig</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="n">Sigma</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">abc</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">abc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">abc</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">abc</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+        <span class="n">min_eig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Sigma</span><span class="o">.</span><span class="n">detach</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">min_eig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Sigma</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">min_eig</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_factored</span><span class="p">(</span><span class="n">steps</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Optimise log axis lengths and an angle. Every iterate is a valid covariance."""</span>
+    <span class="n">log_s</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]))</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">()</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">log_s</span><span class="p">,</span> <span class="n">theta</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">min_eig</span><span class="p">,</span> <span class="n">losses</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">steps</span><span class="p">):</span>
+        <span class="n">Sigma</span> <span class="o">=</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">log_s</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="n">theta</span><span class="p">)</span>
+        <span class="n">min_eig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigvalsh</span><span class="p">(</span><span class="n">Sigma</span><span class="o">.</span><span class="n">detach</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">)</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">losses</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">Sigma</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">min_eig</span><span class="p">,</span> <span class="n">losses</span>
+
+<span class="n">bad_Sigma</span><span class="p">,</span> <span class="n">raw_eig</span> <span class="o">=</span> <span class="n">fit_raw</span><span class="p">()</span>
+<span class="n">good_Sigma</span><span class="p">,</span> <span class="n">fac_eig</span><span class="p">,</span> <span class="n">fac_loss</span> <span class="o">=</span> <span class="n">fit_factored</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"raw entries: smallest eigenvalue </span><span class="si">{</span><span class="n">raw_eig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> after </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">raw_eig</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> steps -&gt; not a covariance"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"factored:    smallest eigenvalue stays positive (minimum over the run </span><span class="si">{</span><span class="nb">min</span><span class="p">(</span><span class="n">fac_eig</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">), "</span>
+      <span class="sa">f</span><span class="s2">"loss </span><span class="si">{</span><span class="n">fac_loss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">fac_loss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">raw_eig</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">min</span><span class="p">(</span><span class="n">fac_eig</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">fac_loss</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">fac_loss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>raw entries: smallest eigenvalue -0.051 after 16 steps -&gt; not a covariance
+factored:    smallest eigenvalue stays positive (minimum over the run 0.115), loss 0.0090 -&gt; 0.000000
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both runs use the same optimiser and the same step size. The target is thin, so the smallest eigenvalue has to
+become small. With raw entries nothing stops a step from carrying it past zero. Here is what the “blob” has
+become at that moment.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">raw_eig</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"raw entries a, b, c"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fac_eig</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"rotation and axis lengths"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"symlog"</span><span class="p">,</span> <span class="n">linthresh</span><span class="o">=</span><span class="mf">0.5</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"optimisation step"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"smallest eigenvalue of $</span><span class="se">\\</span><span class="s2">Sigma$"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">161</span><span class="p">)</span>
+<span class="n">short_axis</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">eigh</span><span class="p">(</span><span class="n">target_Sigma</span><span class="p">)[</span><span class="mi">1</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span>                 <span class="c1"># direction across the thin target</span>
+<span class="n">line</span> <span class="o">=</span> <span class="n">mu</span> <span class="o">+</span> <span class="n">t</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">short_axis</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">gaussian</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">target_Sigma</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"target"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">gaussian</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">good_Sigma</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"factored, fitted"</span><span class="p">)</span>
+<span class="n">broken</span> <span class="o">=</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">bad_Sigma</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">broken</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"raw, at the last step"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">1e-3</span><span class="p">,</span> <span class="mf">1e6</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper center"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"offset across the blob (pixels)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"value $G$"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">good_Sigma</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">draw_ellipse</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">mu</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">target_Sigma</span><span class="p">),</span> <span class="n">n_sigma</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"factored: fitted blob, target ellipse in green"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (pixels)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (pixels)"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"the broken 'Gaussian' four pixels from its centre:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">broken</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3g</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"(a real one never exceeds 1)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">broken</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>the broken 'Gaussian' four pixels from its centre: inf (a real one never exceeds 1)
+</pre></div>
+</div>
+<img alt="../_images/74a287a22967bc672359d67188c721e5d33973263106529a34b393bd7ec29f9b.png" src="../_images/74a287a22967bc672359d67188c721e5d33973263106529a34b393bd7ec29f9b.png" />
+</div>
+</div>
+<p>The middle panel cuts through the centre, across the thin direction. The target and the factored fit are
+bells. The raw matrix has one negative eigenvalue, so the level curves of <span class="math notranslate nohighlight">\(d^\top \Sigma^{-1} d\)</span> are hyperbolas,
+not ellipses: along this direction the exponent is positive and the function grows as it leaves the centre. A renderer fed with
+this produces garbage, and soon after that, NaN.</p>
+<p>The rule that follows is used everywhere in Gaussian splatting <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>: <strong>the optimiser
+never sees a covariance</strong>. It sees unconstrained numbers (an angle or a quaternion, and the logarithm of the
+axis lengths), and the covariance is built from them.</p>
+</section>
+<section id="from-blobs-to-a-picture-alpha-compositing">
+<h2>4. From blobs to a picture: alpha compositing<a class="headerlink" href="#from-blobs-to-a-picture-alpha-compositing" title="Link to this heading">#</a></h2>
+<p>Give each Gaussian <span class="math notranslate nohighlight">\(i\)</span> a colour <span class="math notranslate nohighlight">\(c_i\)</span> and an opacity <span class="math notranslate nohighlight">\(o_i \in [0, 1]\)</span>. At a pixel <span class="math notranslate nohighlight">\(x\)</span> it covers the fraction</p>
+<div class="math notranslate nohighlight">
+\[
+\alpha_i(x) = o_i \, G_i(x) = o_i \exp\!\left(-\tfrac12\, d_i^\top \Sigma_i^{-1} d_i\right)
+\]</div>
+<p>of what lies behind it. This is the <em>alpha</em> of computer graphics <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id32" title="Thomas Porter and Tom Duff. Compositing digital images. Computer Graphics (SIGGRAPH), 18(3):253–259, 1984.">Porter and Duff, 1984</a>]</span>: 0 is clear
+glass, 1 is a wall.</p>
+<p>Now stack several Gaussians, sorted from front to back. Light reaching the eye from Gaussian <span class="math notranslate nohighlight">\(i\)</span> has to pass
+all the Gaussians in front of it, and each one lets the fraction <span class="math notranslate nohighlight">\(1 - \alpha_j\)</span> through. The product of those
+fractions is the <strong>transmittance</strong> <span class="math notranslate nohighlight">\(T_i\)</span>. The pixel colour is</p>
+<div class="math notranslate nohighlight">
+\[
+C(x) = \sum_{i=1}^{N} c_i \,\underbrace{\alpha_i \, T_i}_{w_i}\; + \; T_{N+1}\, c_\text{bg},
+\qquad T_i = \prod_{j &lt; i} (1 - \alpha_j) .
+\]</div>
+<p>The weights <span class="math notranslate nohighlight">\(w_i = \alpha_i T_i\)</span> say how much of the pixel each Gaussian owns. What is left after the last
+Gaussian, <span class="math notranslate nohighlight">\(T_{N+1}\)</span>, shows the background. The weights and <span class="math notranslate nohighlight">\(T_{N+1}\)</span> always sum to one, so a pixel is a
+weighted average of colours.</p>
+<p>The equation is a loop. Walk through the Gaussians from the front, and carry the transmittance along.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ALPHA_MIN</span><span class="p">,</span> <span class="n">ALPHA_MAX</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="mf">255.0</span><span class="p">,</span> <span class="mf">0.99</span>          <span class="c1"># explained in section 6</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">rasterise</span><span class="p">(</span><span class="n">mu</span><span class="p">,</span> <span class="n">Sigma</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">alpha_min</span><span class="o">=</span><span class="n">ALPHA_MIN</span><span class="p">,</span> <span class="n">alpha_max</span><span class="o">=</span><span class="n">ALPHA_MAX</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Composite N 2D Gaussians; index 0 is in front. Returns image (H, W, 3), coverage (H, W), weights (N, H, W)."""</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">pixel_grid</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">W</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">H</span> <span class="o">*</span> <span class="n">W</span><span class="p">)</span>                          <span class="c1"># transmittance: nothing is in the way yet</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mu</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="n">opacity</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Sigma</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="n">alpha_max</span><span class="p">)</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">alpha</span> <span class="o">&gt;=</span> <span class="n">alpha_min</span><span class="p">,</span> <span class="n">alpha</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">alpha</span><span class="p">))</span>
+        <span class="n">w</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">T</span>                              <span class="c1"># the share of each pixel that Gaussian i gets</span>
+        <span class="n">image</span> <span class="o">=</span> <span class="n">image</span> <span class="o">+</span> <span class="n">w</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">color</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>                      <span class="c1"># what is left for the Gaussians behind</span>
+        <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">w</span><span class="p">)</span>
+    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span> <span class="o">+</span> <span class="n">T</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">bg</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">image</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">T</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Three overlapping blobs. Blue is in front, then yellow, then green.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mu3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">24.0</span><span class="p">,</span> <span class="mf">26.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">38.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">31.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">]])</span>
+<span class="n">Sigma3</span> <span class="o">=</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span>
+<span class="n">color3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.53</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.88</span><span class="p">,</span> <span class="mf">0.63</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">]])</span>
+<span class="n">opacity3</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">])</span>
+
+<span class="n">image</span><span class="p">,</span> <span class="n">coverage</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">rasterise</span><span class="p">(</span><span class="n">mu3</span><span class="p">,</span> <span class="n">Sigma3</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">opacity3</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">image</span><span class="p">,</span> <span class="n">weights</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">weights</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">coverage</span><span class="p">],</span>
+               <span class="p">[</span><span class="s2">"image"</span><span class="p">,</span> <span class="s2">"$w_1$ (front)"</span><span class="p">,</span> <span class="s2">"$w_2$"</span><span class="p">,</span> <span class="s2">"$w_3$ (back)"</span><span class="p">,</span> <span class="s2">"$T_4$: background share"</span><span class="p">],</span>
+               <span class="n">size</span><span class="o">=</span><span class="mf">1.75</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"viridis"</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">total</span> <span class="o">=</span> <span class="n">weights</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coverage</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"weights plus background share, over all pixels: min"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">total</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="s2">"max"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">total</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">total</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">total</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>weights plus background share, over all pixels: min 1.000000 max 1.000000
+</pre></div>
+</div>
+<img alt="../_images/7e56e2221e7926fa45d23565fbbb9f28aeb30085b3007c3b9b850e3e5a880cfb.png" src="../_images/7e56e2221e7926fa45d23565fbbb9f28aeb30085b3007c3b9b850e3e5a880cfb.png" />
+</div>
+</div>
+<p>Look at <span class="math notranslate nohighlight">\(w_2\)</span> and <span class="math notranslate nohighlight">\(w_3\)</span>. Each has a bite taken out of it where a Gaussian in front already used up the
+transmittance. That bite is how splatting does occlusion. There is no depth buffer and no hard edge: a Gaussian
+is hidden to the degree that the ones in front are opaque.</p>
+<p><code class="docutils literal notranslate"><span class="pre">course_utils</span></code> has the same renderer without the Python loop: the running product becomes one <code class="docutils literal notranslate"><span class="pre">cumprod</span></code>. The
+two must agree.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">lib_image</span><span class="p">,</span> <span class="n">lib_coverage</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_2d</span><span class="p">(</span><span class="n">mu3</span><span class="p">,</span> <span class="n">Sigma3</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">opacity3</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"largest difference to cu.render_2d:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">image</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">lib_image</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">image</span><span class="p">,</span> <span class="n">lib_image</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">coverage</span><span class="p">,</span> <span class="n">lib_coverage</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest difference to cu.render_2d: 2.38e-07
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="order-matters">
+<h2>5. Order matters<a class="headerlink" href="#order-matters" title="Link to this heading">#</a></h2>
+<p>The formula treats front and back differently, so the order is part of the scene. Render the same three
+Gaussians with the order reversed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">back_first</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">swapped</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rasterise</span><span class="p">(</span><span class="n">mu3</span><span class="p">[</span><span class="n">back_first</span><span class="p">],</span> <span class="n">Sigma3</span><span class="p">[</span><span class="n">back_first</span><span class="p">],</span> <span class="n">color3</span><span class="p">[</span><span class="n">back_first</span><span class="p">],</span> <span class="n">opacity3</span><span class="p">[</span><span class="n">back_first</span><span class="p">],</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+<span class="n">change</span> <span class="o">=</span> <span class="p">(</span><span class="n">image</span> <span class="o">-</span> <span class="n">swapped</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">image</span><span class="p">,</span> <span class="n">swapped</span><span class="p">,</span> <span class="n">change</span><span class="p">],</span> <span class="p">[</span><span class="s2">"blue in front"</span><span class="p">,</span> <span class="s2">"green in front"</span><span class="p">,</span> <span class="s2">"difference"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">);</span>
+
+<span class="n">alphas</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">opacity3</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">mu3</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">Sigma3</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)])</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">)</span>
+<span class="n">overlap</span> <span class="o">=</span> <span class="p">(</span><span class="n">alphas</span> <span class="o">&gt;=</span> <span class="n">ALPHA_MIN</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span>                  <span class="c1"># pixels inside the footprint of two or more Gaussians</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"largest change where footprints overlap:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="n">overlap</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"largest change everywhere else:         "</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">change</span><span class="p">[</span><span class="o">~</span><span class="n">overlap</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">change</span><span class="p">[</span><span class="n">overlap</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.2</span> <span class="ow">and</span> <span class="n">change</span><span class="p">[</span><span class="o">~</span><span class="n">overlap</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest change where footprints overlap: 0.512
+largest change everywhere else:          0.0e+00
+</pre></div>
+</div>
+<img alt="../_images/cb7f561430d2e37b9bc9b05b2fb29a523b91e6ef9bb240ef03197b842af0a459.png" src="../_images/cb7f561430d2e37b9bc9b05b2fb29a523b91e6ef9bb240ef03197b842af0a459.png" />
+</div>
+</div>
+<p>The picture changes where blobs overlap, and nowhere else. In 2D we chose the order by hand. In 3D the order
+comes from the distance to the camera, and it changes when the camera moves.
+<a class="reference internal" href="02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a> shows what happens when a renderer forgets to sort.</p>
+</section>
+<section id="two-small-constants-the-cut-off-and-the-clamp">
+<h2>6. Two small constants: the cut-off and the clamp<a class="headerlink" href="#two-small-constants-the-cut-off-and-the-clamp" title="Link to this heading">#</a></h2>
+<p>The loop has two constants that look like details. Both are there for a reason.</p>
+<p><strong>The cut-off <span class="math notranslate nohighlight">\(\alpha &lt; 1/255\)</span>.</strong> A Gaussian never reaches zero, so in principle every Gaussian touches every
+pixel. An 8-bit image cannot show a contribution below <span class="math notranslate nohighlight">\(1/255\)</span>, so the renderer skips those. That gives every
+Gaussian a finite footprint: <span class="math notranslate nohighlight">\(\alpha\)</span> falls below the cut-off at the Mahalanobis distance</p>
+<div class="math notranslate nohighlight">
+\[
+m_\text{max} = \sqrt{2 \ln (255\, o)} .
+\]</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"opacity </span><span class="si">{</span><span class="n">o</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">: footprint ends at </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">255</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">o</span><span class="p">))</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> sigma"</span><span class="p">)</span>
+
+<span class="n">no_cut</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">rasterise</span><span class="p">(</span><span class="n">mu3</span><span class="p">,</span> <span class="n">Sigma3</span><span class="p">,</span> <span class="n">color3</span><span class="p">,</span> <span class="n">opacity3</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span><span class="p">,</span> <span class="n">alpha_min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">used</span> <span class="o">=</span> <span class="p">(</span><span class="n">weights</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">largest pixel change caused by the cut-off: </span><span class="si">{</span><span class="p">(</span><span class="n">image</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">no_cut</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> "</span>
+      <span class="sa">f</span><span class="s2">"(one 8-bit step is </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mi">255</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gaussian-pixel pairs that still contribute: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">used</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">image</span> <span class="o">-</span> <span class="n">no_cut</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">255</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>opacity 1.00: footprint ends at 3.33 sigma
+opacity 0.50: footprint ends at 3.11 sigma
+opacity 0.10: footprint ends at 2.55 sigma
+opacity 0.01: footprint ends at 1.37 sigma
+
+largest pixel change caused by the cut-off: 0.0051 (one 8-bit step is 0.0039)
+Gaussian-pixel pairs that still contribute: 38 %
+</pre></div>
+</div>
+</div>
+</div>
+<p>An opaque Gaussian ends at about 3.3 sigma, and the image changes by about one 8-bit step. In this
+scene the three blobs are large compared with the image, so many pairs remain. In a real scene a Gaussian
+covers a few pixels out of millions, and a renderer that visits only the footprint does a tiny fraction of the
+work. The library’s <code class="docutils literal notranslate"><span class="pre">mode=&quot;sparse&quot;</span></code> compositor does exactly that; section 7 measures the saving.</p>
+<p><strong>The clamp <span class="math notranslate nohighlight">\(\alpha \le 0.99\)</span>.</strong> Without it, a Gaussian with opacity 1 has <span class="math notranslate nohighlight">\(\alpha = 1\)</span> at its centre, and the
+transmittance behind it is exactly zero. Two things then break. Nothing behind that pixel receives any
+gradient, so the optimiser cannot learn that something is hidden there. And a renderer that accumulates
+<span class="math notranslate nohighlight">\(\log(1 - \alpha)\)</span> to form the product, or divides by <span class="math notranslate nohighlight">\(1 - \alpha\)</span> in its backward pass, meets
+<span class="math notranslate nohighlight">\(\log 0\)</span> or a division by zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">centre</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">32.5</span><span class="p">,</span> <span class="mf">32.5</span><span class="p">]])</span>
+<span class="k">for</span> <span class="n">alpha_max</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">ALPHA_MAX</span><span class="p">):</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">*</span> <span class="n">gaussian</span><span class="p">(</span><span class="n">centre</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">32.5</span><span class="p">,</span> <span class="mf">32.5</span><span class="p">]),</span> <span class="mf">25.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="n">alpha_max</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"alpha clamped at </span><span class="si">{</span><span class="n">alpha_max</span><span class="si">:</span><span class="s2">4.2f</span><span class="si">}</span><span class="s2">: light passing the centre </span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">alpha</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, "</span>
+          <span class="sa">f</span><span class="s2">"log(1 - alpha) = </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">log1p</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha clamped at 1.00: light passing the centre 0.00, log(1 - alpha) = -inf
+alpha clamped at 0.99: light passing the centre 0.01, log(1 - alpha) = -4.61
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-first-fit-a-few-hundred-gaussians-paint-a-picture">
+<h2>7. A first fit: a few hundred Gaussians paint a picture<a class="headerlink" href="#a-first-fit-a-few-hundred-gaussians-paint-a-picture" title="Link to this heading">#</a></h2>
+<p>Every operation in <code class="docutils literal notranslate"><span class="pre">rasterise</span></code> is differentiable: products, sums and an exponential. So the gradient of any
+loss on the image with respect to every centre, shape, colour and opacity comes for free from autograd.
+<a class="reference internal" href="02c_gradients.html"><span class="std std-doc">Lesson 2c</span></a> looks at these gradients one by one. Here we just use them.</p>
+<p>The target is a 64-pixel picture of the toy person. The model is 300 Gaussians scattered at random. The
+optimiser sees unconstrained numbers only, following the rule of section 3: a log axis length, an angle, and
+logits that a sigmoid turns into colours and opacities in <span class="math notranslate nohighlight">\([0, 1]\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">target_image</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">300</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"mu"</span><span class="p">:</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="o">*</span> <span class="mi">64</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(),</span>            <span class="c1"># centres, anywhere in the image</span>
+    <span class="s2">"log_s"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">3.0</span><span class="p">))</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(),</span>          <span class="c1"># axis lengths start at 3 pixels</span>
+    <span class="s2">"theta"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+    <span class="s2">"color"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>                       <span class="c1"># sigmoid(0) = mid grey</span>
+    <span class="s2">"opacity"</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">N</span><span class="p">,),</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(),</span>                   <span class="c1"># sigmoid(-1) = 0.27</span>
+<span class="p">}</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">paint</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">"sparse"</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_2d</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"mu"</span><span class="p">],</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"log_s"</span><span class="p">]</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="n">p</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"color"</span><span class="p">]),</span>
+                        <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"opacity"</span><span class="p">]),</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([{</span><span class="s2">"params"</span><span class="p">:</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="s2">"mu"</span><span class="p">]],</span> <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>
+                        <span class="p">{</span><span class="s2">"params"</span><span class="p">:</span> <span class="p">[</span><span class="n">params</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"log_s"</span><span class="p">,</span> <span class="s2">"theta"</span><span class="p">,</span> <span class="s2">"color"</span><span class="p">,</span> <span class="s2">"opacity"</span><span class="p">)],</span> <span class="s2">"lr"</span><span class="p">:</span> <span class="mf">0.05</span><span class="p">}])</span>
+<span class="n">snapshots</span><span class="p">,</span> <span class="n">curve</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">[]</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">301</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">paint</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span> <span class="o">-</span> <span class="n">target_image</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">curve</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">out</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">target_image</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">step</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">):</span>
+        <span class="n">snapshots</span><span class="p">[</span><span class="n">step</span><span class="p">]</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> Gaussians, 300 steps, </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s; PSNR </span><span class="si">{</span><span class="n">curve</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB -&gt; </span><span class="si">{</span><span class="n">curve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">curve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">curve</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>300 Gaussians, 300 steps, 1.6 s; PSNR 9.8 dB -&gt; 31.7 dB
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">snapshots</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="p">[</span><span class="n">target_image</span><span class="p">],</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"step </span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">snapshots</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"target"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.75</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4f4ecc960dbbbcb903a4eae0e3a3a3d98f8ca42d9e1585ef8f301b18e4f0d0c5.png" src="../_images/4f4ecc960dbbbcb903a4eae0e3a3a3d98f8ca42d9e1585ef8f301b18e4f0d0c5.png" />
+</div>
+</div>
+<p>The loop uses the library’s sparse compositor because it is faster. It draws the same picture as our
+<code class="docutils literal notranslate"><span class="pre">rasterise</span></code>, and it is faster because only a small share of all Gaussian-pixel pairs survives the cut-off:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">ours</span> <span class="o">=</span> <span class="n">rasterise</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"mu"</span><span class="p">],</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"log_s"</span><span class="p">]</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]),</span>
+                     <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"color"</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"opacity"</span><span class="p">]),</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">ours</span> <span class="o">-</span> <span class="n">paint</span><span class="p">(</span><span class="n">params</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">used</span> <span class="o">=</span> <span class="p">(</span><span class="n">rasterise</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"mu"</span><span class="p">],</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"log_s"</span><span class="p">]</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">]),</span>
+                      <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"color"</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"opacity"</span><span class="p">]),</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest difference between our loop and the sparse compositor on the fitted scene: </span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Gaussian-pixel pairs that contribute in the fitted scene: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">used</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mf">1e-4</span> <span class="ow">and</span> <span class="n">used</span> <span class="o">&lt;</span> <span class="mf">0.2</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest difference between our loop and the sparse compositor on the fitted scene: 7.2e-07
+Gaussian-pixel pairs that contribute in the fitted scene: 1.1 %
+</pre></div>
+</div>
+</div>
+</div>
+<p>The fitted Gaussians are worth a look. Each one moved to a place where it reduces the error, and stretched
+along the structure it found there.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.6</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">"width_ratios"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1.25</span><span class="p">]})</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">snapshots</span><span class="p">[</span><span class="mi">300</span><span class="p">]),</span> <span class="n">extent</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.35</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">Sig</span> <span class="o">=</span> <span class="n">covariance_2d</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"log_s"</span><span class="p">]</span><span class="o">.</span><span class="n">exp</span><span class="p">(),</span> <span class="n">params</span><span class="p">[</span><span class="s2">"theta"</span><span class="p">])</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"opacity"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
+<span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">S_</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"mu"</span><span class="p">])[</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">keep</span><span class="p">)],</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">Sig</span><span class="p">)[</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">keep</span><span class="p">)],</span>
+                    <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sigmoid</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">"color"</span><span class="p">]))[</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">keep</span><span class="p">)]):</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_ellipse</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">m</span><span class="p">,</span> <span class="n">S_</span><span class="p">,</span> <span class="n">n_sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">c</span> <span class="o">*</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">64</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (pixels)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (pixels)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"1-sigma ellipses of the </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">keep</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2"> Gaussians with opacity &gt; 0.1"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"optimisation step"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"PSNR against the target (dB)"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/6bc2a2284da4931e02377513f9b41d60502dc8dd9da6369c869d07b06c4f25d7.png" src="../_images/6bc2a2284da4931e02377513f9b41d60502dc8dd9da6369c869d07b06c4f25d7.png" />
+</div>
+</div>
+<p>Long thin Gaussians lie along the stripes of the shirt and the edges of the arms. Large ones fill the flat
+areas. Nothing told them to: the gradient did. This is the whole idea of the method in miniature, and the
+rest of the course is about what those Gaussians should be attached to.</p>
+<p>Notice also what the fit did <em>not</em> do. The front-to-back order of the 300 Gaussians stayed as it was at the
+start, since nothing in 2D defines it. And the number of Gaussians was fixed. A real fit adds Gaussians where
+detail is missing and removes useless ones; <a class="reference internal" href="02c_gradients.html"><span class="std std-doc">Lesson 2c</span></a> comes back to that.</p>
+</section>
+<section id="the-lesson-as-a-clip">
+<h2>8. The lesson as a clip<a class="headerlink" href="#the-lesson-as-a-clip" title="Link to this heading">#</a></h2>
+<p>The animation replays the three ideas of this lesson (a Gaussian from its covariance, compositing along a ray,
+the effect of the order) and previews the projection step of <a class="reference internal" href="02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a>.</p>
+<div class="course-anim">
+<video controls playsinline preload="metadata" width="100%" poster="../_static/media/S1_splatting/S1_splatting.png">
+<source src="../_static/media/S1_splatting/S1_splatting.webm" type="video/webm">
+<source src="../_static/media/S1_splatting/S1_splatting.mp4" type="video/mp4">
+</video>
+<p class="course-anim-caption">A Gaussian is a centre and a covariance: the clip stretches and rotates one while the matrix updates. Then one pixel is composited front to back along a ray, with a bar showing how much light is left after each Gaussian takes its share, and swapping the order changes the colour. Last, a side view shows a camera flattening a 3D Gaussian into a 2D footprint, and the toy person appears from a few hundred to several thousand Gaussians.</p>
+<details class="course-anim-interactive">
+<summary>Explore it in 3D</summary>
+<iframe src="../_static/media/S1_splatting/interactive.html" title="Gaussians and their projections, in 3D" loading="lazy" width="100%" height="560" style="border:0"></iframe>
+</details>
+</div>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The real system renders 3D Gaussians with the CUDA rasteriser of 3D Gaussian Splatting
+<span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>. The compositing equation is the one of this lesson, including the <span class="math notranslate nohighlight">\(1/255\)</span> cut-off
+and the <span class="math notranslate nohighlight">\(0.99\)</span> clamp. What differs is everything around it.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real code</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rasterise</span></code>: a Python loop over Gaussians, every Gaussian at every pixel</p></td>
+<td><p>A tile-based GPU rasteriser. Upstream GSM’s rasteriser is not in the repository (<span class="private-repo" title="in the project's private repository">licence notes</span>); two modified copies of it used for speed work are in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/dgr_warp</span></code></span> and <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/dgr_label</span></code></span></p></td>
+</tr>
+<tr class="row-odd"><td><p>Autograd computes the gradients</p></td>
+<td><p>The rasteriser has a hand-written backward pass; its floating-point behaviour is discussed in <span class="private-repo" title="in the project's private repository">docs/speed.md</span></p></td>
+</tr>
+<tr class="row-even"><td><p>Colour, opacity and shape are free parameters per Gaussian</p></td>
+<td><p>They are read from a UV texture shared by all frames (<span class="private-repo" title="in the project's private repository">README, Method</span>); <a class="reference internal" href="../part4_shells/04a_shell_maps.html"><span class="std std-doc">Part 4</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>300 Gaussians, 64 pixels</p></td>
+<td><p>About 100,000 Gaussians or more, 4K frames (<a class="reference internal" href="../part1_problem/01_problem.html"><span class="std std-doc">Lesson 1</span></a>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A 2D Gaussian is a soft ellipse: a centre <span class="math notranslate nohighlight">\(\mu\)</span> and a covariance <span class="math notranslate nohighlight">\(\Sigma\)</span>. Its value at a pixel is
+<span class="math notranslate nohighlight">\(\exp(-\tfrac12 d^\top \Sigma^{-1} d)\)</span>, with peak 1.</p></li>
+<li><p>The covariance is built as <span class="math notranslate nohighlight">\(\Sigma = R S S^\top R^\top\)</span> from a rotation and axis lengths. Any values of those
+give a valid blob. Raw matrix entries do not, and an optimiser will find the invalid ones.</p></li>
+<li><p>Alpha is opacity times the Gaussian. Compositing walks front to back: each Gaussian takes the share
+<span class="math notranslate nohighlight">\(\alpha_i T_i\)</span> of the pixel and leaves <span class="math notranslate nohighlight">\(1 - \alpha_i\)</span> of the transmittance for those behind.</p></li>
+<li><p>The order of the Gaussians is part of the picture wherever they overlap.</p></li>
+<li><p>Contributions below <span class="math notranslate nohighlight">\(1/255\)</span> are skipped, which gives each Gaussian a finite footprint. Alpha is clamped at
+<span class="math notranslate nohighlight">\(0.99\)</span> so that some light, and some gradient, always gets through.</p></li>
+<li><p>The renderer is a differentiable function of all its inputs. Gradient descent on a pixel loss is enough to
+make a few hundred Gaussians paint a picture.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Two Gaussians have the same centre, the same covariance and the same opacity <span class="math notranslate nohighlight">\(o\)</span>, but different colours.
+What is the pixel colour at the centre, as a function of <span class="math notranslate nohighlight">\(o\)</span>? For which <span class="math notranslate nohighlight">\(o\)</span> is the back one invisible?
+Check with <code class="docutils literal notranslate"><span class="pre">rasterise</span></code>.</p></li>
+<li><p>Derive the footprint radius <span class="math notranslate nohighlight">\(m_\text{max} = \sqrt{2 \ln(255\,o)}\)</span> from the cut-off, and explain why a
+Gaussian with opacity below <span class="math notranslate nohighlight">\(1/255\)</span> is never drawn at all.</p></li>
+<li><p>Repeat the fit of section 7 with round Gaussians only (one axis length per Gaussian, no angle). How much
+PSNR does the same number of Gaussians lose, and where in the picture?</p></li>
+<li><p>Shuffle the order of the fitted Gaussians and render again. Why does the picture get worse, although every
+Gaussian is unchanged?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<p>At the centre both have <span class="math notranslate nohighlight">\(\alpha = o\)</span> (below the clamp). The front one gets <span class="math notranslate nohighlight">\(w_1 = o\)</span>, the back one
+<span class="math notranslate nohighlight">\(w_2 = o(1 - o)\)</span>, and the background <span class="math notranslate nohighlight">\((1 - o)^2\)</span>:
+<span class="math notranslate nohighlight">\(C = o\,c_1 + o(1-o)\,c_2 + (1-o)^2 c_\text{bg}\)</span>. The back one is never fully invisible, because alpha is
+clamped at 0.99: at <span class="math notranslate nohighlight">\(o = 1\)</span> it still gets the weight <span class="math notranslate nohighlight">\(0.99 \times 0.01\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">two_mu</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">32.5</span><span class="p">,</span> <span class="mf">32.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">32.5</span><span class="p">,</span> <span class="mf">32.5</span><span class="p">]]);</span> <span class="n">two_S</span> <span class="o">=</span> <span class="mf">30.0</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">two_c</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
+<span class="k">for</span> <span class="n">o</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">img</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rasterise</span><span class="p">(</span><span class="n">two_mu</span><span class="p">,</span> <span class="n">two_S</span><span class="p">,</span> <span class="n">two_c</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">o</span><span class="p">,</span> <span class="n">o</span><span class="p">]),</span> <span class="mi">64</span><span class="p">,</span> <span class="mi">64</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">o</span><span class="p">,</span> <span class="n">img</span><span class="p">[</span><span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span> <span class="n">w</span><span class="p">[:,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<p><span class="math notranslate nohighlight">\(\alpha = o\,e^{-m^2/2} \ge 1/255\)</span> gives <span class="math notranslate nohighlight">\(m^2 \le 2\ln(255\,o)\)</span>. If <span class="math notranslate nohighlight">\(o &lt; 1/255\)</span> the logarithm is negative:
+even the centre is below the cut-off, so the Gaussian contributes nowhere. It also receives no gradient, so
+it can never come back. Real pipelines delete such Gaussians (pruning).</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># in `paint`, replace the covariance by an isotropic one:</span>
+<span class="c1">#   s = p["log_s"][:, :1].exp().expand(-1, 2);  covariance_2d(s, torch.zeros(N))</span>
+</pre></div>
+</div>
+<p>The round version loses a few dB with the same count. The loss is at thin structures: the shirt stripes, the
+arms and the outline. A thin feature needs a chain of small round blobs, or one elongated blob.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 4</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">perm</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>          <span class="c1"># a random order</span>
+<span class="n">shuffled</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span><span class="o">.</span><span class="n">detach</span><span class="p">()[</span><span class="n">perm</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">params</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">paint</span><span class="p">(</span><span class="n">shuffled</span><span class="p">),</span> <span class="n">target_image</span><span class="p">),</span> <span class="s2">"dB after shuffling;"</span><span class="p">,</span> <span class="n">curve</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"dB before"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The colours and opacities were optimised for one particular order. A Gaussian that sat behind others, and was
+tuned to show through only a little, may now be in front.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>3D Gaussian splatting, the source of the parameterisation and of the two constants:
+<span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>.</p></li>
+<li><p>Alpha and the “over” operator: <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id32" title="Thomas Porter and Tom Duff. Compositing digital images. Computer Graphics (SIGGRAPH), 18(3):253–259, 1984.">Porter and Duff, 1984</a>]</span>.</p></li>
+<li><p>Splatting elliptical Gaussians onto an image: <span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id31" title="Matthias Zwicker, Hanspeter Pfister, Jeroen van Baar, and Markus Gross. EWA volume splatting. In IEEE Visualization, 29–36. 2001.">Zwicker <em>et al.</em>, 2001</a>]</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part2_splatting"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part1_problem/01_problem.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">From one video to a drivable avatar</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="02b_projection_3d.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">From 3D to the image: how a camera flattens a Gaussian</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-gaussian-is-a-soft-blob">1. A Gaussian is a soft blob</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-the-covariance-from-the-ellipse">2. Build the covariance from the ellipse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-with-raw-matrix-entries">3. What goes wrong with raw matrix entries</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-blobs-to-a-picture-alpha-compositing">4. From blobs to a picture: alpha compositing</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#order-matters">5. Order matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-small-constants-the-cut-off-and-the-clamp">6. Two small constants: the cut-off and the clamp</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-first-fit-a-few-hundred-gaussians-paint-a-picture">7. A first fit: a few hundred Gaussians paint a picture</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-lesson-as-a-clip">8. The lesson as a clip</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

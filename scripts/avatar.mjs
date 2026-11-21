@@ -23,6 +23,7 @@ export function avatarPage({ prefix }) {
           <a class="btn" href="#how">How it works</a>
           <a class="btn" href="#tools">The capture tools</a>
           <a class="btn" href="${prefix}avatar/capture/index.html">Recording guide</a>
+          <a class="btn" href="${prefix}avatar-course/index.html">Course: build one yourself</a>
         </div>
       </section>
 

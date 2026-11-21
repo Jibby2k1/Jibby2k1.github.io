@@ -1,0 +1,1249 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Why do the feet slide, and how does leg IK pin them? &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part7_motion/07a_contact_and_ik';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="When is the body in the air, and can you trust a smoothness number?" href="07b_flight_and_metrics.html" />
+    <link rel="prev" title="Colour that depends on pose, and what fixing it can cost" href="../part6_hifi/06b_pose_dependent_colour.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Why do the feet slide, and how does leg IK pin them?</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-walk-that-skates">1. A walk that skates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-foot-planted">2. When is a foot planted?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cheapest-fix-moves-the-whole-body">3. The cheapest fix moves the whole body</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-bone-ik-the-knee-sets-the-distance-the-hip-aims">4. Two-bone IK: the knee sets the distance, the hip aims</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pin-the-planted-foot-and-blend-the-pin">5. Pin the planted foot, and blend the pin</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-caveat-world-space-and-the-screen-are-different-measurements">6. A caveat: world space and the screen are different measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="why-do-the-feet-slide-and-how-does-leg-ik-pin-them">
+<h1>Why do the feet slide, and how does leg IK pin them?<a class="headerlink" href="#why-do-the-feet-slide-and-how-does-leg-ik-pin-them" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>How to measure foot slide and floor penetration, and why a motion that looks fine joint by joint still
+skates.</p></li>
+<li><p>How to detect when a foot is planted, using height and speed thresholds with hysteresis.</p></li>
+<li><p>What a root-level foot lock can fix, and where two planted feet defeat it.</p></li>
+<li><p>How analytic two-bone inverse kinematics (IK) moves an ankle to a target, with guards for unreachable
+targets and for knees that would bend backwards.</p></li>
+<li><p>Why a pin must be blended in and out, and why a world-space slide number can say “fixed” while the picture
+has not changed.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part3_body/03a_skeleton.html"><span class="std std-doc">Lesson 3a</span></a> (forward kinematics) and
+<a class="reference internal" href="../part3_body/03b_skinning.html"><span class="std std-doc">Lesson 3b</span></a> (skinning). The avatar of <a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Part 5</span></a>
+is <em>driven</em> by giving it new poses. This lesson is about those poses, so it needs no fitted avatar: every
+figure uses the toy actor or its skeleton.</p>
+<p>The tools of this part live in <code class="docutils literal notranslate"><span class="pre">course_utils/motion_tools.py</span></code>, imported as <code class="docutils literal notranslate"><span class="pre">mo</span></code>.</p>
+<section id="a-walk-that-skates">
+<h2>1. A walk that skates<a class="headerlink" href="#a-walk-that-skates" title="Link to this heading">#</a></h2>
+<p>A pose is a set of joint rotations plus one translation for the whole body. Nothing in that description says
+that a foot on the floor must stay where it is. The toy walk makes the point. It swings the hips with a sine
+wave and moves the root forward at a constant speed, and nobody checked that the two agree.</p>
+<p>We need two measurements. Let <span class="math notranslate nohighlight">\(\mathbf{s}_f(t)\)</span> be the horizontal position of the sole centre of foot <span class="math notranslate nohighlight">\(f\)</span> in
+frame <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(h_f(t)\)</span> the height of its lowest point, and <span class="math notranslate nohighlight">\(c_f(t) \in \{0, 1\}\)</span> a contact label that says whether
+the foot is planted. With <span class="math notranslate nohighlight">\(\Delta t\)</span> the time between frames,</p>
+<div class="math notranslate nohighlight">
+\[
+\text{slide}_f(t) = \frac{\lVert \mathbf{s}_f(t) - \mathbf{s}_f(t-1) \rVert}{\Delta t}
+\quad \text{for frames with } c_f(t) = c_f(t-1) = 1,
+\qquad
+\text{penetration}_f(t) = \max\bigl(0,\, -h_f(t)\bigr).
+\]</div>
+<p>A planted foot should have zero slide, and no sole should go below the floor <span class="math notranslate nohighlight">\(y = 0\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">FPS</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"walk"</span><span class="p">,</span> <span class="mi">96</span><span class="p">,</span> <span class="n">cycles</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>          <span class="c1"># two walking cycles, 3.2 seconds</span>
+<span class="n">f_walk</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>                   <span class="c1"># sole centres, sole heights, ankles, sole speed</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"sole xz"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">xz</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="s2">"| height"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">shape</span><span class="p">),</span> <span class="s2">"| speed"</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">speed</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
+
+<span class="n">frames</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">poses</span><span class="p">)))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">foot</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">style</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(((</span><span class="s2">"left"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"right"</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">))):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">xz</span><span class="p">[:,</span> <span class="n">foot</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">style</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> sole"</span><span class="p">)</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">height</span><span class="p">[:,</span> <span class="n">foot</span><span class="p">]),</span> <span class="n">style</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> sole"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"forward position z (m)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"sole height (cm)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">8.5</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"upper center"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>sole xz (96, 2, 2) | height (96, 2) | speed (96, 2)
+</pre></div>
+</div>
+<img alt="../_images/d9ed29853bb3792226924fb97b00dba69723b79c4175af9228dc4f1938462d2d.png" src="../_images/d9ed29853bb3792226924fb97b00dba69723b79c4175af9228dc4f1938462d2d.png" />
+</div>
+</div>
+<p>Look at the left panel while a foot is on the floor (height zero in the right panel). A planted foot should
+draw a flat step. These steps are tilted: the foot keeps creeping forward while it carries the body. The next
+cell puts a number on it. The contact label used here is simple, low and not fast; Section 2 builds it properly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">DETECT</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">h_on</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">h_off</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">v_on</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">v_off</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>             <span class="c1"># metres and metres per second</span>
+<span class="n">con_ref</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">f_walk</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="o">**</span><span class="n">DETECT</span><span class="p">)</span>    <span class="c1"># reference labels from the noise-free walk</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">report</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">contact</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Slide and penetration of a motion, scored on the reference contact labels."""</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con_ref</span> <span class="k">if</span> <span class="n">contact</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">contact</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">penetration</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">&lt;26s</span><span class="si">}</span><span class="s2"> slide median </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'median'</span><span class="p">]</span><span class="si">:</span><span class="s2">6.1f</span><span class="si">}</span><span class="s2">  p90 </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">'p90'</span><span class="p">]</span><span class="si">:</span><span class="s2">6.1f</span><span class="si">}</span><span class="s2"> mm/s | "</span>
+          <span class="sa">f</span><span class="s2">"deepest penetration </span><span class="si">{</span><span class="n">p</span><span class="p">[</span><span class="s1">'max_mm'</span><span class="p">]</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> mm"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="p">,</span> <span class="n">p</span>
+
+<span class="n">s_proc</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="s2">"procedural walk"</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">s_proc</span><span class="p">[</span><span class="s2">"median"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">,</span> <span class="s2">"the procedural walk should skate visibly"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>procedural walk            slide median  415.0  p90  804.8 mm/s | deepest penetration   0.0 mm
+</pre></div>
+</div>
+</div>
+</div>
+<p>Hundreds of millimetres per second is not subtle. The real project met the same thing in its hand-written
+moves (see <a class="reference internal" href="#sec-07a-real-pipeline"><span class="std std-ref">In the real pipeline</span></a>).</p>
+<p>Motion recovered from video has a second problem. A tracker’s errors are small rotations at every joint and a
+small error of the root position. Most of that error is slow (it lasts several frames) with some jitter on
+top. A two-degree error at the hip moves the foot by about three centimetres, because the leg is a long
+lever. <code class="docutils literal notranslate"><span class="pre">mo.tracker_noise</span></code> imitates this. In the toy we know the clean motion, so we can also keep the reference
+contact labels <code class="docutils literal notranslate"><span class="pre">con_ref</span></code>; a real pipeline has to estimate them.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">tracker_noise</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">joint_deg</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">root_m</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">s_raw</span><span class="p">,</span> <span class="n">p_raw</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="s2">"tracked walk"</span><span class="p">,</span> <span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">)</span>
+<span class="n">f_t</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">p_raw</span><span class="p">[</span><span class="s2">"max_mm"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">"the tracked walk should push a foot through the floor"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tracked walk               slide median  487.2  p90  848.1 mm/s | deepest penetration  34.2 mm
+</pre></div>
+</div>
+</div>
+</div>
+<p>The tracked walk skates at least as much, and now the feet also sink into the floor and float above it. Here
+is what that looks like. The camera stands still at the side, and each picture is the average of seven frames
+taken while the left foot (the one nearer the camera) is supposed to be planted. Anything that stays still is
+sharp in such an average.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">a_st</span><span class="p">,</span> <span class="n">b_st</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con_ref</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>                    <span class="c1"># the first planted run of the left foot</span>
+<span class="n">stance</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">a_st</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">b_st</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))[:</span><span class="mi">7</span><span class="p">]</span>
+<span class="n">z_mid</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">f_walk</span><span class="o">.</span><span class="n">xz</span><span class="p">[(</span><span class="n">a_st</span> <span class="o">+</span> <span class="n">b_st</span><span class="p">)</span> <span class="o">//</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">cam_feet</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="p">(</span><span class="mf">4.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">,</span> <span class="n">z_mid</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">,</span> <span class="n">z_mid</span><span class="p">),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">160</span><span class="p">)</span>
+<span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">stance_average</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam_feet</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">stance</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="n">avg_raw</span> <span class="o">=</span> <span class="n">stance_average</span><span class="p">(</span><span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam_feet</span><span class="p">,</span> <span class="n">poses_t</span><span class="p">[</span><span class="n">stance</span><span class="p">[</span><span class="mi">3</span><span class="p">]],</span> <span class="n">trans_t</span><span class="p">[</span><span class="n">stance</span><span class="p">[</span><span class="mi">3</span><span class="p">]])[</span><span class="mi">0</span><span class="p">],</span> <span class="n">avg_raw</span><span class="p">],</span>
+               <span class="p">[</span><span class="s2">"one frame of the stance"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"average of </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">stance</span><span class="p">)</span><span class="si">}</span><span class="s2"> stance frames"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">3.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/98cb1c8fdf8b683fe560c83c430f265b5968ef10748279c0d256f332dc7bc991.png" src="../_images/98cb1c8fdf8b683fe560c83c430f265b5968ef10748279c0d256f332dc7bc991.png" />
+</div>
+</div>
+<p>The planted shoe is as smeared as the rest of the leg. It never stood still.</p>
+</section>
+<section id="when-is-a-foot-planted">
+<h2>2. When is a foot planted?<a class="headerlink" href="#when-is-a-foot-planted" title="Link to this heading">#</a></h2>
+<p>A planted foot is <strong>low</strong> and <strong>slow</strong>. The obvious detector thresholds both, frame by frame:
+<span class="math notranslate nohighlight">\(c_f(t) = [h_f(t) &lt; h_\text{on}] \wedge [v_f(t) &lt; v_\text{on}]\)</span>, where <span class="math notranslate nohighlight">\(v_f\)</span> is the horizontal sole speed.
+On tracked motion this flickers, because noise carries the height and the speed back and forth across the
+thresholds.</p>
+<p><strong>Hysteresis</strong> fixes the flicker with a second, looser pair of thresholds. A foot becomes planted when it is
+below <span class="math notranslate nohighlight">\(h_\text{on}\)</span> and slower than <span class="math notranslate nohighlight">\(v_\text{on}\)</span>. It then stays planted until it is clearly up or clearly
+moving: above <span class="math notranslate nohighlight">\(h_\text{off} &gt; h_\text{on}\)</span> or faster than <span class="math notranslate nohighlight">\(v_\text{off} &gt; v_\text{on}\)</span>. Noise that is smaller
+than the gap between the two thresholds can no longer switch the label. Runs shorter than a few frames are
+dropped.</p>
+<p>Note the speed thresholds. They are far above zero, because the detector has to recognise a planted foot
+<em>before</em> its slide has been removed.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">con_naive</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_t</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">f_t</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">hysteresis</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">min_len</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">DETECT</span><span class="p">)</span>
+<span class="n">con_det</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_t</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">f_t</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="o">**</span><span class="n">DETECT</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">))</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"reference (clean walk)"</span><span class="p">,</span> <span class="n">con_ref</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">]),</span> <span class="p">(</span><span class="s2">"one threshold per frame"</span><span class="p">,</span> <span class="n">con_naive</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]),</span>
+        <span class="p">(</span><span class="s2">"with hysteresis"</span><span class="p">,</span> <span class="n">con_det</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">])]</span>
+<span class="n">ticks</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">r</span><span class="p">,</span> <span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">con</span><span class="p">,</span> <span class="n">colour</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">rows</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">foot</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mf">2.4</span> <span class="o">*</span> <span class="n">r</span> <span class="o">+</span> <span class="n">foot</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">broken_barh</span><span class="p">([(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con</span><span class="p">[:,</span> <span class="n">foot</span><span class="p">])],</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">)</span>
+        <span class="n">ticks</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">y</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="s1">'L'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">foot</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">'R'</span><span class="si">}</span><span class="s2">"</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ticks</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">poses</span><span class="p">));</span> <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">"y"</span><span class="p">,</span> <span class="n">visible</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">n_runs</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">con</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con</span><span class="p">[:,</span> <span class="n">foot</span><span class="p">]))</span> <span class="k">for</span> <span class="n">foot</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">agree</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">con</span><span class="p">:</span> <span class="nb">float</span><span class="p">((</span><span class="n">con</span> <span class="o">==</span> <span class="n">con_ref</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"planted runs: reference </span><span class="si">{</span><span class="n">n_runs</span><span class="p">(</span><span class="n">con_ref</span><span class="p">)</span><span class="si">}</span><span class="s2">, per-frame thresholds </span><span class="si">{</span><span class="n">n_runs</span><span class="p">(</span><span class="n">con_naive</span><span class="p">)</span><span class="si">}</span><span class="s2">, hysteresis </span><span class="si">{</span><span class="n">n_runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"frames that agree with the reference: per-frame </span><span class="si">{</span><span class="n">agree</span><span class="p">(</span><span class="n">con_naive</span><span class="p">)</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">, hysteresis </span><span class="si">{</span><span class="n">agree</span><span class="p">(</span><span class="n">con_det</span><span class="p">)</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">n_runs</span><span class="p">(</span><span class="n">con_naive</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">)</span> <span class="ow">and</span> <span class="n">agree</span><span class="p">(</span><span class="n">con_det</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">agree</span><span class="p">(</span><span class="n">con_naive</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>planted runs: reference 5, per-frame thresholds 12, hysteresis 6
+frames that agree with the reference: per-frame 92%, hysteresis 95%
+</pre></div>
+</div>
+<img alt="../_images/d15e6217868212de0d4fbf02e0bfae3803eefa3dfe0b1591c3213edb5d15f833.png" src="../_images/d15e6217868212de0d4fbf02e0bfae3803eefa3dfe0b1591c3213edb5d15f833.png" />
+</div>
+</div>
+<p>The per-frame detector breaks each stance into pieces. With hysteresis the runs are whole again and closer to
+the reference, though not identical to it: where the tracked foot floats a few centimetres, no height
+threshold can know it should have been on the floor. Every later step inherits these labels. From here on the
+<em>fix</em> uses the detected labels <code class="docutils literal notranslate"><span class="pre">con_det</span></code>, and the <em>score</em> uses the reference labels <code class="docutils literal notranslate"><span class="pre">con_ref</span></code>, so that all
+variants are scored on the same frames.</p>
+</section>
+<section id="the-cheapest-fix-moves-the-whole-body">
+<h2>3. The cheapest fix moves the whole body<a class="headerlink" href="#the-cheapest-fix-moves-the-whole-body" title="Link to this heading">#</a></h2>
+<p>If the planted foot moved by <span class="math notranslate nohighlight">\(\Delta\mathbf{s}\)</span> between two frames, move the whole body back by
+<span class="math notranslate nohighlight">\(-\Delta\mathbf{s}\)</span>. Summed over time this gives a new root trajectory, and it also sets the root height so that
+the planted sole sits on the floor. This is a <strong>root lock</strong>. It changes three numbers per frame and no joint
+rotation.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">root_lock</span><span class="p">(</span><span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">,</span> <span class="n">con_det</span><span class="p">)</span>
+<span class="n">s_lock</span><span class="p">,</span> <span class="n">p_lock</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="s2">"tracked + root lock"</span><span class="p">,</span> <span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">)</span>
+<span class="n">both</span> <span class="o">=</span> <span class="n">con_ref</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">f_l</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="n">single</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f_l</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con_ref</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">both</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">FPS</span><span class="p">)</span>
+<span class="n">double</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f_l</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con_ref</span> <span class="o">&amp;</span> <span class="n">both</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">FPS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"after the root lock: slide p90 with one foot planted </span><span class="si">{</span><span class="n">single</span><span class="p">[</span><span class="s1">'p90'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> mm/s, with both planted </span><span class="si">{</span><span class="n">double</span><span class="p">[</span><span class="s1">'p90'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> mm/s"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">s_lock</span><span class="p">[</span><span class="s2">"median"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">s_raw</span><span class="p">[</span><span class="s2">"median"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">double</span><span class="p">[</span><span class="s2">"p90"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">single</span><span class="p">[</span><span class="s2">"median"</span><span class="p">],</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tracked + root lock        slide median    0.0  p90  251.5 mm/s | deepest penetration  19.6 mm
+after the root lock: slide p90 with one foot planted 0 mm/s, with both planted 364 mm/s
+</pre></div>
+</div>
+</div>
+</div>
+<p>The median slide is gone, and the 90th percentile is not. One translation can hold one foot still. When both
+feet are planted and the tracker moves them in different directions, the root lock can only cancel their
+average, and both still slide. (Some of the remaining slide also sits in frames that the detector missed.)
+The root lock also leaves penetration in the frames where the foot was not labelled as planted. To hold two
+feet at once, each leg has to change shape.</p>
+</section>
+<section id="two-bone-ik-the-knee-sets-the-distance-the-hip-aims">
+<h2>4. Two-bone IK: the knee sets the distance, the hip aims<a class="headerlink" href="#two-bone-ik-the-knee-sets-the-distance-the-hip-aims" title="Link to this heading">#</a></h2>
+<p><strong>Inverse kinematics</strong> asks the opposite question to forward kinematics: given where the ankle should be,
+which joint rotations put it there? For a leg there is a closed-form answer.</p>
+<p>Work in the plane of the leg. The thigh has length <span class="math notranslate nohighlight">\(l_1\)</span> and the shin <span class="math notranslate nohighlight">\(l_2\)</span>. Let <span class="math notranslate nohighlight">\(\phi\)</span> be the knee flexion
+(zero for a straight leg). The distance <span class="math notranslate nohighlight">\(d\)</span> from hip to ankle depends on <span class="math notranslate nohighlight">\(\phi\)</span> only, by the law of cosines:</p>
+<div class="math notranslate nohighlight">
+\[
+d^2 = l_1^2 + l_2^2 + 2\, l_1 l_2 \cos\phi
+\qquad\Longrightarrow\qquad
+\phi = \arccos\frac{d^2 - l_1^2 - l_2^2}{2\, l_1 l_2}.
+\]</div>
+<p>So the knee is solved first, from the distance to the target alone. Then the hip rotates the bent leg until
+the ankle lies on the line from hip to target. In the plane, with the target at forward offset <span class="math notranslate nohighlight">\(t_z\)</span> and
+height offset <span class="math notranslate nohighlight">\(t_y\)</span> from the hip, the hip angle is <span class="math notranslate nohighlight">\(\theta = -(\gamma + \beta)\)</span>, where
+<span class="math notranslate nohighlight">\(\gamma = \operatorname{atan2}(t_z, -t_y)\)</span> is the direction of the target and
+<span class="math notranslate nohighlight">\(\beta = \operatorname{atan2}(l_2 \sin\phi,\; l_1 + l_2\cos\phi)\)</span> is the angle between the thigh and the
+hip–ankle line. The minus sign is the toy body’s convention: swinging the leg forward is a negative rotation
+about <span class="math notranslate nohighlight">\(+x\)</span> at the hip, and bending the knee is a positive one.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">HIP</span><span class="p">,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="n">ANKLE</span> <span class="o">=</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">LEGS</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>            <span class="c1"># the left leg</span>
+<span class="n">REST</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span>
+<span class="n">L1</span><span class="p">,</span> <span class="n">L2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">REST</span><span class="p">[</span><span class="n">KNEE</span><span class="p">]</span> <span class="o">-</span> <span class="n">REST</span><span class="p">[</span><span class="n">HIP</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()),</span> <span class="nb">float</span><span class="p">((</span><span class="n">REST</span><span class="p">[</span><span class="n">ANKLE</span><span class="p">]</span> <span class="o">-</span> <span class="n">REST</span><span class="p">[</span><span class="n">KNEE</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">planar_ik</span><span class="p">(</span><span class="n">tz</span><span class="p">,</span> <span class="n">ty</span><span class="p">,</span> <span class="n">backward</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Hip angle and knee flexion (radians) that put the ankle at (tz forward, ty up) from the hip."""</span>
+    <span class="n">d2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">tz</span> <span class="o">*</span> <span class="n">tz</span> <span class="o">+</span> <span class="n">ty</span> <span class="o">*</span> <span class="n">ty</span><span class="p">)</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">acos</span><span class="p">((</span><span class="n">d2</span> <span class="o">-</span> <span class="n">L1</span> <span class="o">*</span> <span class="n">L1</span> <span class="o">-</span> <span class="n">L2</span> <span class="o">*</span> <span class="n">L2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">L1</span> <span class="o">*</span> <span class="n">L2</span><span class="p">))</span>        <span class="c1"># law of cosines</span>
+    <span class="k">if</span> <span class="n">backward</span><span class="p">:</span>
+        <span class="n">phi</span> <span class="o">=</span> <span class="o">-</span><span class="n">phi</span>                                                    <span class="c1"># the other root of the same equation</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">L2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">),</span> <span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">))</span>
+    <span class="n">gamma</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">tz</span><span class="p">,</span> <span class="o">-</span><span class="n">ty</span><span class="p">)</span>
+    <span class="k">return</span> <span class="o">-</span><span class="p">(</span><span class="n">gamma</span> <span class="o">+</span> <span class="n">beta</span><span class="p">),</span> <span class="n">phi</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">leg_pose</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">):</span>
+    <span class="n">pose</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">zero_pose</span><span class="p">()</span>
+    <span class="n">pose</span><span class="p">[</span><span class="n">HIP</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">pose</span><span class="p">[</span><span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phi</span>
+    <span class="k">return</span> <span class="n">pose</span>
+
+<span class="n">target</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.55</span><span class="p">)</span>                                                <span class="c1"># 25 cm forward, 55 cm below the hip</span>
+<span class="n">theta</span><span class="p">,</span> <span class="n">phi</span> <span class="o">=</span> <span class="n">planar_ik</span><span class="p">(</span><span class="o">*</span><span class="n">target</span><span class="p">)</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">joints</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">leg_pose</span><span class="p">(</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">))</span>
+<span class="n">reached</span> <span class="o">=</span> <span class="n">joints</span><span class="p">[</span><span class="n">ANKLE</span><span class="p">]</span> <span class="o">-</span> <span class="n">joints</span><span class="p">[</span><span class="n">HIP</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"hip </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> deg, knee </span><span class="si">{</span><span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="n">phi</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> deg | "</span>
+      <span class="sa">f</span><span class="s2">"ankle lands at z </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, y </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reached</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>hip -68.3 deg, knee 85.1 deg | ankle lands at z 0.250, y -0.550
+</pre></div>
+</div>
+</div>
+</div>
+<p>Forward kinematics confirms the answer. Three things can still go wrong, and all three show up in real
+motion.</p>
+<ol class="arabic simple">
+<li><p><strong>The equation has two roots.</strong> <span class="math notranslate nohighlight">\(-\phi\)</span> gives the same distance with the knee bent backwards. Both reach
+the target. Only one is a leg.</p></li>
+<li><p><strong>The target may be out of reach.</strong> If <span class="math notranslate nohighlight">\(d &gt; l_1 + l_2\)</span> the argument of the arccosine exceeds one and the
+result is not a number.</p></li>
+<li><p><strong>Near full extension the knee is infinitely sensitive.</strong> The slope <span class="math notranslate nohighlight">\(\mathrm{d}\phi/\mathrm{d}d\)</span> grows
+without bound as <span class="math notranslate nohighlight">\(d \to l_1 + l_2\)</span>, so a millimetre of target noise becomes degrees of knee motion, and a
+hard cut-off at full reach makes the knee snap.</p></li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">theta_b</span><span class="p">,</span> <span class="n">phi_b</span> <span class="o">=</span> <span class="n">planar_ik</span><span class="p">(</span><span class="o">*</span><span class="n">target</span><span class="p">,</span> <span class="n">backward</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">theta_far</span><span class="p">,</span> <span class="n">phi_far</span> <span class="o">=</span> <span class="n">planar_ik</span><span class="p">(</span><span class="mf">0.60</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.70</span><span class="p">)</span>                           <span class="c1"># 92 cm away; the leg is 82 cm long</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"unreachable target without a guard: knee ="</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">phi_far</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">math</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">phi_far</span><span class="p">))</span>
+
+<span class="n">d_max</span> <span class="o">=</span> <span class="n">L1</span> <span class="o">+</span> <span class="n">L2</span>
+<span class="n">d</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.90</span><span class="p">,</span> <span class="mi">400</span><span class="p">)</span>
+<span class="n">phi_of</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">dist</span><span class="p">:</span> <span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">acos</span><span class="p">(((</span><span class="n">dist</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">L1</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">L2</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">L1</span> <span class="o">*</span> <span class="n">L2</span><span class="p">))</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
+<span class="n">phi_hard</span> <span class="o">=</span> <span class="n">phi_of</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">max</span><span class="o">=</span><span class="n">d_max</span><span class="p">))</span>
+<span class="n">phi_soft</span> <span class="o">=</span> <span class="n">phi_of</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">soft_clamp</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="mf">0.998</span> <span class="o">*</span> <span class="n">d_max</span><span class="p">,</span> <span class="n">soft</span><span class="o">=</span><span class="mf">0.03</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="p">(</span><span class="n">th</span><span class="p">,</span> <span class="n">ph</span><span class="p">),</span> <span class="n">colour</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">(((</span><span class="n">theta</span><span class="p">,</span> <span class="n">phi</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="s2">"knee forward"</span><span class="p">),</span>
+                                <span class="p">((</span><span class="n">theta_b</span><span class="p">,</span> <span class="n">phi_b</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="s2">"knee backward (same ankle)"</span><span class="p">)):</span>
+    <span class="n">j</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">leg_pose</span><span class="p">(</span><span class="n">th</span><span class="p">,</span> <span class="n">ph</span><span class="p">))[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">j</span><span class="p">[[</span><span class="n">HIP</span><span class="p">,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="n">ANKLE</span><span class="p">],</span> <span class="mi">2</span><span class="p">],</span> <span class="n">j</span><span class="p">[[</span><span class="n">HIP</span><span class="p">,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="n">ANKLE</span><span class="p">],</span> <span class="mi">1</span><span class="p">],</span> <span class="s2">"-o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">hip_xy</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">REST</span><span class="p">[</span><span class="n">HIP</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">hip_xy</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">hip_xy</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"x"</span><span class="p">,</span> <span class="n">ms</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">mew</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"target"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"forward z (m)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"height y (m)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"center right"</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">phi_hard</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"hard limit at full reach"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">phi_soft</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"soft limit"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">d_max</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"full reach"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"hip-to-target distance d (m)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"knee flexion (deg)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>unreachable target without a guard: knee = nan
+</pre></div>
+</div>
+<img alt="../_images/6b8e725c424da76677486f3c94dc9654468ebad496187f87caa007ceb37c9a00.png" src="../_images/6b8e725c424da76677486f3c94dc9654468ebad496187f87caa007ceb37c9a00.png" />
+</div>
+</div>
+<p>The guards are short. Take the positive root, so the knee bends the natural way. Replace the wanted distance
+<span class="math notranslate nohighlight">\(d\)</span> by a <strong>soft clamp</strong> that follows <span class="math notranslate nohighlight">\(d\)</span> until shortly before full reach and then levels off smoothly just
+below it. An unreachable target then gives a nearly straight leg that points at the target, and the curve on
+the right has no corner.</p>
+<p>In three dimensions one more choice appears. The knee can swing around the hip–ankle line without moving the
+ankle. <code class="docutils literal notranslate"><span class="pre">mo.two_bone_ik</span></code> resolves this by changing the input pose as little as possible: it adjusts the knee
+flexion, then applies the <em>smallest</em> rotation at the hip that brings the ankle onto the hip–target line. That
+rotation adds no twist, so the knee keeps pointing where it pointed. Last, the ankle rotation is recomputed so
+that the foot keeps its orientation in the world. The next cell checks the library against the planar formula,
+and checks the guards.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">pose0</span><span class="p">,</span> <span class="n">trans0</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">zero_pose</span><span class="p">()</span>
+<span class="n">ankles</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">pose0</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">trans0</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span><span class="o">.</span><span class="n">ankle</span>                     <span class="c1"># (1, 2, 3) current ankle positions</span>
+<span class="n">goal</span> <span class="o">=</span> <span class="n">ankles</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">goal</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">REST</span><span class="p">[</span><span class="n">HIP</span><span class="p">]</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">target</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="p">[</span><span class="mi">0</span><span class="p">]])</span>
+<span class="n">solved</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">two_bone_ik</span><span class="p">(</span><span class="n">pose0</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">trans0</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">goal</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"library vs planar formula: hip </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">solved</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">HIP</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">theta</span><span class="p">)</span><span class="si">:</span><span class="s2">+.1e</span><span class="si">}</span><span class="s2"> rad, knee </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">solved</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">KNEE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">phi</span><span class="p">)</span><span class="si">:</span><span class="s2">+.1e</span><span class="si">}</span><span class="s2"> rad"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">solved</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">HIP</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">theta</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-4</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">solved</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">KNEE</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">phi</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">solved</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="s2">"r_hip"</span><span class="p">)]</span> <span class="o">-</span> <span class="n">pose0</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="s2">"r_hip"</span><span class="p">)])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>   <span class="c1"># other leg untouched</span>
+
+<span class="n">far</span> <span class="o">=</span> <span class="n">ankles</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">far</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">REST</span><span class="p">[</span><span class="n">HIP</span><span class="p">]</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.60</span><span class="p">])</span>              <span class="c1"># the unreachable target from above</span>
+<span class="n">solved_far</span><span class="p">,</span> <span class="n">info_far</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">two_bone_ik</span><span class="p">(</span><span class="n">solved</span><span class="p">,</span> <span class="n">trans0</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">far</span><span class="p">)</span>     <span class="c1"># start from the bent leg just solved</span>
+<span class="n">flex_far</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">knee_flexion</span><span class="p">(</span><span class="n">solved_far</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"unreachable target with guards: knee flexion </span><span class="si">{</span><span class="n">flex_far</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> deg, ankle stops </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">info_far</span><span class="p">[</span><span class="s1">'residual'</span><span class="p">][</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm short"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">solved_far</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">flex_far</span> <span class="o">&lt;</span> <span class="mi">15</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>library vs planar formula: hip +0.0e+00 rad, knee -1.2e-07 rad
+unreachable target with guards: knee flexion 7.3 deg, ankle stops 10.4 cm short
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="pin-the-planted-foot-and-blend-the-pin">
+<h2>5. Pin the planted foot, and blend the pin<a class="headerlink" href="#pin-the-planted-foot-and-blend-the-pin" title="Link to this heading">#</a></h2>
+<p>A <strong>foot lock</strong> turns contact labels into ankle targets. For every planted run of a foot:</p>
+<ul class="simple">
+<li><p>the sole centre is held at the horizontal position where it landed, the first frame of the run;</p></li>
+<li><p>the lowest point of the sole is put on the floor.</p></li>
+</ul>
+<p>The difference between that and where the sole is now is a correction <span class="math notranslate nohighlight">\(\boldsymbol{\delta}_f(t)\)</span>, added to the
+ankle position and handed to the IK. The foot is rigid below the ankle and keeps its orientation, so moving the
+ankle by <span class="math notranslate nohighlight">\(\boldsymbol{\delta}\)</span> moves the sole by <span class="math notranslate nohighlight">\(\boldsymbol{\delta}\)</span>.</p>
+<p>What happens at the end of a run? If the correction is simply switched off, the foot jumps back to its
+uncorrected path in one frame. <code class="docutils literal notranslate"><span class="pre">ramp=0</span></code> does exactly that:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">release_jump</span><span class="p">(</span><span class="n">info</span><span class="p">,</span> <span class="n">contact</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Largest one-frame change of the ankle correction outside planted frame pairs, in mm."""</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">]</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">-</span> <span class="n">c</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1000</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">[</span><span class="o">~</span><span class="p">(</span><span class="n">contact</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&amp;</span> <span class="n">contact</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+<span class="n">poses_hard</span><span class="p">,</span> <span class="n">info_hard</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pin_feet</span><span class="p">(</span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">con_det</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> <span class="n">ramp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">poses_ik</span><span class="p">,</span> <span class="n">info_ik</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pin_feet</span><span class="p">(</span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">con_det</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> <span class="n">ramp</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">jump_hard</span><span class="p">,</span> <span class="n">jump_soft</span> <span class="o">=</span> <span class="n">release_jump</span><span class="p">(</span><span class="n">info_hard</span><span class="p">,</span> <span class="n">con_det</span><span class="p">),</span> <span class="n">release_jump</span><span class="p">(</span><span class="n">info_ik</span><span class="p">,</span> <span class="n">con_det</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest one-frame jump of a correction at a pin boundary: switched </span><span class="si">{</span><span class="n">jump_hard</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm, blended </span><span class="si">{</span><span class="n">jump_soft</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">jump_soft</span> <span class="o">&lt;</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">jump_hard</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"planted (detected)"</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">info_hard</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"switched on and off"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">info_ik</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">][:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"blended over 4 frames"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"left ankle correction (cm)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest one-frame jump of a correction at a pin boundary: switched 70.7 mm, blended 29.2 mm
+</pre></div>
+</div>
+<img alt="../_images/bc3999698467097a7918e3bf3a88eac215bb46522bc057cec513a766de2752d7.png" src="../_images/bc3999698467097a7918e3bf3a88eac215bb46522bc057cec513a766de2752d7.png" />
+</div>
+</div>
+<p>Inside a run the correction is nearly constant, because after the root lock the foot already stands still for
+most of the run, a few centimetres from where it landed. The orange curve drops to zero the moment a run ends:
+a pop of centimetres in a single frame. The blended version carries the correction past the end of the run and fades it out over a few frames of the
+swing, where the foot is moving fast anyway and the catch-up is hidden. Between two runs that are close
+together it cross-fades from one anchor to the next. (The floor rule also acts outside the runs: a sole below
+the floor is lifted to it in every frame.)</p>
+<p>Now the whole chain on the tracked walk, scored on the same reference labels each time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">report</span><span class="p">(</span><span class="s2">"tracked walk"</span><span class="p">,</span> <span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">)</span>
+<span class="n">report</span><span class="p">(</span><span class="s2">"+ root lock"</span><span class="p">,</span> <span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">)</span>
+<span class="n">s_ik</span><span class="p">,</span> <span class="n">p_ik</span> <span class="o">=</span> <span class="n">report</span><span class="p">(</span><span class="s2">"+ root lock + leg IK"</span><span class="p">,</span> <span class="n">poses_ik</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">)</span>
+
+<span class="n">flex</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">knee_flexion</span><span class="p">(</span><span class="n">poses_ik</span><span class="p">)</span>
+<span class="n">flips</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pole_flips</span><span class="p">(</span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">poses_ik</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">min_bend</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+<span class="n">solved</span> <span class="o">=</span> <span class="n">info_ik</span><span class="p">[</span><span class="s2">"solved"</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">leg IK changed </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">solved</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2"> of the foot-frames; the rest are bit-identical: "</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">bool</span><span class="p">((</span><span class="n">poses_ik</span><span class="p">[</span><span class="o">~</span><span class="n">solved</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">poses_l</span><span class="p">[</span><span class="o">~</span><span class="n">solved</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">1</span><span class="p">)])</span><span class="o">.</span><span class="n">all</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"smallest knee flexion in solved frames </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">flex</span><span class="p">[</span><span class="n">solved</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg | knee flips </span><span class="si">{</span><span class="n">flips</span><span class="si">}</span><span class="s2"> | "</span>
+      <span class="sa">f</span><span class="s2">"largest unreachable remainder </span><span class="si">{</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">info_ik</span><span class="p">[</span><span class="s1">'residual'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> mm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">s_ik</span><span class="p">[</span><span class="s2">"median"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.05</span> <span class="o">*</span> <span class="n">s_raw</span><span class="p">[</span><span class="s2">"median"</span><span class="p">]</span> <span class="ow">and</span> <span class="n">s_ik</span><span class="p">[</span><span class="s2">"p90"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">s_lock</span><span class="p">[</span><span class="s2">"p90"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">p_ik</span><span class="p">[</span><span class="s2">"max_mm"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">flips</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">flex</span><span class="p">[</span><span class="n">solved</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mf">0.01</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tracked walk               slide median  487.2  p90  848.1 mm/s | deepest penetration  34.2 mm
++ root lock                slide median    0.0  p90  251.5 mm/s | deepest penetration  19.6 mm
++ root lock + leg IK       slide median    0.0  p90   62.9 mm/s | deepest penetration   0.0 mm
+
+leg IK changed 80% of the foot-frames; the rest are bit-identical: True
+smallest knee flexion in solved frames 0.23 deg | knee flips 0 | largest unreachable remainder 40.7 mm
+</pre></div>
+</div>
+</div>
+</div>
+<p>Slide in the median is gone, penetration is gone, no knee bends backwards and none flips sides. The 90th
+percentile improves but does not reach zero. It lives in the frames that the reference calls planted and the
+detector did not, and in targets the leg could not reach. The published numbers of the real project have the
+same shape: a median near zero and a 90th percentile that stays, because only part of the frames get pinned.</p>
+<p>The stance average from Section 1, before and after:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">avg_raw</span><span class="p">,</span> <span class="n">stance_average</span><span class="p">(</span><span class="n">poses_ik</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">)],</span>
+               <span class="p">[</span><span class="s2">"tracked: the planted shoe smears"</span><span class="p">,</span> <span class="s2">"root lock + leg IK: the shoe is sharp"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">3.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ddd9653f1fdcb4a0ce540499eeeba8b78699aee88f4fca557334ac10ae435353.png" src="../_images/ddd9653f1fdcb4a0ce540499eeeba8b78699aee88f4fca557334ac10ae435353.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f_ik</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses_ik</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.18</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"planted (detected)"</span> <span class="k">if</span> <span class="n">a</span> <span class="o">==</span> <span class="n">mo</span><span class="o">.</span><span class="n">runs</span><span class="p">(</span><span class="n">con_det</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">f_t</span><span class="o">.</span><span class="n">xz</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"tracked"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">f_ik</span><span class="o">.</span><span class="n">xz</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"root lock + leg IK"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"left sole, forward position z (m)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/54316a4f5f1109c185a983d513adcf0738b3552f8e5e16b71dfd6bc8e4a3285d.png" src="../_images/54316a4f5f1109c185a983d513adcf0738b3552f8e5e16b71dfd6bc8e4a3285d.png" />
+</div>
+</div>
+<p>Inside the shaded runs the corrected sole draws flat steps where the tracked one keeps creeping. The corrected
+walk also covers less ground: the root now travels only as far as the steps carry it.</p>
+</section>
+<section id="a-caveat-world-space-and-the-screen-are-different-measurements">
+<h2>6. A caveat: world space and the screen are different measurements<a class="headerlink" href="#a-caveat-world-space-and-the-screen-are-different-measurements" title="Link to this heading">#</a></h2>
+<p>Everything above is measured in world coordinates. A viewer sees pixels. The real project measured both and
+found that leg IK took the median world-space slide to nearly zero while the on-screen slide of the same feet
+did not change (the numbers are in <a class="reference internal" href="#sec-07a-real-pipeline"><span class="std std-ref">In the real pipeline</span></a>). So measure both here too.
+<code class="docutils literal notranslate"><span class="pre">mo.screen_slide</span></code> projects a point on each sole into a camera and reports its motion in pixels per frame over
+planted frames. We use two cameras: one that stands still, and one that travels with the walker, as a
+follow shot would.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">SIZE</span> <span class="o">=</span> <span class="mi">256</span>
+<span class="n">z_all</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">trans_l</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">cam_static</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="p">(</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">z_all</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="n">z_all</span><span class="p">),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">)</span>
+<span class="n">cam_follow</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="p">(</span><span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">z</span><span class="p">)),</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">z</span><span class="p">)),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">SIZE</span><span class="p">)</span> <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="n">trans_l</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]]</span>
+
+<span class="n">rows</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">label</span><span class="p">,</span> <span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span> <span class="ow">in</span> <span class="p">{</span><span class="s2">"tracked"</span><span class="p">:</span> <span class="p">(</span><span class="n">poses_t</span><span class="p">,</span> <span class="n">trans_t</span><span class="p">),</span> <span class="s2">"root lock + leg IK"</span><span class="p">:</span> <span class="p">(</span><span class="n">poses_ik</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">)}</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+    <span class="n">rows</span><span class="p">[</span><span class="n">label</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con_ref</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)[</span><span class="s2">"median"</span><span class="p">]</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span>            <span class="c1"># mm per frame</span>
+                   <span class="n">mo</span><span class="o">.</span><span class="n">screen_slide</span><span class="p">(</span><span class="n">cam_static</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">con_ref</span><span class="p">)[</span><span class="s2">"median"</span><span class="p">],</span>
+                   <span class="n">mo</span><span class="o">.</span><span class="n">screen_slide</span><span class="p">(</span><span class="n">cam_follow</span><span class="p">,</span> <span class="n">f</span><span class="o">.</span><span class="n">points</span><span class="p">,</span> <span class="n">con_ref</span><span class="p">)[</span><span class="s2">"median"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">:</span><span class="s2">&lt;20s</span><span class="si">}</span><span class="s2"> world </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">6.2f</span><span class="si">}</span><span class="s2"> mm/frame | static camera </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2"> px/frame | "</span>
+          <span class="sa">f</span><span class="s2">"follow camera </span><span class="si">{</span><span class="n">rows</span><span class="p">[</span><span class="n">label</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2"> px/frame"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">unit</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="s2">"world slide (mm/frame)"</span><span class="p">,</span> <span class="s2">"static camera (px/frame)"</span><span class="p">,</span> <span class="s2">"follow camera (px/frame)"</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">rows</span><span class="p">[</span><span class="s2">"tracked"</span><span class="p">][</span><span class="n">k</span><span class="p">],</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"root lock + leg IK"</span><span class="p">][</span><span class="n">k</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">]])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s2">"tracked"</span><span class="p">,</span> <span class="s2">"lock + IK"</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"median "</span> <span class="o">+</span> <span class="n">unit</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="k">assert</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"root lock + leg IK"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tracked"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>              <span class="c1"># static camera agrees with the world</span>
+<span class="k">assert</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"root lock + leg IK"</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tracked"</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span>              <span class="c1"># follow camera barely notices</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tracked              world  16.24 mm/frame | static camera  0.91 px/frame | follow camera  2.05 px/frame
+root lock + leg IK   world   0.00 mm/frame | static camera  0.00 px/frame | follow camera  2.17 px/frame
+</pre></div>
+</div>
+<img alt="../_images/ea1a75381cf6c0a01c0e9b97d5e21b13aca05b010f7f40cda1d3013b4cd59723.png" src="../_images/ea1a75381cf6c0a01c0e9b97d5e21b13aca05b010f7f40cda1d3013b4cd59723.png" />
+</div>
+</div>
+<p>With a camera that stands still, the two measurements agree on the toy: the pinned foot stops in the world and
+on the screen. With the follow camera they part ways. A foot that is perfectly still on the floor travels
+across the image at the camera’s speed, the pixel number is dominated by that travel, and the pin hardly
+changes it. Neither number is wrong. They answer different questions, and only one of them is what the viewer
+sees. The toy does not reproduce the real project’s finding with a static camera, and the repository does not
+publish a cause for it, so do not read this section as its explanation. Read it as a rule: decide on the
+screen-space measurement before trusting a world-space gain. <a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html"><span class="std std-doc">Part 8</span></a>
+returns to measurements that can mislead.</p>
+</section>
+<section id="from-the-real-system">
+<h2>From the real system<a class="headerlink" href="#from-the-real-system" title="Link to this heading">#</a></h2>
+<link rel="stylesheet" href="../_static/compare.css"><script defer src="../_static/compare.js"></script>
+<div class="course-compare" data-before="no leg IK" data-after="leg IK" style="--compare-max:640px">
+<video muted loop playsinline preload="metadata" poster="../_static/media/real/leg-ik/leg_ik_off_poster.jpg" aria-label="The avatar's legs and feet during a dance step without leg IK: the standing foot drifts across the floor tiles."><source src="../_static/media/real/leg-ik/leg_ik_off.webm" type="video/webm"><source src="../_static/media/real/leg-ik/leg_ik_off.mp4" type="video/mp4"></video><video muted loop playsinline preload="metadata" poster="../_static/media/real/leg-ik/leg_ik_on_poster.jpg" aria-label="The same step with leg IK: the standing foot stays on the same spot of the floor."><source src="../_static/media/real/leg-ik/leg_ik_on.webm" type="video/webm"><source src="../_static/media/real/leg-ik/leg_ik_on.mp4" type="video/mp4"></video>
+</div>
+<figure class="course-real">
+<video controls muted loop playsinline preload="metadata" poster="../_static/media/real/leg-ik/leg_ik_off_vs_on_poster.jpg" aria-label="The same eight seconds of a dance step side by side, without leg IK on the left and with it on the right, cropped on the legs and feet."><source src="../_static/media/real/leg-ik/leg_ik_off_vs_on.webm" type="video/webm"><source src="../_static/media/real/leg-ik/leg_ik_off_vs_on.mp4" type="video/mp4"></video>
+</figure>
+<!-- YOUTUBE: leg-ik (see UPLOAD.md) -->
+<p><strong>Foot sliding, before and after leg IK.</strong> The author’s standard-track avatar driven by a dance motion on the project’s synthetic floor, rendered twice with the same camera: without leg IK (the floor fix and root foot lock are still on) and with two-bone leg IK pinning the planted feet. Watch a standing foot against the floor tiles: without IK it drifts while it should be planted; with IK it stays put and lifts off when the motion lifts it. On the four-avatar dance the repository reports the median foot slide dropping from 112–159 to 27–35 mm/s (<span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span>).</p>
+<div class="course-compare" data-before="original compositing" data-after="grade + shadow" style="--compare-max:560px">
+<img src="../_static/media/real/look/look_k0651_original.jpg" alt="The avatar on the synthetic set with the original compositing: a cool grey wall and a faint blob under the feet."><img src="../_static/media/real/look/look_k0651_graded.jpg" alt="The same frame with the compositing look: a warmer set and a cast shadow on the floor that follows the legs.">
+</div>
+<p><strong>Grounding by compositing.</strong> The same rendered frame composited two ways: the original path, and the look that tints the set towards the capture’s illuminant and casts the posed body’s shadow onto the floor with contact darkening under the soles. Nothing about the avatar changes. Notice how much of “standing on the floor” comes from the shadow rather than from the feet (<span class="private-repo" title="in the project's private repository">docs/look.md</span>).</p>
+<div class="course-compare" data-before="no fix" data-after="webbing fix" style="--compare-max:420px">
+<img src="../_static/media/real/webbing/webbing_k300_before.jpg" alt="Hip close-up of an avatar in a wide stance: dark shreds hang between the thighs."><img src="../_static/media/real/webbing/webbing_k300_after.jpg" alt="The same close-up with the webbing fix: the shreds are gone and the legs separate cleanly.">
+</div>
+<p><strong>A pose the capture never showed.</strong> A wide dance stance on the author’s earlier avatar (hip close-up, cropped from a 720p render). Shell vertices on the inner thigh were skinned to the other leg, which cannot be seen in the capture’s narrow stances; when the legs spread, their Gaussians stretch across the gap. The fix re-skins those vertices and ramps in only beyond the capture’s range of thigh spread (<span class="private-repo" title="in the project's private repository">docs/webbing.md</span>).</p>
+</section>
+<section id="in-the-real-pipeline">
+<span id="sec-07a-real-pipeline"></span><h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The repository drives its avatars with motion from a video tracker and with a few hand-written moves. Both
+needed the steps of this lesson, in the same order: floor fix, root-level foot lock, then leg IK.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Where</p></th>
+<th class="head"><p>What differs from the toy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Contact labels</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/perform.py</span></code></span></p></td>
+<td><p>Labels come from the dancer’s joints and from the tracker, and the two sets are combined</p></td>
+</tr>
+<tr class="row-odd"><td><p>Floor fix and root lock</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/perform.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/DANCE.md</span></p></td>
+<td><p>The floor height comes from the avatar’s own sole vertices</p></td>
+</tr>
+<tr class="row-even"><td><p>Two-bone leg IK</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/leg_ik.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span></p></td>
+<td><p>Soles are mesh vertices; a yaw lock holds the foot’s heading; a pin is cut when the original foot drifts too far</p></td>
+</tr>
+<tr class="row-odd"><td><p>Lift-off release</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span></p></td>
+<td><p>The labels are known offline, so a pin ends when the original foot is <em>about to</em> rise by 2 cm, which removes late, sudden kicks</p></td>
+</tr>
+<tr class="row-even"><td><p>Foot metrics</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/feet_eval.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/plus-feet.md</span></p></td>
+<td><p>Slide of the sole centre and of the fastest sole vertex, float, penetration, knee flexion, pole flips</p></td>
+</tr>
+<tr class="row-odd"><td><p>Hand-written moves</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/motion3.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/MOTION.md</span></p></td>
+<td><p>A per-frame least-squares leg solve instead of the closed form</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Published results, with their sources:</p>
+<ul class="simple">
+<li><p>On one solo driving clip, the median world-space slide over contact frames went from 1.092 cm/frame (raw) to
+0.575 (root lock) to 0.015 (lock, leg IK and support), while the 90th percentile stayed at 1.47 cm/frame
+because only about 45–50 % of frames get pinned
+(<span class="private-repo" title="in the project's private repository">docs/plus-feet.md</span>,
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>).</p></li>
+<li><p>On-screen slide on that clip was 17.6 px/frame before and 17.1 after: unchanged
+(<span class="private-repo" title="in the project's private repository">RESULTS.md</span>; “What we learned”, item 6, in the
+<span class="private-repo" title="in the project's private repository">README</span>). The project calls the IK “a leg clean-up,
+not yet a skating fix”
+(<span class="private-repo" title="in the project's private repository">docs/RESEARCH_DIRECTIONS.md</span>).</p></li>
+<li><p>No penetration below 2 cm, no knee hyperextension and no pole flip in any reported run
+(<span class="private-repo" title="in the project's private repository">docs/plus-feet.md</span>).</p></li>
+<li><p>The IK is not free: it adds sharp corrections to the leg joints. How to measure that, and how the first
+attempt at measuring it went wrong, is the subject of <a class="reference internal" href="07b_flight_and_metrics.html"><span class="std std-doc">Lesson 7b</span></a>.</p></li>
+<li><p>The hand-written moves had the same disease as the toy walk. Before the leg solve, a planted foot in the
+jumping jacks drifted 14 sprite pixels and went 42 mm into the floor
+(<span class="private-repo" title="in the project's private repository">docs/MOTION.md</span>).</p></li>
+</ul>
+<p>The toy differs in the usual ways: capsule feet instead of a shoe mesh, synthetic tracking noise instead of a
+tracker, and contact labels we can check against a known clean motion.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Joint rotations and a root translation do not know about the floor. Procedural motion and tracked motion
+both slide, and tracked motion also sinks and floats.</p></li>
+<li><p>Slide is the horizontal speed of a planted sole; it needs a contact label. Detect contact with height and
+speed thresholds, and use hysteresis so that noise cannot switch the label.</p></li>
+<li><p>A root lock holds one foot with one translation. Two planted feet that disagree need the legs to change.</p></li>
+<li><p>Two-bone IK is closed form: the law of cosines gives the knee from the hip–target distance, and the smallest
+hip rotation aims the leg. Take the forward root, limit the reach softly, and keep the foot’s orientation.</p></li>
+<li><p>Blend a pin in and out, or the foot pops when the pin lets go.</p></li>
+<li><p>Report the on-screen number next to the world-space number. They can disagree.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><strong>Retargeting.</strong> Play the clean procedural walk on a body whose legs are 12 % shorter, by passing a
+modified rest skeleton as <code class="docutils literal notranslate"><span class="pre">rest=</span></code> to <code class="docutils literal notranslate"><span class="pre">mo.feet</span></code>, <code class="docutils literal notranslate"><span class="pre">mo.root_lock</span></code> and <code class="docutils literal notranslate"><span class="pre">mo.pin_feet</span></code>. How much does it float,
+and what do the root lock and the IK do about it?</p></li>
+<li><p>Pin with <code class="docutils literal notranslate"><span class="pre">anchor=&quot;mean&quot;</span></code> instead of <code class="docutils literal notranslate"><span class="pre">anchor=&quot;onset&quot;</span></code>. Which one needs the smaller corrections, and why
+might a pipeline still prefer the onset?</p></li>
+<li><p>Lower <code class="docutils literal notranslate"><span class="pre">v_on</span></code> and <code class="docutils literal notranslate"><span class="pre">v_off</span></code> to 0.2 and 0.3 m/s and detect contact on the tracked walk again. What happens to
+the planted runs, and why is that a trap?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rest</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">side</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"l"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">):</span>
+    <span class="n">hip</span><span class="p">,</span> <span class="n">knee</span><span class="p">,</span> <span class="n">ankle</span> <span class="o">=</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"hip"</span><span class="p">,</span> <span class="s2">"knee"</span><span class="p">,</span> <span class="s2">"ankle"</span><span class="p">))</span>
+    <span class="n">rest</span><span class="p">[</span><span class="n">knee</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rest</span><span class="p">[</span><span class="n">hip</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.88</span> <span class="o">*</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">knee</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">hip</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">rest</span><span class="p">[</span><span class="n">ankle</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">rest</span><span class="p">[</span><span class="n">knee</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.88</span> <span class="o">*</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">ankle</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">knee</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">f_short</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">rest</span><span class="o">=</span><span class="n">rest</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"float of the lowest sole, cm:"</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">f_short</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">median</span><span class="p">()))</span>
+<span class="n">con</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_short</span><span class="o">.</span><span class="n">height</span> <span class="o">-</span> <span class="n">f_short</span><span class="o">.</span><span class="n">height</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">f_short</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="o">**</span><span class="n">DETECT</span><span class="p">)</span>
+<span class="n">p1</span><span class="p">,</span> <span class="n">t1</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">root_lock</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">con</span><span class="p">,</span> <span class="n">rest</span><span class="o">=</span><span class="n">rest</span><span class="p">)</span>
+<span class="n">p2</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pin_feet</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">con</span><span class="p">,</span> <span class="n">rest</span><span class="o">=</span><span class="n">rest</span><span class="p">)</span>
+<span class="n">f2</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">feet</span><span class="p">(</span><span class="n">p2</span><span class="p">,</span> <span class="n">t1</span><span class="p">,</span> <span class="n">rest</span><span class="o">=</span><span class="n">rest</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"slide median, mm/s:"</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f_short</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con</span><span class="p">)[</span><span class="s2">"median"</span><span class="p">],</span> <span class="s2">"-&gt;"</span><span class="p">,</span> <span class="n">mo</span><span class="o">.</span><span class="n">foot_slide</span><span class="p">(</span><span class="n">f2</span><span class="o">.</span><span class="n">xz</span><span class="p">,</span> <span class="n">con</span><span class="p">)[</span><span class="s2">"median"</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>The same joint angles on shorter legs leave the feet hanging about ten centimetres above the floor, and the
+steps are now too short for the root’s speed, so the feet still skate. The root lock lowers the body and matches the
+root’s travel to the shorter steps; the IK then removes what is left in double support. Retargeting is a
+contact problem as much as a rotation problem.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">info_mean</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">pin_feet</span><span class="p">(</span><span class="n">poses_l</span><span class="p">,</span> <span class="n">trans_l</span><span class="p">,</span> <span class="n">con_det</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="s2">"mean"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">info_ik</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">info_mean</span><span class="p">[</span><span class="s2">"correction"</span><span class="p">]</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>The mean position of a run is the point closest to all of its frames, so the corrections are smaller. The
+onset is where the foot actually touched down. With the mean, the foot has to be moved <em>before</em> it lands so
+that it lands on the anchor, which changes the landing; with the onset, the landing is untouched and the whole
+correction happens while the foot is on the floor.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">strict</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">detect_contact</span><span class="p">(</span><span class="n">f_t</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">f_t</span><span class="o">.</span><span class="n">speed</span><span class="p">,</span> <span class="n">h_on</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">h_off</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">v_on</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">v_off</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">strict</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">con_det</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>Most planted frames disappear, because a planted foot in this motion slides faster than the new thresholds.
+The detector would report that there is almost no contact and therefore almost nothing to fix. A speed
+threshold must tolerate the slide that the fix is about to remove.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The real implementation and its record: <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/leg_ik.py</span></code></span>,
+<span class="private-repo" title="in the project's private repository">docs/leg_ik.md</span>,
+<span class="private-repo" title="in the project's private repository">docs/plus-feet.md</span>,
+<span class="private-repo" title="in the project's private repository">docs/MOTION.md</span>.</p></li>
+<li><p>The tracker whose motion the real pipeline cleans up: <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id40" title="Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view coordinates. In SIGGRAPH Asia. 2024.">Shen <em>et al.</em>, 2024</a>]</span>. The body model whose legs it
+solves: <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part7_motion"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part6_hifi/06b_pose_dependent_colour.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Colour that depends on pose, and what fixing it can cost</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07b_flight_and_metrics.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">When is the body in the air, and can you trust a smoothness number?</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-walk-that-skates">1. A walk that skates</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-is-a-foot-planted">2. When is a foot planted?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-cheapest-fix-moves-the-whole-body">3. The cheapest fix moves the whole body</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-bone-ik-the-knee-sets-the-distance-the-hip-aims">4. Two-bone IK: the knee sets the distance, the hip aims</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pin-the-planted-foot-and-blend-the-pin">5. Pin the planted foot, and blend the pin</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-caveat-world-space-and-the-screen-are-different-measurements">6. A caveat: world space and the screen are different measurements</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,32 @@
+/* Before/after wipe slider for two images or two synchronised videos. See compare.js.
+   Without JavaScript the two media simply sit next to each other. */
+.course-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; max-width: var(--compare-max, 720px); margin: 0.8em auto 0.4em; }
+.course-compare > img, .course-compare > video { width: 100%; height: auto; display: block; }
+.course-compare.is-ready { display: block; position: relative; overflow: hidden; border-radius: 6px; line-height: 0;
+  background: #808080; outline: 1px solid rgba(128, 128, 128, 0.45); touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.course-compare.is-ready > .cc-media { display: block; width: 100%; height: auto; max-width: none; margin: 0; border-radius: 0; pointer-events: none; }
+.course-compare.is-ready > .cc-before { position: absolute; inset: 0; height: 100%; object-fit: fill; z-index: 1;
+  clip-path: inset(0 calc(100% - var(--cc-pos, 50%)) 0 0); }
+.course-compare .cc-line { position: absolute; top: 0; bottom: 0; left: var(--cc-pos, 50%); width: 2px; margin-left: -1px; z-index: 2;
+  background: #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55); pointer-events: none; }
+.course-compare .cc-knob { position: absolute; top: 50%; left: var(--cc-pos, 50%); width: 36px; height: 36px; margin: -18px 0 0 -18px; z-index: 3;
+  border-radius: 50%; background: #fff; box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.55), 0 1px 4px rgba(0, 0, 0, 0.4); pointer-events: none; }
+.course-compare .cc-knob::before, .course-compare .cc-knob::after { content: ""; position: absolute; top: 50%; width: 0; height: 0; margin-top: -6px;
+  border: 6px solid transparent; }
+.course-compare .cc-knob::before { left: 3px; border-right-color: #222; }
+.course-compare .cc-knob::after { right: 3px; border-left-color: #222; }
+/* the range input covers the figure: it takes pointer and keyboard input and is the accessible control */
+.course-compare .cc-range { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; z-index: 4; opacity: 0; cursor: ew-resize;
+  -webkit-appearance: none; appearance: none; background: transparent; }
+.course-compare .cc-range:focus-visible ~ .cc-knob { outline: 3px solid #3987e5; outline-offset: 2px; }
+.course-compare .cc-label { position: absolute; top: 8px; z-index: 3; padding: 3px 8px; border-radius: 5px; font: 600 13px/1.3 system-ui, sans-serif;
+  color: #fff; background: rgba(20, 20, 20, 0.78); pointer-events: none; max-width: 46%; }
+.course-compare .cc-label-before { left: 8px; }
+.course-compare .cc-label-after { right: 8px; text-align: right; }
+.course-compare .cc-play { position: absolute; left: 8px; bottom: 8px; z-index: 5; min-width: 32px; height: 28px; padding: 0 8px; border: 0; border-radius: 5px;
+  font: 600 12px/28px system-ui, sans-serif; color: #fff; background: rgba(20, 20, 20, 0.78); cursor: pointer; }
+.course-compare .cc-play:focus-visible { outline: 3px solid #3987e5; outline-offset: 2px; }
+.course-compare-caption { max-width: var(--compare-max, 720px); margin: 0.2em auto 1.2em; font-size: 0.9em; opacity: 0.85; }
+figure.course-real { margin: 0.8em auto 1.4em; text-align: center; }
+figure.course-real img, figure.course-real video { max-width: 100%; height: auto; border-radius: 6px; }
+figure.course-real figcaption { font-size: 0.9em; opacity: 0.85; margin-top: 0.3em; }

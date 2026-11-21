@@ -24,7 +24,7 @@ const DESC_BAND = [50, 200];
 const OG_MIN = [200, 200];
 const OG_IDEAL = [1200, 630];
 
-const SKIP = new Set(['node_modules', '.git', '.cache', 'ieee-sps-uf-site', 'e3nn-course']);
+const SKIP = new Set(['node_modules', '.git', '.cache', 'ieee-sps-uf-site', 'e3nn-course', 'avatar-course']);
 async function htmlPages(dir = root, prefix = '') {
   const out = [];
   for (const entry of await fs.readdir(dir, { withFileTypes: true })) {

@@ -1,0 +1,1171 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fitting an avatar to one video &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part5_fitting/05a_fit_from_video';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Why avatars are blurry: the frames disagree" href="05b_frames_disagree.html" />
+    <link rel="prev" title="Sampling and density: how many Gaussians, and where?" href="../part4_shells/04b_sampling_density.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Fitting an avatar to one video</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-camera-and-a-person-who-turns">1. One camera, and a person who turns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-loss-one-term-at-a-time">2. The loss, one term at a time</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-with-a-white-background-and-no-alpha-term">2.1 What goes wrong with a white background and no alpha term</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fit-watched-from-the-held-out-frames">3. The fit, watched from the held-out frames</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#driving-the-avatar-with-motion-it-never-saw">4. Driving the avatar with motion it never saw</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coverage-what-the-camera-never-saw">5. Coverage: what the camera never saw</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="fitting-an-avatar-to-one-video">
+<h1>Fitting an avatar to one video<a class="headerlink" href="#fitting-an-avatar-to-one-video" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>The monocular setup: one fixed camera, a person who turns, a mask and a pose for every frame.</p></li>
+<li><p>The fitting loss, one term at a time: the photometric term, the alpha-against-mask term and the random
+background, and what breaks without them.</p></li>
+<li><p>How to judge a fit: frames held out of training, and motions the avatar never saw.</p></li>
+<li><p>What happens on surfaces the video never showed.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part2_splatting/02c_gradients.html"><span class="std std-doc">Lesson 2c</span></a> (gradients through the renderer) and
+<a class="reference internal" href="../part4_shells/04a_shell_maps.html"><span class="std std-doc">Lesson 4a</span></a> (the shell avatar).</p>
+<section id="one-camera-and-a-person-who-turns">
+<h2>1. One camera, and a person who turns<a class="headerlink" href="#one-camera-and-a-person-who-turns" title="Link to this heading">#</a></h2>
+<p>To reconstruct a 3D object you need to see it from many directions. A capture studio does this with many
+cameras. A person with one phone on a tripod can do it too: stand in front of the camera and turn slowly in
+place. For a rigid object the two are the same thing. Turning the object by an angle <span class="math notranslate nohighlight">\(\theta\)</span> in front of a
+fixed camera gives the same picture as leaving the object alone and moving the camera around it by <span class="math notranslate nohighlight">\(-\theta\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"turn"</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span>                    <span class="c1"># arms lowered, one full turn about the vertical axis</span>
+<span class="n">fixed</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">theta</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">degrees</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>             <span class="c1"># the root joint's rotation about y in this frame</span>
+<span class="n">turned</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">fixed</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>     <span class="c1"># the person turned, camera fixed</span>
+<span class="n">still_pose</span><span class="p">,</span> <span class="n">still_trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">orbited</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="o">-</span><span class="n">theta</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">),</span> <span class="n">still_pose</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">still_trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>   <span class="c1"># person still, camera moved</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">turned</span> <span class="o">-</span> <span class="n">orbited</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">: the person turned by </span><span class="si">{</span><span class="n">theta</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> degrees; largest pixel difference to the orbiting camera: </span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mf">1e-3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>frame 5: the person turned by 75 degrees; largest pixel difference to the orbiting camera: 8.1e-06
+</pre></div>
+</div>
+</div>
+</div>
+<p>A turn in place is an orbit in disguise. The disguise slips for a real person, who is not rigid: the arms
+sway, the clothes shift, and the body is not in exactly the same pose in every frame. So a real pipeline
+cannot treat the frames as views of one rigid object. It needs the <em>pose</em> of the body in every frame, and that
+is why the avatar is built on a skeleton.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cu.make_video</span></code> produces what a capture and its preprocessing would deliver:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Per frame</p></th>
+<th class="head"><p>Toy</p></th>
+<th class="head"><p>Real capture</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>colour image</p></td>
+<td><p>rendered actor</p></td>
+<td><p>a video frame</p></td>
+</tr>
+<tr class="row-odd"><td><p>mask of the person</p></td>
+<td><p>the renderer’s alpha</p></td>
+<td><p>a segmentation network</p></td>
+</tr>
+<tr class="row-even"><td><p>body pose</p></td>
+<td><p>the true pose</p></td>
+<td><p>a pose tracker’s estimate</p></td>
+</tr>
+<tr class="row-odd"><td><p>2D keypoints</p></td>
+<td><p>projected joints</p></td>
+<td><p>a keypoint detector</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The toy poses are exact. That is the largest difference from reality in this lesson, and
+<a class="reference internal" href="05b_frames_disagree.html"><span class="std std-doc">Lesson 5b</span></a> is about what happens when they are not.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
+<span class="n">train</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>                   <span class="c1"># even frames: used for fitting</span>
+<span class="n">held_out</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>                <span class="c1"># odd frames: only ever used for scoring</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">video</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames -&gt; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">)</span><span class="si">}</span><span class="s2"> for training, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">held_out</span><span class="p">)</span><span class="si">}</span><span class="s2"> held out"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">)))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">t</span><span class="p">]),</span> <span class="n">levels</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">],</span> <span class="n">colors</span><span class="o">=</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">]],</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">joint_size</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"training frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_axis_off</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>24 frames -&gt; 12 for training, 12 held out
+</pre></div>
+</div>
+<img alt="../_images/3c10180e5795bb4a3794d98b753153fb71065bc6a0f913862aab764a9d5fc771.png" src="../_images/3c10180e5795bb4a3794d98b753153fb71065bc6a0f913862aab764a9d5fc771.png" />
+</div>
+</div>
+<p>Green is the outline of the mask and yellow is the skeleton projected into the image. The held-out frames
+lie between the training frames, so they show the body from directions the fit has not seen exactly. Holding
+out frames is the least you can do to check that the avatar is a 3D object and not a set of memorised pictures.
+<a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html"><span class="std std-doc">Part 8</span></a> explains why this split is still an easy test.</p>
+</section>
+<section id="the-loss-one-term-at-a-time">
+<h2>2. The loss, one term at a time<a class="headerlink" href="#the-loss-one-term-at-a-time" title="Link to this heading">#</a></h2>
+<p>The avatar is a function. Given a texture <span class="math notranslate nohighlight">\(T\)</span>, a pose <span class="math notranslate nohighlight">\(\theta_t\)</span> and a camera, it renders a colour image
+<span class="math notranslate nohighlight">\(\hat I_t\)</span> and an alpha image <span class="math notranslate nohighlight">\(\hat\alpha_t\)</span> (how much of each pixel the Gaussians cover). Fitting means
+choosing <span class="math notranslate nohighlight">\(T\)</span> so that the renders match the frames. Three ingredients define “match”.</p>
+<p><strong>The photometric term.</strong> Compare colours pixel by pixel with an L1 distance:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_\text{photo} = \operatorname{mean}_{\text{pixels}} \big| \hat I_t - I_t \big| .\]</div>
+<p>L1 is used instead of a squared error because it does not let a few badly wrong pixels dominate, which keeps
+edges sharper.</p>
+<p><strong>The background.</strong> A render needs a background colour <span class="math notranslate nohighlight">\(b\)</span> behind the Gaussians, and the frame needs the same
+one: <span class="math notranslate nohighlight">\(I_t = F_t + (1 - m_t)\, b\)</span>, where <span class="math notranslate nohighlight">\(F_t\)</span> is the foreground colour (already multiplied by the mask <span class="math notranslate nohighlight">\(m_t\)</span>).
+The fit draws a new random <span class="math notranslate nohighlight">\(b\)</span> at every step.</p>
+<p><strong>The alpha term.</strong> Compare the rendered alpha with the mask directly:</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_\alpha = \operatorname{mean}_{\text{pixels}} \big| \hat\alpha_t - m_t \big|, \qquad
+\mathcal{L} = \mathcal{L}_\text{photo} + w_\alpha \mathcal{L}_\alpha .\]</div>
+<p>Here is the whole fit, written out. It is what <code class="docutils literal notranslate"><span class="pre">cu.fit</span></code> does.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">fit_inline</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">random_bg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">probe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="n">log</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"step"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"loss"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"probe"</span><span class="p">:</span> <span class="p">[]}</span>
+    <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">cu</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">video</span><span class="p">),</span> <span class="p">(</span><span class="n">batch</span><span class="p">,),</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">():</span>        <span class="c1"># a few random frames</span>
+            <span class="n">bg</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">)</span> <span class="k">if</span> <span class="n">random_bg</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>           <span class="c1"># background colour b</span>
+            <span class="n">img</span><span class="p">,</span> <span class="n">alpha</span> <span class="o">=</span> <span class="n">avatar</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">video</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">video</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">bg</span><span class="o">=</span><span class="n">bg</span><span class="p">)</span>
+            <span class="n">target</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">composite_on</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">rgb</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">video</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">bg</span><span class="p">)</span>              <span class="c1"># the frame over the same b</span>
+            <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="p">(</span><span class="n">img</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="n">w_alpha</span> <span class="o">*</span> <span class="p">(</span><span class="n">alpha</span> <span class="o">-</span> <span class="n">video</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="n">t</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">/</span> <span class="n">batch</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">step</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">step</span> <span class="o">==</span> <span class="n">iters</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">log</span><span class="p">[</span><span class="s2">"step"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step</span><span class="p">);</span> <span class="n">log</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">detach</span><span class="p">()))</span>
+            <span class="n">log</span><span class="p">[</span><span class="s2">"probe"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">probe</span><span class="p">(</span><span class="n">avatar</span><span class="p">)</span> <span class="k">if</span> <span class="n">probe</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">log</span>
+
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">)),</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">))</span>
+<span class="n">fit_inline</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">same</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">a</span><span class="o">.</span><span class="n">texture</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">texture</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest texture difference between this loop and cu.fit after 4 steps: </span><span class="si">{</span><span class="n">same</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">same</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest texture difference between this loop and cu.fit after 4 steps: 3.0e-08
+</pre></div>
+</div>
+</div>
+</div>
+<p>The optimiser is Adam <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id48" title="Diederik P. Kingma and Jimmy Ba. Adam: a method for stochastic optimization. International Conference on Learning Representations (ICLR), 2015.">Kingma and Ba, 2015</a>]</span>. It suits this problem because the gradients of different texels
+differ by orders of magnitude: a texel on the chest is seen in most frames, one under the arm in almost none.
+Adam rescales each parameter’s step by the size of its own recent gradients.</p>
+<section id="what-goes-wrong-with-a-white-background-and-no-alpha-term">
+<h3>2.1 What goes wrong with a white background and no alpha term<a class="headerlink" href="#what-goes-wrong-with-a-white-background-and-no-alpha-term" title="Link to this heading">#</a></h3>
+<p>The simplest fit would composite everything over white and use only the photometric term. We run it, together
+with each fix alone and with both. To keep this section short the four fits use a light avatar with two
+shells. Each fit is scored on the held-out frames twice: over white, and over a dark blue background that no
+fit was trained on.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dark</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mf">0.30</span><span class="p">)</span>
+<span class="n">variants</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"white background, no alpha term"</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">random_bg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+            <span class="s2">"random background only"</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">random_bg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">),</span>
+            <span class="s2">"alpha term only"</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">random_bg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">),</span>
+            <span class="s2">"both (the default)"</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">random_bg</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)}</span>
+<span class="n">table</span><span class="p">,</span> <span class="n">shown</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">kw</span> <span class="ow">in</span> <span class="n">variants</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">))</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+    <span class="n">on_white</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">held_out</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+    <span class="n">on_dark</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">held_out</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">dark</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+    <span class="n">imgs</span><span class="p">,</span> <span class="n">alphas</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">held_out</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">dark</span><span class="p">)</span>
+    <span class="n">inside</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">held_out</span><span class="o">.</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.95</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>          <span class="c1"># rendered alpha where the person certainly is</span>
+    <span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">on_white</span><span class="p">,</span> <span class="n">on_dark</span><span class="p">,</span> <span class="n">inside</span><span class="p">)</span>
+    <span class="n">shown</span> <span class="o">+=</span> <span class="p">[</span><span class="n">imgs</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">alphas</span><span class="p">[</span><span class="mi">6</span><span class="p">]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">32s</span><span class="si">}</span><span class="s2">: over white </span><span class="si">{</span><span class="n">on_white</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2"> dB | over dark blue </span><span class="si">{</span><span class="n">on_dark</span><span class="si">:</span><span class="s2">5.2f</span><span class="si">}</span><span class="s2"> dB | alpha inside the body </span><span class="si">{</span><span class="n">inside</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">shown</span><span class="p">[:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">held_out</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="n">bg</span><span class="o">=</span><span class="n">dark</span><span class="p">)]</span> <span class="o">+</span> <span class="n">shown</span><span class="p">[</span><span class="mi">4</span><span class="p">:]</span> <span class="o">+</span> <span class="p">[</span><span class="n">held_out</span><span class="o">.</span><span class="n">mask</span><span class="p">[</span><span class="mi">6</span><span class="p">]],</span>
+               <span class="p">[</span><span class="s2">"white bg, no alpha term"</span><span class="p">,</span> <span class="s2">"its alpha"</span><span class="p">,</span> <span class="s2">"random bg only"</span><span class="p">,</span> <span class="s2">"its alpha"</span><span class="p">,</span> <span class="s2">"frame (truth)"</span><span class="p">,</span>
+                <span class="s2">"alpha term only"</span><span class="p">,</span> <span class="s2">"its alpha"</span><span class="p">,</span> <span class="s2">"both"</span><span class="p">,</span> <span class="s2">"its alpha"</span><span class="p">,</span> <span class="s2">"mask (truth)"</span><span class="p">],</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">);</span>
+<span class="n">naive</span><span class="p">,</span> <span class="n">both</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s2">"white background, no alpha term"</span><span class="p">],</span> <span class="n">table</span><span class="p">[</span><span class="s2">"both (the default)"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">naive</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">naive</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">3.0</span><span class="p">,</span> <span class="s2">"the naive fit should look much worse on a new background"</span>
+<span class="k">assert</span> <span class="n">naive</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">both</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.02</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">both</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">both</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">2.5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>white background, no alpha term : over white 33.30 dB | over dark blue 26.56 dB | alpha inside the body 0.924
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>random background only          : over white 35.01 dB | over dark blue 36.15 dB | alpha inside the body 0.989
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>alpha term only                 : over white 35.05 dB | over dark blue 35.87 dB | alpha inside the body 0.992
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>both (the default)              : over white 35.11 dB | over dark blue 36.13 dB | alpha inside the body 0.992
+</pre></div>
+</div>
+<img alt="../_images/4a5e22abcaf24e67dfe4e60efda6071aa547a3df9e99ff31be82991224a45c20.png" src="../_images/4a5e22abcaf24e67dfe4e60efda6071aa547a3df9e99ff31be82991224a45c20.png" />
+</div>
+</div>
+<p>Over white, the naive fit looks nearly as good as the others. Over dark blue it loses several decibels, and
+its alpha image shows why: there are holes in the body. The actor has a white print on the back of the shirt
+and pale stripes. A pixel that should be white can be explained by an opaque white Gaussian or by <em>no Gaussian
+at all</em>, with the white background showing through. The photometric loss cannot tell the two apart, so the
+fit has no reason to prefer the solid answer. The avatar looks right only in front of the background it was
+trained on.</p>
+<p>Either fix removes the ambiguity on this toy:</p>
+<ul class="simple">
+<li><p>With a <strong>random background</strong>, a transparent pixel shows a different colour at every step, so it cannot
+match a white print. The model is forced to make it opaque.</p></li>
+<li><p>The <strong>alpha term</strong> says directly that the pixel is covered.</p></li>
+</ul>
+<p>The two fixes are not redundant on real footage. The random background also works where the mask is
+unreliable, since it acts through the colour. The alpha term also pins down the <em>outline</em>, which the colour
+of a blurred edge pixel only constrains weakly, and it gives the fit a signal that does not depend on colour at
+all. Lesson 5b uses that property.</p>
+<p>One more lesson hides in this table: the white-background score did not reveal the holes. A metric computed
+over the training background is blind to exactly this failure. Score over a background the model never
+trained on, or over two different ones.</p>
+</section>
+</section>
+<section id="the-fit-watched-from-the-held-out-frames">
+<h2>3. The fit, watched from the held-out frames<a class="headerlink" href="#the-fit-watched-from-the-held-out-frames" title="Link to this heading">#</a></h2>
+<p>Now the full avatar: four shells, about 9,000 Gaussians. While it trains we score it on a few held-out frames.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+<span class="n">probe_set</span> <span class="o">=</span> <span class="n">held_out</span><span class="o">.</span><span class="n">subset</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">])</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">log</span> <span class="o">=</span> <span class="n">fit_inline</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">probe</span><span class="o">=</span><span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">probe_set</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">])</span>
+<span class="n">seconds</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="s2">"step"</span><span class="p">],</span> <span class="n">log</span><span class="p">[</span><span class="s2">"loss"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">]);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">)</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"step"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"training loss"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">log</span><span class="p">[</span><span class="s2">"step"</span><span class="p">],</span> <span class="n">log</span><span class="p">[</span><span class="s2">"probe"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"step"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"PSNR on held-out frames (dB)"</span><span class="p">)</span>
+<span class="n">ev_train</span><span class="p">,</span> <span class="n">ev_held</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">train</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">held_out</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians, 120 steps in </span><span class="si">{</span><span class="n">seconds</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s (including the scoring)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"training frames </span><span class="si">{</span><span class="n">ev_train</span><span class="p">[</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB | held-out frames </span><span class="si">{</span><span class="n">ev_held</span><span class="p">[</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB | "</span>
+      <span class="sa">f</span><span class="s2">"held-out silhouette IoU </span><span class="si">{</span><span class="n">ev_held</span><span class="p">[</span><span class="s1">'mean_iou'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">ev_held</span><span class="p">[</span><span class="s2">"mean_psnr"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">30.0</span> <span class="ow">and</span> <span class="n">ev_held</span><span class="p">[</span><span class="s2">"mean_psnr"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">log</span><span class="p">[</span><span class="s2">"probe"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mf">10.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9308 Gaussians, 120 steps in 3 s (including the scoring)
+training frames 40.08 dB | held-out frames 37.33 dB | held-out silhouette IoU 0.989
+</pre></div>
+</div>
+<img alt="../_images/7a9719c11fad093fde4b7756394c77101653534de25826ead277d8f253ef9df3.png" src="../_images/7a9719c11fad093fde4b7756394c77101653534de25826ead277d8f253ef9df3.png" />
+</div>
+</div>
+<p>The loss falls quickly and then crawls. The first dozen steps make the body opaque and give each part its
+average colour; the rest of the fit sharpens the stripes and the edges. The held-out score follows the
+training score a little below it. The gap is small because a held-out frame lies between two training frames
+only fifteen degrees to either side.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">renders</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">held_out</span><span class="p">)</span>
+<span class="n">picks</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">9</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">held_out</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">renders</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">]</span> <span class="o">+</span>
+               <span class="p">[(</span><span class="n">renders</span><span class="p">[</span><span class="n">t</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_out</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">],</span>
+               <span class="p">[</span><span class="sa">f</span><span class="s2">"held-out frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">picks</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"avatar"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"|error|"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.9</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.4</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f7fa9cc3cb0aa62484188de903a12766617ce4f474353f02cd0b9377e4ee5154.png" src="../_images/f7fa9cc3cb0aa62484188de903a12766617ce4f474353f02cd0b9377e4ee5154.png" />
+</div>
+</div>
+<p>The error that remains sits on outlines and on the borders between colours, where a one-pixel difference in
+position costs the most.</p>
+</section>
+<section id="driving-the-avatar-with-motion-it-never-saw">
+<h2>4. Driving the avatar with motion it never saw<a class="headerlink" href="#driving-the-avatar-with-motion-it-never-saw" title="Link to this heading">#</a></h2>
+<p>A held-out frame of the same turn is a new <em>view</em>. It is not a new <em>pose</em>: the arms are where they were in
+every training frame. The purpose of the avatar is to be driven, so the real test is a different motion. We
+render the fitted avatar and the true actor in two motions from the library, and compare.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">drive</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"dance"</span><span class="p">,</span> <span class="s2">"arms_up"</span><span class="p">):</span>
+    <span class="n">p</span><span class="p">,</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+    <span class="n">truth_video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
+    <span class="n">drive</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">truth_video</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">truth_video</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">8s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">drive</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB whole frame, </span><span class="si">{</span><span class="n">drive</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">'mean_psnr_fg'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB inside the mask"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"held-out frames of the turn: </span><span class="si">{</span><span class="n">ev_held</span><span class="p">[</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB whole frame, </span><span class="si">{</span><span class="n">ev_held</span><span class="p">[</span><span class="s1">'mean_psnr_fg'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB inside the mask"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s2">"mean_psnr"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">26.0</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">drive</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">drive</span><span class="p">[</span><span class="s2">"arms_up"</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s2">"mean_psnr_fg"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">ev_held</span><span class="p">[</span><span class="s2">"mean_psnr_fg"</span><span class="p">]</span>
+
+<span class="n">big</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">p</span><span class="p">,</span> <span class="n">tr</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"arms_up"</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">shown</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">a_img</span> <span class="o">=</span> <span class="n">avatar</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">big</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">tr</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">t_img</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">big</span><span class="p">,</span> <span class="n">p</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">tr</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">shown</span> <span class="o">+=</span> <span class="p">[</span><span class="n">t_img</span><span class="p">,</span> <span class="n">a_img</span><span class="p">,</span> <span class="p">(</span><span class="n">a_img</span> <span class="o">-</span> <span class="n">t_img</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">shown</span><span class="p">,</span> <span class="p">[</span><span class="s2">"actor (truth)"</span><span class="p">,</span> <span class="s2">"avatar, driven"</span><span class="p">,</span> <span class="s2">"|error|"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.4</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>dance   : 33.40 dB whole frame, 28.49 dB inside the mask
+arms_up : 33.59 dB whole frame, 28.49 dB inside the mask
+held-out frames of the turn: 37.33 dB whole frame, 30.95 dB inside the mask
+</pre></div>
+</div>
+<img alt="../_images/f06accfef69d400ef49366f8a3a531613c62504ba3a9e92346e2bf133d6bcce2.png" src="../_images/f06accfef69d400ef49366f8a3a531613c62504ba3a9e92346e2bf133d6bcce2.png" />
+</div>
+</div>
+<p>The avatar follows the new motion, and the face, logo and stripes stay where they belong. The score is lower
+than on the held-out turn frames, and the error maps show where: around the armpits and shoulders, and along
+the sides of the torso. In the training video the arms hung beside the body in every frame, so the camera saw
+those surfaces poorly, and raising the arms exposes them. The next section isolates this effect and then
+measures it.</p>
+</section>
+<section id="coverage-what-the-camera-never-saw">
+<h2>5. Coverage: what the camera never saw<a class="headerlink" href="#coverage-what-the-camera-never-saw" title="Link to this heading">#</a></h2>
+<p>Suppose the person does not complete the turn. We fit a second avatar to a video that only swings from −70°
+to +70°, so that the camera never sees the back.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">front_poses</span><span class="p">,</span> <span class="n">front_trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">front_poses</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">deg2rad</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">front_video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">front_poses</span><span class="p">,</span> <span class="n">front_trans</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="n">fixed</span><span class="p">)</span>
+<span class="n">partial</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+<span class="n">texture_before</span> <span class="o">=</span> <span class="n">partial</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">partial</span><span class="p">,</span> <span class="n">front_video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+
+<span class="n">front_cam</span><span class="p">,</span> <span class="n">back_cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">180</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">views</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"front"</span><span class="p">,</span> <span class="n">front_cam</span><span class="p">),</span> <span class="p">(</span><span class="s2">"back"</span><span class="p">,</span> <span class="n">back_cam</span><span class="p">))}</span>
+<span class="n">score</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="o">*</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">views</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"front view </span><span class="si">{</span><span class="n">score</span><span class="p">[</span><span class="s1">'front'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB | back view </span><span class="si">{</span><span class="n">score</span><span class="p">[</span><span class="s1">'back'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">views</span><span class="p">[</span><span class="s2">"front"</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">views</span><span class="p">[</span><span class="s2">"front"</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">views</span><span class="p">[</span><span class="s2">"back"</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="n">views</span><span class="p">[</span><span class="s2">"back"</span><span class="p">][</span><span class="mi">0</span><span class="p">]],</span>
+               <span class="p">[</span><span class="s2">"actor, front"</span><span class="p">,</span> <span class="s2">"avatar, front"</span><span class="p">,</span> <span class="s2">"actor, back"</span><span class="p">,</span> <span class="s2">"avatar, back (never seen)"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.4</span><span class="p">);</span>
+<span class="k">assert</span> <span class="n">score</span><span class="p">[</span><span class="s2">"back"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">score</span><span class="p">[</span><span class="s2">"front"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>front view 30.7 dB | back view 25.6 dB
+</pre></div>
+</div>
+<img alt="../_images/e76e41eb22df4ab19438ead4e68fc5809c2cb0f79188fdcf2b71dee66364552e.png" src="../_images/e76e41eb22df4ab19438ead4e68fc5809c2cb0f79188fdcf2b71dee66364552e.png" />
+</div>
+</div>
+<p>The front is right. The back is a plausible-looking guess that is wrong: the white print is missing, and the
+shorts are smeared with grey. Where did the guess come from, if no frame showed the back? Measure how much each
+Gaussian contributes to the training images. The contribution of Gaussian <span class="math notranslate nohighlight">\(i\)</span> to a pixel is its blending weight
+<span class="math notranslate nohighlight">\(w_i = \alpha_i \prod_{j&lt;i} (1 - \alpha_j)\)</span> from <a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html"><span class="std std-doc">Lesson 2a</span></a>, and its
+sum over all pixels and frames is the <em>observedness</em> of the Gaussian. The gradient of a rendered image with
+respect to a Gaussian’s colour is exactly that sum, so autograd computes it for us.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">observedness</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">video</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Sum over frames and pixels of each Gaussian's blending weight. Colour is not read."""</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">video</span><span class="p">)):</span>
+        <span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">gaussians</span><span class="p">(</span><span class="n">video</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">video</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">]))</span>
+        <span class="n">colors</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">img</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">colors</span><span class="p">,</span> <span class="n">opacity</span><span class="p">,</span> <span class="n">video</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">bg</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+        <span class="n">img</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>                    <span class="c1"># d(sum of red) / d(red of Gaussian i) = sum of its weights</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">colors</span><span class="o">.</span><span class="n">grad</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">total</span>
+
+<span class="n">torso</span> <span class="o">=</span> <span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"chest"</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"abdomen"</span><span class="p">))</span>
+<span class="n">facing_back</span> <span class="o">=</span> <span class="n">torso</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">rest_frame</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">)</span>      <span class="c1"># rest-pose normal points away from the front</span>
+<span class="n">facing_front</span> <span class="o">=</span> <span class="n">torso</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">rest_frame</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">)</span>
+
+<span class="n">obs_after</span> <span class="o">=</span> <span class="n">observedness</span><span class="p">(</span><span class="n">partial</span><span class="p">,</span> <span class="n">front_video</span><span class="p">)</span>
+<span class="n">fresh</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+<span class="n">obs_start</span> <span class="o">=</span> <span class="n">observedness</span><span class="p">(</span><span class="n">fresh</span><span class="p">,</span> <span class="n">front_video</span><span class="p">)</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">o</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="n">facing_back</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">o</span><span class="p">[</span><span class="n">facing_front</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"observedness of back-facing torso Gaussians, relative to front-facing ones: "</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">ratio</span><span class="p">(</span><span class="n">obs_start</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> before the fit, </span><span class="si">{</span><span class="n">ratio</span><span class="p">(</span><span class="n">obs_after</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> after it"</span><span class="p">)</span>
+<span class="n">changed</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">partial</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span> <span class="o">-</span> <span class="n">texture_before</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="mi">2</span><span class="p">)[:,</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s1">'chest'</span><span class="p">)]]</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of chest texels that moved away from their initial value: </span><span class="si">{</span><span class="n">changed</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">ratio</span><span class="p">(</span><span class="n">obs_after</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.03</span> <span class="ow">and</span> <span class="n">ratio</span><span class="p">(</span><span class="n">obs_start</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">ratio</span><span class="p">(</span><span class="n">obs_after</span><span class="p">)</span> <span class="ow">and</span> <span class="n">changed</span> <span class="o">&gt;</span> <span class="mf">0.8</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>observedness of back-facing torso Gaussians, relative to front-facing ones: 0.05 before the fit, 0.0065 after it
+share of chest texels that moved away from their initial value: 1.00
+</pre></div>
+</div>
+</div>
+</div>
+<p>After the fit, the back-facing Gaussians contribute almost nothing to any training image: the front of the
+body is opaque and hides them. Yet nearly every texel of the chest has moved away from its initial value,
+including the ones on the back. Two things explain it. First, the back is not perfectly hidden early on. An
+untrained avatar is partly transparent, so a little of the camera’s view passes through the body, and the back
+of the shirt receives a faint gradient from pixels that show the front; the first number above measures that
+leak. Second, Adam divides every parameter’s step by the typical size of its own gradient. A texel with a
+faint gradient therefore moves about as fast as a texel with a strong one. The faint, wrong signal is enough
+to paint the back with a faded copy of the front. Once the front is opaque the signal stops, and the back keeps
+whatever it had at that moment. It looks plausible, and it is wrong.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">opacity</span> <span class="o">=</span> <span class="n">partial</span><span class="o">.</span><span class="n">gaussians</span><span class="p">()</span>
+<span class="n">level</span> <span class="o">=</span> <span class="p">(</span><span class="n">obs_after</span> <span class="o">/</span> <span class="n">obs_after</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.9</span><span class="p">))</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">as_colour</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s2">"viridis"</span><span class="p">)(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">level</span><span class="p">))[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">maps</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">cov</span><span class="p">,</span> <span class="n">as_colour</span><span class="p">,</span> <span class="n">opacity</span><span class="p">,</span> <span class="n">c</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="n">front_cam</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">),</span> <span class="n">back_cam</span><span class="p">)]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">maps</span><span class="p">,</span> <span class="p">[</span><span class="s2">"observedness, from the front"</span><span class="p">,</span> <span class="s2">"from the side"</span><span class="p">,</span> <span class="s2">"from the back"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.4</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/f5365e5fde995125987ef071b411aa3aab51f6a922fbcef42c2ecb751587812e.png" src="../_images/f5365e5fde995125987ef071b411aa3aab51f6a922fbcef42c2ecb751587812e.png" />
+</div>
+</div>
+<p>Yellow Gaussians were seen well by the training video and dark ones hardly at all. The whole back is dark.</p>
+<p>The same measure explains the error maps of Section 4. For the avatar fitted to the <em>full</em> turn, compare the
+undersides of the upper arms with their tops, and the sides of the torso with its front and back.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">obs_full</span> <span class="o">=</span> <span class="n">observedness</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">train</span><span class="p">)</span>
+<span class="n">normal</span> <span class="o">=</span> <span class="n">avatar</span><span class="o">.</span><span class="n">rest_frame</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">2</span><span class="p">]</span>                     <span class="c1"># rest-pose normals; in the rest pose the arms point sideways</span>
+<span class="n">arms</span> <span class="o">=</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"l_upperarm"</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"r_upperarm"</span><span class="p">))</span>
+<span class="n">torso</span> <span class="o">=</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"chest"</span><span class="p">))</span> <span class="o">|</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"abdomen"</span><span class="p">))</span>
+<span class="n">mean</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">m</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">obs_full</span><span class="p">[</span><span class="n">m</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">under</span><span class="p">,</span> <span class="n">top</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">arms</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">normal</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">0.7</span><span class="p">)),</span> <span class="n">mean</span><span class="p">(</span><span class="n">arms</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">normal</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.7</span><span class="p">))</span>
+<span class="n">side</span><span class="p">,</span> <span class="n">front_back</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">torso</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">normal</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">)),</span> <span class="n">mean</span><span class="p">(</span><span class="n">torso</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">normal</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.8</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"observedness, underside of the upper arms / top: </span><span class="si">{</span><span class="n">under</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">top</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"observedness, sides of the torso / front and back: </span><span class="si">{</span><span class="n">side</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">front_back</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">under</span> <span class="o">&lt;</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">top</span> <span class="ow">and</span> <span class="n">side</span> <span class="o">&lt;</span> <span class="mf">0.9</span> <span class="o">*</span> <span class="n">front_back</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>observedness, underside of the upper arms / top: 0.39
+observedness, sides of the torso / front and back: 0.60
+</pre></div>
+</div>
+</div>
+</div>
+<p>With the arms lowered, the undersides of the arms and the sides of the torso face each other. They are not
+invisible in a full turn, but they are seen through a narrow gap and in fewer frames, so they are fitted with
+less evidence than the chest or the back.</p>
+<p>Nothing in the fit can fix this, because the information is not in the video. There are two remedies, and
+both are outside the optimiser. The first is to capture what is missing: turn all the way around, and hold a
+pose with the arms away from the body. The second is to <em>fill</em> poorly observed texels from well observed
+neighbours in texture space, which at least replaces an arbitrary leftover with the colour of the surrounding
+cloth or skin. The real pipeline does the second after every fit, with exactly this observedness measure.</p>
+</section>
+<section id="from-the-real-system">
+<h2>From the real system<a class="headerlink" href="#from-the-real-system" title="Link to this heading">#</a></h2>
+<link rel="stylesheet" href="../_static/compare.css"><script defer src="../_static/compare.js"></script>
+<figure class="course-real">
+<img src="../_static/media/real/stage-chain/stage_chain.jpg" alt="Four panels for one frame of the capture: the captured frame, the person mask, a body mesh drawn over the frame, and the rendered avatar in the same pose.">
+</figure>
+<p><strong>What the fit starts from.</strong> One training frame from the slow turn in the author’s capture, with the two inputs the fit needs besides the pixels: the person mask (SAM 2) and the tracked body (GVHMR). The last panel is the fitted avatar rendered in that frame’s pose and camera. In the toy lessons the poses were known exactly; here they come from a tracker and are only roughly right.</p>
+<figure class="course-real">
+<video controls muted loop playsinline preload="metadata" poster="../_static/media/real/fit-tracking/tracked_overlay_poster.jpg" aria-label="Eight seconds of the capture side by side with the same frames covered by the tracked body mesh, which follows the person as he turns his head and moves his arms."><source src="../_static/media/real/fit-tracking/tracked_overlay.webm" type="video/webm"><source src="../_static/media/real/fit-tracking/tracked_overlay.mp4" type="video/mp4"></video>
+</figure>
+<p><strong>Tracking over time.</strong> Eight seconds of the same training take: the captured frames and the body mesh GVHMR tracked for them. Notice that the mesh follows the motion closely but does not sit exactly on the person, and that its hands and face barely move. This is why the pipeline corrects the pose per frame from silhouettes and keypoints, and why hands and faces get their own trackers in the hi-fi track.</p>
+<figure class="course-real">
+<video controls muted loop playsinline preload="metadata" poster="../_static/media/real/fit-turn/turn_capture_vs_render_poster.jpg" aria-label="The capture and the rendered avatar side by side over the whole turn, the person rotating in place and moving his arms and head."><source src="../_static/media/real/fit-turn/turn_capture_vs_render.webm" type="video/webm"><source src="../_static/media/real/fit-turn/turn_capture_vs_render.mp4" type="video/mp4"></video>
+</figure>
+<p><strong>The fit, replayed over the turn.</strong> Every frame the standard track kept from the turn clip (most of them training frames), captured on the left and rendered on the right in the same pose and camera. Notice what a single shared appearance can and cannot do: the shirt print and the silhouette follow the capture, while folds and shading that change from frame to frame are averaged out.</p>
+<p>Training progression (renders at increasing iterations) is not shown: the real runs keep only their final checkpoints.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Toy</p></th>
+<th class="head"><p>Real pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Capture</p></td>
+<td><p>a rendered turn</p></td>
+<td><p>a slow turn in place plus free movement, from a phone or camera (<span class="private-repo" title="in the project's private repository">docs/CAPTURE_GUIDE.md</span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Masks</p></td>
+<td><p>exact</p></td>
+<td><p>SAM 2 <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id41" title="Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, and others. SAM 2: segment anything in images and videos. In International Conference on Learning Representations (ICLR). 2025.">Ravi <em>et al.</em>, 2025</a>]</span> (<span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">prep/sam2_masks.py</span></code></span>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Poses</p></td>
+<td><p>exact</p></td>
+<td><p>GVHMR <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id40" title="Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view coordinates. In SIGGRAPH Asia. 2024.">Shen <em>et al.</em>, 2024</a>]</span> seeds, then silhouette and keypoint tracking (<span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">pipeline/new_person.sh</span></code></span>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Fit</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cu.fit</span></code>, about a hundred steps</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/fit_multi.py</span></code></span>, 30,000 iterations, one texture shared by all frames</p></td>
+</tr>
+<tr class="row-even"><td><p>Unseen surfaces</p></td>
+<td><p>left as they are</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tools/inpaint_unobserved.py</span></code></span> fills poorly observed texels from their neighbours</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The real loss has the same three ingredients, with a structural-similarity term <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id46" title="Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P. Simoncelli. Image quality assessment: from error visibility to structural similarity. IEEE Transactions on Image Processing, 13(4):600–612, 2004.">Wang <em>et al.</em>, 2004</a>]</span> mixed
+into the photometric part. Its history is close to Section 2.1. The project’s first fits used a constant grey
+background and scored on grey, and a review found that “the grey-background PSNR is blind to grey splats”:
+every Gaussian starts grey, so the metric hid them. Scoring was changed to the mean over black and white
+backgrounds, and training with a random background per iteration then scored about 2 dB higher than training
+on constant grey (26.14 against 23.96 dB at the end of training;
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>).</p>
+<p>The inpainting tool measures observedness the way Section 5 does, as each Gaussian’s accumulated colour
+contribution over the training frames, maps it to texels through the bilinear lookup, and recolours the texels
+that fall below a fraction of the median. It reads no colour from any frame. The surfaces it exists for are
+the ones Section 5 measured as poorly observed: inner arms against the torso, and armpits.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A person turning in front of one fixed camera gives the views an orbiting camera would, as far as the body
+is rigid. Because it is not, every frame needs a pose.</p></li>
+<li><p>The fit is gradient descent on the texture. The loss is an L1 colour difference plus an L1 difference
+between rendered alpha and the mask, over a background colour drawn at random at each step.</p></li>
+<li><p>With one fixed background and no alpha term, the model can explain a pixel of the background’s colour by a
+hole. The picture looks right on that background only. A random background or the alpha term removes the
+ambiguity, and a score computed over the training background does not reveal it.</p></li>
+<li><p>Judge a fit on frames it did not train on, and then on poses it did not train on. New poses expose surfaces
+that the training video never showed.</p></li>
+<li><p>Unseen texels are not left untouched: they keep whatever faint, leaked gradients painted into them early on. The fit cannot repair
+that; a better capture or a fill from neighbouring texels can.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Run the main fit with <code class="docutils literal notranslate"><span class="pre">batch=1</span></code> and with <code class="docutils literal notranslate"><span class="pre">batch=4</span></code> for the same number of steps. How do the time and the
+held-out PSNR change? What would you expect at equal <em>time</em>?</p></li>
+<li><p>Replace the L1 photometric term in <code class="docutils literal notranslate"><span class="pre">fit_inline</span></code> with a squared error. Compare the held-out PSNR and look at
+the stripes on the shirt.</p></li>
+<li><p>Fill the unseen texels of <code class="docutils literal notranslate"><span class="pre">partial</span></code>. Map <code class="docutils literal notranslate"><span class="pre">obs_after</span></code> to texels (differentiate
+<code class="docutils literal notranslate"><span class="pre">(partial.sample_texture(probe)[:,</span> <span class="pre">0]</span> <span class="pre">*</span> <span class="pre">obs_after).sum()</span></code> with respect to a zero <code class="docutils literal notranslate"><span class="pre">probe</span></code> texture), mark
+texels below 2 % of the median, and replace their colour channels by the average of their known neighbours,
+repeatedly, wrapping in <span class="math notranslate nohighlight">\(u\)</span>. Does the back view improve? Why is the gain so limited on this toy?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">();</span> <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+    <span class="n">fit_inline</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="n">batch</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span><span class="p">),</span> <span class="s2">"s"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">held_out</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">],</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"dB"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Time grows in proportion to the batch, because every frame is one render and one backward pass. At equal steps
+a larger batch is a little better, since each step averages the gradient over more views. At equal time the
+small batch usually wins on this problem: Adam’s running averages already smooth the gradient over steps.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">probe</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">(</span><span class="n">probe</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">obs_after</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="n">count</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">texture</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">partial</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">(</span><span class="n">count</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+<span class="n">per_texel</span> <span class="o">=</span> <span class="n">probe</span><span class="o">.</span><span class="n">grad</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="n">count</span><span class="o">.</span><span class="n">grad</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+<span class="n">unknown</span> <span class="o">=</span> <span class="n">per_texel</span> <span class="o">&lt;</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="n">per_texel</span><span class="p">[</span><span class="n">count</span><span class="o">.</span><span class="n">grad</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span>
+
+<span class="n">tex</span> <span class="o">=</span> <span class="n">partial</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">known</span> <span class="o">=</span> <span class="p">(</span><span class="o">~</span><span class="n">unknown</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">val</span> <span class="o">=</span> <span class="n">tex</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">known</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">neighbours</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">1</span><span class="p">:,</span> <span class="p">:],</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">:,</span> <span class="p">:]],</span> <span class="o">-</span><span class="mi">2</span><span class="p">);</span> <span class="n">down</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">1</span><span class="p">,</span> <span class="p">:],</span> <span class="n">x</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="p">:]],</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">up</span> <span class="o">+</span> <span class="n">down</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">40</span><span class="p">):</span>
+    <span class="n">s</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">neighbours</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">neighbours</span><span class="p">(</span><span class="n">known</span><span class="p">)</span>
+    <span class="n">new</span> <span class="o">=</span> <span class="p">(</span><span class="n">known</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">w</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">s</span> <span class="o">/</span> <span class="n">w</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">val</span><span class="p">)</span>
+    <span class="n">known</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">known</span><span class="p">),</span> <span class="n">known</span><span class="p">)</span>
+<span class="n">tex</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unknown</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">val</span><span class="p">,</span> <span class="n">tex</span><span class="p">[:,</span> <span class="p">:,</span> <span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">partial</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">back_cam</span><span class="p">,</span> <span class="n">texture</span><span class="o">=</span><span class="n">tex</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">back_cam</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>The back view changes very little. The fill replaces colours with those of the nearest observed cloth, and the
+faint leaked gradients had already put similar colours there. No fill can invent the white print, which
+no frame showed. On real footage the gain is larger, because unseen texels there keep a grey initial colour
+that shows as streaks when a new pose exposes them.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id48" title="Diederik P. Kingma and Jimmy Ba. Adam: a method for stochastic optimization. International Conference on Learning Representations (ICLR), 2015.">Kingma and Ba, 2015</a>]</span> for the optimiser.</p></li>
+<li><p><span class="bibtex-citation" id="id6">[<a class="reference internal" href="../appendix/references.html#id45" title="Thiemo Alldieck, Marcus Magnor, Weipeng Xu, Christian Theobalt, and Gerard Pons-Moll. Video based reconstruction of 3D people models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). 2018.">Alldieck <em>et al.</em>, 2018</a>]</span> for the turn-in-place capture as a way to reconstruct a person from one
+camera.</p></li>
+<li><p><span class="bibtex-citation" id="id7">[<a class="reference internal" href="../appendix/references.html#id41" title="Nikhila Ravi, Valentin Gabeur, Yuan-Ting Hu, Ronghang Hu, Chaitanya Ryali, Tengyu Ma, Haitham Khedr, Roman Rädle, Chloe Rolland, Laura Gustafson, and others. SAM 2: segment anything in images and videos. In International Conference on Learning Representations (ICLR). 2025.">Ravi <em>et al.</em>, 2025</a>]</span> and <span class="bibtex-citation" id="id8">[<a class="reference internal" href="../appendix/references.html#id40" title="Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view coordinates. In SIGGRAPH Asia. 2024.">Shen <em>et al.</em>, 2024</a>]</span> for the masks and pose seeds of the real pipeline;
+<span class="bibtex-citation" id="id9">[<a class="reference internal" href="../appendix/references.html#id46" title="Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P. Simoncelli. Image quality assessment: from error visibility to structural similarity. IEEE Transactions on Image Processing, 13(4):600–612, 2004.">Wang <em>et al.</em>, 2004</a>]</span> for the structural-similarity term.</p></li>
+<li><p>Project documentation: <span class="private-repo" title="in the project's private repository">README, Method</span> and
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part5_fitting"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part4_shells/04b_sampling_density.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Sampling and density: how many Gaussians, and where?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="05b_frames_disagree.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Why avatars are blurry: the frames disagree</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-camera-and-a-person-who-turns">1. One camera, and a person who turns</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-loss-one-term-at-a-time">2. The loss, one term at a time</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-with-a-white-background-and-no-alpha-term">2.1 What goes wrong with a white background and no alpha term</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-fit-watched-from-the-held-out-frames">3. The fit, watched from the held-out frames</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#driving-the-avatar-with-motion-it-never-saw">4. Driving the avatar with motion it never saw</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coverage-what-the-camera-never-saw">5. Coverage: what the camera never saw</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

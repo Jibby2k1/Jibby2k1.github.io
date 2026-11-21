@@ -1,0 +1,1157 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Why avatars are blurry: the frames disagree &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part5_fitting/05b_frames_disagree';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Small parts need their own pixels and their own joints" href="../part6_hifi/06a_crops_and_parts.html" />
+    <link rel="prev" title="Fitting an avatar to one video" href="05a_fit_from_video.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Why avatars are blurry: the frames disagree</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-texture-is-an-average">1. A texture is an average</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-large-is-the-disagreement">2. How large is the disagreement?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-against-tracking-noise">3. Quality against tracking noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-frame-a-few-frames-all-frames">4. One frame, a few frames, all frames</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#does-more-capacity-buy-it-back">5. Does more capacity buy it back?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixing-the-registration">6. Fixing the registration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-one-keypoints">6.1 Round one: keypoints</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-two-silhouettes">6.2 Round two: silhouettes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-pose-correction-does-not-recover">7. What pose correction does not recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="why-avatars-are-blurry-the-frames-disagree">
+<h1>Why avatars are blurry: the frames disagree<a class="headerlink" href="#why-avatars-are-blurry-the-frames-disagree" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>Why a texture fitted to many frames is blurred when the frames disagree about where the surface is, and
+how to predict the amount of blur.</p></li>
+<li><p>How to show it: quality against tracking noise, and one frame against a few against all.</p></li>
+<li><p>Why more capacity (texture resolution, Gaussians) does not buy the detail back, and fixing the
+registration does.</p></li>
+<li><p>How to correct each frame’s pose from silhouettes and 2D keypoints alone, and what that cannot recover.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a>. This lesson carries the main finding of the project
+the course is built on.</p>
+<section id="a-texture-is-an-average">
+<h2>1. A texture is an average<a class="headerlink" href="#a-texture-is-an-average" title="Link to this heading">#</a></h2>
+<p>Lesson 5a fitted one texture to all frames, with the true pose of every frame. A real pipeline does not have
+true poses. It has a tracker’s estimates, and each estimate is a little wrong, in a different way in every
+frame.</p>
+<p>Think about what that does to one texel, say one on a stripe of the shirt. In frame 1 the believed pose
+puts the texel a centimetre too high in the image, so it lands on the pale stripe. In frame 2 it is a
+centimetre too low and lands on the dark one. The fit must choose one colour for the texel that serves all
+frames, and the choice that minimises the loss is a compromise between what the frames ask for. Over many
+frames the texel learns the <em>average</em> colour of its neighbourhood. An average over a neighbourhood is a blur.</p>
+<p>This can be made exact in one dimension. Let the true texture be <span class="math notranslate nohighlight">\(c(x)\)</span>, and let frame <span class="math notranslate nohighlight">\(t\)</span> see it shifted by
+an error <span class="math notranslate nohighlight">\(e_t\)</span>. The least-squares texture is the mean of the shifted copies,</p>
+<div class="math notranslate nohighlight">
+\[\hat c(x) = \frac{1}{T} \sum_{t=1}^{T} c(x + e_t) \;\xrightarrow{\;T \to \infty\;}\; (c * p)(x),\]</div>
+<p>the true texture convolved with the distribution <span class="math notranslate nohighlight">\(p\)</span> of the errors. If the errors are Gaussian with standard
+deviation <span class="math notranslate nohighlight">\(s\)</span>, a stripe pattern of period <span class="math notranslate nohighlight">\(\lambda\)</span> keeps only a fraction</p>
+<div class="math notranslate nohighlight">
+\[\frac{\text{contrast after}}{\text{contrast before}} = \exp\!\Big(-\frac{2 \pi^2 s^2}{\lambda^2}\Big)\]</div>
+<p>of its contrast. Detail of period <span class="math notranslate nohighlight">\(\lambda\)</span> is nearly gone once <span class="math notranslate nohighlight">\(s\)</span> reaches about <span class="math notranslate nohighlight">\(\lambda / 3\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">800</span><span class="p">)</span>                           <span class="c1"># four periods of a stripe pattern, period 1</span>
+<span class="n">stripes</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">s</span> <span class="o">=</span> <span class="mf">0.15</span>                                                <span class="c1"># registration error, in periods</span>
+<span class="n">shifts</span> <span class="o">=</span> <span class="n">s</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+<span class="n">shifted</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([(</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">e</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">float</span><span class="p">()</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">shifts</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.6</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">256</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">stripes</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"true texture"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">shifted</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fitted texture"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fitted to </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> frame</span><span class="si">{</span><span class="s1">'s'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">''</span><span class="si">}</span><span class="s2">"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"position (stripe periods)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"colour"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="o">*</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_legend_handles_labels</span><span class="p">(),</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.14</span><span class="p">))</span>
+
+<span class="n">wave</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">e</span><span class="p">))</span> <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">shifts</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>       <span class="c1"># a pure sinusoid, to test the formula</span>
+<span class="n">measured</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">wave</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">predicted</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">s</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"contrast kept by a sinusoid at s = </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2"> periods: measured </span><span class="si">{</span><span class="n">measured</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, predicted </span><span class="si">{</span><span class="n">predicted</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">measured</span> <span class="o">-</span> <span class="n">predicted</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.08</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>contrast kept by a sinusoid at s = 0.15 periods: measured 0.68, predicted 0.64
+</pre></div>
+</div>
+<img alt="../_images/e9145a94df16f52e9b0476c0263b687abeb94bfaa1862a921a31c0de9ab55ee3.png" src="../_images/e9145a94df16f52e9b0476c0263b687abeb94bfaa1862a921a31c0de9ab55ee3.png" />
+</div>
+</div>
+<p>Read the three panels from left to right, because the whole lesson is in them.</p>
+<ul class="simple">
+<li><p><strong>One frame.</strong> The fitted texture is perfectly sharp. It is in the wrong place, but nothing contradicts it.</p></li>
+<li><p><strong>A few frames.</strong> The copies disagree and the edges turn into steps.</p></li>
+<li><p><strong>Many frames.</strong> The steps merge into a smooth ramp. The stripes are still there, at a fraction of their
+contrast.</p></li>
+</ul>
+<p>So misregistration does not make a single frame’s fit worse. It makes the frames <em>disagree</em>, and the blur is
+what agreement costs. The rest of the lesson shows the same thing on the avatar, and then what can be done.</p>
+<div class="course-anim">
+<video controls playsinline preload="metadata" width="100%" poster="../_static/media/S4_frames_disagree/S4_frames_disagree.png">
+<source src="../_static/media/S4_frames_disagree/S4_frames_disagree.webm" type="video/webm">
+<source src="../_static/media/S4_frames_disagree/S4_frames_disagree.mp4" type="video/mp4">
+</video>
+<p class="course-anim-caption">Eight frames see the same striped patch, each placed with a small pose error. One texture has to explain all of them, so it becomes their average and the stripes lose most of their contrast. With one frame the texture is sharp, and when the poses are corrected the frames agree and the detail returns.</p>
+<details class="course-anim-interactive">
+<summary>Explore it in 3D</summary>
+<iframe src="../_static/media/S4_frames_disagree/interactive.html" title="The same body under slightly wrong poses, in 3D" loading="lazy" width="100%" height="560" style="border:0"></iframe>
+</details>
+</div>
+</section>
+<section id="how-large-is-the-disagreement">
+<h2>2. How large is the disagreement?<a class="headerlink" href="#how-large-is-the-disagreement" title="Link to this heading">#</a></h2>
+<p>Tracking error is an error in joint <em>angles</em>. What blurs the texture is an error in surface <em>position</em>. The
+two are connected by a lever arm: a rotation error <span class="math notranslate nohighlight">\(\delta\)</span> (in radians) at a joint moves a point at distance
+<span class="math notranslate nohighlight">\(r\)</span> from the joint by about <span class="math notranslate nohighlight">\(r\,\delta\)</span>, and the errors of all joints between the root and the point add up.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cu.perturb_poses(poses,</span> <span class="pre">sigma_deg)</span></code> imitates a tracker by adding independent noise to every joint rotation in
+every frame. <code class="docutils literal notranslate"><span class="pre">tracking.surface_error</span></code> measures the result where it matters: the distance between each
+Gaussian’s position under the believed pose and under the true pose.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"turn"</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">held_out</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">make_avatar</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">**</span><span class="n">kw</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>       <span class="c1"># a light avatar: this lesson fits many</span>
+<span class="n">ruler</span> <span class="o">=</span> <span class="n">make_avatar</span><span class="p">()</span>                                                      <span class="c1"># used only to measure surface positions</span>
+<span class="n">SIGMA</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">noisy</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">SIGMA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">part_error</span><span class="p">(</span><span class="n">believed</span><span class="p">,</span> <span class="n">cams</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">believed</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">cams</span><span class="o">=</span><span class="n">cams</span><span class="p">,</span> <span class="n">per_gaussian</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">d</span><span class="p">[</span><span class="n">ruler</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span>
+
+<span class="n">err_cm</span><span class="p">,</span> <span class="n">err_px</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">part_error</span><span class="p">(</span><span class="n">noisy</span><span class="p">),</span> <span class="n">part_error</span><span class="p">(</span><span class="n">noisy</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">err_cm</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">PART_NAMES</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"mean surface error (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"body part"</span><span class="p">)</span>
+<span class="n">pix_cm</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">4.2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">14</span><span class="p">))</span> <span class="o">/</span> <span class="mi">64</span>
+<span class="n">all_cm</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">noisy</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">all_px</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">noisy</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">cams</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"joint noise </span><span class="si">{</span><span class="n">SIGMA</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> degrees -&gt; mean surface error </span><span class="si">{</span><span class="n">all_cm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm in 3D, </span><span class="si">{</span><span class="n">all_px</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px in the image "</span>
+      <span class="sa">f</span><span class="s2">"(one pixel is about </span><span class="si">{</span><span class="n">pix_cm</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm here)"</span><span class="p">)</span>
+<span class="n">idx</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span>
+<span class="k">assert</span> <span class="n">err_cm</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="s2">"l_hand"</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">err_cm</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="s2">"pelvis"</span><span class="p">)]</span> <span class="ow">and</span> <span class="n">err_cm</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="s2">"l_foot"</span><span class="p">)]</span> <span class="o">&gt;</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">err_cm</span><span class="p">[</span><span class="n">idx</span><span class="p">(</span><span class="s2">"pelvis"</span><span class="p">)]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>joint noise 3 degrees -&gt; mean surface error 4.0 cm in 3D, 0.90 px in the image (one pixel is about 3.3 cm here)
+</pre></div>
+</div>
+<img alt="../_images/26e25066b355e27bc596a14e7d38b6e01d19fe1e0d8dc885b08f7ca1629d7fd2.png" src="../_images/26e25066b355e27bc596a14e7d38b6e01d19fe1e0d8dc885b08f7ca1629d7fd2.png" />
+</div>
+</div>
+<p>Three degrees per joint sounds small. At the end of a chain of joints it is several centimetres: the hands,
+feet and head move most, the pelvis least. The stripes on the toy shirt are a few centimetres wide, and the
+eyes are smaller than that. By the rule of Section 1 we should expect to lose them.</p>
+</section>
+<section id="quality-against-tracking-noise">
+<h2>3. Quality against tracking noise<a class="headerlink" href="#quality-against-tracking-noise" title="Link to this heading">#</a></h2>
+<p>Fit the same avatar to the same video four times, with believed poses of increasing noise. Each avatar is then
+scored on the held-out frames <strong>with their true poses</strong>. Only a toy allows that: it separates the quality of
+the learned texture from the error of the pose used to render it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ITERS</span> <span class="o">=</span> <span class="mi">80</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_and_score</span><span class="p">(</span><span class="n">believed</span><span class="p">,</span> <span class="n">video</span><span class="o">=</span><span class="n">train</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">make_avatar</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="n">ITERS</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">believed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">held_out</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+
+<span class="n">sigmas</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">)</span>
+<span class="n">sweep</span><span class="p">,</span> <span class="n">t0</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">:</span>
+    <span class="n">believed</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">sg</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">]</span> <span class="o">=</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">believed</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">believed</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">cams</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"joint noise </span><span class="si">{</span><span class="n">sg</span><span class="si">:</span><span class="s2">3.1f</span><span class="si">}</span><span class="s2"> deg | surface error </span><span class="si">{</span><span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | held-out PSNR </span><span class="si">{</span><span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"four fits in </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sigmas</span><span class="p">,</span> <span class="p">[</span><span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"tracking noise per joint (degrees)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"held-out PSNR (dB)"</span><span class="p">)</span>
+<span class="n">quality</span> <span class="o">=</span> <span class="p">[</span><span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="o">+</span> <span class="mf">1.0</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">quality</span><span class="p">,</span> <span class="n">quality</span><span class="p">[</span><span class="mi">1</span><span class="p">:])),</span> <span class="s2">"quality should fall steadily with tracking noise"</span>
+<span class="n">clean_model</span><span class="p">,</span> <span class="n">clean_psnr</span> <span class="o">=</span> <span class="n">sweep</span><span class="p">[</span><span class="mf">0.0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+<span class="n">noisy_model</span><span class="p">,</span> <span class="n">noisy_psnr</span> <span class="o">=</span> <span class="n">sweep</span><span class="p">[</span><span class="n">SIGMA</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>joint noise 0.0 deg | surface error 0.00 px | held-out PSNR 33.81 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>joint noise 1.5 deg | surface error 0.45 px | held-out PSNR 28.35 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>joint noise 3.0 deg | surface error 0.90 px | held-out PSNR 25.44 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>joint noise 6.0 deg | surface error 1.78 px | held-out PSNR 22.21 dB
+four fits in 6 s
+</pre></div>
+</div>
+<img alt="../_images/3315024bb7eb884cee1fba43d3d71d66263dd3ffb02daec661795a0e763b3a7d.png" src="../_images/3315024bb7eb884cee1fba43d3d71d66263dd3ffb02daec661795a0e763b3a7d.png" />
+</div>
+</div>
+<p>Quality falls steeply and keeps falling. The first step is the most expensive: an error well below one pixel
+on average already costs several decibels. Here is what the loss looks like. The camera below is the training
+camera, zoomed on the chest and head of one held-out frame.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zoom_cam</span> <span class="o">=</span> <span class="n">held_out</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>                    <span class="c1"># a 24 px window, rendered at 144 px</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">zoom</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">pose</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">tr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">pose</span> <span class="o">=</span> <span class="n">held_out</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">pose</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">pose</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">model</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">zoom_cam</span><span class="p">,</span> <span class="n">pose</span><span class="p">,</span> <span class="n">held_out</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">tr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">tr</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">truth_zoom</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">zoom_cam</span><span class="p">,</span> <span class="n">held_out</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">held_out</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">truth_zoom</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">zoom</span><span class="p">(</span><span class="n">sweep</span><span class="p">[</span><span class="n">sg</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">],</span>
+               <span class="p">[</span><span class="s2">"actor (truth)"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"noise </span><span class="si">{</span><span class="n">sg</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2"> deg"</span> <span class="k">for</span> <span class="n">sg</span> <span class="ow">in</span> <span class="n">sigmas</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/147b1e3773c4d0d70fc1f9e5cfb207a270c35a9480bce26648ba088e747b5d8d.png" src="../_images/147b1e3773c4d0d70fc1f9e5cfb207a270c35a9480bce26648ba088e747b5d8d.png" />
+</div>
+</div>
+<p>With true poses the fit shows the stripes, the logo and a hint of a face (the head is only about six pixels
+wide in the training video, so even the best fit has little to work with). As the noise grows, the stripes fade
+into a flat colour, the logo spreads, and the face disappears first because its features are the smallest. The
+outline goes soft as well: the opacity texture is averaged in the same way as the colour texture.</p>
+</section>
+<section id="one-frame-a-few-frames-all-frames">
+<h2>4. One frame, a few frames, all frames<a class="headerlink" href="#one-frame-a-few-frames-all-frames" title="Link to this heading">#</a></h2>
+<p>Section 1 predicted that a single frame is sharp even with a wrong pose. Test it. We fit to 1, 4 and 16 of the
+noisy training frames and look at training frame 0, rendered in the pose the fit <em>believed</em> for it.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">frame0</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">subset</span><span class="p">([</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">crop0</span> <span class="o">=</span> <span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">crop</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">zoom</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+<span class="n">by_count</span><span class="p">,</span> <span class="n">shots</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">16</span><span class="p">):</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">16</span> <span class="o">//</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">noisy_model</span> <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">16</span> <span class="k">else</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">noisy</span><span class="p">[</span><span class="n">idx</span><span class="p">],</span> <span class="n">video</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">idx</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">by_count</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">frame0</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">noisy</span><span class="p">[[</span><span class="mi">0</span><span class="p">]])[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="n">shots</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">crop0</span><span class="p">,</span> <span class="n">noisy</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fitted to </span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> noisy frame</span><span class="si">{</span><span class="s1">'s'</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="s1">' '</span><span class="si">}</span><span class="s2">: PSNR on frame 0 </span><span class="si">{</span><span class="n">by_count</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">crop0</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">shots</span><span class="p">,</span>
+               <span class="p">[</span><span class="s2">"frame 0 (truth)"</span><span class="p">,</span> <span class="s2">"fitted to 1 frame"</span><span class="p">,</span> <span class="s2">"to 4 frames"</span><span class="p">,</span> <span class="s2">"to 16 frames"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.3</span><span class="p">);</span>
+<span class="k">assert</span> <span class="n">by_count</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">by_count</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="ow">and</span> <span class="n">by_count</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">by_count</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span> <span class="o">+</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fitted to  1 noisy frame : PSNR on frame 0 30.42 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fitted to  4 noisy frames: PSNR on frame 0 24.23 dB
+fitted to 16 noisy frames: PSNR on frame 0 21.18 dB
+</pre></div>
+</div>
+<img alt="../_images/62d7b7ad547175c3b71861842290f2ac333db28b27f55f70b0135ae2768df779.png" src="../_images/62d7b7ad547175c3b71861842290f2ac333db28b27f55f70b0135ae2768df779.png" />
+</div>
+</div>
+<p>The same noisy pose, the same model, the same number of steps. Fitted to one frame, the avatar reproduces that
+frame far more sharply, stripes and all. Add three more frames and the picture softens. With all sixteen it is the blur of Section 3.
+Nothing about frame 0 changed between the three fits. What changed is how many other frames it had to agree
+with.</p>
+<p>Do not conclude that one frame is the better avatar. A one-frame model is sharp from one direction and knows
+nothing about the rest of the body. The comparison is a diagnostic. It says the <em>representation</em> can hold the
+detail, so the detail is being lost in the agreement between frames.</p>
+</section>
+<section id="does-more-capacity-buy-it-back">
+<h2>5. Does more capacity buy it back?<a class="headerlink" href="#does-more-capacity-buy-it-back" title="Link to this heading">#</a></h2>
+<p>A blurry result invites an obvious response: the model must be too small. Give it a texture with twice the
+resolution in each direction and twice the Gaussians, keep the noisy poses, and fit again.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">big_model</span><span class="p">,</span> <span class="n">big_psnr</span> <span class="o">=</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">noisy</span><span class="p">,</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="mf">1800.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"noisy poses, default capacity:  </span><span class="si">{</span><span class="n">noisy_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB   (</span><span class="si">{</span><span class="n">noisy_model</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="si">}</span><span class="s2"> texture numbers, </span><span class="si">{</span><span class="n">noisy_model</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"noisy poses, larger model:      </span><span class="si">{</span><span class="n">big_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB   (</span><span class="si">{</span><span class="n">big_model</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="si">}</span><span class="s2"> texture numbers, </span><span class="si">{</span><span class="n">big_model</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"true poses, default capacity:   </span><span class="si">{</span><span class="n">clean_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">big_psnr</span> <span class="o">-</span> <span class="n">noisy_psnr</span> <span class="o">&lt;</span> <span class="mf">0.35</span> <span class="o">*</span> <span class="p">(</span><span class="n">clean_psnr</span> <span class="o">-</span> <span class="n">noisy_psnr</span><span class="p">),</span> <span class="s2">"capacity should not close the gap"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>noisy poses, default capacity:  25.44 dB   (45696 texture numbers, 4654 Gaussians)
+noisy poses, larger model:      25.77 dB   (182784 texture numbers, 9372 Gaussians)
+true poses, default capacity:   33.81 dB
+</pre></div>
+</div>
+</div>
+</div>
+<p>Four times the texture and twice the Gaussians move the score by a small fraction of the gap to the fit with
+true poses. This follows from Section 1. The fitted texture is the true one convolved with the error
+distribution. A finer grid of texels stores that blurred function more accurately, and it is still the blurred
+function. The information about fine detail was destroyed by the averaging before it reached the texture.
+In <a class="reference internal" href="../part4_shells/04b_sampling_density.html"><span class="std std-doc">Lesson 4b</span></a>, with exact poses, both knobs helped. Capacity is
+worth exactly as much as the registration lets it be.</p>
+</section>
+<section id="fixing-the-registration">
+<h2>6. Fixing the registration<a class="headerlink" href="#fixing-the-registration" title="Link to this heading">#</a></h2>
+<p>If the frames disagree because the poses are wrong, correct the poses. The correction must not use colour.
+If it did, the pose of a frame would be tuned to make <em>this texture</em> look right in <em>this frame</em>, the texture
+would then be refitted to those poses, and errors could hide in the loop between the two. Worse, a held-out
+frame corrected with its own colours is no longer held out. So the correction uses two signals that say where
+the body is and nothing about what it looks like:</p>
+<ul class="simple">
+<li><p><strong>2D keypoints</strong> <span class="math notranslate nohighlight">\(k_{tj}\)</span>: where a detector saw joint <span class="math notranslate nohighlight">\(j\)</span> in frame <span class="math notranslate nohighlight">\(t\)</span>;</p></li>
+<li><p><strong>the silhouette</strong> <span class="math notranslate nohighlight">\(m_t\)</span>: the mask of the person.</p></li>
+</ul>
+<p>For every frame we look for a small change <span class="math notranslate nohighlight">\(\delta_t\)</span> of the pose (one rotation vector per joint) that
+minimises</p>
+<div class="math notranslate nohighlight">
+\[\mathcal{L}_t(\delta_t) = \underbrace{\operatorname{mean}_{\text{pixels}} \big|\alpha(\theta_t + \delta_t) - m_t\big|}_{\text{silhouette}}
+\;+\; \frac{w_\text{kp}}{W} \underbrace{\operatorname{mean}_j \big\| \pi\big(J_j(\theta_t + \delta_t)\big) - k_{tj} \big\|}_{\text{keypoints}}
+\;+\; \lambda \|\delta_t\|^2 .\]</div>
+<p>Here <span class="math notranslate nohighlight">\(J_j(\theta)\)</span> is the 3D position of joint <span class="math notranslate nohighlight">\(j\)</span> from forward kinematics, <span class="math notranslate nohighlight">\(\pi\)</span> is the camera projection, <span class="math notranslate nohighlight">\(W\)</span>
+is the image width, and <span class="math notranslate nohighlight">\(\alpha(\theta)\)</span> is the alpha image of the avatar rendered in pose <span class="math notranslate nohighlight">\(\theta\)</span>. The
+avatar’s texture is held fixed. The last term keeps <span class="math notranslate nohighlight">\(\delta_t\)</span> at zero unless the data ask for a change. Both
+data terms are differentiable in the pose: the keypoint term through forward kinematics, the silhouette term
+through skinning and the renderer.</p>
+<p>The keypoint term for one frame, written out:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">keypoint_loss</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">tr</span><span class="p">,</span> <span class="n">cam</span><span class="p">,</span> <span class="n">keypoints</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">joints</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span>         <span class="c1"># (J, 3) joint positions in the world</span>
+    <span class="n">projected</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">joints</span><span class="p">)</span>                  <span class="c1"># (J, 2) pixels</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">projected</span> <span class="o">-</span> <span class="n">keypoints</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span>
+
+<span class="n">t</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">ours</span> <span class="o">=</span> <span class="n">keypoint_loss</span><span class="p">(</span><span class="n">noisy</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+<span class="n">lib</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">keypoint_residual</span><span class="p">(</span><span class="n">noisy</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="n">t</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">/</span> <span class="mi">64</span>
+<span class="n">at_truth</span> <span class="o">=</span> <span class="n">keypoint_loss</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"keypoint loss of frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">ours</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> at the believed pose (library: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">lib</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">), </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">at_truth</span><span class="p">)</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> at the true pose"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">ours</span> <span class="o">-</span> <span class="n">lib</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-5</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">at_truth</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>keypoint loss of frame 3: 0.0165 at the believed pose (library: 0.0165), 0.0e+00 at the true pose
+</pre></div>
+</div>
+</div>
+</div>
+<p>A real detector is not exact, so we do not hand the correction exact keypoints. We add half a pixel of noise to
+each one, which is about a centimetre and a half on the body.</p>
+<section id="round-one-keypoints">
+<h3>6.1 Round one: keypoints<a class="headerlink" href="#round-one-keypoints" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">tracking.refine_poses</span></code> optimises all <span class="math notranslate nohighlight">\(\delta_t\)</span> with Adam. With the silhouette term switched off it never
+renders anything, so it takes about a second.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">detected</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">noisy_keypoints</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">keypoints</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">registration</span><span class="p">(</span><span class="n">believed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Mean surface error in cm (3D) and in pixels (in the image)."""</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">believed</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="n">px</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">surface_error</span><span class="p">(</span><span class="n">ruler</span><span class="p">,</span> <span class="n">believed</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">cams</span><span class="o">=</span><span class="n">train</span><span class="o">.</span><span class="n">cams</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">cm</span><span class="p">,</span> <span class="n">px</span>
+
+<span class="n">poses_kp</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">hist_kp</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">refine_poses</span><span class="p">(</span><span class="n">noisy_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">noisy</span><span class="p">,</span> <span class="n">keypoints</span><span class="o">=</span><span class="n">detected</span><span class="p">,</span> <span class="n">w_sil</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="n">kp_model</span><span class="p">,</span> <span class="n">kp_psnr</span> <span class="o">=</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"tracker poses:            surface error </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">noisy</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm, </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">noisy</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | refit </span><span class="si">{</span><span class="n">noisy_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"after keypoint round:     surface error </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm, </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | refit </span><span class="si">{</span><span class="n">kp_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB   (</span><span class="si">{</span><span class="n">hist_kp</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">registration</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">registration</span><span class="p">(</span><span class="n">noisy</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="n">kp_psnr</span> <span class="o">&gt;</span> <span class="n">noisy_psnr</span> <span class="o">+</span> <span class="mf">1.5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tracker poses:            surface error 4.02 cm, 0.90 px | refit 25.44 dB
+after keypoint round:     surface error 2.82 cm, 0.41 px | refit 29.22 dB   (2.7 s)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="round-two-silhouettes">
+<h3>6.2 Round two: silhouettes<a class="headerlink" href="#round-two-silhouettes" title="Link to this heading">#</a></h3>
+<p>The silhouette term needs an avatar to render. The avatar fitted with the tracker’s poses has a blurred
+outline, which is a poor reference. The avatar we just refitted with the keypoint-corrected poses is sharper,
+so we use that one, then refit once more. This alternation, fit, correct, refit, is the structure of the real
+pipeline too.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poses_sil</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">hist_sil</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">refine_poses</span><span class="p">(</span><span class="n">kp_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">poses_kp</span><span class="p">,</span> <span class="n">keypoints</span><span class="o">=</span><span class="n">detected</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.003</span><span class="p">)</span>
+<span class="n">final_model</span><span class="p">,</span> <span class="n">final_psnr</span> <span class="o">=</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"silhouette loss </span><span class="si">{</span><span class="n">hist_sil</span><span class="p">[</span><span class="s1">'sil'</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">hist_sil</span><span class="p">[</span><span class="s1">'sil'</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> in </span><span class="si">{</span><span class="n">hist_sil</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"after silhouette round:   surface error </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm, </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | refit </span><span class="si">{</span><span class="n">final_psnr</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+
+<span class="n">arms</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">"true poses"</span><span class="p">,</span> <span class="n">clean_psnr</span><span class="p">,</span> <span class="s2">"truth"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"tracker poses"</span><span class="p">,</span> <span class="n">noisy_psnr</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"tracker poses,</span><span class="se">\n</span><span class="s2">larger model"</span><span class="p">,</span> <span class="n">big_psnr</span><span class="p">,</span> <span class="s2">"error"</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">"+ keypoint</span><span class="se">\n</span><span class="s2">correction"</span><span class="p">,</span> <span class="n">kp_psnr</span><span class="p">,</span> <span class="s2">"gaussian"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"+ silhouette</span><span class="se">\n</span><span class="s2">correction"</span><span class="p">,</span> <span class="n">final_psnr</span><span class="p">,</span> <span class="s2">"gaussian"</span><span class="p">)]</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arms</span><span class="p">)),</span> <span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arms</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arms</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">arms</span><span class="p">)),</span> <span class="p">[</span><span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arms</span><span class="p">],</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"held-out PSNR (dB)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">arms</span><span class="p">)</span> <span class="o">-</span> <span class="mi">3</span><span class="p">,</span> <span class="n">clean_psnr</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">recovered</span> <span class="o">=</span> <span class="p">(</span><span class="n">final_psnr</span> <span class="o">-</span> <span class="n">noisy_psnr</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">clean_psnr</span> <span class="o">-</span> <span class="n">noisy_psnr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"share of the loss recovered by pose correction: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">recovered</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> %   (larger model: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">big_psnr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">noisy_psnr</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="n">clean_psnr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">noisy_psnr</span><span class="p">)</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> %)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">final_psnr</span> <span class="o">&gt;</span> <span class="n">noisy_psnr</span> <span class="o">+</span> <span class="mf">2.5</span> <span class="ow">and</span> <span class="n">final_psnr</span> <span class="o">&gt;</span> <span class="n">big_psnr</span> <span class="o">+</span> <span class="mf">1.5</span>
+<span class="k">assert</span> <span class="n">final_psnr</span> <span class="o">&lt;</span> <span class="n">clean_psnr</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"correction from noisy 2D evidence should not recover everything"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>silhouette loss 0.0152 -&gt; 0.0088 in 3 s
+after silhouette round:   surface error 2.28 cm, 0.29 px | refit 30.37 dB
+share of the loss recovered by pose correction: 59 %   (larger model: 4 %)
+</pre></div>
+</div>
+<img alt="../_images/c200397d1c5a44ddd698879ac49a63cf6ebda67a4ff4584a1058d5a247213fa6.png" src="../_images/c200397d1c5a44ddd698879ac49a63cf6ebda67a4ff4584a1058d5a247213fa6.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">truth_zoom</span><span class="p">,</span> <span class="n">zoom</span><span class="p">(</span><span class="n">clean_model</span><span class="p">),</span> <span class="n">zoom</span><span class="p">(</span><span class="n">noisy_model</span><span class="p">),</span> <span class="n">zoom</span><span class="p">(</span><span class="n">big_model</span><span class="p">),</span> <span class="n">zoom</span><span class="p">(</span><span class="n">final_model</span><span class="p">)],</span>
+               <span class="p">[</span><span class="s2">"actor (truth)"</span><span class="p">,</span> <span class="s2">"true poses"</span><span class="p">,</span> <span class="s2">"tracker poses"</span><span class="p">,</span> <span class="s2">"tracker poses,</span><span class="se">\n</span><span class="s2">larger model"</span><span class="p">,</span> <span class="s2">"corrected poses"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/65db192649e837ea9f4a0f0b4398ad7182f29b95d18478b9d2fec77cc50f6758.png" src="../_images/65db192649e837ea9f4a0f0b4398ad7182f29b95d18478b9d2fec77cc50f6758.png" />
+</div>
+</div>
+<p>Correcting the poses recovers a large share of what the tracking noise cost, using no colour and no extra
+capacity. The stripes are back, fainter than with true poses. The larger model, on the same noisy poses, recovered almost
+nothing. This is the result the course is organised around: <strong>registration matters more than capacity.</strong></p>
+</section>
+</section>
+<section id="what-pose-correction-does-not-recover">
+<h2>7. What pose correction does not recover<a class="headerlink" href="#what-pose-correction-does-not-recover" title="Link to this heading">#</a></h2>
+<p>The corrected avatar is still below the one fitted with true poses, and the face is still a smudge. It is worth
+being exact about why, because each reason is a limit of the method and not a bug.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">after_cm</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">part_error</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="n">w</span> <span class="o">=</span> <span class="mf">0.4</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)</span> <span class="o">-</span> <span class="n">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">err_cm</span><span class="p">),</span> <span class="n">w</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"tracker poses"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)</span> <span class="o">+</span> <span class="n">w</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">after_cm</span><span class="p">),</span> <span class="n">w</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"corrected poses"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">PART_NAMES</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">"right"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"mean surface error (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"body part"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">head</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="s2">"head"</span><span class="p">)</span>
+<span class="n">twist</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">twist_swing_error_deg</span><span class="p">(</span><span class="n">p</span><span class="p">[:,</span> <span class="n">head</span><span class="p">],</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">[:,</span> <span class="n">head</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">rot</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">tracking</span><span class="o">.</span><span class="n">rotation_error_deg</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">exact</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">refine_poses</span><span class="p">(</span><span class="n">noisy_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">noisy</span><span class="p">,</span> <span class="n">w_sil</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>      <span class="c1"># exact keypoints</span>
+<span class="n">cm</span><span class="p">,</span> <span class="n">px</span> <span class="o">=</span> <span class="n">registration</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"1. noisy evidence: surface error with detected keypoints </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm, with exact keypoints </span><span class="si">{</span><span class="n">registration</span><span class="p">(</span><span class="n">exact</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"2. depth: remaining error </span><span class="si">{</span><span class="n">cm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm in 3D, but only </span><span class="si">{</span><span class="n">px</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px = </span><span class="si">{</span><span class="n">px</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">pix_cm</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm in the image"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"3. head turn about its own axis: </span><span class="si">{</span><span class="n">twist</span><span class="p">(</span><span class="n">noisy</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg before, </span><span class="si">{</span><span class="n">twist</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg after the keypoint round"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"4. mean joint-angle error: </span><span class="si">{</span><span class="n">rot</span><span class="p">(</span><span class="n">noisy</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg before, </span><span class="si">{</span><span class="n">rot</span><span class="p">(</span><span class="n">poses_sil</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg after"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">twist</span><span class="p">(</span><span class="n">noisy</span><span class="p">)</span> <span class="o">-</span> <span class="n">twist</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-3</span> <span class="ow">and</span> <span class="n">registration</span><span class="p">(</span><span class="n">exact</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">registration</span><span class="p">(</span><span class="n">poses_kp</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">px</span> <span class="o">*</span> <span class="n">pix_cm</span> <span class="o">&lt;</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">cm</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">after_cm</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">err_cm</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1. noisy evidence: surface error with detected keypoints 2.82 cm, with exact keypoints 0.59 cm
+2. depth: remaining error 2.28 cm in 3D, but only 0.29 px = 0.96 cm in the image
+3. head turn about its own axis: 2.07 deg before, 2.07 deg after the keypoint round
+4. mean joint-angle error: 4.83 deg before, 6.00 deg after
+</pre></div>
+</div>
+<img alt="../_images/a6e25467f5fb1f0128347fbc470ed73577d42c1f43d9fcb3692c9f7ad8f0c2e9.png" src="../_images/a6e25467f5fb1f0128347fbc470ed73577d42c1f43d9fcb3692c9f7ad8f0c2e9.png" />
+</div>
+</div>
+<p>Every part is better registered than before, and none is perfect. The four printed lines are four separate
+reasons.</p>
+<ol class="arabic simple">
+<li><p><strong>The correction is only as good as its evidence.</strong> With exact keypoints the surface error drops to a small
+fraction of what the noisy detections achieve. Half a pixel of keypoint noise is itself a registration
+error of more than a centimetre, and the correction cannot do better than its input. The silhouette helps
+because it is independent evidence, and it is blunt in its own way: it only sees the outline.</p></li>
+<li><p><strong>One camera does not see depth.</strong> The error that remains is much larger in 3D than in the image. A limb
+that swings towards the camera barely moves its keypoints or its outline. The frame it came from is
+explained either way, but the texture is mapped onto the surface in the wrong place, and a different
+viewpoint will show it.</p></li>
+<li><p><strong>Some rotations are invisible to both signals.</strong> The head turning about its own axis moves no keypoint in
+our skeleton, which has no joint beyond the head, and hardly changes the outline of a round head. The
+keypoint round left that error untouched, to the last digit. The face is drawn on exactly that rotation,
+which is one reason it stays blurred. The same holds for a forearm twisting about its length.</p></li>
+<li><p><strong>Joint angles are the wrong yardstick.</strong> The mean angle error did not improve and may even grow, while the
+surface error fell. The correction moves the surface to where the evidence says it is, and it is free to
+do so with a different combination of joint rotations. Judge registration on the surface, in pixels.</p></li>
+</ol>
+<p>A fifth reason does not appear in the toy at all: a real person is not a posed template. Cloth slides, hair
+moves, skin shades differently as the body turns. No pose, however exact, makes such frames agree.
+<a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html"><span class="std std-doc">Part 6</span></a> and <a class="reference internal" href="../part7_motion/07c_secondary_motion.html"><span class="std std-doc">Lesson 7c</span></a> pick
+that up.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The first item of “What we learned” in the project’s
+<span class="private-repo" title="in the project's private repository">README</span> is this lesson:
+“Registration and tracking matter more than capacity, at every stage.”</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>noise added by <code class="docutils literal notranslate"><span class="pre">cu.perturb_poses</span></code></p></td>
+<td><p>the error of an off-the-shelf tracker on real footage</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tracking.refine_poses</span></code>: keypoints, then silhouettes</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/refine_pose.py</span></code></span>: per-frame deltas to the global orientation, the body pose and the translation, from silhouettes and 2D keypoints with an L2 prior; colour is never used</p></td>
+</tr>
+<tr class="row-even"><td><p>fit, correct, refit</p></td>
+<td><p>texture fit (M6), pose correction, refit with the corrections (M7)</p></td>
+</tr>
+<tr class="row-odd"><td><p>a larger texture and more Gaussians</p></td>
+<td><p>benchmark arms with a 512-pixel texture and 300k Gaussians</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The published numbers have the same shape as the bar chart of Section 6. On the benchmark, per-frame pose
+correction gave +1.04 dB, while “more texture resolution, more Gaussians, extra losses and LR schedules gave
+nothing”; a rigid correction from silhouettes alone gave part of that gain and the articulated one the rest
+(<span class="private-repo" title="in the project's private repository">RESULTS.md</span>). On phone captures, held-out pose
+refinement was worth 0.5 to 1.2 dB, and in the hi-fi study 2.5 times the capacity <em>cost</em> body quality. The
+corrections themselves are small: the median delta reported there is about 0.002 rad per joint and about a
+centimetre of translation.</p>
+<p>The project’s current diagnosis of its soft hands and faces is Sections 4 and 7 of this lesson, on real data
+(<span class="private-repo" title="in the project's private repository">docs/mobile_parts.md</span>): trained on a
+single frame, the same model reproduces a close-up far more sharply than the full model does; “detail is lost
+because frames disagree”; and pose refinement “recovers a good share of the loss on body-framed shots and
+little on close-ups”. The suspects it lists for the rest are the fifth reason above: expression and gaze,
+moving hair, changing shading, finger poses the trackers do not fix. Its realism recipe attacks one of them
+with a per-frame warp, used in training only, that “absorbs cloth sliding between frames so the texture is not
+averaged into a blur” (<span class="private-repo" title="in the project's private repository">docs/realism_v4.md</span>).</p>
+<p>Two cautions from the same documents. The toy scores with true poses; real held-out frames have none, so they
+are scored with refined poses, which makes held-out scores optimistic compared with motion that gets no
+refinement. And one run is not a result: the project’s rule that a gain counts only above the seed spread
+demoted one of its own pose-correction gains. Every number in this lesson comes from one seed;
+<a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html"><span class="std std-doc">Lesson 8a</span></a> repairs that.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A texture fitted to many frames is an average. If the frames place the surface differently, the average is
+the true texture blurred by the distribution of the placement errors.</p></li>
+<li><p>A small error in joint angles is a large error in surface position at the end of a limb. Sub-pixel average
+error already costs several decibels.</p></li>
+<li><p>One frame is sharp even with a wrong pose; a few are softer; all of them are blurred. The representation
+can hold the detail, and the disagreement between frames removes it.</p></li>
+<li><p>More texels and more Gaussians store the blurred texture more accurately. They do not recover the detail.</p></li>
+<li><p>Correcting each frame’s pose from keypoints and silhouettes, without colour, recovers a large part of the
+loss. It cannot recover what its evidence does not show: depth, rotations about a limb’s own axis, keypoint
+noise, and anything that is not a pose error at all.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Run round one with exact keypoints (<code class="docutils literal notranslate"><span class="pre">keypoints=None</span></code> uses <code class="docutils literal notranslate"><span class="pre">train.keypoints</span></code>) and refit. How close does the
+result come to the fit with true poses? What does that say about where to invest in a real pipeline?</p></li>
+<li><p>Section 6.2 used the refitted avatar as the silhouette reference. Run the silhouette round with
+<code class="docutils literal notranslate"><span class="pre">noisy_model</span></code> instead of <code class="docutils literal notranslate"><span class="pre">kp_model</span></code>, starting from <code class="docutils literal notranslate"><span class="pre">poses_kp</span></code>, and refit. Compare with the keypoint round
+alone.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">cu.perturb_poses(train.poses,</span> <span class="pre">3.0,</span> <span class="pre">joints=[&quot;pelvis&quot;])</span></code> and
+<code class="docutils literal notranslate"><span class="pre">cu.perturb_poses(train.poses,</span> <span class="pre">3.0,</span> <span class="pre">joints=[&quot;l_wrist&quot;,</span> <span class="pre">&quot;r_wrist&quot;])</span></code> and compare their surface errors with
+<code class="docutils literal notranslate"><span class="pre">registration</span></code>. Which joints should a tracker get right first?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">exact</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">refine_poses</span><span class="p">(</span><span class="n">noisy_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">noisy</span><span class="p">,</span> <span class="n">w_sil</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">registration</span><span class="p">(</span><span class="n">exact</span><span class="p">),</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">exact</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">clean_psnr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With exact keypoints the refit comes close to the fit with true poses: seventeen exact 2D points per frame pin
+down almost everything about this skeleton except depth and twist. The quality of the 2D evidence sets the
+ceiling. A better keypoint detector, or more keypoints (face, hands, feet), raises the ceiling more than
+anything done to the optimiser.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bad_ref</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">tracking</span><span class="o">.</span><span class="n">refine_poses</span><span class="p">(</span><span class="n">noisy_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">poses_kp</span><span class="p">,</span> <span class="n">keypoints</span><span class="o">=</span><span class="n">detected</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.003</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">registration</span><span class="p">(</span><span class="n">bad_ref</span><span class="p">),</span> <span class="n">fit_and_score</span><span class="p">(</span><span class="n">bad_ref</span><span class="p">)[</span><span class="mi">1</span><span class="p">],</span> <span class="n">kp_psnr</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The gain of the silhouette round shrinks or turns into a loss. The avatar fitted with the tracker’s poses has
+an outline that is the average of sixteen misplaced outlines: too wide and too soft. Matching that outline to
+a crisp mask pulls the poses towards wherever the blur happens to be smallest. A silhouette reference has to
+be at least as well registered as the poses it is meant to improve, which is why correction and refitting
+alternate.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">joints</span> <span class="ow">in</span> <span class="p">([</span><span class="s2">"pelvis"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"l_wrist"</span><span class="p">,</span> <span class="s2">"r_wrist"</span><span class="p">]):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">joints</span><span class="p">,</span> <span class="n">registration</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">joints</span><span class="o">=</span><span class="n">joints</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>The same angular noise at the pelvis moves the whole body, with lever arms up to the length of a leg. At the
+wrists it moves two hands by a few millimetres. Errors near the root of the kinematic tree are the expensive
+ones for the body as a whole, so global orientation and the spine come first. The hands still matter for
+close-ups of hands, where millimetres are many pixels.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id45" title="Thiemo Alldieck, Marcus Magnor, Weipeng Xu, Christian Theobalt, and Gerard Pons-Moll. Video based reconstruction of 3D people models. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). 2018.">Alldieck <em>et al.</em>, 2018</a>]</span> fits a consensus shape and texture to a turning person from silhouettes
+and keypoints, the benchmark setting the project’s pose correction was first measured on.</p></li>
+<li><p><span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id40" title="Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view coordinates. In SIGGRAPH Asia. 2024.">Shen <em>et al.</em>, 2024</a>]</span> is the tracker whose estimates the real pipeline refines.</p></li>
+<li><p><span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span> for the representation being fitted.</p></li>
+<li><p>Project documentation: <span class="private-repo" title="in the project's private repository">README, What we learned</span>,
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>,
+<span class="private-repo" title="in the project's private repository">docs/mobile_parts.md</span> and
+<span class="private-repo" title="in the project's private repository">docs/realism_v4.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part5_fitting"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="05a_fit_from_video.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Fitting an avatar to one video</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../part6_hifi/06a_crops_and_parts.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Small parts need their own pixels and their own joints</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-texture-is-an-average">1. A texture is an average</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-large-is-the-disagreement">2. How large is the disagreement?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quality-against-tracking-noise">3. Quality against tracking noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-frame-a-few-frames-all-frames">4. One frame, a few frames, all frames</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#does-more-capacity-buy-it-back">5. Does more capacity buy it back?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixing-the-registration">6. Fixing the registration</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-one-keypoints">6.1 Round one: keypoints</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#round-two-silhouettes">6.2 Round two: silhouettes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-pose-correction-does-not-recover">7. What pose correction does not recover</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

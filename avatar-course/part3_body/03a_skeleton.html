@@ -1,0 +1,1251 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>A skeleton and forward kinematics: how a pose moves a body &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part3_body/03a_skeleton';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Skinning: making a surface follow the skeleton" href="03b_skinning.html" />
+    <link rel="prev" title="Gradients: fitting Gaussians to pictures, and why that is not yet an avatar" href="../part2_splatting/02c_gradients.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>A skeleton and forward kinematics: how a pose moves a body</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-body-is-a-tree-of-joints">1. A body is a tree of joints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-rotation-is-three-numbers-axis-angle-and-rodrigues-formula">2. One rotation is three numbers: axis-angle and Rodrigues’ formula</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-rotating-about-the-wrong-point-or-in-the-wrong-order">3. What goes wrong: rotating about the wrong point, or in the wrong order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-kinematics-composing-transforms-down-the-tree">4. Forward kinematics: composing transforms down the tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-tree-backwards-a-pose-from-2d-keypoints">5. Running the tree backwards: a pose from 2D keypoints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="a-skeleton-and-forward-kinematics-how-a-pose-moves-a-body">
+<h1>A skeleton and forward kinematics: how a pose moves a body<a class="headerlink" href="#a-skeleton-and-forward-kinematics-how-a-pose-moves-a-body" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>How a body is described as a tree of joints, and what the numbers of a pose mean.</p></li>
+<li><p>How an axis-angle vector becomes a rotation matrix (Rodrigues’ formula), including at zero rotation.</p></li>
+<li><p>How rotations travel down the tree (forward kinematics), and how the body tears apart when they are
+composed the wrong way.</p></li>
+<li><p>That forward kinematics is differentiable: a pose can be recovered from 2D keypoints by gradient descent,
+up to an ambiguity that one camera cannot resolve.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part2_splatting/02c_gradients.html"><span class="std std-doc">Lesson 2c</span></a> ended with Gaussians that could not move.
+This lesson builds the thing that will move them. You need rotation matrices and matrix products; the pinhole
+camera of <a class="reference internal" href="../part2_splatting/02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a> returns in the last section.</p>
+<section id="a-body-is-a-tree-of-joints">
+<h2>1. A body is a tree of joints<a class="headerlink" href="#a-body-is-a-tree-of-joints" title="Link to this heading">#</a></h2>
+<p>A skeleton, for our purposes, is three lists.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cu.JOINTS</span></code>: the names of the joints.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cu.PARENTS</span></code>: for every joint, the index of the joint it hangs from. The root (the pelvis) has parent <span class="math notranslate nohighlight">\(-1\)</span>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cu.REST_JOINTS</span></code>: where every joint is in the <strong>rest pose</strong>, a T-pose with the arms straight out.</p></li>
+</ul>
+<p>Each joint has exactly one parent, so the joints form a tree, the <strong>kinematic tree</strong>. A <em>bone</em> is the segment
+from a joint to its parent.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">children</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PARENTS</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="o">==</span> <span class="n">j</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">print_tree</span><span class="p">(</span><span class="n">j</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">depth</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'    '</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">depth</span><span class="si">}{</span><span class="n">j</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">cu</span><span class="o">.</span><span class="n">JOINTS</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="si">:</span><span class="s2">&lt;11s</span><span class="si">}</span><span class="s2"> rest position (</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">y</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">z</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+        <span class="n">print_tree</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">depth</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="n">print_tree</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 0 pelvis      rest position (+0.00, 0.95, +0.00)
+     1 spine       rest position (+0.00, 1.10, +0.00)
+         2 chest       rest position (+0.00, 1.28, +0.00)
+             3 neck        rest position (+0.00, 1.47, +0.00)
+                 4 head        rest position (+0.00, 1.56, +0.00)
+             5 l_shoulder  rest position (+0.20, 1.41, +0.00)
+                 6 l_elbow     rest position (+0.47, 1.41, +0.00)
+                     7 l_wrist     rest position (+0.72, 1.41, +0.00)
+             8 r_shoulder  rest position (-0.20, 1.41, +0.00)
+                 9 r_elbow     rest position (-0.47, 1.41, +0.00)
+                    10 r_wrist     rest position (-0.72, 1.41, +0.00)
+    11 l_hip       rest position (+0.10, 0.90, +0.00)
+        12 l_knee      rest position (+0.10, 0.50, +0.00)
+            13 l_ankle     rest position (+0.10, 0.08, +0.00)
+    14 r_hip       rest position (-0.10, 0.90, +0.00)
+        15 r_knee      rest position (-0.10, 0.50, +0.00)
+            16 r_ankle     rest position (-0.10, 0.08, +0.00)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.2</span><span class="p">,</span> <span class="mf">4.8</span><span class="p">))</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">joint_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">rest_np</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">JOINTS</span><span class="p">):</span>
+    <span class="n">side</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">"r_"</span><span class="p">)</span> <span class="k">else</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">((</span><span class="s2">"shoulder"</span><span class="p">,</span> <span class="s2">"wrist"</span><span class="p">)):</span>
+        <span class="n">offset</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">14</span><span class="p">),</span> <span class="s2">"center"</span>                     <span class="c1"># arm labels alternate below and above the bone</span>
+    <span class="k">elif</span> <span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">"elbow"</span><span class="p">):</span>
+        <span class="n">offset</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="s2">"center"</span>
+    <span class="k">elif</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"chest"</span><span class="p">:</span>
+        <span class="n">offset</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">),</span> <span class="s2">"right"</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">offset</span><span class="p">,</span> <span class="n">ha</span> <span class="o">=</span> <span class="p">(</span><span class="mi">7</span> <span class="o">*</span> <span class="n">side</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"left"</span> <span class="k">if</span> <span class="n">side</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"right"</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">annotate</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">j</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">rest_np</span><span class="p">[</span><span class="n">j</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">xytext</span><span class="o">=</span><span class="n">offset</span><span class="p">,</span> <span class="n">textcoords</span><span class="o">=</span><span class="s2">"offset points"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="n">ha</span><span class="p">,</span>
+                <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.95</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.02</span><span class="p">,</span> <span class="mf">1.72</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (m): the person's left is +x"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (m): up"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"The toy skeleton in its rest pose, seen from the front"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/7bad5a7a242362b08cfa09abd6bed00765302e2705a2a0512fbd134b2267782d.png" src="../_images/7bad5a7a242362b08cfa09abd6bed00765302e2705a2a0512fbd134b2267782d.png" />
+</div>
+</div>
+<p>The view is from the front, so the person’s left arm (<code class="docutils literal notranslate"><span class="pre">l_</span></code>, towards <span class="math notranslate nohighlight">\(+x\)</span>) is on the right of the picture.
+Two properties of the lists will be used below without further comment: a parent always has a smaller index
+than its children, and the root comes first.</p>
+<p>A <strong>pose</strong> <span class="math notranslate nohighlight">\(\theta\)</span> is one rotation per joint. The rotation of joint <span class="math notranslate nohighlight">\(j\)</span> says how the bone leaving <span class="math notranslate nohighlight">\(j\)</span> is
+turned <em>relative to the parent’s bone</em>: bend the elbow by 90° and the pose stores “elbow: 90°”, no matter what
+the shoulder is doing. The root’s rotation turns the whole body, and a translation <span class="math notranslate nohighlight">\(\tau \in \mathbb{R}^3\)</span>
+places it in the world.</p>
+</section>
+<section id="one-rotation-is-three-numbers-axis-angle-and-rodrigues-formula">
+<h2>2. One rotation is three numbers: axis-angle and Rodrigues’ formula<a class="headerlink" href="#one-rotation-is-three-numbers-axis-angle-and-rodrigues-formula" title="Link to this heading">#</a></h2>
+<p>Each joint rotation is stored as an <strong>axis-angle</strong> vector <span class="math notranslate nohighlight">\(a \in \mathbb{R}^3\)</span>. Its direction
+<span class="math notranslate nohighlight">\(k = a / \lVert a \rVert\)</span> is the axis to turn about, and its length <span class="math notranslate nohighlight">\(\phi = \lVert a \rVert\)</span> is the angle in
+radians. Zero rotation is the zero vector, which is what makes the rest pose “all zeros”.</p>
+<p>To rotate a point we need a matrix. Write the cross product with <span class="math notranslate nohighlight">\(k\)</span> as a matrix <span class="math notranslate nohighlight">\(K\)</span>, so that
+<span class="math notranslate nohighlight">\(K x = k \times x\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+K = \begin{pmatrix} 0 &amp; -k_z &amp; k_y \\ k_z &amp; 0 &amp; -k_x \\ -k_y &amp; k_x &amp; 0 \end{pmatrix},
+\qquad
+R = I + \sin\phi \; K + (1 - \cos\phi)\, K^2 .
+\end{split}\]</div>
+<p>This is <strong>Rodrigues’ formula</strong>. Its three terms have a geometric reading. Split <span class="math notranslate nohighlight">\(x\)</span> into the part along the
+axis and the part perpendicular to it. The part along the axis does not move. The perpendicular part turns in
+its plane: <span class="math notranslate nohighlight">\(Kx\)</span> is that part turned by a quarter turn, and <span class="math notranslate nohighlight">\(K^2 x\)</span> is minus that part.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rodrigues_naive</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Axis-angle (..., 3) -&gt; rotation matrices (..., 3, 3). Written exactly as the formula."""</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">a</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="p">,</span> <span class="n">kz</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">kx</span><span class="p">)</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">zero</span><span class="p">,</span> <span class="o">-</span><span class="n">kz</span><span class="p">,</span> <span class="n">ky</span><span class="p">,</span> <span class="n">kz</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="o">-</span><span class="n">kx</span><span class="p">,</span> <span class="o">-</span><span class="n">ky</span><span class="p">,</span> <span class="n">kx</span><span class="p">,</span> <span class="n">zero</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">K</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">))[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">K</span><span class="p">)</span>
+
+<span class="n">quarter_z</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">])</span>            <span class="c1"># a quarter turn about the z axis</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x axis after a quarter turn about z:"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">rodrigues_naive</span><span class="p">(</span><span class="n">quarter_z</span><span class="p">)</span> <span class="o">@</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]))</span><span class="o">.</span><span class="n">tolist</span><span class="p">()])</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">R</span> <span class="o">=</span> <span class="n">rodrigues_naive</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R R^T = I up to"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">R</span><span class="w"> </span><span class="o">@</span><span class="w"> </span><span class="n">R</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+      <span class="s2">"| same as cu.axis_angle_to_matrix up to"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">R</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">a</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>x axis after a quarter turn about z: [0.0, 1.0, 0.0]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R R^T = I up to 3.3e-16 | same as cu.axis_angle_to_matrix up to 2.0e-13
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>The failure.</strong> The formula divides by the angle. The most common pose value of all is zero rotation, and
+there it divides zero by zero.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"naive formula at zero rotation:"</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">rodrigues_naive</span><span class="p">(</span><span class="n">zero</span><span class="p">)</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>naive formula at zero rotation:
+tensor([[nan, nan, nan],
+        [nan, nan, nan],
+        [nan, nan, nan]], device='cuda:0')
+</pre></div>
+</div>
+</div>
+</div>
+<p>A NaN in one joint spreads to everything that hangs below it, and then to the loss. The repair must also keep
+the <em>gradient</em> finite at zero, because an optimiser that starts from the rest pose differentiates right there.
+The library’s version adds a tiny constant under the square root, <span class="math notranslate nohighlight">\(\phi = \sqrt{\lVert a\rVert^2 + \epsilon}\)</span>,
+so that <span class="math notranslate nohighlight">\(a / \phi\)</span> is zero at zero instead of undefined:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">rodrigues</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">eps</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Rodrigues' formula, safe at zero rotation (the same as cu.axis_angle_to_matrix)."""</span>
+    <span class="n">phi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">sqrt</span><span class="p">((</span><span class="n">a</span> <span class="o">*</span> <span class="n">a</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdim</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">+</span> <span class="n">eps</span><span class="p">)</span>
+    <span class="n">kx</span><span class="p">,</span> <span class="n">ky</span><span class="p">,</span> <span class="n">kz</span> <span class="o">=</span> <span class="p">(</span><span class="n">a</span> <span class="o">/</span> <span class="n">phi</span><span class="p">)</span><span class="o">.</span><span class="n">unbind</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">kx</span><span class="p">)</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">zero</span><span class="p">,</span> <span class="o">-</span><span class="n">kz</span><span class="p">,</span> <span class="n">ky</span><span class="p">,</span> <span class="n">kz</span><span class="p">,</span> <span class="n">zero</span><span class="p">,</span> <span class="o">-</span><span class="n">kx</span><span class="p">,</span> <span class="o">-</span><span class="n">ky</span><span class="p">,</span> <span class="n">kx</span><span class="p">,</span> <span class="n">zero</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">a</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">phi</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">K</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">phi</span><span class="p">))[</span><span class="o">...</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">K</span> <span class="o">@</span> <span class="n">K</span><span class="p">)</span>
+
+<span class="n">zero</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">moved</span> <span class="o">=</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">zero</span><span class="p">)</span> <span class="o">@</span> <span class="n">x</span>
+<span class="n">jac</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">autograd</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">@</span> <span class="n">x</span><span class="p">,</span> <span class="n">zero</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"R(0) x ="</span><span class="p">,</span> <span class="n">moved</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"d(R x)/da at zero ="</span><span class="p">);</span> <span class="nb">print</span><span class="p">(</span><span class="n">jac</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">moved</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="ow">and</span> <span class="n">torch</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">jac</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">rodrigues</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">axis_angle_to_matrix</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>R(0) x = [1.0, 0.0, 0.0]
+d(R x)/da at zero =
+tensor([[ 0.0000,  0.0000,  0.0000],
+        [ 0.0000,  0.0000,  1.0000],
+        [ 0.0000, -1.0000,  0.0000]], device='cuda:0', dtype=torch.float64)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The gradient at zero is finite, and it is the right one. For a small rotation, <span class="math notranslate nohighlight">\(R x \approx x + a \times x\)</span>:
+a small turn about z moves the x axis towards y, a small turn about y moves it towards <span class="math notranslate nohighlight">\(-z\)</span>, and a turn about
+x itself does nothing. Those are the three columns printed above.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">small</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">2e-4</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e-4</span><span class="p">,</span> <span class="mf">3e-4</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">err</span> <span class="o">=</span> <span class="p">(</span><span class="n">rodrigues</span><span class="p">(</span><span class="n">small</span><span class="p">)</span> <span class="o">@</span> <span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">small</span><span class="p">,</span> <span class="n">x</span><span class="p">)))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"small-angle check: R x differs from x + a × x by </span><span class="si">{</span><span class="n">err</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> (the angle squared is </span><span class="si">{</span><span class="n">small</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="mi">2</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">err</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>small-angle check: R x differs from x + a × x by 5.0e-08 (the angle squared is 1.4e-07)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-goes-wrong-rotating-about-the-wrong-point-or-in-the-wrong-order">
+<h2>3. What goes wrong: rotating about the wrong point, or in the wrong order<a class="headerlink" href="#what-goes-wrong-rotating-about-the-wrong-point-or-in-the-wrong-order" title="Link to this heading">#</a></h2>
+<p>A pose is a list of rotations. How do they move the joints? Here is a pose that uses two joints of the left
+arm: the shoulder lowers the arm by 50°, and the elbow bends the forearm 90° forwards.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">J</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span>
+<span class="n">pose</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_shoulder"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="mf">50.0</span><span class="p">)])</span>      <span class="c1"># about z: lower the arm</span>
+<span class="n">pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_elbow"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="mf">90.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">])</span>         <span class="c1"># about y: bend the forearm forwards</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">descendants</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">children</span><span class="p">(</span><span class="n">j</span><span class="p">):</span>
+        <span class="n">out</span> <span class="o">+=</span> <span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">+</span> <span class="n">descendants</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pose_by_rotating</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">pivot</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Move the rest joints by applying each joint's rotation to everything below that joint.</span>
+<span class="sd">    pivot: 'origin' or 'joint'. order: the sequence in which the joints are processed."""</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">order</span><span class="p">:</span>
+        <span class="n">below</span> <span class="o">=</span> <span class="n">descendants</span><span class="p">(</span><span class="n">j</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">below</span><span class="p">:</span>
+            <span class="n">centre</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="k">if</span> <span class="n">pivot</span> <span class="o">==</span> <span class="s2">"joint"</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">below</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">below</span><span class="p">]</span> <span class="o">-</span> <span class="n">centre</span><span class="p">)</span> <span class="o">@</span> <span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">]</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">centre</span>
+    <span class="k">return</span> <span class="n">x</span>
+
+<span class="n">root_first</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">))</span>
+<span class="n">attempt_origin</span> <span class="o">=</span> <span class="n">pose_by_rotating</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="s2">"origin"</span><span class="p">,</span> <span class="n">root_first</span><span class="p">)</span>
+<span class="n">attempt_order</span> <span class="o">=</span> <span class="n">pose_by_rotating</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="s2">"joint"</span><span class="p">,</span> <span class="n">root_first</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Attempt 1: rotate about the world origin.</strong> A rotation matrix turns points about the origin of the
+coordinate system. The origin of the world is on the floor between the feet. An elbow should turn about the
+elbow.</p>
+<p><strong>Attempt 2: rotate about the joint, root first.</strong> Now each rotation is centred on its joint. The shoulder
+goes first and lowers the arm. Then the elbow turns the forearm about the <em>world’s</em> y axis. But the elbow’s
+axis is part of the arm, and it went down with the arm. The pose says “bend forwards, relative to the upper
+arm”, and the upper arm no longer points where it did.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">correct</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+<span class="n">view</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">elevation_deg</span><span class="o">=</span><span class="mi">18</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>        <span class="c1"># a three-quarter view</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">bone_error</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">rest</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">rest</span><span class="p">[</span><span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PARENTS</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.4</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">panels</span> <span class="o">=</span> <span class="p">[(</span><span class="n">attempt_origin</span><span class="p">,</span> <span class="s2">"1: rotations about the world origin"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]),</span>
+          <span class="p">(</span><span class="n">attempt_order</span><span class="p">,</span> <span class="s2">"2: about the joints, root first"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]),</span>
+          <span class="p">(</span><span class="n">correct</span><span class="p">,</span> <span class="s2">"correct (forward kinematics)"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">])]</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">panels</span><span class="p">):</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">correct</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">joint_size</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">view</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.4</span><span class="p">,</span> <span class="n">joint_size</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">290</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">290</span><span class="p">,</span> <span class="mi">30</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">9.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"image x (pixels)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.03</span><span class="p">,</span> <span class="mf">0.94</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"largest bone-length change: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bone_error</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">,</span> <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"image y (pixels)"</span><span class="p">);</span> <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"bone-length error: attempt 1 </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bone_error</span><span class="p">(</span><span class="n">attempt_origin</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm, attempt 2 </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">bone_error</span><span class="p">(</span><span class="n">attempt_order</span><span class="p">)</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"wrist position error: attempt 1 </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">attempt_origin</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">correct</span><span class="p">)[</span><span class="n">J</span><span class="p">(</span><span class="s1">'l_wrist'</span><span class="p">)]</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> cm, "</span>
+      <span class="sa">f</span><span class="s2">"attempt 2 </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">attempt_order</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">correct</span><span class="p">)[</span><span class="n">J</span><span class="p">(</span><span class="s1">'l_wrist'</span><span class="p">)]</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">bone_error</span><span class="p">(</span><span class="n">attempt_origin</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.05</span> <span class="ow">and</span> <span class="n">bone_error</span><span class="p">(</span><span class="n">attempt_order</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+<span class="k">assert</span> <span class="p">(</span><span class="n">attempt_order</span> <span class="o">-</span> <span class="n">correct</span><span class="p">)[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_wrist"</span><span class="p">)]</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">0.1</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>bone-length error: attempt 1 183.0 cm, attempt 2 6.0e-06 cm
+wrist position error: attempt 1 159 cm, attempt 2 21 cm
+</pre></div>
+</div>
+<img alt="../_images/fbb15f1b5bbcffbdc5782efa1ab0d2abb6d11f55c217956c9a8e4835bb63a8de.png" src="../_images/fbb15f1b5bbcffbdc5782efa1ab0d2abb6d11f55c217956c9a8e4835bb63a8de.png" />
+</div>
+</div>
+<p>The grey skeleton in each panel is the correct answer. Attempt 1 tears the arm off: the upper arm has changed
+its length, because one of its ends turned about a point on the floor and the other end stayed. Attempt 2
+keeps every bone length, so it looks like a body, but the forearm points down instead of forwards. The second
+error is the more dangerous one in practice, because nothing looks broken.</p>
+<p>There is a version of this procedure that works: process the joints <strong>leaf first</strong>. Turn the hand about the
+wrist, then the forearm (with the hand) about the elbow, then the arm about the shoulder. Each rotation is
+applied while its bone still lies along its rest direction, so the pose’s axes mean what they say.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">leaf_first</span> <span class="o">=</span> <span class="n">pose_by_rotating</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="s2">"joint"</span><span class="p">,</span> <span class="n">root_first</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"leaf first vs the library's forward kinematics:"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">leaf_first</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">correct</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> m"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">leaf_first</span><span class="p">,</span> <span class="n">correct</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>leaf first vs the library's forward kinematics: 0.0e+00 m
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="forward-kinematics-composing-transforms-down-the-tree">
+<h2>4. Forward kinematics: composing transforms down the tree<a class="headerlink" href="#forward-kinematics-composing-transforms-down-the-tree" title="Link to this heading">#</a></h2>
+<p>Moving points around in a loop is slow and awkward to reuse. The standard formulation computes one
+<strong>transform per joint</strong> that can then be applied to anything attached to that joint: a joint position now, a
+skin surface in the <a class="reference internal" href="03b_skinning.html"><span class="std std-doc">next lesson</span></a>.</p>
+<p>Give every joint <span class="math notranslate nohighlight">\(j\)</span> its own coordinate frame, with the origin at the joint and, in the rest pose, the axes of
+the world. The <strong>local transform</strong> places joint <span class="math notranslate nohighlight">\(j\)</span>’s frame inside its parent’s frame: rotate by <span class="math notranslate nohighlight">\(R_j\)</span>, then
+shift by the rest offset <span class="math notranslate nohighlight">\(o_j = r_j - r_{p(j)}\)</span> from the parent joint to this joint (<span class="math notranslate nohighlight">\(r\)</span> are the rest
+positions, <span class="math notranslate nohighlight">\(p(j)\)</span> is the parent). As a 4 x 4 matrix acting on <span class="math notranslate nohighlight">\((x, y, z, 1)\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+L_j = \begin{pmatrix} R_j &amp; o_j \\ 0 &amp; 1 \end{pmatrix}, \qquad
+G_j = G_{p(j)}\, L_j, \qquad G_\text{root} = \begin{pmatrix} R_0 &amp; r_0 + \tau \\ 0 &amp; 1 \end{pmatrix}.
+\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(G_j\)</span> is the <strong>world transform</strong> of joint <span class="math notranslate nohighlight">\(j\)</span>: it maps a point given in joint <span class="math notranslate nohighlight">\(j\)</span>’s frame to the world.
+Multiplying out the recursion for the wrist gives
+<span class="math notranslate nohighlight">\(G_\text{wrist} = L_\text{pelvis} L_\text{spine} L_\text{chest} L_\text{shoulder} L_\text{elbow} L_\text{wrist}\)</span>.
+Read from the right, this is the leaf-first procedure of the last cell: the innermost transform acts first.
+The last column of <span class="math notranslate nohighlight">\(G_j\)</span> is the image of the frame’s origin, which is the posed position of the joint itself.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">forward_kinematics</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">trans</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""pose (J, 3) axis-angle per joint, trans (3,). Returns world transforms G (J, 4, 4) and joints (J, 3)."""</span>
+    <span class="n">rest</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">pose</span><span class="p">)</span>
+    <span class="n">bottom</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">pose</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">j</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PARENTS</span><span class="p">):</span>                       <span class="c1"># parents come before their children</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">rest</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">+</span> <span class="n">trans</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">rest</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">-</span> <span class="n">rest</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">R</span><span class="p">[</span><span class="n">j</span><span class="p">],</span> <span class="n">offset</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]],</span> <span class="mi">1</span><span class="p">),</span> <span class="n">bottom</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">G</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">L</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">G</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">@</span> <span class="n">L</span><span class="p">)</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">G</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">G</span><span class="p">,</span> <span class="n">G</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+<span class="n">dance_poses</span><span class="p">,</span> <span class="n">dance_trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"dance"</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+<span class="n">G</span><span class="p">,</span> <span class="n">joints</span> <span class="o">=</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="n">dance_poses</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">dance_trans</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="n">G_lib</span><span class="p">,</span> <span class="n">joints_lib</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">dance_poses</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">dance_trans</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"largest difference to cu.forward_kinematics: transforms"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">G</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">G_lib</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">,"</span><span class="p">,</span>
+      <span class="s2">"joints"</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="p">(</span><span class="n">joints</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">joints_lib</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">torch</span><span class="o">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">G</span><span class="p">,</span> <span class="n">G_lib</span><span class="p">,</span> <span class="n">atol</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest difference to cu.forward_kinematics: transforms 6.0e-08, joints 6.0e-08
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Bone lengths are preserved.</strong> Every <span class="math notranslate nohighlight">\(L_j\)</span> is a rotation followed by a shift, a rigid motion. A product of
+rigid motions is rigid. So whatever the pose, the distance between a joint and its parent is the rest
+distance. Random poses confirm it, including wild ones that no body could take:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">g</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rest_len</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([(</span><span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PARENTS</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">worst</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">g</span><span class="p">))</span>
+    <span class="n">lengths</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([(</span><span class="n">x</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="n">p</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PARENTS</span><span class="p">)</span> <span class="k">if</span> <span class="n">p</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">worst</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">worst</span><span class="p">,</span> <span class="p">(</span><span class="n">lengths</span> <span class="o">-</span> <span class="n">rest_len</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"200 random poses: largest change of any bone length </span><span class="si">{</span><span class="n">worst</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2"> m"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">worst</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>200 random poses: largest change of any bone length 2.4e-07 m
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Counting.</strong> A pose of the toy body is <span class="math notranslate nohighlight">\(17 \times 3\)</span> numbers, plus 3 for the translation: 54 numbers per
+frame. Everything the body does in this course is a sequence of such vectors.</p>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">side_view</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">35</span><span class="p">,</span> <span class="n">elevation_deg</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">300</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">),</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">)):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="n">dance_poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">dance_trans</span><span class="p">[</span><span class="n">t</span><span class="p">])</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">side_view</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">240</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">290</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s2">"frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"image x"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"image y (pixels)"</span><span class="p">);</span> <span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s2">"cu.motion('dance'): 12 x 54 numbers"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/28daa210c01af5c0de2da0d55fcf9894d55e0078b5e3c70011ffc0256ef64aa5.png" src="../_images/28daa210c01af5c0de2da0d55fcf9894d55e0078b5e3c70011ffc0256ef64aa5.png" />
+</div>
+</div>
+<p>The poses are <em>relative</em>, and that is what makes them a good parameterisation. Change one number at the
+shoulder and the elbow, wrist and hand follow without being told. The price is that an error near the root is
+carried all the way down: a few degrees at the spine move the hands by centimetres.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">wrist_shift</span><span class="p">(</span><span class="n">joint</span><span class="p">,</span> <span class="n">degrees</span><span class="o">=</span><span class="mf">3.0</span><span class="p">):</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span> <span class="n">p</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="n">joint</span><span class="p">),</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">degrees</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">))[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">)[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_wrist"</span><span class="p">)]</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"a 3° error moves the left wrist by:"</span><span class="p">,</span> <span class="p">{</span><span class="n">j</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">wrist_shift</span><span class="p">(</span><span class="n">j</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"spine"</span><span class="p">,</span> <span class="s2">"l_shoulder"</span><span class="p">,</span> <span class="s2">"l_elbow"</span><span class="p">)})</span>
+<span class="k">assert</span> <span class="n">wrist_shift</span><span class="p">(</span><span class="s2">"spine"</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">wrist_shift</span><span class="p">(</span><span class="s2">"l_shoulder"</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">wrist_shift</span><span class="p">(</span><span class="s2">"l_elbow"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>a 3° error moves the left wrist by: {'spine': '4.1 cm', 'l_shoulder': '2.7 cm', 'l_elbow': '1.3 cm'}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="running-the-tree-backwards-a-pose-from-2d-keypoints">
+<h2>5. Running the tree backwards: a pose from 2D keypoints<a class="headerlink" href="#running-the-tree-backwards-a-pose-from-2d-keypoints" title="Link to this heading">#</a></h2>
+<p>Forward kinematics is built from sines, cosines and matrix products, so it is differentiable, and so is the
+camera projection. Chain them and the 2D position of every joint in an image becomes a differentiable function
+of the pose. That is enough to do a first, small version of <strong>tracking</strong>: given where the joints appear in a
+picture, find the pose.</p>
+<p>The data: one target pose, and its 17 joints projected into a front camera. A real system would get these 2D
+points from a keypoint detector.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">target_pose</span><span class="p">,</span> <span class="n">target_trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">a_pose</span><span class="p">()</span>
+<span class="n">target_pose</span><span class="p">,</span> <span class="n">target_trans</span> <span class="o">=</span> <span class="n">target_pose</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">(),</span> <span class="n">target_trans</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">target_pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_elbow"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="mf">70.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">])</span>        <span class="c1"># left forearm towards the camera</span>
+<span class="n">target_pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"r_shoulder"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="o">-</span><span class="mf">20.0</span><span class="p">)])</span>     <span class="c1"># right arm raised</span>
+<span class="n">target_pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"r_knee"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">50.0</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>          <span class="c1"># right knee bent</span>
+<span class="n">target_pose</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"spine"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mf">8.0</span><span class="p">)])</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">target_joints</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">target_pose</span><span class="p">,</span> <span class="n">target_trans</span><span class="p">)</span>
+
+<span class="n">front</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+<span class="n">side</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">azimuth_deg</span><span class="o">=</span><span class="mi">90</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_pose</span><span class="p">(</span><span class="n">cams</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Gradient descent on the 2D keypoint error, starting from the rest pose."""</span>
+    <span class="n">keypoints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">target_joints</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">cam</span> <span class="ow">in</span> <span class="n">cams</span><span class="p">]</span>
+    <span class="n">pose</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">trans</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">requires_grad</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">([</span><span class="n">pose</span><span class="p">,</span> <span class="n">trans</span><span class="p">],</span> <span class="n">lr</span><span class="o">=</span><span class="n">lr</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">iters</span><span class="p">):</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">joints</span> <span class="o">=</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="n">pose</span><span class="p">,</span> <span class="n">trans</span><span class="p">)</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">joints</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">kp</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">cam</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cams</span><span class="p">,</span> <span class="n">keypoints</span><span class="p">))</span>
+        <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">();</span> <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="n">pose</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">trans</span><span class="o">.</span><span class="n">detach</span><span class="p">())[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">errors</span><span class="p">(</span><span class="n">joints</span><span class="p">):</span>
+    <span class="n">e2d</span> <span class="o">=</span> <span class="p">(</span><span class="n">front</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">joints</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">front</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">target_joints</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="n">e3d</span> <span class="o">=</span> <span class="mi">100</span> <span class="o">*</span> <span class="p">(</span><span class="n">joints</span> <span class="o">-</span> <span class="n">target_joints</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">e2d</span><span class="p">,</span> <span class="n">e3d</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">e3d</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">cu</span><span class="o">.</span><span class="n">JOINTS</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">e3d</span><span class="o">.</span><span class="n">argmax</span><span class="p">())]</span>
+
+<span class="n">one_view</span> <span class="o">=</span> <span class="n">fit_pose</span><span class="p">([</span><span class="n">front</span><span class="p">])</span>
+<span class="n">e2d</span><span class="p">,</span> <span class="n">e3d</span><span class="p">,</span> <span class="n">worst</span><span class="p">,</span> <span class="n">where</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">one_view</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one camera:  2D error in that camera </span><span class="si">{</span><span class="n">e2d</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | 3D error mean </span><span class="si">{</span><span class="n">e3d</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm, worst </span><span class="si">{</span><span class="n">worst</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> cm at </span><span class="si">{</span><span class="n">where</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one camera:  2D error in that camera 0.04 px | 3D error mean 8.2 cm, worst 49 cm at l_ankle
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the two numbers together. In the image, the fitted skeleton lies on the keypoints to a fraction of a
+pixel. In space, some joints are tens of centimetres from where they should be.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">two_views</span> <span class="o">=</span> <span class="n">fit_pose</span><span class="p">([</span><span class="n">front</span><span class="p">,</span> <span class="n">side</span><span class="p">])</span>
+<span class="n">e2d_2</span><span class="p">,</span> <span class="n">e3d_2</span><span class="p">,</span> <span class="n">worst_2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">errors</span><span class="p">(</span><span class="n">two_views</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"two cameras: 2D error in the front camera </span><span class="si">{</span><span class="n">e2d_2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px | 3D error mean </span><span class="si">{</span><span class="n">e3d_2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm, worst </span><span class="si">{</span><span class="n">worst_2</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">e2d</span> <span class="o">&lt;</span> <span class="mf">1.0</span> <span class="ow">and</span> <span class="n">worst</span> <span class="o">&gt;</span> <span class="mf">10.0</span> <span class="ow">and</span> <span class="n">worst_2</span> <span class="o">&lt;</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>two cameras: 2D error in the front camera 0.00 px | 3D error mean 0.00 cm, worst 0.00 cm
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="admonition hide above-input">
+<summary aria-label="Toggle hidden content">
+<p class="collapsed admonition-title">Show code cell source</p>
+<p class="expanded admonition-title">Hide code cell source</p>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.4</span><span class="p">,</span> <span class="mf">3.8</span><span class="p">))</span>
+<span class="n">kp</span> <span class="o">=</span> <span class="n">front</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">target_joints</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">front</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">one_view</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fitted, one camera"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="o">*</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">facecolors</span><span class="o">=</span><span class="s2">"none"</span><span class="p">,</span> <span class="n">edgecolors</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">linewidths</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"2D keypoints (data)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">120</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">124</span><span class="p">,</span> <span class="mi">12</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"image x (pixels)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"image y (pixels)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"what the camera sees: a perfect fit"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">9.5</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">title</span> <span class="ow">in</span> <span class="p">((</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">one_view</span><span class="p">,</span> <span class="s2">"from the side: one camera"</span><span class="p">),</span> <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">two_views</span><span class="p">,</span> <span class="s2">"from the side: two cameras"</span><span class="p">)):</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">target_joints</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"true pose"</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">draw_skeleton</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fitted"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.75</span><span class="p">,</span> <span class="mf">0.75</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.75</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mf">9.5</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"z (m): towards the front camera"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (m)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mf">7.5</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower left"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</details>
+<div class="cell_output docutils container">
+<img alt="../_images/2012b02f003e55d1e48d570c89badf5b301dc26eb151382fd02057e384fe73e3.png" src="../_images/2012b02f003e55d1e48d570c89badf5b301dc26eb151382fd02057e384fe73e3.png" />
+</div>
+</div>
+<p>Seen from the side, the one-camera fit is a different pose. The left forearm is <em>behind</em> the body; the true
+forearm points towards the camera. A straight leg has swung forwards. Yet the picture from the front is the
+same, because a pinhole camera measures direction, not distance. Each keypoint says only that its joint lies
+somewhere on one ray through the camera centre. Given the parent joint, the child must also lie on a sphere
+around the parent whose radius is the bone length. A ray meets a sphere in two points: one nearer the camera
+and one farther. So every bone has two candidate directions that draw the same picture, tilted towards the
+camera or away from it. This is the <strong>depth ambiguity</strong> of a single view.</p>
+<p>The same thing as a loss landscape, for one joint: keep everything at the true pose, sweep the left elbow
+angle, and plot the wrist’s reprojection error in each camera.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">angles</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">110</span><span class="p">,</span> <span class="mi">111</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="n">sweep</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"front camera"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"side camera"</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">angles</span><span class="p">:</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">target_pose</span><span class="o">.</span><span class="n">clone</span><span class="p">();</span> <span class="n">p</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_elbow"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">a</span><span class="p">)),</span> <span class="mf">0.0</span><span class="p">])</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">forward_kinematics</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">target_trans</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_wrist"</span><span class="p">)]</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">cam</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"front camera"</span><span class="p">,</span> <span class="n">front</span><span class="p">),</span> <span class="p">(</span><span class="s2">"side camera"</span><span class="p">,</span> <span class="n">side</span><span class="p">)):</span>
+        <span class="n">sweep</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">x</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">cam</span><span class="o">.</span><span class="n">project</span><span class="p">(</span><span class="n">target_joints</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_wrist"</span><span class="p">)])[</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">norm</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.2</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">sweep</span><span class="p">[</span><span class="s2">"front camera"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"camera"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"front camera"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">angles</span><span class="p">),</span> <span class="n">sweep</span><span class="p">[</span><span class="s2">"side camera"</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"camera"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"side camera"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="o">-</span><span class="mi">68</span><span class="p">,</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="mf">0.92</span><span class="p">,</span> <span class="s2">"true angle"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"left elbow angle (degrees; negative = forearm towards the front camera)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"wrist reprojection error (pixels)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+
+<span class="n">front_err</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">(</span><span class="n">sweep</span><span class="p">[</span><span class="s2">"front camera"</span><span class="p">]);</span> <span class="n">positive</span> <span class="o">=</span> <span class="n">angles</span> <span class="o">&gt;</span> <span class="mi">20</span>
+<span class="n">twin</span> <span class="o">=</span> <span class="n">angles</span><span class="p">[</span><span class="n">positive</span><span class="p">][</span><span class="n">front_err</span><span class="p">[</span><span class="n">positive</span><span class="p">]</span><span class="o">.</span><span class="n">argmin</span><span class="p">()]</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"front camera: a second minimum at </span><span class="si">{</span><span class="n">twin</span><span class="si">:</span><span class="s2">+.0f</span><span class="si">}</span><span class="s2">° with </span><span class="si">{</span><span class="n">front_err</span><span class="p">[</span><span class="n">positive</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> px of error "</span>
+      <span class="sa">f</span><span class="s2">"(the true minimum is at -70° with 0 px)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"side camera at that angle: </span><span class="si">{</span><span class="n">sweep</span><span class="p">[</span><span class="s1">'side camera'</span><span class="p">][</span><span class="nb">int</span><span class="p">((</span><span class="n">angles</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">twin</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> px"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">front_err</span><span class="p">[</span><span class="n">positive</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">3.0</span> <span class="ow">and</span> <span class="n">sweep</span><span class="p">[</span><span class="s2">"side camera"</span><span class="p">][</span><span class="nb">int</span><span class="p">((</span><span class="n">angles</span> <span class="o">==</span> <span class="n">twin</span><span class="p">)</span><span class="o">.</span><span class="n">nonzero</span><span class="p">())]</span> <span class="o">&gt;</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>front camera: a second minimum at +60° with 1.44 px of error (the true minimum is at -70° with 0 px)
+side camera at that angle: 31 px
+</pre></div>
+</div>
+<img alt="../_images/b86ff08e409d5177b9971601fea0e468a4c8bdf45c82cf12b8a4a23d8c7deb32.png" src="../_images/b86ff08e409d5177b9971601fea0e468a4c8bdf45c82cf12b8a4a23d8c7deb32.png" />
+</div>
+</div>
+<p>The front camera’s curve has two valleys. The wrong one is not quite as deep as the right one, but the
+difference is about a pixel in a 128-pixel image, and the full fit hid even that by adjusting the other joints
+a little. A real keypoint detector is not more accurate than this. Which valley gradient descent ends in
+depends on where it starts and on the first few steps; here it rolled into the wrong one for the forearm and
+for a leg. The side camera’s
+curve has a single valley, and with both cameras the fit is exact.</p>
+<p>This toy result is honest about the real problem. A single camera constrains a pose well in the image plane
+and poorly in depth. Real monocular trackers resolve it with what a few keypoints lack: a learned prior over
+plausible human poses, the silhouette, the continuity of motion over time, or a second camera.</p>
+<div class="note admonition">
+<p class="admonition-title">A clip for this lesson and the next</p>
+<p>The animation in <a class="reference internal" href="03b_skinning.html"><span class="std std-doc">Lesson 3b</span></a> shows the kinematic chain of this lesson in motion, and then
+puts a surface on it.</p>
+</div>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The real system uses the skeleton of SMPL <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span>, with joints that are not hand-placed but
+computed from the body shape. Forward kinematics is the same recursion.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real code</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>17 hand-placed joints, 54 numbers per pose</p></td>
+<td><p>SMPL: a root plus 23 joints, with joint positions regressed from the shaped mesh <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span>. The hi-fi track adds finger joints (SMPL+H / MANO) and a jaw (FLAME): <span class="private-repo" title="in the project's private repository">README, Method</span></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fit_pose</span></code>: gradient descent on 2D keypoints from the rest pose</p></td>
+<td><p>Poses are seeded by an off-the-shelf tracker (GVHMR) and then corrected per frame from silhouettes and keypoints, with gradients through the body model and the renderer: <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/refine_pose.py</span></code></span>, helpers in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/posefit.py</span></code></span></p></td>
+</tr>
+<tr class="row-even"><td><p>The depth ambiguity of section 5</p></td>
+<td><p>The capture guide names it as a main cause of lost detail (“with one camera, depth and finger positions are guesses”) and plans three cameras for the next session: <span class="private-repo" title="in the project's private repository">docs/CAPTURE_GUIDE.md</span></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The pose correction in the repository never uses colour, only masks and keypoints
+(<span class="private-repo" title="in the project's private repository">README, Method</span>).
+<a class="reference internal" href="../part5_fitting/05b_frames_disagree.html"><span class="std std-doc">Part 5</span></a> shows on the toy why pose errors matter so much for the
+texture.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A skeleton is a tree: joint names, a parent for each joint, and rest positions. A pose is one axis-angle
+rotation per joint, relative to the parent, plus a root translation.</p></li>
+<li><p>Rodrigues’ formula, <span class="math notranslate nohighlight">\(R = I + \sin\phi\,K + (1-\cos\phi)\,K^2\)</span>, turns an axis-angle vector into a matrix. It
+must be written so that the value and the gradient are finite at zero rotation.</p></li>
+<li><p>Forward kinematics composes local transforms from the root down: <span class="math notranslate nohighlight">\(G_j = G_{p(j)} L_j\)</span>. A rotation acts
+about its own joint, in the frame its parent has carried it to.</p></li>
+<li><p>Rotating about the world origin tears bones apart. Composing in the wrong order keeps the bones and gives
+the wrong pose, which is harder to notice.</p></li>
+<li><p>Bone lengths are the same in every pose, because every step is a rigid motion.</p></li>
+<li><p>Forward kinematics is differentiable, so a pose can be fitted to 2D keypoints by gradient descent. One
+camera leaves the depth of each limb ambiguous.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Rotations do not commute. Compute <code class="docutils literal notranslate"><span class="pre">rodrigues(a)</span> <span class="pre">&#64;</span> <span class="pre">rodrigues(b)</span></code> and <code class="docutils literal notranslate"><span class="pre">rodrigues(b)</span> <span class="pre">&#64;</span> <span class="pre">rodrigues(a)</span></code> for
+quarter turns about x and y. Then find a pair of joints and axes on the toy body for which the order of
+section 3 does <em>not</em> matter, and explain why.</p></li>
+<li><p>The root joint’s rotation turns the whole body about the pelvis. Use <code class="docutils literal notranslate"><span class="pre">forward_kinematics</span></code> to make the body
+turn about its left ankle instead, without changing the function.</p></li>
+<li><p>In section 5, start the one-camera fit from a pose whose left elbow is already bent 20° towards the
+camera. Does it find the true pose? What does that tell you about the role of initialisation in tracking?</p></li>
+<li><p>Add a third term to the loss of <code class="docutils literal notranslate"><span class="pre">fit_pose</span></code>: a penalty <span class="math notranslate nohighlight">\(\lambda \lVert \theta \rVert^2\)</span> on the pose. Does it
+resolve the depth ambiguity? Why not?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ax_</span><span class="p">,</span> <span class="n">ay_</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rodrigues</span><span class="p">(</span><span class="n">ax_</span><span class="p">)</span> <span class="o">@</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">ay_</span><span class="p">));</span> <span class="nb">print</span><span class="p">(</span><span class="n">rodrigues</span><span class="p">(</span><span class="n">ay_</span><span class="p">)</span> <span class="o">@</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">ax_</span><span class="p">))</span>     <span class="c1"># different</span>
+</pre></div>
+</div>
+<p>The order does not matter when the two rotations share an axis: for example the hip and the knee both turning
+about x, as in a squat. Rotations about the same axis add their angles in either order. It also does not
+matter for joints on different branches (the left and the right elbow), because neither is below the other.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<p>Rotating by <span class="math notranslate nohighlight">\(R\)</span> about a point <span class="math notranslate nohighlight">\(c\)</span> is <span class="math notranslate nohighlight">\(x \mapsto R(x - c) + c\)</span>. The root rotation turns about the pelvis <span class="math notranslate nohighlight">\(r_0\)</span>,
+so add the difference to the translation: <span class="math notranslate nohighlight">\(\tau = (I - R)(c - r_0)\)</span>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">turn</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">);</span> <span class="n">turn</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+<span class="n">c</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_ankle"</span><span class="p">)]</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="n">rodrigues</span><span class="p">(</span><span class="n">turn</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">@</span> <span class="p">(</span><span class="n">c</span> <span class="o">-</span> <span class="n">cu</span><span class="o">.</span><span class="n">REST_JOINTS</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">forward_kinematics</span><span class="p">(</span><span class="n">turn</span><span class="p">,</span> <span class="n">tau</span><span class="p">)[</span><span class="mi">1</span><span class="p">][</span><span class="n">J</span><span class="p">(</span><span class="s2">"l_ankle"</span><span class="p">)],</span> <span class="n">c</span><span class="p">)</span>        <span class="c1"># the ankle did not move</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html"><span class="std std-doc">Lesson 7a</span></a> uses this idea to keep a planted foot still.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<p>Yes: from a start in the correct valley, gradient descent stays in it and reaches the true pose. Tracking is
+therefore rarely done from scratch for every frame. The previous frame’s pose, or a learned tracker’s
+estimate, puts the optimiser in the right valley; the optimisation only refines.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 4</p>
+<p>No. The two valleys are mirror images with the same elbow angle up to sign, so <span class="math notranslate nohighlight">\(\lVert\theta\rVert^2\)</span> is the
+same in both. A prior helps only if it tells the two candidates apart: for the elbow, a joint-limit prior does
+(a human elbow bends one way only), and that is one of the things a learned pose prior encodes.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>SMPL, the body model whose skeleton and pose parameterisation this lesson imitates: <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id33" title="Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J. Black. SMPL: a skinned multi-person linear model. ACM Transactions on Graphics, 2015.">Loper <em>et al.</em>, 2015</a>]</span>.</p></li>
+<li><p>Camera geometry and the single-view ambiguity: <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id52" title="Richard Hartley and Andrew Zisserman. Multiple View Geometry in Computer Vision. Cambridge University Press, 2 edition, 2004.">Hartley and Zisserman, 2004</a>]</span>.</p></li>
+<li><p>The monocular tracker that seeds the real pipeline’s poses: <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id40" title="Zehong Shen, Huaijin Pi, Yan Xia, Zhi Cen, Sida Peng, Zechen Hu, Hujun Bao, Ruizhen Hu, and Xiaowei Zhou. World-grounded human motion recovery via gravity-view coordinates. In SIGGRAPH Asia. 2024.">Shen <em>et al.</em>, 2024</a>]</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part3_body"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part2_splatting/02c_gradients.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03b_skinning.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Skinning: making a surface follow the skeleton</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-body-is-a-tree-of-joints">1. A body is a tree of joints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#one-rotation-is-three-numbers-axis-angle-and-rodrigues-formula">2. One rotation is three numbers: axis-angle and Rodrigues’ formula</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-rotating-about-the-wrong-point-or-in-the-wrong-order">3. What goes wrong: rotating about the wrong point, or in the wrong order</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#forward-kinematics-composing-transforms-down-the-tree">4. Forward kinematics: composing transforms down the tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-tree-backwards-a-pose-from-2d-keypoints">5. Running the tree backwards: a pose from 2D keypoints</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

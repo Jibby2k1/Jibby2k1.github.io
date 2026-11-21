@@ -1,0 +1,1109 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Sampling and density: how many Gaussians, and where? &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part4_shells/04b_sampling_density';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Fitting an avatar to one video" href="../part5_fitting/05a_fit_from_video.html" />
+    <link rel="prev" title="Gaussian Shell Maps: where do the Gaussians live?" href="04a_shell_maps.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Sampling and density: how many Gaussians, and where?</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-grids-that-are-easy-to-confuse">1. Two grids that are easy to confuse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-the-texture-between-texels">2. Reading the texture between texels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bilinear-lookup">2.1 Bilinear lookup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-without-the-wrap">2.2 What goes wrong without the wrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-size-that-follows-the-spacing">2.3 A size that follows the spacing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#re-sampling-a-trained-avatar">3. Re-sampling a trained avatar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-knobs-texture-resolution-and-gaussian-count">4. Two knobs: texture resolution and Gaussian count</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-texels-or-free-gaussians">5. Shared texels or free Gaussians?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="sampling-and-density-how-many-gaussians-and-where">
+<h1>Sampling and density: how many Gaussians, and where?<a class="headerlink" href="#sampling-and-density-how-many-gaussians-and-where" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>How Gaussians are <em>sampled</em> from a shell texture: sample points, bilinear lookup, the wrap-around in <span class="math notranslate nohighlight">\(u\)</span>,
+and a base size tied to the spacing between samples.</p></li>
+<li><p>What happens when you re-sample a trained avatar at another density without retraining it.</p></li>
+<li><p>Why texture resolution and the number of Gaussians are two separate knobs, and what a per-part density
+boost buys on a head close-up.</p></li>
+<li><p>What sharing texels between neighbouring Gaussians does, and does not, buy compared with free parameters
+per Gaussian.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="04a_shell_maps.html"><span class="std std-doc">Lesson 4a</span></a>.</p>
+<section id="two-grids-that-are-easy-to-confuse">
+<h2>1. Two grids that are easy to confuse<a class="headerlink" href="#two-grids-that-are-easy-to-confuse" title="Link to this heading">#</a></h2>
+<p>A shell map has two grids, and this lesson is about keeping them apart.</p>
+<ul class="simple">
+<li><p>The <strong>texel grid</strong> is where the <em>learned numbers</em> live: a tile of <span class="math notranslate nohighlight">\(H \times W\)</span> texels per body part and
+shell. It sets how much detail the avatar can store.</p></li>
+<li><p>The <strong>sample points</strong> are where the <em>Gaussians</em> sit: a list of <span class="math notranslate nohighlight">\((u_i, v_i)\)</span> per part. It sets how many
+Gaussians are rendered, and so how finely the stored detail is drawn.</p></li>
+</ul>
+<p>A Gaussian is not a texel. It reads the texture at its own <span class="math notranslate nohighlight">\((u_i, v_i)\)</span>, between texel centres, by
+interpolation. So the two grids can have different resolutions, and you can change one without touching the
+other.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cu.sample_uv(density)</span></code> makes the sample points. For each part it lays a regular grid over the <span class="math notranslate nohighlight">\((u, v)\)</span>
+square, with the number of rows and columns chosen so that points are about equally far apart <em>on the
+surface</em> in both directions, and so that the part gets about <code class="docutils literal notranslate"><span class="pre">density</span></code> points per square metre. Every other
+row is shifted by half a step.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">part</span><span class="p">,</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">sample_uv</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"points per part:"</span><span class="p">,</span> <span class="p">{</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">PART_NAMES</span><span class="p">)</span> <span class="k">if</span> <span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"r"</span><span class="p">})</span>
+
+<span class="n">measured</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="nb">float</span><span class="p">((</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">/</span> <span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">part_area</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span>
+<span class="n">big</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">body</span><span class="o">.</span><span class="n">part_area</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.08</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">)])</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"points per square metre on the larger parts: </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">measured</span><span class="p">[</span><span class="n">big</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">measured</span><span class="p">[</span><span class="n">big</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> (asked for 900)"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">((</span><span class="n">measured</span><span class="p">[</span><span class="n">big</span><span class="p">]</span> <span class="o">-</span> <span class="mi">900</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="mi">900</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"l_thigh"</span><span class="p">)</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">part</span> <span class="o">==</span> <span class="n">p</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">capsule_surface</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">m</span><span class="p">])</span>
+<span class="n">front</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">((</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.75</span><span class="p">))</span>        <span class="c1"># u = 0 faces the camera at +z</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">3.4</span><span class="p">),</span> <span class="n">gridspec_kw</span><span class="o">=</span><span class="p">{</span><span class="s2">"width_ratios"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">]})</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">]),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="n">m</span><span class="p">]),</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">])</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"u (around the limb)"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"v (along the limb)"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"sample points in the (u, v) square"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="n">front</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])[</span><span class="n">front</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"front half"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])[</span><span class="o">~</span><span class="n">front</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])[</span><span class="o">~</span><span class="n">front</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"back half"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">set_aspect</span><span class="p">(</span><span class="s2">"equal"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x (m)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (m)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"the same points on the left thigh"</span><span class="p">)</span>
+<span class="n">a1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>points per part: {'pelvis': 280, 'abdomen': 280, 'chest': 308, 'neck': 56, 'head': 135, 'l_upperarm': 96, 'l_forearm': 70, 'l_hand': 30, 'l_thigh': 224, 'l_shin': 150, 'l_foot': 64}
+points per square metre on the larger parts: 875 to 928 (asked for 900)
+</pre></div>
+</div>
+<img alt="../_images/2aaf571d56e1c0258a0b4870488d4a71f80217ee7c94ccb38fc903a12b7ec671.png" src="../_images/2aaf571d56e1c0258a0b4870488d4a71f80217ee7c94ccb38fc903a12b7ec671.png" />
+</div>
+</div>
+<p>Small parts get few points and large parts many, because the count follows the surface area. Near the two
+poles of the capsule the points bunch together in <span class="math notranslate nohighlight">\(u\)</span>. That wastes a few Gaussians and does no harm.</p>
+</section>
+<section id="reading-the-texture-between-texels">
+<h2>2. Reading the texture between texels<a class="headerlink" href="#reading-the-texture-between-texels" title="Link to this heading">#</a></h2>
+<section id="bilinear-lookup">
+<h3>2.1 Bilinear lookup<a class="headerlink" href="#bilinear-lookup" title="Link to this heading">#</a></h3>
+<p>Texel <span class="math notranslate nohighlight">\((i, j)\)</span> of an <span class="math notranslate nohighlight">\(H \times W\)</span> tile has its centre at <span class="math notranslate nohighlight">\(u = (j + \tfrac12) / W\)</span>, <span class="math notranslate nohighlight">\(v = (i + \tfrac12) / H\)</span>. For
+a sample point <span class="math notranslate nohighlight">\((u, v)\)</span>, write its position in texel units and split it into an integer part and a fraction:</p>
+<div class="math notranslate nohighlight">
+\[x = uW - \tfrac12 = j_0 + a, \qquad y = vH - \tfrac12 = i_0 + b, \qquad a, b \in [0, 1).\]</div>
+<p>The bilinear value is the average of the four surrounding texels, weighted by closeness:</p>
+<div class="math notranslate nohighlight">
+\[T(u, v) = (1-b)\big[(1-a)\,T_{i_0, j_0} + a\,T_{i_0, j_0+1}\big] + b\,\big[(1-a)\,T_{i_0+1, j_0} + a\,T_{i_0+1, j_0+1}\big].\]</div>
+<p>Two things need care at the edges of a tile. Along the limb, <span class="math notranslate nohighlight">\(v\)</span> ends at the poles, so row indices are
+<em>clamped</em> to the tile. Around the limb, <span class="math notranslate nohighlight">\(u = 0\)</span> and <span class="math notranslate nohighlight">\(u = 1\)</span> are the same line on the surface, so column
+indices must <em>wrap</em>: the neighbour to the right of the last column is the first column.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bilinear</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">uu</span><span class="p">,</span> <span class="n">vv</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Bilinear lookup in one (C, H, W) tile at points (uu, vv). Returns (N, C)."""</span>
+    <span class="n">C</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">W</span> <span class="o">=</span> <span class="n">tile</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">uu</span> <span class="o">*</span> <span class="n">W</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">vv</span> <span class="o">*</span> <span class="n">H</span> <span class="o">-</span> <span class="mf">0.5</span>
+    <span class="n">j0</span><span class="p">,</span> <span class="n">i0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">(),</span> <span class="n">torch</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">long</span><span class="p">()</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">j0</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">i0</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="n">col</span> <span class="o">=</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span> <span class="o">%</span> <span class="n">W</span><span class="p">)</span> <span class="k">if</span> <span class="n">wrap</span> <span class="k">else</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">j</span><span class="p">:</span> <span class="n">j</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">W</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">row</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">:</span> <span class="n">i</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">H</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">:</span> <span class="n">tile</span><span class="p">[:,</span> <span class="n">row</span><span class="p">(</span><span class="n">i</span><span class="p">),</span> <span class="n">col</span><span class="p">(</span><span class="n">j</span><span class="p">)]</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">j0</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">t</span><span class="p">(</span><span class="n">i0</span><span class="p">,</span> <span class="n">j0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="p">((</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span> <span class="o">*</span> <span class="n">t</span><span class="p">(</span><span class="n">i0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j0</span><span class="p">)</span> <span class="o">+</span> <span class="n">a</span> <span class="o">*</span> <span class="n">t</span><span class="p">(</span><span class="n">i0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">j0</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">1</span><span class="p">)))</span>
+<span class="n">ours</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">,</span> <span class="mi">7</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">offsets</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">N_PARTS</span><span class="p">):</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">shell</span> <span class="o">==</span> <span class="n">k</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">p</span><span class="p">)</span>
+        <span class="n">ours</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">p</span><span class="p">]</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">avatar</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">],</span> <span class="n">avatar</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">m</span><span class="p">])</span>
+<span class="n">diff</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">ours</span> <span class="o">-</span> <span class="n">avatar</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">())</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest difference between this lookup and avatar.sample_texture(): </span><span class="si">{</span><span class="n">diff</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">diff</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest difference between this lookup and avatar.sample_texture(): 4.1e-06
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="what-goes-wrong-without-the-wrap">
+<h3>2.2 What goes wrong without the wrap<a class="headerlink" href="#what-goes-wrong-without-the-wrap" title="Link to this heading">#</a></h3>
+<p>Take a tile whose content is smooth around the limb and sample it along a ring, once with clamped columns and
+once with wrapped ones.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">W</span> <span class="o">=</span> <span class="mi">16</span>
+<span class="n">centres</span> <span class="o">=</span> <span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">W</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">W</span>
+<span class="n">tile</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">centres</span> <span class="o">-</span> <span class="mf">0.02</span><span class="p">))[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>     <span class="c1"># smooth and periodic in u</span>
+<span class="n">ring_u</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.90</span><span class="p">,</span> <span class="mf">0.9999</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mi">40</span><span class="p">)])</span>
+<span class="n">ring_x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mf">0.10</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mi">40</span><span class="p">),</span> <span class="n">torch</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.10</span><span class="p">,</span> <span class="mi">40</span><span class="p">)])</span>
+<span class="n">ring_v</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">ring_u</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">clamped</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">ring_u</span><span class="p">,</span> <span class="n">ring_v</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">False</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">wrapped</span> <span class="o">=</span> <span class="n">bilinear</span><span class="p">(</span><span class="n">tile</span><span class="p">,</span> <span class="n">ring_u</span><span class="p">,</span> <span class="n">ring_v</span><span class="p">,</span> <span class="n">wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">ring_x</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">clamped</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"columns clamped"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">ring_x</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">wrapped</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"columns wrapped"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">/</span> <span class="n">W</span><span class="p">,</span> <span class="mf">0.5</span> <span class="o">/</span> <span class="n">W</span><span class="p">],</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">tile</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"texel centres"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"u, measured from the seam at the front of the body"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"texture value"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">jump</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="mi">40</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">39</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"jump across the seam: clamped </span><span class="si">{</span><span class="n">jump</span><span class="p">(</span><span class="n">clamped</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">, wrapped </span><span class="si">{</span><span class="n">jump</span><span class="p">(</span><span class="n">wrapped</span><span class="p">)</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">jump</span><span class="p">(</span><span class="n">clamped</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">20</span> <span class="o">*</span> <span class="n">jump</span><span class="p">(</span><span class="n">wrapped</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>jump across the seam: clamped 0.049, wrapped 0.0001
+</pre></div>
+</div>
+<img alt="../_images/ef655d653b79f6f2d1d7a415e977ac8ee611eda10dfab1149cc86a9be5de7ced.png" src="../_images/ef655d653b79f6f2d1d7a415e977ac8ee611eda10dfab1149cc86a9be5de7ced.png" />
+</div>
+</div>
+<p>With clamping, the value is frozen for half a texel on each side of the seam and then jumps. On the body that
+is a visible vertical line down the front of every limb, exactly where the logo and the face are. With
+wrapping the two ends join smoothly. <code class="docutils literal notranslate"><span class="pre">ShellAvatar.sample_texture</span></code> wraps by padding each tile with one column
+from the other side before interpolating.</p>
+</section>
+<section id="a-size-that-follows-the-spacing">
+<h3>2.3 A size that follows the spacing<a class="headerlink" href="#a-size-that-follows-the-spacing" title="Link to this heading">#</a></h3>
+<p>The texture stores a size, but not in metres. It stores a <em>multiplier</em> on a base size <span class="math notranslate nohighlight">\(s_0\)</span> that is tied to
+the distance <span class="math notranslate nohighlight">\(h\)</span> between neighbouring sample points:</p>
+<div class="math notranslate nohighlight">
+\[h = \frac{1}{\sqrt{\text{density}}}, \qquad s = h \cdot (0.75,\ 0.75,\ 0.25) \odot \exp(T_{4:7}).\]</div>
+<p>With the multiplier at 1, neighbouring Gaussians overlap enough to close the surface, whatever the density. The
+texture then only has to say “a bit larger here, a bit thinner there”. Section 3 shows what this choice does
+and where it stops working.</p>
+</section>
+</section>
+<section id="re-sampling-a-trained-avatar">
+<h2>3. Re-sampling a trained avatar<a class="headerlink" href="#re-sampling-a-trained-avatar" title="Link to this heading">#</a></h2>
+<p>Fit one avatar to a turn of the actor at the default density. This is the model we re-sample.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"turn"</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>                               <span class="c1"># density 900, texture 12 x 16 per part and shell</span>
+<span class="n">hist</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fitted </span><span class="si">{</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians in </span><span class="si">{</span><span class="n">hist</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s; texture holds </span><span class="si">{</span><span class="n">avatar</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span><span class="si">}</span><span class="s2"> numbers"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fitted 9308 Gaussians in 2 s; texture holds 91392 numbers
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">avatar.resample(density)</span></code> picks new sample points and leaves the texture alone. We try it in two ways. In the
+first, the base size stays at the value it had during training, as if size were stored in metres (we overwrite
+<code class="docutils literal notranslate"><span class="pre">avatar.spacing</span></code> to imitate this). In the second, the base size follows the new spacing, which is what the
+library does.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">views</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="n">az</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">128</span><span class="p">)</span> <span class="k">for</span> <span class="n">az</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">140</span><span class="p">,</span> <span class="mi">250</span><span class="p">)]</span>
+<span class="n">truth</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">views</span><span class="p">]</span>
+
+<span class="nd">@torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">()</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">[</span><span class="n">model</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">views</span><span class="p">]</span>
+    <span class="n">psnr</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">cu</span><span class="o">.</span><span class="n">psnr</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">truth</span><span class="p">)]))</span>
+    <span class="n">cover</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.9</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">for</span> <span class="n">o</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">truth</span><span class="p">)]))</span>    <span class="c1"># alpha inside the true body</span>
+    <span class="k">return</span> <span class="n">psnr</span><span class="p">,</span> <span class="n">cover</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">densities</span> <span class="o">=</span> <span class="p">(</span><span class="mf">150.0</span><span class="p">,</span> <span class="mf">400.0</span><span class="p">,</span> <span class="mf">900.0</span><span class="p">,</span> <span class="mf">2500.0</span><span class="p">)</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"fixed"</span><span class="p">:</span> <span class="p">[],</span> <span class="s2">"tied"</span><span class="p">:</span> <span class="p">[]}</span>
+<span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">densities</span><span class="p">:</span>
+    <span class="n">avatar</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+    <span class="n">rows</span><span class="p">[</span><span class="s2">"tied"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">,)</span> <span class="o">+</span> <span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">))</span>
+    <span class="n">avatar</span><span class="o">.</span><span class="n">spacing</span><span class="o">.</span><span class="n">fill_</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">900.0</span><span class="p">))</span>        <span class="c1"># pretend the size did not follow the density</span>
+    <span class="n">rows</span><span class="p">[</span><span class="s2">"fixed"</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">,)</span> <span class="o">+</span> <span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">))</span>
+<span class="n">avatar</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>                                  <span class="c1"># back to the trained sampling</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">densities</span><span class="p">):</span>
+    <span class="n">f</span><span class="p">,</span> <span class="n">t</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"fixed"</span><span class="p">][</span><span class="n">i</span><span class="p">],</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tied"</span><span class="p">][</span><span class="n">i</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"density </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">5.0f</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2"> Gaussians) | fixed size: </span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB, coverage </span><span class="si">{</span><span class="n">f</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> | size tied to spacing: </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> dB, coverage </span><span class="si">{</span><span class="n">t</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"fixed"</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tied"</span><span class="p">]],</span>
+               <span class="p">[</span><span class="sa">f</span><span class="s2">"fixed size, density </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">densities</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"tied size, density </span><span class="si">{</span><span class="n">d</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">densities</span><span class="p">],</span>
+               <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.1</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>density   150 ( 1640 Gaussians) | fixed size: 22.7 dB, coverage 0.76 | size tied to spacing: 17.6 dB, coverage 1.00
+density   400 ( 4128 Gaussians) | fixed size: 29.9 dB, coverage 0.95 | size tied to spacing: 22.8 dB, coverage 1.00
+density   900 ( 9308 Gaussians) | fixed size: 30.5 dB, coverage 1.00 | size tied to spacing: 30.5 dB, coverage 1.00
+density  2500 (26040 Gaussians) | fixed size: 25.2 dB, coverage 1.00 | size tied to spacing: 31.3 dB, coverage 0.99
+</pre></div>
+</div>
+<img alt="../_images/a02f3990d9fae61117ab7fbd7af215fe0425da1c95d5e9931488b9a33328b0a4.png" src="../_images/a02f3990d9fae61117ab7fbd7af215fe0425da1c95d5e9931488b9a33328b0a4.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="n">n</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tied"</span><span class="p">]]</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">colour</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"fixed"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="s2">"fixed size"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"tied"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="s2">"size tied to spacing"</span><span class="p">)):</span>
+    <span class="n">a0</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="n">key</span><span class="p">]],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">a1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">[</span><span class="n">key</span><span class="p">]],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="p">(</span><span class="n">a0</span><span class="p">,</span> <span class="n">a1</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Gaussians after re-sampling"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">)</span>
+<span class="n">a0</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"PSNR on new views (dB)"</span><span class="p">);</span> <span class="n">a1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"coverage of the true body"</span><span class="p">);</span> <span class="n">a0</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+<span class="n">fixed</span><span class="p">,</span> <span class="n">tied</span> <span class="o">=</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"fixed"</span><span class="p">],</span> <span class="n">rows</span><span class="p">[</span><span class="s2">"tied"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">fixed</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.9</span> <span class="ow">and</span> <span class="n">tied</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.95</span>           <span class="c1"># sparse: holes with a fixed size, none with a tied size</span>
+<span class="k">assert</span> <span class="n">tied</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tied</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.0</span>                     <span class="c1"># denser than trained: no retraining needed</span>
+<span class="k">assert</span> <span class="n">fixed</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tied</span><span class="p">[</span><span class="mi">3</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span>                    <span class="c1"># ... but only if the size follows the spacing</span>
+<span class="k">assert</span> <span class="n">tied</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">tied</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mf">3.0</span>                     <span class="c1"># much sparser than trained: the picture degrades</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/ecf4f6ccd51a203573eafadb9278714bca3b16cee0c6ff4dccf97615d19867cc.png" src="../_images/ecf4f6ccd51a203573eafadb9278714bca3b16cee0c6ff4dccf97615d19867cc.png" />
+</div>
+</div>
+<p>The dotted line marks the density used in training. Read the result in three parts.</p>
+<ul class="simple">
+<li><p><strong>Sparser, fixed size: holes.</strong> The Gaussians no longer overlap. The body turns into a net and the
+coverage drops.</p></li>
+<li><p><strong>Sparser, tied size: no holes, but blur.</strong> Each Gaussian grows to close the surface. The body stays solid
+and becomes a bloated, smeared version of itself, and the PSNR falls even further than with holes. A tied
+size protects the silhouette’s <em>coverage</em>, not the detail.</p></li>
+<li><p><strong>Denser, tied size: it just works.</strong> Nearly three times as many Gaussians read the same texture and the
+picture is as good as, or slightly better than, the trained sampling. With a fixed size the same Gaussians
+pile up, every pixel is covered many times over, and the outline swells.</p></li>
+</ul>
+<p>So a trained shell map can be re-sampled <em>upwards</em> for free. Going far <em>down</em> loses quality either way, because
+the learned opacities and size multipliers were tuned for the overlap the avatar was trained with. If you need
+a lighter model, re-sample and then fine-tune for a few steps (Exercise 2).</p>
+</section>
+<section id="two-knobs-texture-resolution-and-gaussian-count">
+<h2>4. Two knobs: texture resolution and Gaussian count<a class="headerlink" href="#two-knobs-texture-resolution-and-gaussian-count" title="Link to this heading">#</a></h2>
+<p>At 64 pixels the head of the full-body video is about six pixels wide, so nothing in this section could be
+seen there. We switch to a close-up: a camera framed on the head, with the head turning. This is also how the
+real pipeline’s hi-fi track treats faces, as <a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html"><span class="std std-doc">Lesson 6a</span></a> explains.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">head_cam</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">size</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">elevation_deg</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mf">4.2</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.65</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="n">size</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">head_turn</span><span class="p">(</span><span class="n">yaws</span><span class="p">):</span>
+    <span class="n">yaws</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">yaws</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yaws</span><span class="p">),</span> <span class="n">cu</span><span class="o">.</span><span class="n">N_JOINTS</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">p</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">yaws</span>                                   <span class="c1"># turn the whole body about the vertical axis</span>
+    <span class="k">return</span> <span class="n">p</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">yaws</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span>
+
+<span class="n">close_train</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="o">*</span><span class="n">head_turn</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span> <span class="o">/</span> <span class="mi">12</span><span class="p">),</span> <span class="n">cam</span><span class="o">=</span><span class="n">head_cam</span><span class="p">(</span><span class="mi">48</span><span class="p">))</span>
+<span class="n">close_test</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="o">*</span><span class="n">head_turn</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.3</span><span class="p">]),</span> <span class="n">cam</span><span class="o">=</span><span class="n">head_cam</span><span class="p">(</span><span class="mi">128</span><span class="p">))</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">close_train</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)],</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"training frame </span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)],</span> <span class="n">size</span><span class="o">=</span><span class="mf">1.6</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/323b19e27518e20189cd39fb520f5359a5e0780684a5903ba81a4d11d73ecafc.png" src="../_images/323b19e27518e20189cd39fb520f5359a5e0780684a5903ba81a4d11d73ecafc.png" />
+</div>
+</div>
+<p>We fit four avatars to the close-up video. They differ in two settings only: the tile resolution (12 × 16 or
+24 × 32 texels) and the density on the head (the default, or four times the default with
+<code class="docutils literal notranslate"><span class="pre">boost={&quot;head&quot;:</span> <span class="pre">4}</span></code>). To save time they use two shells.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">results</span><span class="p">,</span> <span class="n">pictures</span> <span class="o">=</span> <span class="p">{},</span> <span class="p">{}</span>
+<span class="n">head</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">part_index</span><span class="p">(</span><span class="s2">"head"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">res</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">)):</span>
+    <span class="k">for</span> <span class="n">boost</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.015</span><span class="p">),</span> <span class="n">tex_res</span><span class="o">=</span><span class="n">res</span><span class="p">,</span> <span class="n">boost</span><span class="o">=</span><span class="p">{</span><span class="s2">"head"</span><span class="p">:</span> <span class="n">boost</span><span class="p">})</span>
+        <span class="n">hist</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">close_train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+        <span class="n">ev</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">close_test</span><span class="p">)</span>
+        <span class="n">results</span><span class="p">[</span><span class="n">res</span><span class="p">,</span> <span class="n">boost</span><span class="p">]</span> <span class="o">=</span> <span class="n">ev</span><span class="p">[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+        <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+            <span class="n">pictures</span><span class="p">[</span><span class="n">res</span><span class="p">,</span> <span class="n">boost</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">close_test</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">close_test</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">close_test</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"tile </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2"> x </span><span class="si">{</span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">2d</span><span class="si">}</span><span class="s2">, head density x</span><span class="si">{</span><span class="n">boost</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">int</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">part</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">head</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2"> Gaussians and "</span>
+              <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">res</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">5d</span><span class="si">}</span><span class="s2"> texture numbers on the head, </span><span class="si">{</span><span class="n">hist</span><span class="p">[</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">4.1f</span><span class="si">}</span><span class="s2"> s, new views </span><span class="si">{</span><span class="n">ev</span><span class="p">[</span><span class="s1">'mean_psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+
+<span class="n">keys</span> <span class="o">=</span> <span class="p">[((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="p">((</span><span class="mi">12</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="p">((</span><span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="mi">1</span><span class="p">),</span> <span class="p">((</span><span class="mi">24</span><span class="p">,</span> <span class="mi">32</span><span class="p">),</span> <span class="mi">4</span><span class="p">)]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">pictures</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">close_test</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">0</span><span class="p">)],</span>
+               <span class="p">[</span><span class="s2">"coarse texture</span><span class="se">\n</span><span class="s2">few Gaussians"</span><span class="p">,</span> <span class="s2">"coarse texture</span><span class="se">\n</span><span class="s2">4x Gaussians"</span><span class="p">,</span> <span class="s2">"fine texture</span><span class="se">\n</span><span class="s2">few Gaussians"</span><span class="p">,</span>
+                <span class="s2">"fine texture</span><span class="se">\n</span><span class="s2">4x Gaussians"</span><span class="p">,</span> <span class="s2">"actor (truth)"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="n">neither</span><span class="p">,</span> <span class="n">more_g</span><span class="p">,</span> <span class="n">more_t</span><span class="p">,</span> <span class="n">both</span> <span class="o">=</span> <span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">both</span> <span class="o">&gt;</span> <span class="nb">max</span><span class="p">(</span><span class="n">more_g</span><span class="p">,</span> <span class="n">more_t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.7</span> <span class="ow">and</span> <span class="n">both</span> <span class="o">&gt;</span> <span class="n">neither</span> <span class="o">+</span> <span class="mf">2.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tile 12 x 16, head density x1:  270 Gaussians and  2688 texture numbers on the head,  1.4 s, new views 25.35 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tile 12 x 16, head density x4: 1080 Gaussians and  2688 texture numbers on the head,  1.7 s, new views 27.65 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tile 24 x 32, head density x1:  270 Gaussians and 10752 texture numbers on the head,  1.4 s, new views 26.84 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>tile 24 x 32, head density x4: 1080 Gaussians and 10752 texture numbers on the head,  1.7 s, new views 30.75 dB
+</pre></div>
+</div>
+<img alt="../_images/811b897c3dd680bc56d70a770c2d3e694af69f1538f67eed8fa014b00cac587e.png" src="../_images/811b897c3dd680bc56d70a770c2d3e694af69f1538f67eed8fa014b00cac587e.png" />
+</div>
+</div>
+<p>Only the avatar with both changes shows eyes and a mouth. Each knob alone helps a little and then hits the
+other one’s limit:</p>
+<ul class="simple">
+<li><p><strong>Coarse texture, more Gaussians.</strong> The extra Gaussians read the same few texels. Interpolation makes the
+result smooth, and it cannot make it detailed: an eye is about the size of one texel.</p></li>
+<li><p><strong>Fine texture, few Gaussians.</strong> The texture could store an eye, but the Gaussians are spaced wider than the
+texels, so most texels are never read and get no gradient. The stored detail is under-sampled.</p></li>
+<li><p><strong>Both.</strong> Capacity lives in the texture. The Gaussians are how that capacity reaches the screen. The two
+resolutions have to match: about one Gaussian per texel or more.</p></li>
+</ul>
+<p>A per-part boost exists because a uniform density wastes Gaussians. Covering the whole body at the head’s
+boosted density would multiply the cost of every frame, while boosting only the head adds a few hundred
+Gaussians:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plain</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+<span class="n">boosted</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">boost</span><span class="o">=</span><span class="p">{</span><span class="s2">"head"</span><span class="p">:</span> <span class="mi">4</span><span class="p">})</span>
+<span class="n">uniform</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">3600.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"default: </span><span class="si">{</span><span class="n">plain</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> | head x4: </span><span class="si">{</span><span class="n">boosted</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> | everything x4: </span><span class="si">{</span><span class="n">uniform</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians"</span><span class="p">)</span>
+<span class="n">h</span> <span class="o">=</span> <span class="n">boosted</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">head</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"spacing on the head: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">plain</span><span class="o">.</span><span class="n">spacing</span><span class="p">[</span><span class="n">plain</span><span class="o">.</span><span class="n">part</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">head</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm -&gt; </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">spacing</span><span class="p">[</span><span class="n">h</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm; "</span>
+      <span class="sa">f</span><span class="s2">"elsewhere unchanged: </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">spacing</span><span class="p">[</span><span class="o">~</span><span class="n">h</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">boosted</span><span class="o">.</span><span class="n">n_gaussians</span> <span class="o">&lt;</span> <span class="mf">1.25</span> <span class="o">*</span> <span class="n">plain</span><span class="o">.</span><span class="n">n_gaussians</span> <span class="ow">and</span> <span class="n">uniform</span><span class="o">.</span><span class="n">n_gaussians</span> <span class="o">&gt;</span> <span class="mf">3.5</span> <span class="o">*</span> <span class="n">plain</span><span class="o">.</span><span class="n">n_gaussians</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>default: 9308 | head x4: 10928 | everything x4: 37740 Gaussians
+spacing on the head: 3.3 cm -&gt; 1.7 cm; elsewhere unchanged: 3.3 cm
+</pre></div>
+</div>
+</div>
+</div>
+<p>One caution before you conclude that more is always better. This toy face is fitted with exact poses. In
+<a class="reference internal" href="../part5_fitting/05b_frames_disagree.html"><span class="std std-doc">Lesson 5b</span></a> the poses are noisy, and neither knob buys back the detail
+that the noise destroys.</p>
+</section>
+<section id="shared-texels-or-free-gaussians">
+<h2>5. Shared texels or free Gaussians?<a class="headerlink" href="#shared-texels-or-free-gaussians" title="Link to this heading">#</a></h2>
+<p>A shell map makes neighbouring Gaussians share texels. The alternative is to give every Gaussian its own seven
+numbers, as plain Gaussian splatting does, while keeping the positions on the shells. Does sharing help? A
+common expectation is that it acts as a smoothness prior and generalises better from few frames. We test it:
+both models get the same four frames of the turn (front, back and the two sides) and are scored on views in
+between.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FreeAvatar</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""The same Gaussians on the same shells, but each one owns its 7 attribute values."""</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">free</span> <span class="o">=</span> <span class="n">nn</span><span class="o">.</span><span class="n">Parameter</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">sample_texture</span><span class="p">()</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">())</span>     <span class="c1"># start from the same values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">requires_grad_</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">sample_texture</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texture</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">free</span>
+
+<span class="n">few</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+<span class="n">between</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">compare</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">make</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"shared texels"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">),</span> <span class="p">(</span><span class="s2">"free Gaussians"</span><span class="p">,</span> <span class="n">FreeAvatar</span><span class="p">)):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">make</span><span class="p">()</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">few</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">n_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+    <span class="n">compare</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">few</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">between</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">14s</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">n_params</span><span class="si">:</span><span class="s2">6d</span><span class="si">}</span><span class="s2"> learned numbers | training frames </span><span class="si">{</span><span class="n">compare</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB | views in between </span><span class="si">{</span><span class="n">compare</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"shared texels"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"free Gaussians"</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"shared - free on the views in between: </span><span class="si">{</span><span class="n">gap</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">2.0</span> <span class="ow">and</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"free Gaussians"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">compare</span><span class="p">[</span><span class="s2">"shared texels"</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="mf">0.5</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>shared texels :  91392 learned numbers | training frames 43.44 dB | views in between 32.14 dB
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>free Gaussians:  65156 learned numbers | training frames 46.44 dB | views in between 31.74 dB
+shared - free on the views in between: +0.40 dB
+</pre></div>
+</div>
+</div>
+</div>
+<p>The honest reading of this experiment: the difference on unseen views is small, a fraction of a decibel in
+either direction depending on the seed and the number of steps, and the free model fits its training frames
+at least as well. Sharing texels is not a strong regulariser here. The reason is in the numbers the cell
+prints: at the default settings there is about one texel per Gaussian, so there is little sharing to speak
+of, and the texture does not even have fewer parameters. The published real model is similar in this
+respect: its texture holds more numbers than a free parametrisation of its Gaussians would.</p>
+<p>What the texture buys is something else, and you have used all of it in this lesson:</p>
+<ul class="simple">
+<li><p><strong>Density is decoupled from what was learned.</strong> You re-sampled a trained avatar upwards and boosted one part,
+and nothing had to be retrained. Free Gaussians cannot be re-sampled: there is nothing between them to read.</p></li>
+<li><p><strong>Appearance is an image.</strong> Image tools apply to it: smoothness penalties between neighbouring texels,
+filling texels that no frame saw from their neighbours (<a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a>),
+editing a logo.</p></li>
+<li><p><strong>A network can produce it.</strong> The original Gaussian Shell Maps are generated by a convolutional network that
+outputs the textures <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span>. A fixed-size image is a natural output for such a network; a
+list of free Gaussians is not.</p></li>
+</ul>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p></p></th>
+<th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real pipeline</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Sample points</p></td>
+<td><p>regular grid per capsule</p></td>
+<td><p>points spread over the SMPL shell mesh in proportion to surface area</p></td>
+</tr>
+<tr class="row-odd"><td><p>Texture</p></td>
+<td><p>12 × 16 texels per part and shell</p></td>
+<td><p>one 256 × 256 atlas per shell, 11 channels, for 100,000 Gaussians (<span class="private-repo" title="in the project's private repository">RESULTS.md</span>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Density boost</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">boost={&quot;head&quot;:</span> <span class="pre">4}</span></code></p></td>
+<td><p>face ×4 in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/face_density.py</span></code></span>, hands ×6, feet opt-in; all share one weighted sampler</p></td>
+</tr>
+<tr class="row-odd"><td><p>Region</p></td>
+<td><p>a whole capsule</p></td>
+<td><p>a smooth ramp over a face mask, so density changes gradually at the border</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The real face-density option multiplies the <em>area weight</em> of the triangles in the face region when the points
+are drawn, which is the mesh version of <code class="docutils literal notranslate"><span class="pre">boost</span></code>. Two published results are worth setting beside this lesson’s
+clean 2 × 2 picture. On the benchmark, a 512-pixel texture and three times as many Gaussians gave no gain
+(“more halo”), while pose correction did
+(<span class="private-repo" title="in the project's private repository">RESULTS.md</span>, and “What we learned” in the
+<span class="private-repo" title="in the project's private repository">README</span>). And in the hi-fi study,
+“face density helps” was <em>not</em> established: it was a single-seed result under twice the seed spread, and the
+verification pass demoted it. Capacity helps only when the data are registered well enough to fill it, which is
+the subject of <a class="reference internal" href="../part5_fitting/05b_frames_disagree.html"><span class="std std-doc">Lesson 5b</span></a>.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A shell map has two grids. Texels store what is learned; sample points decide where Gaussians are drawn.
+Gaussians read the texture by bilinear interpolation, clamped along the limb and wrapped around it.</p></li>
+<li><p>The base size of a Gaussian follows the spacing between samples, so a trained avatar can be re-sampled to a
+higher density without retraining. Far below the trained density the picture degrades: holes if sizes are
+fixed, blur if they follow the spacing.</p></li>
+<li><p>Capacity lives in the texture, and the Gaussians carry it to the screen. Detail needs both a fine enough
+texture and enough Gaussians to read it. A per-part boost spends Gaussians where the camera looks closely.</p></li>
+<li><p>Sharing texels is not a strong regulariser at one Gaussian per texel. Its value is that density is decoupled
+from the learned content and that appearance is an image that tools and networks can work on.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cu.sample_uv(density,</span> <span class="pre">jitter=0.6)</span></code> moves every sample point randomly inside its grid cell. Re-sample the
+trained avatar with and without jitter at density 900 and compare the PSNR on the three test views. Why
+might a jittered or random sampling be preferable when fitting from scratch?</p></li>
+<li><p>Re-sample the trained avatar to density 300 and fine-tune it for 40 steps with <code class="docutils literal notranslate"><span class="pre">cu.fit</span></code>. How much of the
+loss from re-sampling comes back, and how does the result compare with the avatar at density 900?</p></li>
+<li><p>Section 4 boosts the whole head. Count how many of the boosted Gaussians are on the face (say
+<span class="math notranslate nohighlight">\(|\phi| &lt; 1.2\)</span> rad around the front, <span class="math notranslate nohighlight">\(0.3 &lt; v &lt; 0.7\)</span>). What fraction of the boost is spent on hair and the
+back of the head, and how would you avoid it?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">jitter</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">):</span>
+    <span class="n">avatar</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mf">900.0</span><span class="p">,</span> <span class="n">jitter</span><span class="o">=</span><span class="n">jitter</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">jitter</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">avatar</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mf">900.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The scores are close: the texture is read at slightly different points and bilinear interpolation covers the
+difference. A regular grid can line up with the pixel grid or with a regular pattern in the texture and
+produce beating (moiré) patterns; random positions turn that structured error into noise. The real pipeline
+draws its points at random on the mesh.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">avatar</span><span class="o">.</span><span class="n">resample</span><span class="p">(</span><span class="mf">300.0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"re-sampled:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"fine-tuned:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Most of the loss comes back within a few dozen steps, because the texture only has to adjust opacities and
+size multipliers to the new overlap. The result stays below the density-900 avatar: with a third of the
+Gaussians, each one covers more than one texel and the finest stored detail is not drawn.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">m</span> <span class="o">=</span> <span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">part</span> <span class="o">==</span> <span class="n">head</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">shell</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">phi</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">atan2</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">boosted</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">boosted</span><span class="o">.</span><span class="n">u</span><span class="p">[</span><span class="n">m</span><span class="p">]))</span>
+<span class="n">face</span> <span class="o">=</span> <span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1.2</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.3</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">boosted</span><span class="o">.</span><span class="n">v</span><span class="p">[</span><span class="n">m</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.7</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">float</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span>
+</pre></div>
+</div>
+<p>Well under half of the head’s Gaussians are on the face. To spend the boost only there, the multiplier has to
+be a function of <span class="math notranslate nohighlight">\((u, v)\)</span> and not of the part: sample the face region on a finer grid, with a smooth ramp at
+its border so that the density does not jump. That is what the real <code class="docutils literal notranslate"><span class="pre">face_density.py</span></code> does with a face mask.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span> for shell maps and their generation by a network.</p></li>
+<li><p><span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span> for free Gaussians with one parameter set each.</p></li>
+<li><p>Project documentation: <span class="private-repo" title="in the project's private repository">README</span>,
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span> and
+<span class="private-repo" title="in the project's private repository">docs/hifi.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part4_shells"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="04a_shell_maps.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Gaussian Shell Maps: where do the Gaussians live?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../part5_fitting/05a_fit_from_video.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Fitting an avatar to one video</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-grids-that-are-easy-to-confuse">1. Two grids that are easy to confuse</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reading-the-texture-between-texels">2. Reading the texture between texels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bilinear-lookup">2.1 Bilinear lookup</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-goes-wrong-without-the-wrap">2.2 What goes wrong without the wrap</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-size-that-follows-the-spacing">2.3 A size that follows the spacing</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#re-sampling-a-trained-avatar">3. Re-sampling a trained avatar</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-knobs-texture-resolution-and-gaussian-count">4. Two knobs: texture resolution and Gaussian count</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-texels-or-free-gaussians">5. Shared texels or free Gaussians?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

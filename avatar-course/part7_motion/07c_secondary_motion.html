@@ -1,0 +1,1106 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Why does cloth need memory? &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part7_motion/07c_secondary_motion';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="What does a number mean? Splits, seeds and metrics that cannot be gamed" href="../part8_evaluation/08a_splits_and_seeds.html" />
+    <link rel="prev" title="When is the body in the air, and can you trust a smoothness number?" href="07b_flight_and_metrics.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Why does cloth need memory?</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secondary-motion-and-a-toy-cloth-that-has-it">1. Secondary motion, and a toy cloth that has it</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stepping-a-spring-the-obvious-integrator-explodes">2. Stepping a spring: the obvious integrator explodes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-data-marks-on-the-hem">3. The data: marks on the hem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-memoryless-model">4. A memoryless model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-model-with-state-fitted-through-its-simulation">5. A model with state, fitted through its simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-test-amplitude-lag-and-settling-at-a-withheld-speed">6. The test: amplitude, lag and settling at a withheld speed</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-toy-does-not-show">What this toy does not show</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="why-does-cloth-need-memory">
+<h1>Why does cloth need memory?<a class="headerlink" href="#why-does-cloth-need-memory" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>What secondary motion is, and how a damped spring driven by the body’s acceleration produces lag, sway
+and settling.</p></li>
+<li><p>Why explicit Euler integration blows up on a springy system, and why semi-implicit Euler does not.</p></li>
+<li><p>Why any model that maps the body’s <em>instantaneous</em> motion to a displacement is memoryless, and returns to
+exactly zero when the body stops.</p></li>
+<li><p>How to fit a model with state by gradient descent through its simulation, and how to test it: amplitude,
+lag and settling time at a speed it was not trained on.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part3_body/03b_skinning.html"><span class="std std-doc">Lesson 3b</span></a> (skinning; a Gaussian’s rest-pose position) and
+<a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a> (fitting by gradient descent).
+<a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html"><span class="std std-doc">Lesson 6b</span></a> made appearance depend on the pose. This lesson makes
+<em>geometry</em> depend on the motion.</p>
+<section id="secondary-motion-and-a-toy-cloth-that-has-it">
+<h2>1. Secondary motion, and a toy cloth that has it<a class="headerlink" href="#secondary-motion-and-a-toy-cloth-that-has-it" title="Link to this heading">#</a></h2>
+<p>The avatar so far is rigidly tied to its skeleton. Every Gaussian sits at a fixed place in the rest pose and
+skinning carries it along. Real clothing and hair do more. When the body turns, a loose hem <strong>lags</strong> behind.
+When the body stops, the hem <strong>overshoots</strong>, swings back, and <strong>settles</strong> over a second or two. This is
+called <em>secondary motion</em>: motion that the body causes but the skeleton does not describe.</p>
+<p>The toy actor wears a loose shirt. To give it secondary motion we add a displacement <span class="math notranslate nohighlight">\(\mathbf{x}_i(t)\)</span> to the
+rest-pose position of each shirt Gaussian <span class="math notranslate nohighlight">\(i\)</span> before skinning (the <code class="docutils literal notranslate"><span class="pre">extra_offset</span></code> argument of the actor). The
+physics is the simplest that has the three behaviours. Treat each Gaussian as a small mass on a damped spring
+that is attached to the body. In the frame that moves with the body, the mass feels the spring, the damper,
+and an inertial force opposite to the body’s acceleration <span class="math notranslate nohighlight">\(\mathbf{a}_i(t)\)</span> at that point:</p>
+<div class="math notranslate nohighlight">
+\[
+\ddot{\mathbf{x}}_i = -\omega_0^2\, \mathbf{x}_i \;-\; 2 \zeta \omega_0\, \dot{\mathbf{x}}_i \;-\; \gamma\, \mathbf{a}_i(t) .
+\]</div>
+<p>Three numbers describe the cloth: the natural frequency <span class="math notranslate nohighlight">\(\omega_0 = 2\pi f_0\)</span> (how fast it swings), the damping
+ratio <span class="math notranslate nohighlight">\(\zeta\)</span> (how fast the swing dies; <span class="math notranslate nohighlight">\(\zeta &lt; 1\)</span> rings), and a gain <span class="math notranslate nohighlight">\(\gamma\)</span>. Each Gaussian’s displacement
+is finally scaled by its <em>looseness</em> <span class="math notranslate nohighlight">\(r_i \in [0, 1]\)</span>, which is zero where the shirt lies on the body and one at
+the hem.</p>
+<p>The important word is <strong>state</strong>. To step this equation forward you need <span class="math notranslate nohighlight">\(\mathbf{x}\)</span> and <span class="math notranslate nohighlight">\(\dot{\mathbf{x}}\)</span>
+from the previous instant. The cloth remembers.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">FPS</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">loose</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">looseness</span><span class="p">(</span><span class="n">actor</span><span class="p">)</span>                                   <span class="c1"># r_i in [0, 1], from the shirt's stand-off distance</span>
+<span class="n">shirt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">loose</span> <span class="o">&gt;</span> <span class="mf">0.05</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>                     <span class="c1"># the Gaussians that can move</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">shirt</span><span class="p">)</span><span class="si">}</span><span class="s2"> of </span><span class="si">{</span><span class="n">actor</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians are loose cloth"</span><span class="p">)</span>
+
+<span class="n">TRUE</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">f0</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">zeta</span><span class="o">=</span><span class="mf">0.10</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>                      <span class="c1"># the cloth we will try to recover</span>
+<span class="n">N</span><span class="p">,</span> <span class="n">START</span><span class="p">,</span> <span class="n">STOP</span> <span class="o">=</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">55</span>                                  <span class="c1"># frames: start turning at 10, stop dead at 55</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">true_offsets</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">idx</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Ground-truth displacement (T, len(idx), 3) of Gaussians idx, simulated with small time steps."""</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">local_kinematics</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+    <span class="n">w0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"f0"</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">simulate_spring</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">w0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"zeta"</span><span class="p">]</span> <span class="o">*</span> <span class="n">w0</span><span class="p">,</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"gain"</span><span class="p">],</span> <span class="n">substeps</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">loose</span><span class="p">[</span><span class="n">idx</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">full_offsets</span><span class="p">(</span><span class="n">x_shirt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Scatter shirt displacements (T, n_shirt, 3) into per-Gaussian offsets (T, N, 3) for rendering."""</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x_shirt</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">actor</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">out</span><span class="p">[:,</span> <span class="n">shirt</span><span class="p">]</span> <span class="o">=</span> <span class="n">x_shirt</span>
+    <span class="k">return</span> <span class="n">out</span>
+
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">2.25</span><span class="p">,</span> <span class="n">stop</span><span class="o">=</span><span class="n">STOP</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="n">START</span><span class="p">)</span>
+<span class="n">x_true</span> <span class="o">=</span> <span class="n">true_offsets</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">shirt</span><span class="p">)</span>
+<span class="n">yaw_end</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>                               <span class="c1"># where the body faces after the stop</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">look_at</span><span class="p">(</span><span class="n">eye</span><span class="o">=</span><span class="p">(</span><span class="mf">2.6</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">yaw_end</span><span class="p">),</span> <span class="mf">1.15</span><span class="p">,</span> <span class="mf">2.6</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">yaw_end</span><span class="p">)),</span> <span class="n">target</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">fov_deg</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">144</span><span class="p">)</span>
+<span class="n">shown</span> <span class="o">=</span> <span class="p">(</span><span class="n">STOP</span> <span class="o">-</span> <span class="mi">5</span><span class="p">,</span> <span class="n">STOP</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">STOP</span> <span class="o">+</span> <span class="mi">10</span><span class="p">,</span> <span class="n">STOP</span> <span class="o">+</span> <span class="mi">60</span><span class="p">)</span>
+<span class="n">rigid</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">shown</span><span class="p">]</span>
+<span class="n">cloth</span> <span class="o">=</span> <span class="p">[</span><span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">extra_offset</span><span class="o">=</span><span class="n">full_offsets</span><span class="p">(</span><span class="n">x_true</span><span class="p">)[</span><span class="n">t</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">shown</span><span class="p">]</span>
+<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"still turning"</span> <span class="k">if</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">STOP</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">t</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">STOP</span><span class="si">}</span><span class="s2"> frames after stop"</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">shown</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">rigid</span> <span class="o">+</span> <span class="n">cloth</span> <span class="o">+</span> <span class="p">[(</span><span class="n">c</span> <span class="o">-</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">cloth</span><span class="p">,</span> <span class="n">rigid</span><span class="p">)],</span>
+               <span class="p">[</span><span class="sa">f</span><span class="s2">"rigid, </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"cloth, </span><span class="si">{</span><span class="n">l</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"difference"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span><span class="p">,</span>
+               <span class="n">ncols</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1501 of 8332 Gaussians are loose cloth
+</pre></div>
+</div>
+<img alt="../_images/2aa2e13ef58ee000cc6aead207fbb8d5bf93c7cf093572eb71fe302834614063.png" src="../_images/2aa2e13ef58ee000cc6aead207fbb8d5bf93c7cf093572eb71fe302834614063.png" />
+</div>
+</div>
+<p>The body turns at a constant rate and then stops dead. In the top row the shirt is rigid, so after the stop
+every frame is the same picture. In the middle row the hem keeps going for a moment, swings back, and has
+settled two seconds later. A few centimetres of hem are easy to miss in a still, so the bottom row shows where
+the two rows differ; in motion the eye picks it up at once.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mo.local_kinematics</span></code> supplies <span class="math notranslate nohighlight">\(\mathbf{a}_i(t)\)</span>: it skins the Gaussian rigidly, takes central differences of
+its world position, and rotates the result into the Gaussian’s own rest-pose axes, which is the frame the
+displacement lives in.</p>
+</section>
+<section id="stepping-a-spring-the-obvious-integrator-explodes">
+<h2>2. Stepping a spring: the obvious integrator explodes<a class="headerlink" href="#stepping-a-spring-the-obvious-integrator-explodes" title="Link to this heading">#</a></h2>
+<p>A simulation advances the state by one time step <span class="math notranslate nohighlight">\(h\)</span> after another. The obvious rule is <strong>explicit Euler</strong>:
+use the current velocity to move, and the current force to accelerate.</p>
+<div class="math notranslate nohighlight">
+\[
+\text{explicit:}\quad
+\mathbf{x} \leftarrow \mathbf{x} + h\, \mathbf{v}, \quad
+\mathbf{v} \leftarrow \mathbf{v} + h\, \mathbf{f}(\mathbf{x}_\text{old}, \mathbf{v}_\text{old})
+\qquad\qquad
+\text{semi-implicit:}\quad
+\mathbf{v} \leftarrow \mathbf{v} + h\, \mathbf{f}(\mathbf{x}, \mathbf{v}), \quad
+\mathbf{x} \leftarrow \mathbf{x} + h\, \mathbf{v}_\text{new}
+\]</div>
+<p><strong>Semi-implicit Euler</strong> differs by one detail: update the velocity first, then move with the <em>new</em> velocity.
+The cost is identical. The behaviour is not.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">simulate</span><span class="p">(</span><span class="n">acc</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">stiffness</span><span class="p">,</span> <span class="n">damping</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"semi"</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""x'' = -stiffness x - damping x' - gain acc(t), one step per frame. acc: (T, ...)."""</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">out</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">acc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">acc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">a_body</span> <span class="ow">in</span> <span class="n">acc</span><span class="p">:</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="o">-</span><span class="n">stiffness</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="n">damping</span> <span class="o">*</span> <span class="n">v</span> <span class="o">-</span> <span class="n">gain</span> <span class="o">*</span> <span class="n">a_body</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"explicit"</span><span class="p">:</span>
+            <span class="n">x</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">v</span><span class="p">,</span> <span class="n">v</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span>                       <span class="c1"># move with the old velocity</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">v</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">f</span>                                     <span class="c1"># velocity first ...</span>
+            <span class="n">x</span> <span class="o">=</span> <span class="n">x</span> <span class="o">+</span> <span class="n">h</span> <span class="o">*</span> <span class="n">v</span>                                     <span class="c1"># ... then move with the new velocity</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+
+<span class="n">mark</span> <span class="o">=</span> <span class="n">shirt</span><span class="p">[(</span><span class="n">loose</span><span class="p">[</span><span class="n">shirt</span><span class="p">]</span> <span class="o">*</span> <span class="n">actor</span><span class="o">.</span><span class="n">rest_points</span><span class="p">[</span><span class="n">shirt</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span><span class="o">.</span><span class="n">argmax</span><span class="p">()]</span>      <span class="c1"># a hem Gaussian at the front</span>
+<span class="n">_</span><span class="p">,</span> <span class="n">acc_mark</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">local_kinematics</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">mark</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">FPS</span><span class="p">)</span>
+<span class="n">w0</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"f0"</span><span class="p">]</span>
+<span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span> <span class="o">=</span> <span class="n">w0</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"zeta"</span><span class="p">]</span> <span class="o">*</span> <span class="n">w0</span>
+<span class="n">x_exp</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">acc_mark</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"explicit"</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">x_semi</span> <span class="o">=</span> <span class="n">simulate</span><span class="p">(</span><span class="n">acc_mark</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"semi"</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">x_ref</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">simulate_spring</span><span class="p">(</span><span class="n">acc_mark</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span><span class="p">,</span> <span class="n">substeps</span><span class="o">=</span><span class="mi">16</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">simulate</span><span class="p">(</span><span class="n">acc_mark</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span><span class="p">)</span> <span class="o">-</span> <span class="n">mo</span><span class="o">.</span><span class="n">simulate_spring</span><span class="p">(</span><span class="n">acc_mark</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">k_true</span><span class="p">,</span> <span class="n">c_true</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+
+<span class="n">growth</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"zeta"</span><span class="p">]</span> <span class="o">*</span> <span class="n">w0</span> <span class="o">/</span> <span class="n">FPS</span> <span class="o">+</span> <span class="p">(</span><span class="n">w0</span> <span class="o">/</span> <span class="n">FPS</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>    <span class="c1"># explicit Euler: factor per step</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"explicit Euler multiplies the oscillation by </span><span class="si">{</span><span class="n">growth</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> per frame; after </span><span class="si">{</span><span class="n">N</span><span class="si">}</span><span class="s2"> frames that is x</span><span class="si">{</span><span class="n">growth</span><span class="w"> </span><span class="o">**</span><span class="w"> </span><span class="n">N</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest displacement: explicit </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">x_exp</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> cm | semi-implicit </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">x_semi</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm | "</span>
+      <span class="sa">f</span><span class="s2">"reference (16 substeps) </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">x_ref</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> cm"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_exp</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_ref</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">((</span><span class="n">x_semi</span> <span class="o">-</span> <span class="n">x_ref</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">x_ref</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+
+<span class="n">frames</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">))</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x_exp</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"explicit Euler"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x_ref</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"reference"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x_semi</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"semi-implicit Euler"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">x_ref</span><span class="p">),</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"reference"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">axes</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">STOP</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"the body stops"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"hem displacement (cm)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>explicit Euler multiplies the oscillation by 1.045 per frame; after 120 frames that is x193
+largest displacement: explicit 258 cm | semi-implicit 2.78 cm | reference (16 substeps) 2.69 cm
+</pre></div>
+</div>
+<img alt="../_images/8151fd261c67b8b8dceef158a82c3947c096c31c614891b4103a4eaeb4d86448.png" src="../_images/8151fd261c67b8b8dceef158a82c3947c096c31c614891b4103a4eaeb4d86448.png" />
+</div>
+</div>
+<p>With explicit Euler the hem swings a little wider on every frame and ends up metres from the body. Nothing is
+wrong with the physics or the parameters; the integrator feeds energy into the oscillation. For this equation
+one explicit step multiplies the amplitude by <span class="math notranslate nohighlight">\(\sqrt{1 - 2\zeta\omega_0 h + \omega_0^2 h^2}\)</span>, which exceeds one
+whenever <span class="math notranslate nohighlight">\(\omega_0 h &gt; 2\zeta\)</span>: a stiff or lightly damped spring at a video frame rate. The semi-implicit rule
+stays bounded as long as <span class="math notranslate nohighlight">\(\omega_0 h &lt; 2\)</span> and tracks the reference closely at one step per frame. A model that
+will be <em>trained</em> through its simulation needs this even more than a simulation does, because the optimiser
+will try stiffer springs than the true one on its way.</p>
+</section>
+<section id="the-data-marks-on-the-hem">
+<h2>3. The data: marks on the hem<a class="headerlink" href="#the-data-marks-on-the-hem" title="Link to this heading">#</a></h2>
+<p>To learn the cloth we need to observe it. The plan in the real project is footage with tape marks on the
+shirt. The toy version is 48 “tape marks”: hem Gaussians whose 3D displacement we record in every frame, with
+a millimetre of measurement noise. The training clips are two turn-and-stop takes at different speeds and one
+take of swaying from side to side. Two takes are withheld for testing: a turn-and-stop at a speed between the
+training speeds, and a sway at a different frequency.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">hem</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nonzero</span><span class="p">(</span><span class="n">loose</span> <span class="o">&gt;</span> <span class="mf">0.95</span><span class="p">)[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">marks</span> <span class="o">=</span> <span class="n">hem</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">hem</span><span class="p">),</span> <span class="p">(</span><span class="mi">48</span><span class="p">,),</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="mi">0</span><span class="p">))]</span>
+<span class="n">m_front</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">actor</span><span class="o">.</span><span class="n">rest_points</span><span class="p">[</span><span class="n">marks</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>            <span class="c1"># the mark we plot: front of the hem</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">take</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">seed</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""One recorded take: features and noisy mark displacements."""</span>
+    <span class="n">vel</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">local_kinematics</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">marks</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+    <span class="n">clean</span> <span class="o">=</span> <span class="n">true_offsets</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">marks</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">vel</span><span class="o">=</span><span class="n">vel</span><span class="p">,</span> <span class="n">acc</span><span class="o">=</span><span class="n">acc</span><span class="p">,</span> <span class="n">clean</span><span class="o">=</span><span class="n">clean</span><span class="p">,</span> <span class="n">obs</span><span class="o">=</span><span class="n">clean</span> <span class="o">+</span> <span class="mf">0.001</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="o">*</span><span class="n">clean</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">generator</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">generator</span><span class="p">(</span><span class="n">seed</span><span class="p">)))</span>
+
+<span class="n">train</span> <span class="o">=</span> <span class="p">[</span><span class="n">take</span><span class="p">(</span><span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">START</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+         <span class="n">take</span><span class="p">(</span><span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">START</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span>
+         <span class="n">take</span><span class="p">(</span><span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">sway</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">amp</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">test_stop</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">,</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">START</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>       <span class="c1"># withheld speed</span>
+<span class="n">SWAY_TEST</span> <span class="o">=</span> <span class="mf">1.4</span>
+<span class="n">test_sway</span> <span class="o">=</span> <span class="n">take</span><span class="p">(</span><span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">sway</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">SWAY_TEST</span><span class="p">,</span> <span class="n">amp</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">),</span> <span class="n">seed</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>     <span class="c1"># withheld frequency</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">2.9</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">clip</span><span class="p">,</span> <span class="n">label</span><span class="p">,</span> <span class="n">colour</span> <span class="ow">in</span> <span class="p">((</span><span class="n">train</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"turn at 1.5 rad/s (train)"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">]),</span>
+                            <span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"turn at 3.0 rad/s (train)"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"camera"</span><span class="p">]),</span>
+                            <span class="p">(</span><span class="n">test_stop</span><span class="p">,</span> <span class="s2">"turn at 2.25 rad/s (withheld)"</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">])):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">colour</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">STOP</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"the body stops"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"front mark, sideways displacement (cm)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">train</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="s2">"obs"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"sway at 0.8 Hz (train)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">test_sway</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"sway at </span><span class="si">{</span><span class="n">SWAY_TEST</span><span class="si">}</span><span class="s2"> Hz (withheld)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"front mark, sideways displacement (cm)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/2348d7a26d5942e4b75e80857223e4c0849ad014f9a38fd5e3761ee578d0a946.png" src="../_images/2348d7a26d5942e4b75e80857223e4c0849ad014f9a38fd5e3761ee578d0a946.png" />
+</div>
+</div>
+<p>The left panel is the signature of secondary motion. The mark is kicked when the turn starts, rings, is kicked
+again when the body stops, and rings down while the body is perfectly still.</p>
+</section>
+<section id="a-memoryless-model">
+<h2>4. A memoryless model<a class="headerlink" href="#a-memoryless-model" title="Link to this heading">#</a></h2>
+<p>The first idea, and the one the real project built first, is a function of the body’s motion <em>right now</em>.
+Collect instantaneous motion features <span class="math notranslate nohighlight">\(\mathbf{m}_i(t)\)</span>, here the velocity and the acceleration of the
+Gaussian in its own axes, and learn</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf{x}_i(t) = F\bigl(\mathbf{m}_i(t)\bigr), \qquad F(\mathbf{0}) = \mathbf{0} .
+\]</div>
+<p><span class="math notranslate nohighlight">\(F\)</span> is a linear map fitted by least squares, or a small network in the residual form
+<span class="math notranslate nohighlight">\(\operatorname{mlp}(\mathbf{m}) - \operatorname{mlp}(\mathbf{0})\)</span>, which guarantees that a body at rest shows
+the static avatar. Such a model is <strong>memoryless</strong>: its output at time <span class="math notranslate nohighlight">\(t\)</span> depends on nothing but the features
+at time <span class="math notranslate nohighlight">\(t\)</span>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">linear</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">MemorylessLinear</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">([(</span><span class="n">c</span><span class="p">[</span><span class="s2">"vel"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">])</span>
+<span class="n">mlp</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">MemorylessMLP</span><span class="p">(</span><span class="n">hidden</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">mlp_loss</span> <span class="o">=</span> <span class="n">mlp</span><span class="o">.</span><span class="n">fit</span><span class="p">([(</span><span class="n">c</span><span class="p">[</span><span class="s2">"vel"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">],</span> <span class="n">iters</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"network training loss: </span><span class="si">{</span><span class="n">mlp_loss</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">mlp_loss</span><span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">:])</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> cm^2"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_memoryless</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">clip</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">model</span><span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="s2">"vel"</span><span class="p">],</span> <span class="n">clip</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">])</span>
+
+<span class="n">rms</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="mi">1000</span> <span class="o">*</span> <span class="nb">float</span><span class="p">((</span><span class="n">x</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">sqrt</span><span class="p">())</span>
+<span class="n">after</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="n">STOP</span> <span class="o">+</span> <span class="mi">3</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span>                                     <span class="c1"># from three frames after the stop</span>
+<span class="n">feat_after</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">test_stop</span><span class="p">[</span><span class="s2">"vel"</span><span class="p">][</span><span class="n">after</span><span class="p">],</span> <span class="n">test_stop</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">][</span><span class="n">after</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"withheld turn, from 3 frames after the stop: largest |feature| </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">feat_after</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"linear"</span><span class="p">,</span> <span class="n">linear</span><span class="p">),</span> <span class="p">(</span><span class="s2">"network"</span><span class="p">,</span> <span class="n">mlp</span><span class="p">)):</span>
+    <span class="n">pred</span> <span class="o">=</span> <span class="n">predict_memoryless</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">test_stop</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  </span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">8s</span><span class="si">}</span><span class="s2"> largest predicted displacement </span><span class="si">{</span><span class="mi">1000</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nb">float</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="n">after</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> mm | "</span>
+          <span class="sa">f</span><span class="s2">"true cloth still moves by </span><span class="si">{</span><span class="n">rms</span><span class="p">(</span><span class="n">test_stop</span><span class="p">[</span><span class="s1">'clean'</span><span class="p">][</span><span class="n">after</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> mm rms"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="n">after</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">,</span> <span class="s2">"a memoryless model must be exactly zero once the features are zero"</span>
+<span class="k">assert</span> <span class="n">rms</span><span class="p">(</span><span class="n">test_stop</span><span class="p">[</span><span class="s2">"clean"</span><span class="p">][</span><span class="n">after</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>network training loss: 0.657 -&gt; 0.297 cm^2
+withheld turn, from 3 frames after the stop: largest |feature| 0.0e+00
+  linear   largest predicted displacement 0.000 mm | true cloth still moves by 5.36 mm rms
+  network  largest predicted displacement 0.000 mm | true cloth still moves by 5.36 mm rms
+</pre></div>
+</div>
+</div>
+</div>
+<p>Exactly zero. Not small: zero, from the frame at which the finite-difference features vanish. A bigger network,
+more features or more data would not change it, because the argument does not involve the fit at all. Once the
+body is still, every instantaneous motion feature is zero, <span class="math notranslate nohighlight">\(F(\mathbf{0}) = \mathbf{0}\)</span>, and the cloth is
+back in its rest shape. The ringing after the stop is caused by what the body did <em>earlier</em>, and the model has
+no input that says what happened earlier. (Features computed over a window of frames move the problem by the
+length of the window; they do not remove it.)</p>
+</section>
+<section id="a-model-with-state-fitted-through-its-simulation">
+<h2>5. A model with state, fitted through its simulation<a class="headerlink" href="#a-model-with-state-fitted-through-its-simulation" title="Link to this heading">#</a></h2>
+<p>The alternative keeps what the physics keeps. <code class="docutils literal notranslate"><span class="pre">mo.DampedModes</span></code> is the equation of Section 1 with three
+learnable numbers, <span class="math notranslate nohighlight">\(f_0\)</span>, <span class="math notranslate nohighlight">\(\zeta\)</span> and <span class="math notranslate nohighlight">\(\gamma\)</span>, integrated with semi-implicit Euler in two steps per frame. Its
+state <span class="math notranslate nohighlight">\((\mathbf{x}, \dot{\mathbf{x}})\)</span> is carried from frame to frame. To fit it, run the simulation over each
+training take, compare the simulated marks with the observed ones, and let automatic differentiation carry the
+error back through every time step to the three parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">damped</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">DampedModes</span><span class="p">(</span><span class="n">f0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">zeta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">substeps</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>           <span class="c1"># a deliberately wrong start</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"start: f0 </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">f0</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Hz, zeta </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">zeta</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, gain </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">gain</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">loss_hist</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">fit_damped</span><span class="p">(</span><span class="n">damped</span><span class="p">,</span> <span class="p">[(</span><span class="n">c</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">],</span> <span class="n">iters</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">FPS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fit:   f0 </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">f0</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> Hz, zeta </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">zeta</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, gain </span><span class="si">{</span><span class="n">damped</span><span class="o">.</span><span class="n">gain</span><span class="o">.</span><span class="n">item</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span>
+      <span class="sa">f</span><span class="s2">"   (true: </span><span class="si">{</span><span class="n">TRUE</span><span class="p">[</span><span class="s1">'f0'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">TRUE</span><span class="p">[</span><span class="s1">'zeta'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">TRUE</span><span class="p">[</span><span class="s1">'gain'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">)   </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"loss </span><span class="si">{</span><span class="n">loss_hist</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">loss_hist</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> cm^2"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">damped</span><span class="o">.</span><span class="n">f0</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"f0"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">damped</span><span class="o">.</span><span class="n">zeta</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"zeta"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">damped</span><span class="o">.</span><span class="n">gain</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">-</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"gain"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="n">TRUE</span><span class="p">[</span><span class="s2">"gain"</span><span class="p">]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">predict_damped</span><span class="p">(</span><span class="n">clip</span><span class="p">):</span>
+    <span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+        <span class="k">return</span> <span class="n">damped</span><span class="p">(</span><span class="n">clip</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">],</span> <span class="n">FPS</span><span class="p">)</span>
+
+<span class="n">preds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"memoryless (linear)"</span><span class="p">:</span> <span class="n">predict_memoryless</span><span class="p">(</span><span class="n">linear</span><span class="p">,</span> <span class="n">test_stop</span><span class="p">),</span> <span class="s2">"memoryless (network)"</span><span class="p">:</span> <span class="n">predict_memoryless</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">test_stop</span><span class="p">),</span>
+         <span class="s2">"damped, with state"</span><span class="p">:</span> <span class="n">predict_damped</span><span class="p">(</span><span class="n">test_stop</span><span class="p">)}</span>
+<span class="n">colours</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"memoryless (linear)"</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="s2">"memoryless (network)"</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"camera"</span><span class="p">],</span> <span class="s2">"damped, with state"</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">]}</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">test_stop</span><span class="p">[</span><span class="s2">"clean"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"true cloth"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">preds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">pred</span><span class="p">[:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">color</span><span class="o">=</span><span class="n">colours</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">STOP</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"contact"</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"the body stops"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"front mark, sideways displacement (cm)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"withheld turn speed"</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"left"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.08</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>start: f0 1.00 Hz, zeta 0.50, gain 0.50
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>fit:   f0 1.96 Hz, zeta 0.10, gain 1.43   (true: 2.00, 0.10, 1.50)   16 s
+loss 0.612 -&gt; 0.0119 cm^2
+</pre></div>
+</div>
+<img alt="../_images/da14296e57e8dc511464285cbf80fb1c7fa49200b7584e3e8d5fe4e793db27f0.png" src="../_images/da14296e57e8dc511464285cbf80fb1c7fa49200b7584e3e8d5fe4e793db27f0.png" />
+</div>
+</div>
+<p>The fit recovers the cloth’s frequency, damping and gain from a wrong start, up to a small bias from its coarse
+time step. On the withheld take the damped model lies on the true curve, including everything after the
+stop. Both memoryless models produce a spike in the frames where the body accelerates and a flat line
+elsewhere.</p>
+</section>
+<section id="the-test-amplitude-lag-and-settling-at-a-withheld-speed">
+<h2>6. The test: amplitude, lag and settling at a withheld speed<a class="headerlink" href="#the-test-amplitude-lag-and-settling-at-a-withheld-speed" title="Link to this heading">#</a></h2>
+<p>A fair test of a dynamics model is not a pixel score on frames like the training frames. It is a take the
+model has not seen, at a speed it has not seen, scored on what dynamics is about. For the stop:</p>
+<ul class="simple">
+<li><p><strong>amplitude</strong>: the largest displacement after the stop;</p></li>
+<li><p><strong>lag</strong>: when that peak arrives, in seconds after the stop;</p></li>
+<li><p><strong>settling time</strong>: how long until the displacement stays below a tenth of the true amplitude.</p></li>
+</ul>
+<p>For the sway at a withheld frequency: the amplitude of the response and its <strong>phase lag</strong> behind the driving
+force, from a sine fit.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">truth_stop</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">settle_metrics</span><span class="p">(</span><span class="n">test_stop</span><span class="p">[</span><span class="s2">"clean"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'withheld turn-and-stop'</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> amplitude (cm)  peak after stop (s)  settling time (s)"</span><span class="p">)</span>
+<span class="n">table</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"true cloth"</span><span class="p">:</span> <span class="n">truth_stop</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'true cloth'</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">truth_stop</span><span class="p">[</span><span class="s1">'amplitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">10.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">truth_stop</span><span class="p">[</span><span class="s1">'first_peak_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">17.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">truth_stop</span><span class="p">[</span><span class="s1">'settle_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">18.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">preds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">settle_metrics</span><span class="p">(</span><span class="n">pred</span><span class="p">[:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">reference</span><span class="o">=</span><span class="n">truth_stop</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'amplitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">10.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'first_peak_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">17.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'settle_s'</span><span class="p">]</span><span class="si">:</span><span class="s2">18.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">drive</span> <span class="o">=</span> <span class="o">-</span><span class="n">test_sway</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">][:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>                       <span class="c1"># the inertial force on the mark</span>
+<span class="n">sway_preds</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"true cloth"</span><span class="p">:</span> <span class="n">test_sway</span><span class="p">[</span><span class="s2">"clean"</span><span class="p">],</span> <span class="s2">"memoryless (linear)"</span><span class="p">:</span> <span class="n">predict_memoryless</span><span class="p">(</span><span class="n">linear</span><span class="p">,</span> <span class="n">test_sway</span><span class="p">),</span>
+              <span class="s2">"memoryless (network)"</span><span class="p">:</span> <span class="n">predict_memoryless</span><span class="p">(</span><span class="n">mlp</span><span class="p">,</span> <span class="n">test_sway</span><span class="p">),</span> <span class="s2">"damped, with state"</span><span class="p">:</span> <span class="n">predict_damped</span><span class="p">(</span><span class="n">test_sway</span><span class="p">)}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="s1">'withheld sway frequency'</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> amplitude (cm)  phase lag (deg)"</span><span class="p">)</span>
+<span class="n">sway_table</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pred</span> <span class="ow">in</span> <span class="n">sway_preds</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">sway_table</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">sine_response</span><span class="p">(</span><span class="n">pred</span><span class="p">[:,</span> <span class="n">m_front</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">drive</span><span class="p">,</span> <span class="n">SWAY_TEST</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">skip</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">24s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">sway_table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'amplitude'</span><span class="p">]</span><span class="si">:</span><span class="s2">10.2f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">sway_table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s1">'lag_deg'</span><span class="p">]</span><span class="si">:</span><span class="s2">14.1f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+
+<span class="n">d</span><span class="p">,</span> <span class="n">t_</span> <span class="o">=</span> <span class="n">table</span><span class="p">[</span><span class="s2">"damped, with state"</span><span class="p">],</span> <span class="n">table</span><span class="p">[</span><span class="s2">"true cloth"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="n">t_</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"settle_s"</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_</span><span class="p">[</span><span class="s2">"settle_s"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"first_peak_s"</span><span class="p">]</span> <span class="o">-</span> <span class="n">t_</span><span class="p">[</span><span class="s2">"first_peak_s"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.07</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"memoryless (linear)"</span><span class="p">,</span> <span class="s2">"memoryless (network)"</span><span class="p">):</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">"settle_s"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.15</span> <span class="ow">and</span> <span class="n">t_</span><span class="p">[</span><span class="s2">"settle_s"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1.0</span>          <span class="c1"># settles "instantly"; the cloth takes over a second</span>
+<span class="n">ds</span><span class="p">,</span> <span class="n">ts</span> <span class="o">=</span> <span class="n">sway_table</span><span class="p">[</span><span class="s2">"damped, with state"</span><span class="p">],</span> <span class="n">sway_table</span><span class="p">[</span><span class="s2">"true cloth"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="o">-</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ds</span><span class="p">[</span><span class="s2">"lag_deg"</span><span class="p">]</span> <span class="o">-</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"lag_deg"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">8</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"memoryless (linear)"</span><span class="p">,</span> <span class="s2">"memoryless (network)"</span><span class="p">):</span>
+    <span class="n">miss</span> <span class="o">=</span> <span class="n">sway_table</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">miss</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="o">-</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"amplitude"</span><span class="p">]</span> <span class="ow">or</span> <span class="nb">abs</span><span class="p">(</span><span class="n">miss</span><span class="p">[</span><span class="s2">"lag_deg"</span><span class="p">]</span> <span class="o">-</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"lag_deg"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">10</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>withheld turn-and-stop   amplitude (cm)  peak after stop (s)  settling time (s)
+true cloth                     3.42              0.13               1.93
+memoryless (linear)            7.22              0.00               0.03
+memoryless (network)           0.35              0.00               0.03
+damped, with state             3.38              0.13               1.93
+
+withheld sway frequency  amplitude (cm)  phase lag (deg)
+true cloth                     3.40           23.0
+memoryless (linear)            1.19            7.4
+memoryless (network)           2.23            4.8
+damped, with state             3.44           19.9
+</pre></div>
+</div>
+</div>
+</div>
+<p>Read the table row by row. The damped model matches the true cloth on all three stop measures and on the
+sway. The memoryless models are finished a frame or two after the stop, where the cloth needs more than a
+second. Whatever displacement they show “after the stop” is the last frame in which the finite-difference
+features are still non-zero.</p>
+<p>The sway deserves a second look, because here the memoryless models are not zero. A body that sways never
+stops, so there are always features to respond to. For a pure sine, velocity is a quarter-period-shifted copy
+of acceleration, so a mix of the two can imitate a lagging response at the training frequency. At another
+frequency the true amplitude and lag change, because the cloth is closer to its resonance, and a fixed mix
+cannot follow. This is the reason to withhold a <em>speed</em> and not just frames.</p>
+<p>Finally the picture. Four frames after the stop, on the withheld take:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t_show</span> <span class="o">=</span> <span class="n">STOP</span> <span class="o">+</span> <span class="mi">4</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">vel_all</span><span class="p">,</span> <span class="n">acc_all</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">local_kinematics</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="o">*</span><span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">,</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">START</span><span class="p">),</span> <span class="n">shirt</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span>
+    <span class="n">pose_s</span><span class="p">,</span> <span class="n">trans_s</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">turn_and_stop</span><span class="p">(</span><span class="n">N</span><span class="p">,</span> <span class="mf">2.25</span><span class="p">,</span> <span class="n">STOP</span><span class="p">,</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">START</span><span class="p">)</span>
+    <span class="n">off</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"true cloth"</span><span class="p">:</span> <span class="n">x_true</span><span class="p">[</span><span class="n">t_show</span><span class="p">],</span>
+           <span class="s2">"memoryless (network)"</span><span class="p">:</span> <span class="p">(</span><span class="n">mlp</span><span class="p">(</span><span class="n">vel_all</span><span class="p">,</span> <span class="n">acc_all</span><span class="p">)</span> <span class="o">*</span> <span class="n">loose</span><span class="p">[</span><span class="n">shirt</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">])[</span><span class="n">t_show</span><span class="p">],</span>
+           <span class="s2">"damped, with state"</span><span class="p">:</span> <span class="p">(</span><span class="n">damped</span><span class="p">(</span><span class="n">acc_all</span><span class="p">,</span> <span class="n">FPS</span><span class="p">)</span> <span class="o">*</span> <span class="n">loose</span><span class="p">[</span><span class="n">shirt</span><span class="p">][</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">])[</span><span class="n">t_show</span><span class="p">]}</span>
+<span class="n">imgs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">pose_s</span><span class="p">[</span><span class="n">t_show</span><span class="p">],</span> <span class="n">trans_s</span><span class="p">[</span><span class="n">t_show</span><span class="p">],</span> <span class="n">extra_offset</span><span class="o">=</span><span class="n">full_offsets</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="kc">None</span><span class="p">])[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">off</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">still</span> <span class="o">=</span> <span class="n">actor</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">pose_s</span><span class="p">[</span><span class="n">t_show</span><span class="p">],</span> <span class="n">trans_s</span><span class="p">[</span><span class="n">t_show</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">imgs</span><span class="o">.</span><span class="n">values</span><span class="p">())</span> <span class="o">+</span> <span class="p">[(</span><span class="n">im</span> <span class="o">-</span> <span class="n">imgs</span><span class="p">[</span><span class="s2">"true cloth"</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">imgs</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span>
+               <span class="nb">list</span><span class="p">(</span><span class="n">imgs</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"error: true cloth (zero)"</span><span class="p">,</span> <span class="s2">"error: memoryless"</span><span class="p">,</span> <span class="s2">"error: damped"</span><span class="p">],</span>
+               <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">1.0</span><span class="p">);</span>
+<span class="n">err</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">((</span><span class="n">im</span> <span class="o">-</span> <span class="n">imgs</span><span class="p">[</span><span class="s2">"true cloth"</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">imgs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"mean absolute image error against the true cloth:"</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">err</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">off</span><span class="p">[</span><span class="s2">"memoryless (network)"</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">==</span> <span class="mf">0.0</span>                   <span class="c1"># the memoryless offset is exactly zero,</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">((</span><span class="n">imgs</span><span class="p">[</span><span class="s2">"memoryless (network)"</span><span class="p">]</span> <span class="o">-</span> <span class="n">still</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>     <span class="c1"># so its render is the rigid render (a GPU</span>
+                                                                            <span class="c1"># sums in a varying order: equal to rounding)</span>
+<span class="k">assert</span> <span class="n">err</span><span class="p">[</span><span class="s2">"damped, with state"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">err</span><span class="p">[</span><span class="s2">"memoryless (network)"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>mean absolute image error against the true cloth: {'true cloth': 0.0, 'memoryless (network)': 0.0077, 'damped, with state': 0.00088}
+</pre></div>
+</div>
+<img alt="../_images/74668f6d8b7ab3c453cb40411bbf273cfa0aa5fc7f6ef798c7cd30c3348677ad.png" src="../_images/74668f6d8b7ab3c453cb40411bbf273cfa0aa5fc7f6ef798c7cd30c3348677ad.png" />
+</div>
+</div>
+<p>The memoryless avatar, four frames after the stop, is pixel for pixel the rigid avatar. The damped one still
+carries the swing.</p>
+<section id="what-this-toy-does-not-show">
+<h3>What this toy does not show<a class="headerlink" href="#what-this-toy-does-not-show" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>The data are generous.</strong> We observed 3D displacements of marks. A real capture gives pixels from one
+camera; the displacement has to be inferred through the renderer, together with pose errors that are larger
+than the cloth motion.</p></li>
+<li><p><strong>The model family contains the truth.</strong> The true cloth is this same spring equation (simulated with a finer
+step and observed with noise), so recovering it is the best case. Real cloth is a connected sheet with
+collisions and folds, not independent springs.</p></li>
+<li><p><strong>One mode.</strong> Every Gaussian here shares one frequency and one damping. A garment has several modes, and
+hair has its own.</p></li>
+</ul>
+<p>What survives all three caveats is the argument of Section 4, which is not about the toy: without state there
+is nothing after the stop.</p>
+</section>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Topic</p></th>
+<th class="head"><p>Where</p></th>
+<th class="head"><p>Published facts</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>The secondary-motion network</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/secmotion.py</span></code></span>, <span class="private-repo" title="in the project's private repository">docs/plus-secmotion.md</span></p></td>
+<td><p>A displacement along the shell normal for cloth and hair Gaussians, from an MLP on instantaneous motion features (angular and linear velocities and accelerations), in the residual form <code class="docutils literal notranslate"><span class="pre">mlp(s,</span> <span class="pre">m)</span> <span class="pre">-</span> <span class="pre">mlp(s,</span> <span class="pre">0)</span></code>, read through a low-rank basis in texture space</p></td>
+</tr>
+<tr class="row-odd"><td><p>Its measured effect</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/plus-secmotion.md</span>, <span class="private-repo" title="in the project's private repository">RESULTS.md</span></p></td>
+<td><p>Every arm is within seed noise of “off” (0.045 dB validation spread). The first settings memorised: about +0.27 dB on training frames and −0.05 dB on validation frames</p></td>
+</tr>
+<tr class="row-even"><td><p>The zero-after-stop behaviour</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tests/test_brief_secmotion.py</span></code></span></p></td>
+<td><p>Confirmed by a test: the displacement is exactly 0 a few frames after an abrupt stop. No fix yet</p></td>
+</tr>
+<tr class="row-odd"><td><p>The plan for dynamics with state</p></td>
+<td><p><span class="private-repo" title="in the project's private repository">docs/mobile_parts.md</span></p></td>
+<td><p>Candidates: a few damped oscillator modes per garment region and for hair, driven by body acceleration, or a learned recurrent model. The test: a turn, an abrupt stop and settling, with marks on the garment, scored on amplitude, phase lag and settling time at a withheld speed</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Two points of honesty. The real network’s features are smoothed over a short window before differencing, so
+its output reaches zero a few frames after the stop instead of at once; that is the “window” remark of
+Section 4. And the state-based model is a <strong>plan only</strong>. The repository publishes no result for it, and says
+so; the damped model in this lesson is a toy demonstration of the idea, not a report of what the project
+measured.</p>
+<p>The idea of giving soft motion a memory is older than Gaussian avatars. Dyna <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id51" title="Gerard Pons-Moll, Javier Romero, Naureen Mahmood, and Michael J. Black. Dyna: a model of dynamic human shape in motion. ACM Transactions on Graphics, 2015.">Pons-Moll <em>et al.</em>, 2015</a>]</span> predicts
+soft-tissue deformation of a body mesh from the body’s velocity and acceleration <em>and from its own previous
+deformations</em>: an autoregressive model, which is one way of carrying state.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Secondary motion is the lag, sway and settling of cloth and hair. A damped spring driven by the body’s
+acceleration is the smallest model that has all three.</p></li>
+<li><p>Integrate with semi-implicit Euler. Explicit Euler adds energy to a springy system at video frame rates.</p></li>
+<li><p>A function of instantaneous motion features is memoryless. When the body stops, its output is exactly zero,
+whatever its size or training data.</p></li>
+<li><p>A model with state can be fitted by differentiating through its simulation, and a handful of parameters is
+enough when the model has the right structure.</p></li>
+<li><p>Test dynamics on dynamics: amplitude, lag and settling time, on a take at a withheld speed.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Give the memoryless linear model a window: stack the features of frames <span class="math notranslate nohighlight">\(t\)</span>, <span class="math notranslate nohighlight">\(t-2\)</span>, <span class="math notranslate nohighlight">\(t-4\)</span> and <span class="math notranslate nohighlight">\(t-6\)</span>. How
+long after the stop is its output non-zero now? Does it ring?</p></li>
+<li><p>Fit the damped model with <code class="docutils literal notranslate"><span class="pre">method=&quot;explicit&quot;</span></code> inside the simulation (write the loop with
+<code class="docutils literal notranslate"><span class="pre">mo.simulate_spring(...,</span> <span class="pre">method=&quot;explicit&quot;)</span></code>). What happens to the loss?</p></li>
+<li><p>Halve the damping of the true cloth (<code class="docutils literal notranslate"><span class="pre">TRUE[&quot;zeta&quot;]</span> <span class="pre">=</span> <span class="pre">0.05</span></code>) and refit. Which of the three test measures
+changes most?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">window</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">)):</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="s2">"vel"</span><span class="p">],</span> <span class="n">c</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">]],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">torch</span><span class="o">.</span><span class="n">roll</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">f</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">f</span><span class="p">[:</span><span class="o">-</span><span class="n">s</span><span class="p">]])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">window</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">24</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">])</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="n">Y</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">c</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">])</span><span class="o">.</span><span class="n">double</span><span class="p">()</span>
+<span class="n">W</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">solution</span><span class="o">.</span><span class="n">float</span><span class="p">()</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">window</span><span class="p">(</span><span class="n">test_stop</span><span class="p">)</span> <span class="o">@</span> <span class="n">W</span>
+<span class="nb">print</span><span class="p">([</span><span class="nb">round</span><span class="p">(</span><span class="mi">1000</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">pred</span><span class="p">[</span><span class="n">STOP</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span> <span class="mi">2</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">)])</span>
+</pre></div>
+</div>
+<p>The output is non-zero for six more frames, the length of the window, and then exactly zero again. Inside the
+window it responds to the stop a few more times. It cannot ring for a second, because a second is thirty frames and the
+window has six. A finite window is finite memory.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">mo</span><span class="o">.</span><span class="n">DampedModes</span><span class="p">(</span><span class="n">f0</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">zeta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">gain</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">substeps</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">opt</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">optim</span><span class="o">.</span><span class="n">Adam</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">it</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">):</span>
+    <span class="n">opt</span><span class="o">.</span><span class="n">zero_grad</span><span class="p">()</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(((</span><span class="n">model</span><span class="p">(</span><span class="n">c</span><span class="p">[</span><span class="s2">"acc"</span><span class="p">],</span> <span class="n">FPS</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"explicit"</span><span class="p">)</span> <span class="o">-</span> <span class="n">c</span><span class="p">[</span><span class="s2">"obs"</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">train</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1e4</span>
+    <span class="n">loss</span><span class="o">.</span><span class="n">backward</span><span class="p">();</span> <span class="n">opt</span><span class="o">.</span><span class="n">step</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">loss</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">model</span><span class="o">.</span><span class="n">f0</span><span class="o">.</span><span class="n">item</span><span class="p">(),</span> <span class="n">model</span><span class="o">.</span><span class="n">zeta</span><span class="o">.</span><span class="n">item</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>The optimiser cannot reach the true parameters, because at the true frequency and damping the explicit
+simulation is unstable. It settles for a much more heavily damped spring that the integrator can survive (on
+other data the loss can also explode on the way). The integrator has become part of the model.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<p>The settling time roughly doubles, because the envelope decays as <span class="math notranslate nohighlight">\(e^{-\zeta\omega_0 t}\)</span>. The amplitude and
+the time of the first peak barely move: they are set by the kick and by the frequency. Settling time is the
+measure that isolates damping, which is why it is in the test.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id51" title="Gerard Pons-Moll, Javier Romero, Naureen Mahmood, and Michael J. Black. Dyna: a model of dynamic human shape in motion. ACM Transactions on Graphics, 2015.">Pons-Moll <em>et al.</em>, 2015</a>]</span>: soft-tissue dynamics on a body mesh as an autoregressive model.</p></li>
+<li><p>The real secondary-motion network and its record:
+<span class="private-repo" title="in the project's private repository">docs/plus-secmotion.md</span>;
+the zero-after-stop finding: <span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>;
+the plan for state-based dynamics: <span class="private-repo" title="in the project's private repository">docs/mobile_parts.md</span>.</p></li>
+<li><p>The shell representation the displacements ride on: <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part7_motion"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="07b_flight_and_metrics.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">When is the body in the air, and can you trust a smoothness number?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../part8_evaluation/08a_splits_and_seeds.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">What does a number mean? Splits, seeds and metrics that cannot be gamed</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#secondary-motion-and-a-toy-cloth-that-has-it">1. Secondary motion, and a toy cloth that has it</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stepping-a-spring-the-obvious-integrator-explodes">2. Stepping a spring: the obvious integrator explodes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-data-marks-on-the-hem">3. The data: marks on the hem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-memoryless-model">4. A memoryless model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-model-with-state-fitted-through-its-simulation">5. A model with state, fitted through its simulation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-test-amplitude-lag-and-settling-at-a-withheld-speed">6. The test: amplitude, lag and settling at a withheld speed</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-toy-does-not-show">What this toy does not show</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>From the lessons to the repository &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'appendix/repo_map';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="References" href="references.html" />
+    <link rel="prev" title="Notation and conventions" href="notation.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="notation.html">Notation and conventions</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>From the lessons to the repository</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-the-problem">Setup and the problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-gaussian-splatting">Part 2 · Gaussian splatting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-body-models-and-skinning">Part 3 · Body models and skinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-gaussian-shell-maps">Part 4 · Gaussian Shell Maps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-fitting-from-video">Part 5 · Fitting from video</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-6-hi-fi-parts">Part 6 · Hi-fi parts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-7-motion-and-contact">Part 7 · Motion and contact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-8-evaluation">Part 8 · Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-9-speed">Part 9 · Speed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-results-live">Where results live</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="from-the-lessons-to-the-repository">
+<h1>From the lessons to the repository<a class="headerlink" href="#from-the-lessons-to-the-repository" title="Link to this heading">#</a></h1>
+<p>Every lesson builds a small version of something the <span class="private-repo" title="in the project's private repository">Avatar</span> repository
+does on real footage. This page lists, lesson by lesson, the files that do the same job there, and the main
+way in which the real code differs from the toy. Paths are relative to the repository root and link to the
+<code class="docutils literal notranslate"><span class="pre">main</span></code> branch.</p>
+<p>Three differences hold for every row and are not repeated:</p>
+<ul class="simple">
+<li><p>the real pipeline runs on a GPU, on captured video of a person, with licensed body models (SMPL, MANO,
+FLAME) that the repository does not contain;</p></li>
+<li><p>poses, masks and keypoints come from off-the-shelf trackers and are imperfect, where the toy knows them;</p></li>
+<li><p>the base model and its rasteriser are upstream Gaussian Shell Maps <span class="bibtex-citation" id="id1">[<a class="reference internal" href="references.html#id29" title="Rameen Abdal, Wang Yifan, Zifan Shi, Yinghao Xu, Ryan Po, Zhengfei Kuang, Qifeng Chen, Dit-Yan Yeung, and Gordon Wetzstein. Gaussian shell maps for efficient 3D human generation. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), 9441–9451. 2024.">Abdal <em>et al.</em>, 2024</a>]</span> and 3D Gaussian
+splatting <span class="bibtex-citation" id="id2">[<a class="reference internal" href="references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>, cloned separately. The repository holds the fitting, tracking,
+evaluation and speed work around them.</p></li>
+</ul>
+<section id="setup-and-the-problem">
+<h2>Setup and the problem<a class="headerlink" href="#setup-and-the-problem" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part0_setup/00_setup.html"><span class="std std-doc">0 · Setup</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/INSTALL.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/QUICKSTART.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmenv.sh</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">smoke/</span></code></span></p></td>
+<td><p>One core environment plus one small environment per tracker; body models are downloaded by the user</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part1_problem/01_problem.html"><span class="std std-doc">1 · The problem</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">README.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">pipeline/new_person.sh</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/CAPTURE_GUIDE.md</span></code></span></p></td>
+<td><p>One command runs the prep stages for a new person; the capture itself is a first-order lever on quality</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-2-gaussian-splatting">
+<h2>Part 2 · Gaussian splatting<a class="headerlink" href="#part-2-gaussian-splatting" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html"><span class="std std-doc">2a · 2D Gaussians and compositing</span></a></p></td>
+<td><p>the upstream rasteriser (not in the repository); modified copies in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/dgr_warp/</span></code></span> and <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/dgr_label/</span></code></span></p></td>
+<td><p>A tile-based CUDA rasteriser instead of a PyTorch loop over bounding boxes; the copies add a warp and a label output</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part2_splatting/02b_projection_3d.html"><span class="std std-doc">2b · From 3D to the image</span></a></p></td>
+<td><p>the same rasteriser; <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/core.py</span></code></span> calls it</p></td>
+<td><p>Cameras come from a calibration or from an assumed field of view, not from a known toy camera</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../part2_splatting/02c_gradients.html"><span class="std std-doc">2c · Gradients</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/adam_exact/</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">ext/ssim_exact/</span></code></span></p></td>
+<td><p>Exact, fused Adam and SSIM kernels in CUDA; the equivalence evidence for each speed-up is in (<span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/speed.md</span></code></span>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-3-body-models-and-skinning">
+<h2>Part 3 · Body models and skinning<a class="headerlink" href="#part-3-body-models-and-skinning" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part3_body/03a_skeleton.html"><span class="std std-doc">3a · Skeleton and pose</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/articulation.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/posefit.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/fit_shape_multiview.py</span></code></span></p></td>
+<td><p>The SMPL skeleton and a fitted body shape instead of 17 hand-placed joints; poses start from a tracker</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part3_body/03b_skinning.html"><span class="std std-doc">3b · Skinning</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/articulation.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/webbing.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/webbing.md</span></code></span></p></td>
+<td><p>SMPL’s learned skinning weights; a fix for the shreds that appear between the thighs when a dance spreads the legs wider than the capture did</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-4-gaussian-shell-maps">
+<h2>Part 4 · Gaussian Shell Maps<a class="headerlink" href="#part-4-gaussian-shell-maps" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part4_shells/04a_shell_maps.html"><span class="std std-doc">4a · Shell maps</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/shells.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/normal_offset.py</span></code></span></p></td>
+<td><p>Shells around the SMPL mesh with one shared UV texture; a texture channel holds a learned offset along the normal</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part4_shells/04b_sampling_density.html"><span class="std std-doc">4b · Sampling and density</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/face_density.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/foot_density.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/hand_hifi.py</span></code></span></p></td>
+<td><p>One weighted sampler shared by the face, hand and foot density options</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-5-fitting-from-video">
+<h2>Part 5 · Fitting from video<a class="headerlink" href="#part-5-fitting-from-video" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">5a · Fit from video</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/fit_multi.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tools/inpaint_unobserved.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">pipeline/build_sam2_data.py</span></code></span></p></td>
+<td><p>One shared texture fitted to all training frames for 30,000 iterations, with SAM 2 masks; surfaces that no frame saw are inpainted afterwards</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html"><span class="std std-doc">5b · When frames disagree</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/refine_pose.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/refine_rigid.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/track_partitions.py</span></code></span></p></td>
+<td><p>Per-frame articulated pose correction from masks and keypoints, never from colour, followed by a refit; each split is tracked on its own</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-6-hi-fi-parts">
+<h2>Part 6 · Hi-fi parts<a class="headerlink" href="#part-6-hi-fi-parts" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html"><span class="std std-doc">6a · Crops and parts</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/hifi_preset.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/hifi_crop.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/hand_rig.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/flame_rig.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/mouth_proxy.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/closeup_place.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/hifi.md</span></code></span></p></td>
+<td><p>MANO finger joints and a FLAME head rig driven by hand and face trackers; close-up frames become training rows by fitting a body and a camera behind them</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html"><span class="std std-doc">6b · Pose-dependent colour</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/color_offset.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/baseline_exavatar.md</span></code></span></p></td>
+<td><p>The study is written up in full; its code is on development branches and is not published yet</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-7-motion-and-contact">
+<h2>Part 7 · Motion and contact<a class="headerlink" href="#part-7-motion-and-contact" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html"><span class="std std-doc">7a · Contact and leg IK</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/leg_ik.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/leg_ik.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/feet_eval.py</span></code></span></p></td>
+<td><p>Two-bone IK on planted feet, opt-in in <code class="docutils literal notranslate"><span class="pre">eval/perform.py</span></code>; it cut the world-space foot slide while the on-screen slide did not change</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html"><span class="std std-doc">7b · Flight and metrics</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/perform.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/leg_ik.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/research_brief.md</span></code></span></p></td>
+<td><p>The centre-of-mass flight signal and the vector angular acceleration are opt-in fixes from an audit</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../part7_motion/07c_secondary_motion.html"><span class="std std-doc">7c · Secondary motion</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/secmotion.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/plus-secmotion.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/mobile_parts.md</span></code></span></p></td>
+<td><p>Built and off by default; memoryless today, so the displacement returns to zero when motion stops</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-8-evaluation">
+<h2>Part 8 · Evaluation<a class="headerlink" href="#part-8-evaluation" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html"><span class="std std-doc">8a · Splits, seeds, metrics</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/evaluate.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/evaluation_contract.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/split_identity.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/hifi/region_metrics.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">prep/p118v3/sealed/score_sealed.sh</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">planning/EVALUATION_CONTRACTS.md</span></code></span></p></td>
+<td><p>The freeze hashes the checkpoint, the inputs and the code; one scoring attempt is reserved per frozen pipeline; regions come from the control model</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html"><span class="std std-doc">8b · Rules and the blind camera</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/color_offset.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">planning/</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">planning/blind_camera/prereg_draft.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/sync.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tools/sync_clips.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tools/calibrate_camera.py</span></code></span></p></td>
+<td><p>Rules with perceptual guards over several rounds; the blind-camera pilot is not recorded yet, and only a synthetic replay and a draft pre-registration exist</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="part-9-speed">
+<h2>Part 9 · Speed<a class="headerlink" href="#part-9-speed" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Lesson</p></th>
+<th class="head"><p>Real files</p></th>
+<th class="head"><p>What differs</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../part9_speed/09_speed.html"><span class="std std-doc">9 · Speed</span></a></p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/speed.md</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tools/speedv2/</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">bench/</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/speedv2.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/fasttrain.py</span></code></span></p></td>
+<td><p>CUDA kernels and equivalence tiers: bit-identical paths on by default, reordered floating point only where it stays inside run-to-run noise, reduced precision rejected</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="where-results-live">
+<h2>Where results live<a class="headerlink" href="#where-results-live" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">RESULTS.md</span></code></span>: the dated record of every measured result, including the sealed evaluation.</p></li>
+<li><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/results_tour.md</span></code></span>: held-out close-ups, ablations and the standard track.</p></li>
+<li><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/HISTORY.md</span></code></span> and <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">docs/RESEARCH_DIRECTIONS.md</span></code></span>: how the project got here and where it is going.</p></li>
+<li><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">tests/</span></code></span>: unit, identity and integration tests; the CPU tests run anywhere.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./appendix"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="notation.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Notation and conventions</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="references.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">References</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup-and-the-problem">Setup and the problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-2-gaussian-splatting">Part 2 · Gaussian splatting</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-3-body-models-and-skinning">Part 3 · Body models and skinning</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-4-gaussian-shell-maps">Part 4 · Gaussian Shell Maps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-5-fitting-from-video">Part 5 · Fitting from video</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-6-hi-fi-parts">Part 6 · Hi-fi parts</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-7-motion-and-contact">Part 7 · Motion and contact</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-8-evaluation">Part 8 · Evaluation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#part-9-speed">Part 9 · Speed</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-results-live">Where results live</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

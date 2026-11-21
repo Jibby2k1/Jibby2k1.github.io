@@ -1,0 +1,1420 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>What does a number mean? Splits, seeds and metrics that cannot be gamed &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part8_evaluation/08a_splits_and_seeds';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Who decides whether it worked? Pre-registered rules and the blind camera" href="08b_rules_and_blind_camera.html" />
+    <link rel="prev" title="Why does cloth need memory?" href="../part7_motion/07c_secondary_motion.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part9_speed/09_speed.html">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>What does a number mean? Splits, seeds and metrics that cannot be gamed</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-kinds-of-data">1. Three kinds of data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mistake-choose-on-held-out-report-held-out">2. The mistake: choose on held-out, report held-out</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-sealed-set-is-scored-once">3. A sealed set is scored once</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seed-spread-is-the-noise-floor">4. The seed spread is the noise floor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-iteration-or-the-best-checkpoint">5. Fixed iteration, or the best checkpoint?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leakage">6. Leakage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#smoothing-poses-across-a-split-boundary">6.1 Smoothing poses across a split boundary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-statistic-computed-over-all-rows">6.2 A statistic computed over all rows</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-that-can-be-gamed">7. Metrics that can be gamed</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreground-psnr-is-mostly-an-edge-score">7.1 Foreground PSNR is mostly an edge score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-background-colour-can-hide-a-hole">7.2 One background colour can hide a hole</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regions-must-not-move-with-the-model">7.3 Regions must not move with the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="what-does-a-number-mean-splits-seeds-and-metrics-that-cannot-be-gamed">
+<h1>What does a number mean? Splits, seeds and metrics that cannot be gamed<a class="headerlink" href="#what-does-a-number-mean-splits-seeds-and-metrics-that-cannot-be-gamed" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>Why held-out data is <em>spent</em> once you choose with it, and how a sealed set, scored once, gives the number
+you may report.</p></li>
+<li><p>How large the difference between two runs of the <em>same</em> recipe is, and the rule that follows: a difference
+counts only above the seed spread.</p></li>
+<li><p>Why arms are compared at a fixed iteration and not at a validation-picked checkpoint.</p></li>
+<li><p>Two ways information leaks from held-out frames into a result, and a test that catches both.</p></li>
+<li><p>Three metric pitfalls: a foreground score that is mostly edge, a background colour a model can hide in,
+and regions that move with the model being scored.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a> (<code class="docutils literal notranslate"><span class="pre">cu.fit</span></code>, <code class="docutils literal notranslate"><span class="pre">cu.evaluate</span></code>, PSNR) and
+<a class="reference internal" href="../part5_fitting/05b_frames_disagree.html"><span class="std std-doc">Lesson 5b</span></a> (tracking noise). This lesson fits many very small
+avatars; the picture quality is poor on purpose, because we need dozens of runs in two minutes.</p>
+<p>The tools of this part live in <code class="docutils literal notranslate"><span class="pre">course_utils/evaluation.py</span></code>, imported as <code class="docutils literal notranslate"><span class="pre">ev</span></code>.</p>
+<section id="three-kinds-of-data">
+<h2>1. Three kinds of data<a class="headerlink" href="#three-kinds-of-data" title="Link to this heading">#</a></h2>
+<p>Every earlier lesson printed a PSNR. This lesson asks what such a number is allowed to claim. The answer
+depends on what the frames behind it were used for.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Split</p></th>
+<th class="head"><p>Used for</p></th>
+<th class="head"><p>What its score means</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>train</strong></p></td>
+<td><p>fitting the texture</p></td>
+<td><p>how well the model memorised these frames</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>held-out</strong></p></td>
+<td><p>choosing between variants</p></td>
+<td><p>an estimate of quality on new frames, <em>until you choose with it</em></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>sealed</strong></p></td>
+<td><p>nothing, until the choice is frozen</p></td>
+<td><p>quality on new frames; scored once</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The toy capture for this lesson is one 24-frame dance. Every fourth frame is held out and the rest are
+training frames. The poses come from a noisy tracker, as in Lesson 5b: every frame’s pose is off by a few
+of degrees per joint, and the fit and the scorer both use these tracked poses.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">1500.0</span><span class="p">)</span>
+<span class="n">cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">SIGMA</span> <span class="o">=</span> <span class="mf">3.0</span>                                           <span class="c1"># tracker noise, degrees per joint</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">capture</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">n_frames</span><span class="p">,</span> <span class="n">seed</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="n">SIGMA</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""A take: the video, and the poses a tracker reports for it."""</span>
+    <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">n_frames</span><span class="p">)</span>
+    <span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="n">cam</span><span class="p">,</span> <span class="n">noise</span><span class="o">=</span><span class="mf">0.03</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">video</span><span class="p">,</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">poses</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span> <span class="o">+</span> <span class="mi">100</span><span class="p">)</span>
+
+<span class="n">take</span><span class="p">,</span> <span class="n">track</span> <span class="o">=</span> <span class="n">capture</span><span class="p">(</span><span class="s2">"dance"</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">held_idx</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">train_idx</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">held_idx</span><span class="p">]</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">held</span> <span class="o">=</span> <span class="n">take</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">train_idx</span><span class="p">),</span> <span class="n">take</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">held_idx</span><span class="p">)</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">take</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span>
+                     <span class="p">[(</span><span class="s2">"held-out "</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">held_idx</span> <span class="k">else</span> <span class="s2">"train "</span><span class="p">)</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span>
+                     <span class="n">ncols</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">),</span> <span class="s2">"training frames,"</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">held</span><span class="p">),</span> <span class="s2">"held-out frames, at"</span><span class="p">,</span> <span class="n">cam</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="s2">"px"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18 training frames, 6 held-out frames, at 32 px
+</pre></div>
+</div>
+<img alt="../_images/91ef18e76a59f91b62a01f8d1a68a0313e46abb7431299e7484ff6be25563994.png" src="../_images/91ef18e76a59f91b62a01f8d1a68a0313e46abb7431299e7484ff6be25563994.png" />
+</div>
+</div>
+<p>One <em>recipe</em> is one way to build the avatar: a model size, a learning rate, a number of iterations. The
+function below runs the recipe for a given random seed. The seed sets the initial texture and the order in
+which frames are visited, and nothing else. It also keeps a copy of the texture every few steps, which
+Section 5 needs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ITERS</span><span class="p">,</span> <span class="n">EVERY</span> <span class="o">=</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">6</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">run_recipe</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">track</span><span class="p">):</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">snaps</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">fit_with_snapshots</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="n">ITERS</span><span class="p">,</span> <span class="n">every</span><span class="o">=</span><span class="n">EVERY</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
+                                     <span class="n">poses</span><span class="o">=</span><span class="n">poses</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">avatar</span><span class="p">,</span> <span class="n">snaps</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">poses</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cu</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">poses</span><span class="p">)[</span><span class="s2">"mean_psnr"</span><span class="p">]</span>
+
+<span class="n">avatar0</span><span class="p">,</span> <span class="n">snaps0</span> <span class="o">=</span> <span class="n">run_recipe</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"seed 0: train </span><span class="si">{</span><span class="n">score</span><span class="p">(</span><span class="n">avatar0</span><span class="p">,</span><span class="w"> </span><span class="n">train</span><span class="p">,</span><span class="w"> </span><span class="n">track</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB, "</span>
+      <span class="sa">f</span><span class="s2">"held-out </span><span class="si">{</span><span class="n">score</span><span class="p">(</span><span class="n">avatar0</span><span class="p">,</span><span class="w"> </span><span class="n">held</span><span class="p">,</span><span class="w"> </span><span class="n">track</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>seed 0: train 22.93 dB, held-out 22.07 dB
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="the-mistake-choose-on-held-out-report-held-out">
+<h2>2. The mistake: choose on held-out, report held-out<a class="headerlink" href="#the-mistake-choose-on-held-out-report-held-out" title="Link to this heading">#</a></h2>
+<p>Suppose you try twelve ideas: a new loss weight, a schedule, a regulariser. You score each on the held-out
+frames, keep the best, and report its gain over the baseline. That is the normal workflow, and it has a
+flaw that the toy can expose exactly.</p>
+<p>Here the twelve “ideas” are the same recipe with twelve different seeds. By construction, <strong>none of them is
+better than another</strong>. Any difference between them is noise.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_VARIANTS</span> <span class="o">=</span> <span class="mi">12</span>
+<span class="n">runs</span> <span class="o">=</span> <span class="p">[(</span><span class="n">avatar0</span><span class="p">,</span> <span class="n">snaps0</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="n">run_recipe</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">N_VARIANTS</span><span class="p">)]</span>
+<span class="n">held_psnr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">score</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">held</span><span class="p">,</span> <span class="n">track</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">])</span>
+
+<span class="n">pick</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">held_psnr</span><span class="o">.</span><span class="n">argmax</span><span class="p">())</span>
+<span class="n">gain_held</span> <span class="o">=</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">pick</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"held-out PSNR of the twelve variants:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">held_psnr</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the winner is variant </span><span class="si">{</span><span class="n">pick</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">gain_held</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB over the average variant"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>held-out PSNR of the twelve variants: [22.07 21.41 21.67 22.02 21.91 21.8  21.6  21.22 21.78 21.82 21.62 21.81]
+the winner is variant 0: +0.34 dB over the average variant
+</pre></div>
+</div>
+</div>
+</div>
+<p>The winner looks like a real gain. To see whether it is, we need frames that played no part in the choice.
+The toy can make as many new takes as we like, so here is an <em>oracle</em>: two fresh takes with other motions,
+scored for all twelve variants. A real project does not have this luxury, which is the reason for the
+sealed set of the next section.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fresh</span> <span class="o">=</span> <span class="p">[</span><span class="n">capture</span><span class="p">(</span><span class="s2">"arms_up"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">),</span> <span class="n">capture</span><span class="p">(</span><span class="s2">"wave"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">)]</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fresh_score</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">takes</span><span class="o">=</span><span class="n">fresh</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">score</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">tr</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span><span class="p">,</span> <span class="n">tr</span> <span class="ow">in</span> <span class="n">takes</span><span class="p">]))</span>
+
+<span class="n">fresh_psnr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">fresh_score</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">])</span>
+<span class="n">gain_fresh</span> <span class="o">=</span> <span class="n">fresh_psnr</span><span class="p">[</span><span class="n">pick</span><span class="p">]</span> <span class="o">-</span> <span class="n">fresh_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">order</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="o">-</span><span class="n">held_psnr</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">N_VARIANTS</span><span class="p">),</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">order</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span>
+            <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">]</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">pick</span> <span class="k">else</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">order</span><span class="p">])</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"variant, sorted by held-out score"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"held-out PSNR − average (dB)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"what the selection sees"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">held_psnr</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">fresh_psnr</span> <span class="o">-</span> <span class="n">fresh_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">"variants"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">gain_held</span><span class="p">],</span> <span class="p">[</span><span class="n">gain_fresh</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"the winner"</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">lim</span> <span class="o">=</span> <span class="mf">1.15</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">held_psnr</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fresh_psnr</span> <span class="o">-</span> <span class="n">fresh_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="o">-</span><span class="n">lim</span><span class="p">,</span> <span class="n">lim</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="n">lim</span><span class="p">,</span> <span class="n">lim</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span>
+             <span class="n">label</span><span class="o">=</span><span class="s2">"gain carries over fully"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"held-out PSNR − average (dB)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"fresh takes PSNR − average (dB)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"what new data says"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"winner's lead on held-out: </span><span class="si">{</span><span class="n">gain_held</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB   on fresh takes: </span><span class="si">{</span><span class="n">gain_fresh</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>winner's lead on held-out: +0.34 dB   on fresh takes: +0.08 dB
+</pre></div>
+</div>
+<img alt="../_images/799c866e25ea54122c30e972ae762d2f4fe0e7354a23138e1be09d7b8f731632.png" src="../_images/799c866e25ea54122c30e972ae762d2f4fe0e7354a23138e1be09d7b8f731632.png" />
+</div>
+</div>
+<p>One winner is one draw, so repeat the selection many times: draw six of the twelve variants at random, pick
+the best of the six on held-out, and record its lead over the average variant on both kinds of data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">lead_held</span><span class="p">,</span> <span class="n">lead_fresh</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4000</span><span class="p">):</span>
+    <span class="n">subset</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">N_VARIANTS</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">subset</span><span class="p">[</span><span class="n">held_psnr</span><span class="p">[</span><span class="n">subset</span><span class="p">]</span><span class="o">.</span><span class="n">argmax</span><span class="p">()]</span>
+    <span class="n">lead_held</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">held_psnr</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">());</span> <span class="n">lead_fresh</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fresh_psnr</span><span class="p">[</span><span class="n">w</span><span class="p">]</span> <span class="o">-</span> <span class="n">fresh_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+<span class="n">lead_held</span><span class="p">,</span> <span class="n">lead_fresh</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lead_held</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lead_fresh</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"average lead of the selected variant: held-out </span><span class="si">{</span><span class="n">lead_held</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> dB, fresh takes </span><span class="si">{</span><span class="n">lead_fresh</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">lead_held</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">lead_fresh</span> <span class="o">&lt;</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="n">lead_held</span><span class="p">,</span> <span class="s2">"most of a selected lead should not carry over"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>average lead of the selected variant: held-out +0.283 dB, fresh takes +0.059 dB
+</pre></div>
+</div>
+</div>
+</div>
+<p>Most of the winner’s lead does not carry over to the fresh takes. This is <em>selection bias</em>. The maximum of
+several noisy numbers is larger than a typical one, whether or not anything real separates them. The held-out
+score of the winner is therefore biased upward by the act of choosing it, and the more variants you try, the
+larger the bias. Whatever part does carry over belongs to that one lucky <em>run</em>, not to the idea: train the
+same “idea” again with another seed and it is an average variant again.</p>
+<p>Held-out data is not ruined by this. It is still the right tool for choosing. But a score that was used to
+choose can no longer be reported as the quality on new data: the held-out set is <strong>spent</strong>.</p>
+</section>
+<section id="a-sealed-set-is-scored-once">
+<h2>3. A sealed set is scored once<a class="headerlink" href="#a-sealed-set-is-scored-once" title="Link to this heading">#</a></h2>
+<p>The fix is a third split that takes no part in fitting or choosing. The order of operations is the whole
+point:</p>
+<ol class="arabic simple">
+<li><p>compare variants on held-out data and choose;</p></li>
+<li><p><strong>freeze</strong> the choice and record the hash of its checkpoint;</p></li>
+<li><p>open the sealed set, score the frozen checkpoint, and report that number, whatever it is.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">ev.SealedSet</span></code> is a small guard for this workflow. It keeps the data behind an explicit <code class="docutils literal notranslate"><span class="pre">open()</span></code>, which
+demands a checkpoint hash, writes it to a log and refuses to open a second time.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sealed</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">SealedSet</span><span class="p">(</span><span class="n">capture</span><span class="p">(</span><span class="s2">"squat"</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">6</span><span class="p">),</span> <span class="n">name</span><span class="o">=</span><span class="s2">"sealed squat take"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sealed</span><span class="p">)</span>
+
+<span class="n">typical</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">held_psnr</span><span class="p">)[</span><span class="n">N_VARIANTS</span> <span class="o">//</span> <span class="mi">2</span><span class="p">])</span>   <span class="c1"># a middling variant stands in for "the baseline"</span>
+<span class="n">chosen</span><span class="p">,</span> <span class="n">baseline</span> <span class="o">=</span> <span class="n">runs</span><span class="p">[</span><span class="n">pick</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">runs</span><span class="p">[</span><span class="n">typical</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">frozen_hash</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">state_hash</span><span class="p">(</span><span class="n">chosen</span><span class="p">)</span>                    <span class="c1"># every learned number of the chosen model</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"frozen checkpoint:"</span><span class="p">,</span> <span class="n">frozen_hash</span><span class="p">)</span>
+
+<span class="n">video_s</span><span class="p">,</span> <span class="n">track_s</span> <span class="o">=</span> <span class="n">sealed</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">frozen_hash</span><span class="p">,</span> <span class="n">note</span><span class="o">=</span><span class="sa">f</span><span class="s2">"variant </span><span class="si">{</span><span class="n">pick</span><span class="si">}</span><span class="s2"> chosen on held-out"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">ev</span><span class="o">.</span><span class="n">state_hash</span><span class="p">(</span><span class="n">chosen</span><span class="p">)</span> <span class="o">==</span> <span class="n">frozen_hash</span>            <span class="c1"># the model scored is the model that was frozen</span>
+<span class="n">sealed_gain</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">chosen</span><span class="p">,</span> <span class="n">video_s</span><span class="p">,</span> <span class="n">track_s</span><span class="p">)</span> <span class="o">-</span> <span class="n">score</span><span class="p">(</span><span class="n">baseline</span><span class="p">,</span> <span class="n">video_s</span><span class="p">,</span> <span class="n">track_s</span><span class="p">)</span>
+<span class="n">held_gain_vs_base</span> <span class="o">=</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">pick</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">typical</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"winner minus baseline (variant </span><span class="si">{</span><span class="n">typical</span><span class="si">}</span><span class="s2">): held-out </span><span class="si">{</span><span class="n">held_gain_vs_base</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB, sealed </span><span class="si">{</span><span class="n">sealed_gain</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sealed</span><span class="o">.</span><span class="n">log</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>SealedSet('sealed squat take', data fd09db760f2003c0, sealed)
+frozen checkpoint: fda8a71bfab46925
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>winner minus baseline (variant 5): held-out +0.27 dB, sealed -0.32 dB
+[{'checkpoint': 'fda8a71bfab46925', 'data': 'fd09db760f2003c0', 'note': 'variant 0 chosen on held-out'}]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The sealed number is the one to report. If it disappoints, the temptation is to adjust something and score
+again. The guard refuses:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">sealed</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">state_hash</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">0</span><span class="p">]),</span> <span class="n">note</span><span class="o">=</span><span class="s2">"one more try"</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ev</span><span class="o">.</span><span class="n">SealedSetError</span> <span class="k">as</span> <span class="n">err</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"refused:"</span><span class="p">,</span> <span class="n">err</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sealed</span><span class="o">.</span><span class="n">log</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>refused: sealed squat take: already scored once, for checkpoint fda8a71bfab46925. A sealed set is spent after one scoring.
+</pre></div>
+</div>
+</div>
+</div>
+<p>Python cannot stop someone who wants to read the data. The guard’s job is smaller and still useful: the
+honest path is one call, the dishonest one raises an error, and the log records which checkpoint the sealed
+number belongs to. The hash matters as much as the lock. Without it, nothing shows that the model scored
+after the unsealing is the model chosen before it.</p>
+</section>
+<section id="the-seed-spread-is-the-noise-floor">
+<h2>4. The seed spread is the noise floor<a class="headerlink" href="#the-seed-spread-is-the-noise-floor" title="Link to this heading">#</a></h2>
+<p>Section 2 already contains a second lesson. Twelve runs of one recipe gave twelve different scores. The
+spread of those scores is the smallest difference this experiment can resolve.</p>
+<p>With seeds <span class="math notranslate nohighlight">\(s = 0 \dots S-1\)</span> and scores <span class="math notranslate nohighlight">\(m_s\)</span>, the <strong>seed spread</strong> is</p>
+<div class="math notranslate nohighlight">
+\[
+\text{spread} = \max_s m_s - \min_s m_s ,
+\]</div>
+<p>which for two seeds is <span class="math notranslate nohighlight">\(|m_0 - m_1|\)</span>. The rule the rest of the course uses is:</p>
+<blockquote>
+<div><p>A difference between two arms <strong>counts</strong> only if it has the same sign on every seed and its smallest
+magnitude exceeds the seed spread (and a fixed floor, if one was registered).</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">spread</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">seed_spread</span><span class="p">(</span><span class="n">held_psnr</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"held-out PSNR over </span><span class="si">{</span><span class="n">N_VARIANTS</span><span class="si">}</span><span class="s2"> seeds: mean </span><span class="si">{</span><span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB, spread </span><span class="si">{</span><span class="n">spread</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+
+<span class="c1"># An apparent win: the winner against the baseline, one run each.</span>
+<span class="n">single</span> <span class="o">=</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">pick</span><span class="p">]</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="p">[</span><span class="n">typical</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"single-run comparison: </span><span class="si">{</span><span class="n">single</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB; counted: </span><span class="si">{</span><span class="n">ev</span><span class="o">.</span><span class="n">counted</span><span class="p">([</span><span class="n">single</span><span class="p">],</span><span class="w"> </span><span class="n">spread</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">ev</span><span class="o">.</span><span class="n">counted</span><span class="p">([</span><span class="n">single</span><span class="p">],</span> <span class="n">spread</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>held-out PSNR over 12 seeds: mean 21.73 dB, spread 0.84 dB
+single-run comparison: +0.27 dB; counted: 0
+</pre></div>
+</div>
+</div>
+</div>
+<p>A single-run comparison of two seeds of the same recipe can never exceed the spread, so it is never counted.
+That is the rule working: the “win” of Section 2 is thrown out without any fresh take.</p>
+<p>Now a difference that is real. Lesson 5b showed that pose error is what limits a fit. Suppose a better
+tracker halves the error on every take. Three seeds of the same recipe, with the better poses:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">track_b</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">take</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">SIGMA</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">101</span><span class="p">)</span>        <span class="c1"># same noise pattern, half the size</span>
+<span class="n">runs_b</span> <span class="o">=</span> <span class="p">[</span><span class="n">run_recipe</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">track_b</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">)]</span>
+<span class="n">held_b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">score</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">held</span><span class="p">,</span> <span class="n">track_b</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">runs_b</span><span class="p">])</span>
+
+<span class="n">delta</span> <span class="o">=</span> <span class="n">held_b</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>                                     <span class="c1"># arm minus base, seed by seed</span>
+<span class="n">both_spread</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">spread</span><span class="p">,</span> <span class="n">ev</span><span class="o">.</span><span class="n">seed_spread</span><span class="p">(</span><span class="n">held_b</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"better tracker, held-out PSNR:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">held_b</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="sa">f</span><span class="s2">"(spread </span><span class="si">{</span><span class="n">ev</span><span class="o">.</span><span class="n">seed_spread</span><span class="p">(</span><span class="n">held_b</span><span class="p">)</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"difference per seed:"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="s2">"-&gt; counted:"</span><span class="p">,</span> <span class="n">ev</span><span class="o">.</span><span class="n">counted</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">both_spread</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">ev</span><span class="o">.</span><span class="n">counted</span><span class="p">(</span><span class="n">delta</span><span class="p">,</span> <span class="n">both_spread</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">))</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">held_psnr</span><span class="p">,</span> <span class="mf">0.0</span> <span class="o">+</span> <span class="mf">0.06</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">N_VARIANTS</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span>
+           <span class="n">label</span><span class="o">=</span><span class="s2">"base recipe, 12 seeds"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">held_psnr</span><span class="p">[</span><span class="n">pick</span><span class="p">]],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">s</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"the 'winner' of Section 2"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">held_b</span><span class="p">,</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">0.06</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"better tracker, 3 seeds"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">held_psnr</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yticklabels</span><span class="p">([</span><span class="s2">"base"</span><span class="p">,</span> <span class="s2">"better tracker"</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"held-out PSNR (dB)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"center"</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>better tracker, held-out PSNR: [25.18 24.97 25.01] (spread 0.21 dB)
+difference per seed: [3.11 3.56 3.34] -&gt; counted: 1
+</pre></div>
+</div>
+<img alt="../_images/b27cb5f0232297b65ac37ea552558b652d8b59417a68b5639926a988228b5713.png" src="../_images/b27cb5f0232297b65ac37ea552558b652d8b59417a68b5639926a988228b5713.png" />
+</div>
+</div>
+<p>The shaded band is the seed spread of the base recipe. The winner of Section 2 sits inside it. The better
+tracker sits far outside it on every seed. The first is noise and the second is a result, and the rule
+tells them apart without anyone’s judgement.</p>
+<p>Two practical notes. First, the spread is measured <em>per metric and per split</em>: a region metric on six
+frames is noisier than a whole-frame metric on sixty. Second, two seeds give a crude spread. It is a floor
+for decisions, not a confidence interval; <a class="reference internal" href="08b_rules_and_blind_camera.html"><span class="std std-doc">Lesson 8b</span></a> builds intervals.</p>
+</section>
+<section id="fixed-iteration-or-the-best-checkpoint">
+<h2>5. Fixed iteration, or the best checkpoint?<a class="headerlink" href="#fixed-iteration-or-the-best-checkpoint" title="Link to this heading">#</a></h2>
+<p>Training loops often save the checkpoint with the best validation score, <code class="docutils literal notranslate"><span class="pre">best.pt</span></code>. It sounds harmless. It
+is the selection of Section 2 again, applied along the training run instead of across variants.</p>
+<p><code class="docutils literal notranslate"><span class="pre">run_recipe</span></code> stored the texture every few steps. For eight seeds, compare two policies: take the model at the
+fixed last iteration, or take the stored checkpoint with the best held-out score.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">N_CK</span> <span class="o">=</span> <span class="mi">8</span>
+<span class="n">probe</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">steps</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]][</span><span class="mi">4</span><span class="p">:]</span>                 <span class="c1"># the plateau: the second half of training</span>
+<span class="n">curve_held</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_CK</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">)));</span> <span class="n">curve_fresh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N_CK</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">steps</span><span class="p">)))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_CK</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">tex</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="mi">4</span><span class="p">:]):</span>
+        <span class="n">ev</span><span class="o">.</span><span class="n">set_texture</span><span class="p">(</span><span class="n">probe</span><span class="p">,</span> <span class="n">tex</span><span class="p">)</span>
+        <span class="n">curve_held</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">probe</span><span class="p">,</span> <span class="n">held</span><span class="p">,</span> <span class="n">track</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span>
+        <span class="n">curve_fresh</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">fresh_score</span><span class="p">(</span><span class="n">probe</span><span class="p">)</span>
+
+<span class="n">best</span> <span class="o">=</span> <span class="n">curve_held</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">rows</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N_CK</span><span class="p">)</span>
+<span class="n">move_held</span> <span class="o">=</span> <span class="n">curve_held</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">best</span><span class="p">]</span> <span class="o">-</span> <span class="n">curve_held</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">move_fresh</span> <span class="o">=</span> <span class="n">curve_fresh</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">best</span><span class="p">]</span> <span class="o">-</span> <span class="n">curve_fresh</span><span class="p">[:,</span> <span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">8.6</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_CK</span><span class="p">):</span>
+    <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">steps</span><span class="p">,</span> <span class="n">curve_held</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.45</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+                 <span class="n">label</span><span class="o">=</span><span class="s2">"held-out curve, one seed"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">steps</span><span class="p">)[</span><span class="n">best</span><span class="p">],</span> <span class="n">curve_held</span><span class="p">[</span><span class="n">rows</span><span class="p">,</span> <span class="n">best</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">zorder</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+                <span class="n">label</span><span class="o">=</span><span class="s2">"best checkpoint"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"iteration"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"held-out PSNR (dB)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">rows</span> <span class="o">-</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">move_held</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"held-out (used for the pick)"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="n">rows</span> <span class="o">+</span> <span class="mf">0.2</span><span class="p">,</span> <span class="n">move_fresh</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"fresh takes"</span><span class="p">)</span>
+<span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"seed"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"best checkpoint − fixed iteration (dB)"</span><span class="p">);</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"picking the best checkpoint moves held-out PSNR by </span><span class="si">{</span><span class="n">move_held</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB on average "</span>
+      <span class="sa">f</span><span class="s2">"(up to </span><span class="si">{</span><span class="n">move_held</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2">); the same checkpoints move the fresh takes by </span><span class="si">{</span><span class="n">move_fresh</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="si">:</span><span class="s2">+.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">move_held</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">move_held</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">move_fresh</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>picking the best checkpoint moves held-out PSNR by +0.23 dB on average (up to +0.66); the same checkpoints move the fresh takes by +0.06 dB
+</pre></div>
+</div>
+<img alt="../_images/13b7de00a4c0715944dd6bdad0e34a479ba2328a3fe3ff0c8ecbcafef612db4b.png" src="../_images/13b7de00a4c0715944dd6bdad0e34a479ba2328a3fe3ff0c8ecbcafef612db4b.png" />
+</div>
+</div>
+<p>On the plateau the held-out curve wanders by a fraction of a decibel from one checkpoint to the next. Picking
+its highest point can only raise the held-out score, and it raises it by about as much as the curve wanders.
+On fresh takes the picked checkpoints gain far less, or nothing. The pick manufactures a held-out gain
+of the size of the effects one wants to measure, and a different amount for every arm. Compare arms at one
+<strong>fixed iteration</strong>, decided in advance.</p>
+</section>
+<section id="leakage">
+<h2>6. Leakage<a class="headerlink" href="#leakage" title="Link to this heading">#</a></h2>
+<p>A split protects a number only if nothing derived from the protected frames reaches the model or the
+scorer’s inputs. Pipelines have many stages before the fit (tracking, smoothing, normalisation), and each is
+a place to leak. A leak rarely looks like cheating; it looks like a sensible preprocessing step applied to
+the whole table. Two examples follow, one large and one small.</p>
+<section id="smoothing-poses-across-a-split-boundary">
+<h3>6.1 Smoothing poses across a split boundary<a class="headerlink" href="#smoothing-poses-across-a-split-boundary" title="Link to this heading">#</a></h3>
+<p>Real trackers are refined against the training pixels (Lesson 5b), so training frames end up with much
+better poses than the raw tracker gives. We imitate that by giving the training frames a small pose error
+and leaving the held-out frames with the raw tracker error. Then somebody adds a reasonable step: smooth the
+pose track over time to remove jitter.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ev.smooth_poses</span></code> applies a Gaussian window over frames. Given <code class="docutils literal notranslate"><span class="pre">blocks</span></code>, it smooths each block on its own.
+Without <code class="docutils literal notranslate"><span class="pre">blocks</span></code>, it smooths the whole take, across every train/held-out boundary.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">refined</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">take</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">7</span><span class="p">)</span>             <span class="c1"># stands in for poses refined on training pixels</span>
+<span class="n">mixed</span> <span class="o">=</span> <span class="n">track</span><span class="o">.</span><span class="n">clone</span><span class="p">();</span> <span class="n">mixed</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">refined</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]</span>    <span class="c1"># train: refined, held-out: raw tracker</span>
+
+<span class="n">leak_model</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">300.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">))</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="n">ITERS</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">mixed</span><span class="p">[</span><span class="n">train_idx</span><span class="p">])</span>
+
+<span class="n">isolated</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">smooth_poses</span><span class="p">(</span><span class="n">mixed</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="p">[</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">held_idx</span><span class="p">])</span>
+<span class="n">leaky</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">smooth_poses</span><span class="p">(</span><span class="n">mixed</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>                       <span class="c1"># one block: the window crosses the boundary</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pose_error_deg</span><span class="p">(</span><span class="n">tr</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">((</span><span class="n">tr</span> <span class="o">-</span> <span class="n">take</span><span class="o">.</span><span class="n">poses</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="n">psnr_iso</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held</span><span class="p">,</span> <span class="n">isolated</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span>
+<span class="n">psnr_leak</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held</span><span class="p">,</span> <span class="n">leaky</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">7.4</span><span class="p">,</span> <span class="mf">2.8</span><span class="p">))</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pose_error_deg</span><span class="p">(</span><span class="n">isolated</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"smoothed per block"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">pose_error_deg</span><span class="p">(</span><span class="n">leaky</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"smoothed across the boundary"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">held_idx</span><span class="p">):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvspan</span><span class="p">(</span><span class="n">h</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">h</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"camera"</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"held-out frame"</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"frame"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"pose error (deg, mean over joints)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">loc</span><span class="o">=</span><span class="s2">"lower center"</span><span class="p">,</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"held-out PSNR, same model, same pixels: per-block </span><span class="si">{</span><span class="n">psnr_iso</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB, across the boundary </span><span class="si">{</span><span class="n">psnr_leak</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">train_err</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">pose_error_deg</span><span class="p">(</span><span class="n">tr</span><span class="p">)[</span><span class="n">train_idx</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="k">for</span> <span class="n">tr</span> <span class="ow">in</span> <span class="p">(</span><span class="n">isolated</span><span class="p">,</span> <span class="n">leaky</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"pose error on the training frames: per-block </span><span class="si">{</span><span class="n">train_err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg, across the boundary </span><span class="si">{</span><span class="n">train_err</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">psnr_leak</span> <span class="o">&gt;</span> <span class="n">psnr_iso</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="ow">and</span> <span class="n">train_err</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">train_err</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>held-out PSNR, same model, same pixels: per-block 22.05 dB, across the boundary 25.47 dB
+pose error on the training frames: per-block 1.73 deg, across the boundary 1.89 deg
+</pre></div>
+</div>
+<img alt="../_images/7e24c73b337bd78f47b004da9298e1427ab1a02b38c4b20e410fecfc2acf1a2f.png" src="../_images/7e24c73b337bd78f47b004da9298e1427ab1a02b38c4b20e410fecfc2acf1a2f.png" />
+</div>
+</div>
+<p>The model is the same and the held-out images are the same. Only the held-out <em>poses</em> changed: each one
+borrowed from its refined training neighbours, and the held-out score rose by more than any model change in
+this lesson. A new take has no refined neighbours, so this gain does not exist at deployment. (On the
+training frames the same smoothing does a little harm: each one is pulled toward a noisy held-out neighbour.)</p>
+<p>The general test for a leak does not need a score. Change a protected input and see whether anything on the
+other side of the boundary moves:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">poked</span> <span class="o">=</span> <span class="n">mixed</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+<span class="n">poked</span><span class="p">[</span><span class="n">train_idx</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span> <span class="o">+=</span> <span class="mf">0.2</span>                                      <span class="c1"># change one TRAINING frame's pose</span>
+<span class="n">moved_leaky</span> <span class="o">=</span> <span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">smooth_poses</span><span class="p">(</span><span class="n">poked</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)[</span><span class="n">held_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">leaky</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="n">moved_iso</span> <span class="o">=</span> <span class="p">(</span><span class="n">ev</span><span class="o">.</span><span class="n">smooth_poses</span><span class="p">(</span><span class="n">poked</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">blocks</span><span class="o">=</span><span class="p">[</span><span class="n">train_idx</span><span class="p">,</span> <span class="n">held_idx</span><span class="p">])[</span><span class="n">held_idx</span><span class="p">]</span> <span class="o">-</span> <span class="n">isolated</span><span class="p">[</span><span class="n">held_idx</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest change of a held-out pose: across the boundary </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">moved_leaky</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> rad, "</span>
+      <span class="sa">f</span><span class="s2">"per block </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">moved_iso</span><span class="p">)</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> rad"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">moved_iso</span><span class="p">)</span> <span class="o">==</span> <span class="mf">0.0</span> <span class="ow">and</span> <span class="nb">float</span><span class="p">(</span><span class="n">moved_leaky</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest change of a held-out pose: across the boundary 0.011 rad, per block 0.000 rad
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="a-statistic-computed-over-all-rows">
+<h3>6.2 A statistic computed over all rows<a class="headerlink" href="#a-statistic-computed-over-all-rows" title="Link to this heading">#</a></h3>
+<p>The second leak is quieter. Many pipelines compute a statistic over the dataset: a mean colour, a
+normalisation, a <em>neutral</em> pose. The toy version: when the tracker loses the arms, the pipeline falls back
+to a neutral arm pose, the median of the tracked arm poses. Over which rows is that median taken?</p>
+<p>A new held-out take, with raised arms, makes the question matter. (The sealed take of Section 3 is spent, so
+it cannot be used here.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">held2</span><span class="p">,</span> <span class="n">track2</span> <span class="o">=</span> <span class="n">capture</span><span class="p">(</span><span class="s2">"arms_up"</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">arm_joints</span> <span class="o">=</span> <span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">joint_index</span><span class="p">(</span><span class="n">j</span><span class="p">)</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"l_shoulder"</span><span class="p">,</span> <span class="s2">"r_shoulder"</span><span class="p">,</span> <span class="s2">"l_elbow"</span><span class="p">,</span> <span class="s2">"r_elbow"</span><span class="p">)]</span>
+<span class="n">lost</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>                                    <span class="c1"># frames on which the tracker lost the arms</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">with_fallback</span><span class="p">(</span><span class="n">neutral</span><span class="p">):</span>
+    <span class="n">tr</span> <span class="o">=</span> <span class="n">track2</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">lost</span><span class="p">:</span>
+        <span class="n">tr</span><span class="p">[</span><span class="n">t</span><span class="p">,</span> <span class="n">arm_joints</span><span class="p">]</span> <span class="o">=</span> <span class="n">neutral</span>
+    <span class="k">return</span> <span class="n">tr</span>
+
+<span class="n">neutral_train</span> <span class="o">=</span> <span class="n">track</span><span class="p">[</span><span class="n">train_idx</span><span class="p">][:,</span> <span class="n">arm_joints</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="n">neutral_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">track</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">track2</span><span class="p">])[:,</span> <span class="n">arm_joints</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>       <span class="c1"># includes held-out rows</span>
+<span class="n">shift</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">((</span><span class="n">neutral_all</span> <span class="o">-</span> <span class="n">neutral_train</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+<span class="n">effect</span> <span class="o">=</span> <span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held2</span><span class="p">,</span> <span class="n">with_fallback</span><span class="p">(</span><span class="n">neutral_all</span><span class="p">))</span> <span class="o">-</span> <span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held2</span><span class="p">,</span> <span class="n">with_fallback</span><span class="p">(</span><span class="n">neutral_train</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the neutral pose moves by up to </span><span class="si">{</span><span class="n">shift</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> deg when held-out rows are included"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"held-out PSNR changes by </span><span class="si">{</span><span class="n">effect</span><span class="si">:</span><span class="s2">+.3f</span><span class="si">}</span><span class="s2"> dB; the seed spread of this metric's recipe is </span><span class="si">{</span><span class="n">spread</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">shift</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">effect</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">spread</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>the neutral pose moves by up to 3.71 deg when held-out rows are included
+held-out PSNR changes by -0.074 dB; the seed spread of this metric's recipe is 0.84 dB
+</pre></div>
+</div>
+</div>
+</div>
+<p>The statistic does depend on the held-out rows, so this is a leak. Its effect on the score is far below the
+seed spread. Both facts matter:</p>
+<ul class="simple">
+<li><p>You could not have known the size without running both versions. The first leak looked just as innocent.</p></li>
+<li><p>The fix costs nothing: compute every statistic on training rows only. Then there is nothing to argue about.</p></li>
+<li><p>When you find such a leak after publishing, say so, rerun, and report the change next to the spread.</p></li>
+</ul>
+</section>
+</section>
+<section id="metrics-that-can-be-gamed">
+<h2>7. Metrics that can be gamed<a class="headerlink" href="#metrics-that-can-be-gamed" title="Link to this heading">#</a></h2>
+<p>The last three pitfalls are about the metric itself. For these we fit one better model, at 48 px with the
+true poses, and score at 96 px.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cam48</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>
+<span class="n">clean</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">take</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">take</span><span class="o">.</span><span class="n">trans</span><span class="p">,</span> <span class="n">cam</span><span class="o">=</span><span class="n">cam48</span><span class="p">)</span>
+<span class="n">clean_train</span> <span class="o">=</span> <span class="n">clean</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">train_idx</span><span class="p">)</span>
+<span class="n">held96</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">take</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">held_idx</span><span class="p">],</span> <span class="n">take</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">held_idx</span><span class="p">],</span> <span class="n">cam</span><span class="o">=</span><span class="n">cam48</span><span class="o">.</span><span class="n">scaled</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">target96</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">held96</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">held96</span><span class="p">))])</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit48</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
+    <span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">500.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="n">offsets</span><span class="p">,</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">clean_train</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">lr</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">avatar</span>
+
+<span class="n">reference</span> <span class="o">=</span> <span class="n">fit48</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="foreground-psnr-is-mostly-an-edge-score">
+<h3>7.1 Foreground PSNR is mostly an edge score<a class="headerlink" href="#foreground-psnr-is-mostly-an-edge-score" title="Link to this heading">#</a></h3>
+<p><em>Foreground PSNR</em> averages the squared error over the pixels inside the true mask. It sounds like the right
+way to ignore the background. Split those pixels into an <strong>edge band</strong>, within two pixels of the silhouette,
+and the <strong>interior</strong>, and ask where the error is when the poses are the tracked ones:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tracked96</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">perturb_poses</span><span class="p">(</span><span class="n">held96</span><span class="o">.</span><span class="n">poses</span><span class="p">,</span> <span class="n">SIGMA</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">held96</span><span class="o">.</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
+<span class="n">band</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">edge_band</span><span class="p">(</span><span class="n">held96</span><span class="o">.</span><span class="n">mask</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">interior</span> <span class="o">=</span> <span class="n">mask</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">band</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">region_report</span><span class="p">(</span><span class="n">avatar</span><span class="p">):</span>
+    <span class="n">imgs</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">held96</span><span class="p">,</span> <span class="n">poses</span><span class="o">=</span><span class="n">tracked96</span><span class="p">)</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="p">((</span><span class="n">imgs</span> <span class="o">-</span> <span class="n">target96</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">imgs</span><span class="p">,</span> <span class="p">{</span><span class="s2">"fg"</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">masked_psnr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">target96</span><span class="p">,</span> <span class="n">mask</span><span class="p">),</span> <span class="s2">"interior"</span><span class="p">:</span> <span class="n">ev</span><span class="o">.</span><span class="n">masked_psnr</span><span class="p">(</span><span class="n">imgs</span><span class="p">,</span> <span class="n">target96</span><span class="p">,</span> <span class="n">interior</span><span class="p">),</span>
+                  <span class="s2">"band_share"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">se</span><span class="p">[</span><span class="n">band</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">se</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())}</span>
+
+<span class="n">imgs_ref</span><span class="p">,</span> <span class="n">rep_ref</span> <span class="o">=</span> <span class="n">region_report</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+<span class="n">pixel_share</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">band</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">mask</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+<span class="n">err</span> <span class="o">=</span> <span class="p">((</span><span class="n">imgs_ref</span> <span class="o">-</span> <span class="n">target96</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">mask</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">target96</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">imgs_ref</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">err</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">band</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">float</span><span class="p">()],</span>
+               <span class="p">[</span><span class="s2">"captured"</span><span class="p">,</span> <span class="s2">"render, tracked pose"</span><span class="p">,</span> <span class="s2">"squared error (foreground)"</span><span class="p">,</span> <span class="s2">"edge band"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span>
+               <span class="n">vmax</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()));</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"the edge band holds </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">pixel_share</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">% of the foreground pixels "</span>
+      <span class="sa">f</span><span class="s2">"and </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">rep_ref</span><span class="p">[</span><span class="s1">'band_share'</span><span class="p">]</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2">% of the squared error"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">rep_ref</span><span class="p">[</span><span class="s2">"band_share"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">0.6</span> <span class="ow">and</span> <span class="n">rep_ref</span><span class="p">[</span><span class="s2">"band_share"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">pixel_share</span> <span class="o">+</span> <span class="mf">0.15</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>the edge band holds 46% of the foreground pixels and 82% of the squared error
+</pre></div>
+</div>
+<img alt="../_images/378e9c068f5669f0cf95c5623426f03ca96e9dd417156d4180966c193e9e0e53.png" src="../_images/378e9c068f5669f0cf95c5623426f03ca96e9dd417156d4180966c193e9e0e53.png" />
+</div>
+</div>
+<p>A pose that is off by two degrees moves the outline by a pixel or so, and at the outline the error is the
+full contrast between the person and whatever lies behind. That swamps everything inside. The consequence:
+foreground PSNR barely sees interior detail. Blur the texture of the reference model, which destroys the
+shirt stripes and the logo, and compare:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">soft</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">density</span><span class="o">=</span><span class="mf">500.0</span><span class="p">,</span> <span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">tex_res</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">tex</span> <span class="o">=</span> <span class="n">reference</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+    <span class="n">K</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">tw</span> <span class="o">=</span> <span class="n">tex</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">blurred</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">functional</span><span class="o">.</span><span class="n">avg_pool2d</span><span class="p">(</span><span class="n">tex</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">K</span> <span class="o">*</span> <span class="n">P</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">tw</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">count_include_pad</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">tex</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="n">blurred</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">K</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">tw</span><span class="p">)</span>
+    <span class="n">soft</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">tex</span><span class="p">)</span>
+<span class="n">imgs_soft</span><span class="p">,</span> <span class="n">rep_soft</span> <span class="o">=</span> <span class="n">region_report</span><span class="p">(</span><span class="n">soft</span><span class="p">)</span>
+<span class="n">drop_fg</span><span class="p">,</span> <span class="n">drop_in</span> <span class="o">=</span> <span class="n">rep_ref</span><span class="p">[</span><span class="s2">"fg"</span><span class="p">]</span> <span class="o">-</span> <span class="n">rep_soft</span><span class="p">[</span><span class="s2">"fg"</span><span class="p">],</span> <span class="n">rep_ref</span><span class="p">[</span><span class="s2">"interior"</span><span class="p">]</span> <span class="o">-</span> <span class="n">rep_soft</span><span class="p">[</span><span class="s2">"interior"</span><span class="p">]</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">imgs_ref</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">imgs_soft</span><span class="p">[</span><span class="mi">1</span><span class="p">]],</span> <span class="p">[</span><span class="s2">"reference"</span><span class="p">,</span> <span class="s2">"texture blurred"</span><span class="p">],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"blurring the texture costs </span><span class="si">{</span><span class="n">drop_fg</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB of foreground PSNR and </span><span class="si">{</span><span class="n">drop_in</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB of interior PSNR"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">drop_in</span> <span class="o">&gt;</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">drop_fg</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>blurring the texture costs 0.83 dB of foreground PSNR and 2.94 dB of interior PSNR
+</pre></div>
+</div>
+<img alt="../_images/c918e23e384934b6577199acb1832fddf8040063ffe3a3232f5e27e793354feb.png" src="../_images/c918e23e384934b6577199acb1832fddf8040063ffe3a3232f5e27e793354feb.png" />
+</div>
+</div>
+<p>The interior score reports the damage several times more strongly than the foreground score does. Report
+both, or report regions (Section 7.3).</p>
+</section>
+<section id="one-background-colour-can-hide-a-hole">
+<h3>7.2 One background colour can hide a hole<a class="headerlink" href="#one-background-colour-can-hide-a-hole" title="Link to this heading">#</a></h3>
+<p>A whole-frame score needs a background. If the scorer uses one fixed colour, a model can be wrong in ways
+that this colour hides. Train the same recipe on a white background only, with no mask term in the loss:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">white_only</span> <span class="o">=</span> <span class="n">fit48</span><span class="p">(</span><span class="n">random_bg</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">w_alpha</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span>
+<span class="n">held48</span> <span class="o">=</span> <span class="n">clean</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="n">held_idx</span><span class="p">)</span>
+<span class="n">bw_ref</span><span class="p">,</span> <span class="n">bw_white</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">evaluate_bw</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">held48</span><span class="p">),</span> <span class="n">ev</span><span class="o">.</span><span class="n">evaluate_bw</span><span class="p">(</span><span class="n">white_only</span><span class="p">,</span> <span class="n">held48</span><span class="p">)</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">views</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">avatar</span> <span class="ow">in</span> <span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">white_only</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">bg</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)):</span>
+        <span class="n">views</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">avatar</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">held96</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">held96</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">held96</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t0</span><span class="p">],</span> <span class="n">bg</span><span class="o">=</span><span class="n">bg</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">(</span><span class="n">views</span><span class="p">,</span> <span class="p">[</span><span class="s2">"random bg, on white"</span><span class="p">,</span> <span class="s2">"random bg, on black"</span><span class="p">,</span> <span class="s2">"white-only, on white"</span><span class="p">,</span> <span class="s2">"white-only, on black"</span><span class="p">],</span>
+               <span class="n">size</span><span class="o">=</span><span class="mf">2.0</span><span class="p">);</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"trained on random backgrounds"</span><span class="p">,</span> <span class="n">bw_ref</span><span class="p">),</span> <span class="p">(</span><span class="s2">"trained on white only"</span><span class="p">,</span> <span class="n">bw_white</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">30s</span><span class="si">}</span><span class="s2"> white </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'mean_white'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB   black </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'mean_black'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB   bw </span><span class="si">{</span><span class="n">r</span><span class="p">[</span><span class="s1">'mean_bw'</span><span class="p">]</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="n">gap_white</span> <span class="o">=</span> <span class="n">bw_ref</span><span class="p">[</span><span class="s2">"mean_white"</span><span class="p">]</span> <span class="o">-</span> <span class="n">bw_white</span><span class="p">[</span><span class="s2">"mean_white"</span><span class="p">]</span>
+<span class="n">gap_black</span> <span class="o">=</span> <span class="n">bw_ref</span><span class="p">[</span><span class="s2">"mean_black"</span><span class="p">]</span> <span class="o">-</span> <span class="n">bw_white</span><span class="p">[</span><span class="s2">"mean_black"</span><span class="p">]</span>
+<span class="k">assert</span> <span class="n">gap_black</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">gap_white</span><span class="p">)</span> <span class="ow">and</span> <span class="n">gap_black</span> <span class="o">&gt;</span> <span class="mf">3.0</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>trained on random backgrounds  white 36.32 dB   black 35.53 dB   bw 35.92 dB
+trained on white only          white 34.59 dB   black 22.47 dB   bw 28.53 dB
+</pre></div>
+</div>
+<img alt="../_images/9129952d79217d5fe9ce7416c665109edb21a332a0ab83f810363c90b5ab8700.png" src="../_images/9129952d79217d5fe9ce7416c665109edb21a332a0ab83f810363c90b5ab8700.png" />
+</div>
+</div>
+<p>On white, the white-only model is a little behind. On black, it falls apart: wherever the person is
+light, it learned to be partly transparent and let the white background do the work. Nothing in a white
+score can see that. The remedy is to composite the render and the target on <strong>both black and white</strong> and
+average the two scores (“bw” above). A hole or a haze shows in at least one of them. <code class="docutils literal notranslate"><span class="pre">cu.fit</span></code> uses a random
+background colour per step for the same reason.</p>
+</section>
+<section id="regions-must-not-move-with-the-model">
+<h3>7.3 Regions must not move with the model<a class="headerlink" href="#regions-must-not-move-with-the-model" title="Link to this heading">#</a></h3>
+<p>Region scores (face, hands, torso) need region masks. The convenient source is the model being scored: render
+it with the part labels as colours. But then two variants with different silhouettes are scored on different
+pixels. Take a variant whose shells sit inside the body instead of on and outside it, and score the arms:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">thin</span> <span class="o">=</span> <span class="n">fit48</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">0.03</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">))</span>
+<span class="n">ARMS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"l_upperarm"</span><span class="p">,</span> <span class="s2">"r_upperarm"</span><span class="p">,</span> <span class="s2">"l_forearm"</span><span class="p">,</span> <span class="s2">"r_forearm"</span><span class="p">,</span> <span class="s2">"l_hand"</span><span class="p">,</span> <span class="s2">"r_hand"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">arm_region</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">torch</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">ev</span><span class="o">.</span><span class="n">region_mask</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">held96</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">held96</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">held96</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="n">t</span><span class="p">],</span> <span class="n">ARMS</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">held96</span><span class="p">))])</span>
+
+<span class="n">region_ref</span><span class="p">,</span> <span class="n">region_thin</span> <span class="o">=</span> <span class="n">arm_region</span><span class="p">(</span><span class="n">reference</span><span class="p">),</span> <span class="n">arm_region</span><span class="p">(</span><span class="n">thin</span><span class="p">)</span>
+<span class="n">imgs_r</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">reference</span><span class="p">,</span> <span class="n">held96</span><span class="p">)</span>
+<span class="n">imgs_t</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">thin</span><span class="p">,</span> <span class="n">held96</span><span class="p">)</span>
+<span class="n">ref_score</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">masked_psnr</span><span class="p">(</span><span class="n">imgs_r</span><span class="p">,</span> <span class="n">target96</span><span class="p">,</span> <span class="n">region_ref</span><span class="p">)</span>
+<span class="n">thin_own</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">masked_psnr</span><span class="p">(</span><span class="n">imgs_t</span><span class="p">,</span> <span class="n">target96</span><span class="p">,</span> <span class="n">region_thin</span><span class="p">)</span>
+<span class="n">thin_fixed</span> <span class="o">=</span> <span class="n">ev</span><span class="o">.</span><span class="n">masked_psnr</span><span class="p">(</span><span class="n">imgs_t</span><span class="p">,</span> <span class="n">target96</span><span class="p">,</span> <span class="n">region_ref</span><span class="p">)</span>
+
+<span class="n">diff</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="o">*</span><span class="n">region_ref</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">diff</span><span class="p">[</span><span class="n">region_ref</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">region_thin</span><span class="p">[</span><span class="n">t0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">])</span>
+<span class="n">diff</span><span class="p">[</span><span class="n">region_ref</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">region_thin</span><span class="p">[</span><span class="n">t0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.66</span><span class="p">,</span> <span class="mf">0.34</span><span class="p">])</span>       <span class="c1"># only in the reference region</span>
+<span class="n">diff</span><span class="p">[</span><span class="o">~</span><span class="n">region_ref</span><span class="p">[</span><span class="n">t0</span><span class="p">]</span> <span class="o">&amp;</span> <span class="n">region_thin</span><span class="p">[</span><span class="n">t0</span><span class="p">]]</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">0.88</span><span class="p">,</span> <span class="mf">0.38</span><span class="p">,</span> <span class="mf">0.18</span><span class="p">])</span>       <span class="c1"># only in the variant's own region</span>
+<span class="n">crop</span> <span class="o">=</span> <span class="nb">slice</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>                                             <span class="c1"># the rows that contain the arms</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">imgs_r</span><span class="p">[</span><span class="n">t0</span><span class="p">][</span><span class="n">crop</span><span class="p">],</span> <span class="n">imgs_t</span><span class="p">[</span><span class="n">t0</span><span class="p">][</span><span class="n">crop</span><span class="p">],</span> <span class="n">diff</span><span class="p">[</span><span class="n">crop</span><span class="p">]],</span> <span class="p">[</span><span class="s2">"reference"</span><span class="p">,</span> <span class="s2">"variant"</span><span class="p">,</span> <span class="s2">"arm regions: grey both, green ref only,</span><span class="se">\n</span><span class="s2">orange variant only"</span><span class="p">],</span>
+               <span class="n">size</span><span class="o">=</span><span class="mf">2.2</span><span class="p">);</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"arm pixels: reference region </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">region_ref</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">, variant's own region </span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">region_thin</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"arm PSNR  reference </span><span class="si">{</span><span class="n">ref_score</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB | variant in its own region </span><span class="si">{</span><span class="n">thin_own</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB "</span>
+      <span class="sa">f</span><span class="s2">"| variant in the reference region </span><span class="si">{</span><span class="n">thin_fixed</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">region_ref</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">int</span><span class="p">(</span><span class="n">region_thin</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="n">thin_own</span> <span class="o">-</span> <span class="n">thin_fixed</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>arm pixels: reference region 2427, variant's own region 2591
+arm PSNR  reference 29.96 dB | variant in its own region 26.07 dB | variant in the reference region 28.85 dB
+</pre></div>
+</div>
+<img alt="../_images/743e46db328947cb59bc4ddab21588eefdc0db7520b0a2b2ebf94e223a73c138.png" src="../_images/743e46db328947cb59bc4ddab21588eefdc0db7520b0a2b2ebf94e223a73c138.png" />
+</div>
+</div>
+<p>The variant’s score changes with the mask it is scored in, although its pixels did not change. A comparison
+“reference in its region against variant in its own region” therefore mixes two things: how good the pixels
+are, and which pixels were counted. The direction of the error is not predictable; a variant that shrinks a
+part can drop exactly the pixels it gets wrong. The remedy is to take the regions from <strong>one reference
+model</strong> and use them for every arm. The same warning applies to the reference <em>masks</em>: the scoring
+reference is part of the metric, and a change of reference can reverse a ranking.</p>
+</section>
+</section>
+<section id="from-the-real-system">
+<h2>From the real system<a class="headerlink" href="#from-the-real-system" title="Link to this heading">#</a></h2>
+<link rel="stylesheet" href="../_static/compare.css"><script defer src="../_static/compare.js"></script>
+<figure class="course-real">
+<img src="../_static/media/real/heldout-grid/heldout_grid.jpg" alt="A grid of six held-out frames, one per row: two face close-ups, two hand close-ups and two full-body frames. Columns: the captured frame, the baseline render, the render with crop loss and finger rig, and the full hi-fi render.">
+</figure>
+<p><strong>Held-out frames, one row per region.</strong> Frames from the review list that was fixed before model selection: the captured frame, the body-only baseline, the arm with crop loss and finger rig, and the selected hi-fi model. The label in each first panel is the take it comes from; none is a sealed take. Read the grid the way the lesson reads its metrics: the close-up rows change a lot, because the baseline never trained on close-ups, while the full-body rows are nearly identical, which is where the baseline is in fact slightly ahead. Renders are a little offset from the capture because held-out frames get no per-frame pose refit; this applies to every model equally.</p>
+<div class="course-compare" data-before="held-out capture" data-after="rendered avatar" style="--compare-max:420px">
+<video muted loop playsinline preload="metadata" poster="../_static/media/real/heldout-drive/heldout_capture_poster.jpg" aria-label="Held-out frames of the capture: the person seen from the side and back, raising and moving his arms in front of a wall."><source src="../_static/media/real/heldout-drive/heldout_capture.webm" type="video/webm"><source src="../_static/media/real/heldout-drive/heldout_capture.mp4" type="video/mp4"></video><video muted loop playsinline preload="metadata" poster="../_static/media/real/heldout-drive/heldout_render_poster.jpg" aria-label="The standard-track avatar rendered in the same poses and camera on a white background."><source src="../_static/media/real/heldout-drive/heldout_render.webm" type="video/webm"><source src="../_static/media/real/heldout-drive/heldout_render.mp4" type="video/mp4"></video>
+</div>
+<figure class="course-real">
+<video controls muted loop playsinline preload="metadata" poster="../_static/media/real/heldout-drive/heldout_capture_vs_render_poster.jpg" aria-label="The held-out capture and the rendered avatar side by side while the person raises his arms and turns."><source src="../_static/media/real/heldout-drive/heldout_capture_vs_render.webm" type="video/webm"><source src="../_static/media/real/heldout-drive/heldout_capture_vs_render.mp4" type="video/mp4"></video>
+</figure>
+<!-- YOUTUBE: heldout-drive (see UPLOAD.md) -->
+<p><strong>A held-out segment in motion.</strong> A range-of-motion segment the standard track kept out of training, captured (left) and rendered by the standard-track avatar in the tracked poses (right). Drag the divider to compare silhouettes. Notice where the two disagree: at the arms and hands, where the tracked pose is least accurate, and in the cloth, which the model can only move with the body.</p>
+<p>The sealed takes are scored once and are never shown; see the <span class="private-repo" title="in the project's private repository">evaluation protocol</span>.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The project’s protocol is the one built here, with real takes in place of toy ones
+(<span class="private-repo" title="in the project's private repository">README, “Evaluation protocol”</span>).</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Idea</p></th>
+<th class="head"><p>Where</p></th>
+<th class="head"><p>What is different there</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Locked, hashed splits; no tracking state across a boundary</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/split_identity.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">fit/track_partitions.py</span></code></span></p></td>
+<td><p>Split files are validated for disjoint membership and their hash before any fit; each tracking block is tracked on its own</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sealed scoring, once, after a freeze</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/evaluate.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/evaluation_contract.py</span></code></span>, <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">planning/EVALUATION_CONTRACTS.md</span></code></span></p></td>
+<td><p>The freeze hashes the checkpoint, the inputs and the code; a sidecar file reserves the single scoring attempt. The document calls these “workflow guards, not OS access control”</p></td>
+</tr>
+<tr class="row-even"><td><p>Whole-frame “bw” PSNR</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/evaluate.py</span></code></span></p></td>
+<td><p>Exact black and white re-composites of the render, plus spill and hole rates</p></td>
+</tr>
+<tr class="row-odd"><td><p>Regions from one reference model</p></td>
+<td><p><span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">eval/hifi/region_metrics.py</span></code></span> (<code class="docutils literal notranslate"><span class="pre">--ref-ckpt</span></code>)</p></td>
+<td><p>Face, hand, hair and foot regions at native crop resolution, taken from the control model for every arm</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Published facts that match the sections above, all from the
+<span class="private-repo" title="in the project's private repository">README</span> and
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>:</p>
+<ul class="simple">
+<li><p><strong>Seed spread.</strong> Main arms are trained with two seeds and a difference counts only above <span class="math notranslate nohighlight">\(|s_0 - s_1|\)</span> of
+the same column. The rule demoted several apparent wins.</p></li>
+<li><p><strong>Fixed iteration.</strong> Arms are compared at iteration 30,000; a validation-picked <code class="docutils literal notranslate"><span class="pre">best.pt</span></code> moves held-out
+scores by 0.05–0.29 dB, far more than any single flag’s effect.</p></li>
+<li><p><strong>A statistic over all rows.</strong> An audit found that the neutral-expression median included held-out rows.
+Two seeds were retrained with a training-only median: held-out face PSNR changed by −0.03 and −0.05 dB,
+inside the seed spread (<span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>).
+The fix is opt-in in the published code and the audit note sits next to the affected tables.</p></li>
+<li><p><strong>Metrics.</strong> Foreground PSNR is 45–80 % edge band; a grey-background PSNR flattered a single-frame model;
+and scored against the masks of a weaker segmenter, a better model looked worse.</p></li>
+</ul>
+<p>The toy differs in scale and in one important way: it has an oracle. We could draw fresh takes to prove
+that a gain was noise. A real project has only the sealed takes, once.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>A held-out score that was used to choose is biased upward. Choose on held-out data, freeze the choice with
+a hash, then score a sealed set once and report that.</p></li>
+<li><p>Runs of one recipe differ. The seed spread is the noise floor, measured per metric, and a difference
+counts only above it with the same sign on every seed.</p></li>
+<li><p>Picking the best checkpoint by validation is selection too. Compare arms at a fixed iteration.</p></li>
+<li><p>A leak is any path from protected frames into the model or the scorer’s inputs. Test for it by changing
+a protected input and watching the other side; compute statistics on training rows only; track each block
+on its own.</p></li>
+<li><p>Foreground PSNR is dominated by the edge band, one background colour can hide holes, and region masks must
+come from one reference model for every arm.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Selection bias grows with the number of variants. Using the scores already computed, estimate the
+expected held-out lead of the best of <span class="math notranslate nohighlight">\(k\)</span> variants for <span class="math notranslate nohighlight">\(k = 2, 4, 8, 12\)</span> by drawing random subsets.</p></li>
+<li><p>In Section 6.2 the held-out take has 12 rows against 18 training rows. Repeat the computation with the
+held-out take included three times in the median. What happens to the neutral pose and to the effect?</p></li>
+<li><p>Write a function <code class="docutils literal notranslate"><span class="pre">spill(alpha,</span> <span class="pre">mask)</span></code> that returns the fraction of rendered pixels (alpha above 0.5) that
+lie outside the true mask, and compare the reference model with the white-only model of Section 7.2.</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">):</span>
+    <span class="n">lead</span> <span class="o">=</span> <span class="p">[</span><span class="n">held_psnr</span><span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">N_VARIANTS</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">replace</span><span class="o">=</span><span class="kc">False</span><span class="p">)]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">-</span> <span class="n">held_psnr</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2000</span><span class="p">)]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">lead</span><span class="p">)),</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The lead grows roughly with the logarithm of <span class="math notranslate nohighlight">\(k\)</span>. It never needs a real difference between the variants.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cat</span><span class="p">([</span><span class="n">track</span><span class="p">[</span><span class="n">train_idx</span><span class="p">]]</span> <span class="o">+</span> <span class="p">[</span><span class="n">track2</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">)[:,</span> <span class="n">arm_joints</span><span class="p">]</span>
+<span class="n">neutral_3x</span> <span class="o">=</span> <span class="n">rows</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">values</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">rad2deg</span><span class="p">((</span><span class="n">neutral_3x</span> <span class="o">-</span> <span class="n">neutral_train</span><span class="p">)</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">dim</span><span class="o">=-</span><span class="mi">1</span><span class="p">)))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held2</span><span class="p">,</span> <span class="n">with_fallback</span><span class="p">(</span><span class="n">neutral_3x</span><span class="p">))</span> <span class="o">-</span> <span class="n">score</span><span class="p">(</span><span class="n">leak_model</span><span class="p">,</span> <span class="n">held2</span><span class="p">,</span> <span class="n">with_fallback</span><span class="p">(</span><span class="n">neutral_train</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>With held-out rows in the majority the median moves to the held-out take’s own arm pose, and the fallback
+now “knows” the answer for that take. The leak was the same all along; only its size changed.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">spill</span><span class="p">(</span><span class="n">alpha</span><span class="p">,</span> <span class="n">mask</span><span class="p">):</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">m</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">a</span> <span class="o">&amp;</span> <span class="o">~</span><span class="n">m</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">/</span> <span class="n">a</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="nb">min</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">avatar</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"reference"</span><span class="p">,</span> <span class="n">reference</span><span class="p">),</span> <span class="p">(</span><span class="s2">"white only"</span><span class="p">,</span> <span class="n">white_only</span><span class="p">)):</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">alphas</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">render_video</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">held96</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">spill</span><span class="p">(</span><span class="n">alphas</span><span class="p">,</span> <span class="n">held96</span><span class="o">.</span><span class="n">mask</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"coverage"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">alphas</span><span class="p">[</span><span class="n">held96</span><span class="o">.</span><span class="n">mask</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>Spill counts opaque pixels outside the mask. The white-only model’s main defect is the opposite one, low
+coverage inside the mask, which the second number shows. A set of metrics needs both directions.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Structural similarity, a metric that looks at local structure instead of single pixels: <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id46" title="Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P. Simoncelli. Image quality assessment: from error visibility to structural similarity. IEEE Transactions on Image Processing, 13(4):600–612, 2004.">Wang <em>et al.</em>, 2004</a>]</span>.
+Learned perceptual distance: <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id47" title="Richard Zhang, Phillip Isola, Alexei A. Efros, Eli Shechtman, and Oliver Wang. The unreasonable effectiveness of deep features as a perceptual metric. In IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR). 2018.">Zhang <em>et al.</em>, 2018</a>]</span>. The real pipeline reports both next to PSNR.</p></li>
+<li><p>Why to write the analysis down before seeing the outcome: <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id49" title="Brian A. Nosek, Charles R. Ebersole, Alexander C. DeHaven, and David T. Mellor. The preregistration revolution. Proceedings of the National Academy of Sciences, 115(11):2600–2606, 2018.">Nosek <em>et al.</em>, 2018</a>]</span>. The next
+lesson applies it.</p></li>
+<li><p>The project’s protocol and audit:
+<span class="private-repo" title="in the project's private repository">README</span>,
+<span class="private-repo" title="in the project's private repository">RESULTS.md</span>,
+<span class="private-repo" title="in the project's private repository">docs/research_brief.md</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part8_evaluation"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part7_motion/07c_secondary_motion.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Why does cloth need memory?</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="08b_rules_and_blind_camera.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Who decides whether it worked? Pre-registered rules and the blind camera</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#three-kinds-of-data">1. Three kinds of data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-mistake-choose-on-held-out-report-held-out">2. The mistake: choose on held-out, report held-out</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-sealed-set-is-scored-once">3. A sealed set is scored once</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-seed-spread-is-the-noise-floor">4. The seed spread is the noise floor</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fixed-iteration-or-the-best-checkpoint">5. Fixed iteration, or the best checkpoint?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#leakage">6. Leakage</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#smoothing-poses-across-a-split-boundary">6.1 Smoothing poses across a split boundary</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-statistic-computed-over-all-rows">6.2 A statistic computed over all rows</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#metrics-that-can-be-gamed">7. Metrics that can be gamed</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#foreground-psnr-is-mostly-an-edge-score">7.1 Foreground PSNR is mostly an edge score</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#one-background-colour-can-hide-a-hole">7.2 One background colour can hide a hole</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#regions-must-not-move-with-the-model">7.3 Regions must not move with the model</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#from-the-real-system">From the real system</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

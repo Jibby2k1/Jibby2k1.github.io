@@ -1,0 +1,1290 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Faster, with the same answer &#8212; Build a drivable Gaussian avatar</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+    <link rel="stylesheet" type="text/css" href="../_static/styles/sphinx-book-theme.css?v=3c74b3bc" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=6a604523" />
+    <link rel="stylesheet" type="text/css" href="../_static/course.css?v=008ade30" />
+    <link rel="stylesheet" type="text/css" href="../_static/compare.css?v=d6b9c3bb" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
+
+    <script src="../_static/documentation_options.js?v=a8e58a58"></script>
+    <script src="../_static/doctools.js?v=9a2dae69"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?v=fab101a9"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js?v=b8b12719"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../_static/design-tabs.js?v=fcb327ea"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'part9_speed/09_speed';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/compare.js?v=2f396db2"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Notation and conventions" href="../appendix/notation.html" />
+    <link rel="prev" title="Who decides whether it worked? Pre-registered rules and the blind camera" href="../part8_evaluation/08b_rules_and_blind_camera.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../intro.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">Build a drivable Gaussian avatar</p>
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../intro.html">
+                    Build a drivable Gaussian avatar
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 0 · Setup</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part0_setup/00_setup.html">Setting up, and a first look at the toy world</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 1 · The problem</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part1_problem/01_problem.html">From one video to a drivable avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 2 · Gaussian splatting from scratch</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02a_gaussians_2d.html">2D Gaussians and alpha compositing: a renderer in thirty lines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02b_projection_3d.html">From 3D to the image: how a camera flattens a Gaussian</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part2_splatting/02c_gradients.html">Gradients: fitting Gaussians to pictures, and why that is not yet an avatar</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 3 · Body models and skinning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03a_skeleton.html">A skeleton and forward kinematics: how a pose moves a body</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part3_body/03b_skinning.html">Skinning: making a surface follow the skeleton</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 4 · Gaussian Shell Maps</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04a_shell_maps.html">Gaussian Shell Maps: where do the Gaussians live?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part4_shells/04b_sampling_density.html">Sampling and density: how many Gaussians, and where?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 5 · Fitting from video</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05a_fit_from_video.html">Fitting an avatar to one video</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part5_fitting/05b_frames_disagree.html">Why avatars are blurry: the frames disagree</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 6 · Hi-fi parts</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html">Small parts need their own pixels and their own joints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part6_hifi/06b_pose_dependent_colour.html">Colour that depends on pose, and what fixing it can cost</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 7 · Motion and contact</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07a_contact_and_ik.html">Why do the feet slide, and how does leg IK pin them?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07b_flight_and_metrics.html">When is the body in the air, and can you trust a smoothness number?</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part7_motion/07c_secondary_motion.html">Why does cloth need memory?</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 8 · Evaluation done properly</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html">What does a number mean? Splits, seeds and metrics that cannot be gamed</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html">Who decides whether it worked? Pre-registered rules and the blind camera</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Part 9 · Speed</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Faster, with the same answer</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/notation.html">Notation and conventions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/repo_map.html">From the lessons to the repository</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/references.html">References</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><button class="sidebar-toggle primary-toggle btn btn-sm" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</button></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button pst-navbar-icon"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+<button class="sidebar-toggle secondary-toggle btn btn-sm pst-navbar-icon" title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</button>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Faster, with the same answer</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rule-and-three-tiers">1. The rule, and three tiers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profile-first">2. Profile first</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tier-a-caching-proven-bit-identical">3. Tier A: caching, proven bit-identical</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#first-test-the-old-code-against-itself">First test the old code against itself</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-proof-that-survives">A proof that survives</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tier-b-the-same-sum-in-another-order">4. Tier B: the same sum in another order</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-training-does-with-the-last-bit">What training does with the last bit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#register-the-rule-then-run">Register the rule, then run</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rejected-shortcuts-that-change-the-mathematics">5. Rejected: shortcuts that change the mathematics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="faster-with-the-same-answer">
+<h1>Faster, with the same answer<a class="headerlink" href="#faster-with-the-same-answer" title="Link to this heading">#</a></h1>
+<div class="tip admonition">
+<p class="admonition-title">What you will learn</p>
+<ol class="arabic simple">
+<li><p>The one rule of the project’s speed work: a change may make the code faster, but it may not change the
+results beyond the code’s own run-to-run noise.</p></li>
+<li><p>How to profile a fit, so that effort goes where the time is.</p></li>
+<li><p>How to prove a <strong>Tier A</strong> speedup (bit-identical), and why you must first test the old code against
+itself.</p></li>
+<li><p>How to decide a <strong>Tier B</strong> speedup (floating-point reordering): measure the old code’s noise band, write
+the decision rule down, then run.</p></li>
+<li><p>Why a reduced-precision or reduced-work shortcut is rejected even when its scores look acceptable.</p></li>
+</ol>
+</div>
+<p><strong>Prerequisites:</strong> <a class="reference internal" href="../part2_splatting/02b_projection_3d.html"><span class="std std-doc">Lesson 2b</span></a> (the two compositors),
+<a class="reference internal" href="../part5_fitting/05a_fit_from_video.html"><span class="std std-doc">Lesson 5a</span></a> (<code class="docutils literal notranslate"><span class="pre">cu.fit</span></code>) and
+<a class="reference internal" href="../part8_evaluation/08a_splits_and_seeds.html"><span class="std std-doc">Lesson 8a</span></a> (held-out splits and seed spread).</p>
+<section id="the-rule-and-three-tiers">
+<h2>1. The rule, and three tiers<a class="headerlink" href="#the-rule-and-three-tiers" title="Link to this heading">#</a></h2>
+<p>Making a fit faster is easy if the answer is allowed to move: train for fewer steps, at a lower resolution,
+with fewer Gaussians. Every one of those is a different experiment. After such a “speedup”, no result
+measured before it can be compared with a result measured after it.</p>
+<p>The project’s speed work therefore ran under one rule:</p>
+<blockquote>
+<div><p>A change may make the pipeline faster. It may never change its results beyond the pipeline’s own
+run-to-run noise.</p>
+</div></blockquote>
+<p>“The same” comes in grades, and each grade needs its own kind of proof.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tier</p></th>
+<th class="head"><p>Meaning</p></th>
+<th class="head"><p>Proof</p></th>
+<th class="head"><p>Example in this lesson</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>A</strong></p></td>
+<td><p>Bit-identical: the same arithmetic in the same order</p></td>
+<td><p>Outputs compared with <code class="docutils literal notranslate"><span class="pre">torch.equal</span></code>; a check mode that runs the old and the new path on the same live state</p></td>
+<td><p>caching the texture lookup plan and the skinning maps</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>B</strong></p></td>
+<td><p>Floating-point reordering only: the same sum, added up in another order</p></td>
+<td><p>The first step differs at rounding level, <em>and</em> trained results stay inside the old code’s measured noise, under a rule written before the runs</p></td>
+<td><p>the sparse compositor in place of the dense one</p></td>
+</tr>
+<tr class="row-even"><td><p>rejected</p></td>
+<td><p>Drops work or precision: fewer pixels, a smaller footprint, fewer bits</p></td>
+<td><p>none; it is a different computation</p></td>
+<td><p>tight splat boxes, 4-bit colours</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The real project has a further tier, C, for reduced-precision inference of third-party models. Nothing in
+it was adopted; see the last section.</p>
+<p>Why would a different <em>order</em> matter at all? Floating-point addition is not associative
+<span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id55" title="David Goldberg. What every computer scientist should know about floating-point arithmetic. ACM Computing Surveys, 23(1):5–48, 1991.">Goldberg, 1991</a>]</span>. Each addition rounds, so two orders give two slightly different sums:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">x</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">tensor</span><span class="p">([</span><span class="mf">1e8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">torch</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">left_to_right</span> <span class="o">=</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">big_first</span> <span class="o">=</span> <span class="p">((</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"left to right:"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">left_to_right</span><span class="p">),</span> <span class="s2">"  large terms first:"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">big_first</span><span class="p">))</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">left_to_right</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">float</span><span class="p">(</span><span class="n">big_first</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>left to right: 1.0   large terms first: 2.0
+</pre></div>
+</div>
+</div>
+</div>
+<p>In a renderer the effect is far smaller, about one part in a million per pixel. Sections 4 and 5 show what
+training does with one part in a million.</p>
+</section>
+<section id="profile-first">
+<h2>2. Profile first<a class="headerlink" href="#profile-first" title="Link to this heading">#</a></h2>
+<p>Before changing anything, measure where the time goes. One training step of the shell avatar has five
+stages: look the texture up at every Gaussian, pose the Gaussians (skinning), project them, composite the
+image, and run the backward pass. <code class="docutils literal notranslate"><span class="pre">speed.profile_step</span></code> runs them one by one with a clock around each.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">actor</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">()</span>
+<span class="n">poses</span><span class="p">,</span> <span class="n">trans</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">motion</span><span class="p">(</span><span class="s2">"turn"</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+<span class="n">video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">64</span><span class="p">)</span>
+<span class="n">avatar</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">()</span>
+
+<span class="n">stages</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">profile_step</span><span class="p">(</span><span class="n">avatar</span><span class="p">,</span> <span class="n">video</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">target</span><span class="o">=</span><span class="n">video</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+<span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">stages</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">2.6</span><span class="p">))</span>
+<span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">stages</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">names</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="n">stages</span><span class="p">[</span><span class="n">n</span><span class="p">]</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]],</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">f</span><span class="s2">"milliseconds per step (</span><span class="si">{</span><span class="n">avatar</span><span class="o">.</span><span class="n">n_gaussians</span><span class="si">}</span><span class="s2"> Gaussians, 64 px, </span><span class="si">{</span><span class="n">DEVICE</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">names</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">n</span><span class="si">:</span><span class="s2">15s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">stages</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="si">:</span><span class="s2">7.2f</span><span class="si">}</span><span class="s2"> ms  </span><span class="si">{</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">stages</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">total</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2"> %"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">stages</span><span class="p">[</span><span class="s2">"compositing"</span><span class="p">]</span> <span class="o">+</span> <span class="n">stages</span><span class="p">[</span><span class="s2">"backward"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">stages</span><span class="p">[</span><span class="s2">"texture lookup"</span><span class="p">]</span> <span class="o">+</span> <span class="n">stages</span><span class="p">[</span><span class="s2">"skinning"</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>texture lookup     0.52 ms    6.7 %
+skinning           1.53 ms   19.6 %
+projection         0.29 ms    3.7 %
+compositing        2.04 ms   26.1 %
+backward           3.44 ms   44.0 %
+</pre></div>
+</div>
+<img alt="../_images/3cc647d322739478a40a11bb234ddf0a167fca34395b73ab12eb14c4f5ec26d1.png" src="../_images/3cc647d322739478a40a11bb234ddf0a167fca34395b73ab12eb14c4f5ec26d1.png" />
+</div>
+</div>
+<p>Compositing and its backward pass take most of the step. The texture lookup and the skinning are small.
+This tells us two things before we write any code. A speedup of the lookup or the skinning, however clever,
+can save only a few percent of the step. And any large gain must come from the compositor.</p>
+<p>We take the small, safe gain first, because it shows what a proof looks like.</p>
+</section>
+<section id="tier-a-caching-proven-bit-identical">
+<h2>3. Tier A: caching, proven bit-identical<a class="headerlink" href="#tier-a-caching-proven-bit-identical" title="Link to this heading">#</a></h2>
+<p>Read <code class="docutils literal notranslate"><span class="pre">ShellAvatar.sample_texture</span></code> and <code class="docutils literal notranslate"><span class="pre">ShellAvatar.gaussians</span></code> and ask of every line: <em>does this depend on
+anything that changes between steps?</em></p>
+<ul class="simple">
+<li><p>The lookup rebuilds its sampling grid on every call: a sort, a count and two scatters over all Gaussians.
+The sample points <span class="math notranslate nohighlight">\((u, v)\)</span> never move. Only the texture values change.</p></li>
+<li><p>The skinning recomputes forward kinematics and the blended maps <span class="math notranslate nohighlight">\(M_i = \sum_j w_{ij} A_j\)</span> for the frame’s
+pose. A training frame’s pose is fixed, and the weights are fixed. The maps are constants of the frame.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">speed.CachedAvatar</span></code> keeps both: one lookup <em>plan</em>, and one set of skinning maps per pose seen. It calls
+the same operations on the same numbers in the same order, so its claim is Tier A. A claim is not a proof.</p>
+<section id="first-test-the-old-code-against-itself">
+<h3>First test the old code against itself<a class="headerlink" href="#first-test-the-old-code-against-itself" title="Link to this heading">#</a></h3>
+<p>The natural proof is: train once with the old class, once with the new, compare the textures bit for bit.
+Before trusting that test, run it with the old class on both sides.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">small</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="mf">250.0</span><span class="p">)</span>        <span class="c1"># a small avatar keeps this section quick</span>
+<span class="n">small_video</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">actor</span><span class="p">,</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">gradient</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="n">av</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">small</span><span class="p">)</span>
+    <span class="n">img</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">av</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">small_video</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="p">(</span><span class="n">img</span> <span class="o">-</span> <span class="n">small_video</span><span class="o">.</span><span class="n">frame</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">img</span><span class="o">.</span><span class="n">detach</span><span class="p">(),</span> <span class="n">av</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">grad</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+<span class="n">runs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gradient</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+<span class="n">same_image</span> <span class="o">=</span> <span class="nb">all</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">equal</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">)</span>
+<span class="n">n_gradients</span> <span class="o">=</span> <span class="nb">len</span><span class="p">({</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"20 runs of the old code on </span><span class="si">{</span><span class="n">DEVICE</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">()</span><span class="si">}</span><span class="s2"> threads:"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  rendered image identical every time: </span><span class="si">{</span><span class="n">same_image</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  distinct gradients: </span><span class="si">{</span><span class="n">n_gradients</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>20 runs of the old code on cuda, 4 threads:
+  rendered image identical every time: False
+  distinct gradients: 20
+</pre></div>
+</div>
+</div>
+</div>
+<p>The forward pass reproduces itself. The gradient may not: on a multi-threaded CPU this cell usually prints
+two or more distinct gradients, although nothing random happens between the runs. (On your machine it may
+print one. Run it again.) The backward pass of the sparse compositor adds many small contributions into the
+same texture entries from several threads, and the order in which the threads arrive is not fixed. Another
+order, another rounding.</p>
+<p>So the “train twice and compare” test would fail for the old code against itself. A failed comparison of
+old against new would then prove nothing. The real pipeline has the same property for the same reason, and
+its speed study says so first, before any speedup is discussed.</p>
+</section>
+<section id="a-proof-that-survives">
+<h3>A proof that survives<a class="headerlink" href="#a-proof-that-survives" title="Link to this heading">#</a></h3>
+<p>Two proofs do not depend on the gradient being reproducible.</p>
+<p><strong>Check mode.</strong> With <code class="docutils literal notranslate"><span class="pre">check=True</span></code> the cached class also runs the original code on every call, on the same
+live state, and asserts that the outputs are equal. The cell below trains with it, so the assertion runs on
+every state the fit passes through, not on one chosen example.</p>
+<p><strong>A reproducible configuration.</strong> On one thread the gradient has one order. There the old code reproduces
+itself, and the two classes can be compared after training.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">train_small</span> <span class="o">=</span> <span class="n">small_video</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">checked</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">CachedAvatar</span><span class="p">(</span><span class="o">**</span><span class="n">small</span><span class="p">,</span> <span class="n">check</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">checked</span><span class="p">,</span> <span class="n">train_small</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>                  <span class="c1"># every call compares cached and original outputs</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"check mode: </span><span class="si">{</span><span class="n">checked</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s1">'plan'</span><span class="p">]</span><span class="si">}</span><span class="s2"> lookups from the cached plan, </span><span class="si">{</span><span class="n">checked</span><span class="o">.</span><span class="n">hits</span><span class="p">[</span><span class="s1">'skin'</span><span class="p">]</span><span class="si">}</span><span class="s2"> skinning "</span>
+      <span class="sa">f</span><span class="s2">"maps from the cache, 0 mismatches"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">trained_texture</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+    <span class="n">av</span> <span class="o">=</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">small</span><span class="p">)</span>
+    <span class="n">cu</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">train_small</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">av</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">detach</span><span class="p">()</span><span class="o">.</span><span class="n">clone</span><span class="p">()</span>
+
+<span class="n">threads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">old_a</span><span class="p">,</span> <span class="n">old_b</span><span class="p">,</span> <span class="n">new</span> <span class="o">=</span> <span class="n">trained_texture</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">),</span> <span class="n">trained_texture</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">),</span> <span class="n">trained_texture</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">CachedAvatar</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span>
+<span class="n">old_reproduces</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">bit_identical</span><span class="p">(</span><span class="n">old_a</span><span class="p">,</span> <span class="n">old_b</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"one thread: old vs old bit-identical: </span><span class="si">{</span><span class="n">old_reproduces</span><span class="si">}</span><span class="s2">;  old vs cached bit-identical: "</span>
+      <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">speed</span><span class="o">.</span><span class="n">bit_identical</span><span class="p">(</span><span class="n">old_a</span><span class="p">,</span><span class="w"> </span><span class="n">new</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">old_reproduces</span><span class="p">:</span>                                      <span class="c1"># only then does the comparison mean anything</span>
+    <span class="k">assert</span> <span class="n">speed</span><span class="o">.</span><span class="n">bit_identical</span><span class="p">(</span><span class="n">old_a</span><span class="p">,</span> <span class="n">new</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>check mode: 119 lookups from the cached plan, 52 skinning maps from the cache, 0 mismatches
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>one thread: old vs old bit-identical: False;  old vs cached bit-identical: False
+</pre></div>
+</div>
+</div>
+</div>
+<p>On a CPU the last line reports that the trained textures are equal in every bit. (On a GPU the old code may
+not reproduce itself even in this configuration. The cell then skips the comparison, and check mode is the
+proof.)</p>
+<p>Now the gain.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plain</span><span class="p">,</span> <span class="n">cached</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(),</span> <span class="n">speed</span><span class="o">.</span><span class="n">CachedAvatar</span><span class="p">()</span>
+<span class="n">cam64</span> <span class="o">=</span> <span class="n">video</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">cached</span><span class="o">.</span><span class="n">gaussians</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>                    <span class="c1"># fill the caches</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">step</span><span class="p">(</span><span class="n">av</span><span class="p">):</span>
+    <span class="n">img</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">av</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam64</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">t_plain</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">plain</span><span class="o">.</span><span class="n">gaussians</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+    <span class="n">t_cached</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">cached</span><span class="o">.</span><span class="n">gaussians</span><span class="p">(</span><span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">s_plain</span><span class="p">,</span> <span class="n">s_cached</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">step</span><span class="p">(</span><span class="n">plain</span><span class="p">),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">9</span><span class="p">),</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">step</span><span class="p">(</span><span class="n">cached</span><span class="p">),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"build the Gaussians: </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t_plain</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms -&gt; </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">t_cached</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2"> ms (</span><span class="si">{</span><span class="n">t_plain</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">t_cached</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">x)"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"whole training step: </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">s_plain</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ms -&gt; </span><span class="si">{</span><span class="mf">1e3</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">s_cached</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> ms"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.4</span><span class="p">,</span> <span class="mf">2.4</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">values</span> <span class="ow">in</span> <span class="p">((</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"build the Gaussians"</span><span class="p">,</span> <span class="p">(</span><span class="n">t_plain</span><span class="p">,</span> <span class="n">t_cached</span><span class="p">)),</span> <span class="p">(</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"whole training step"</span><span class="p">,</span> <span class="p">(</span><span class="n">s_plain</span><span class="p">,</span> <span class="n">s_cached</span><span class="p">))):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">([</span><span class="s2">"original"</span><span class="p">,</span> <span class="s2">"cached"</span><span class="p">],</span> <span class="p">[</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="p">[</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">]],</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"ms"</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>build the Gaussians: 1.39 ms -&gt; 0.24 ms (5.7x)
+whole training step: 6.2 ms -&gt; 5.1 ms
+</pre></div>
+</div>
+<img alt="../_images/0e8dc94f3434e5f9e990bd4a94c9a57734410bcaa9867c1f87b9452394da75cb.png" src="../_images/0e8dc94f3434e5f9e990bd4a94c9a57734410bcaa9867c1f87b9452394da75cb.png" />
+</div>
+</div>
+<p>The cached stage is a few times faster, and the whole step gains a few percent at most, as the profile
+predicted. (On a busy machine the second line can even go the wrong way: the gain is smaller than the
+timing noise of one cell.) It is still adopted. A Tier A change has no cost in trust, small gains add up
+over many changes, and the project’s largest Tier A win was of the same modest kind: an exact rewrite of
+one periodic check, not a new algorithm.</p>
+</section>
+</section>
+<section id="tier-b-the-same-sum-in-another-order">
+<h2>4. Tier B: the same sum in another order<a class="headerlink" href="#tier-b-the-same-sum-in-another-order" title="Link to this heading">#</a></h2>
+<p>The large gain in the toy is one you have used since Part 2. <code class="docutils literal notranslate"><span class="pre">cu.composite_dense</span></code> evaluates every Gaussian
+at every pixel. <code class="docutils literal notranslate"><span class="pre">cu.composite_sparse</span></code> evaluates each Gaussian only inside the box where it contributes at
+least 1/255, sorts the (Gaussian, pixel) pairs, and accumulates. For this lesson, treat the dense
+compositor as <strong>the old code</strong> and the sparse one as <strong>the candidate</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sizes</span><span class="p">,</span> <span class="n">t_dense</span><span class="p">,</span> <span class="n">t_sparse</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">density</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">250.0</span><span class="p">,</span> <span class="mf">600.0</span><span class="p">):</span>
+    <span class="n">av</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="n">density</span><span class="p">)</span>
+    <span class="n">cam</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">orbit_camera</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">48</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_step</span><span class="p">(</span><span class="n">mode</span><span class="p">):</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="n">mode</span><span class="p">)</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">():</span>
+            <span class="n">img</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">cam</span><span class="p">,</span> <span class="n">poses</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">trans</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">backward</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">run</span>
+    <span class="n">sizes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">av</span><span class="o">.</span><span class="n">n_gaussians</span><span class="p">)</span>
+    <span class="n">t_dense</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">make_step</span><span class="p">(</span><span class="s2">"dense"</span><span class="p">),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">t_sparse</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">speed</span><span class="o">.</span><span class="n">timeit</span><span class="p">(</span><span class="n">make_step</span><span class="p">(</span><span class="s2">"sparse"</span><span class="p">),</span> <span class="n">repeats</span><span class="o">=</span><span class="mi">3</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">5.6</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">t_dense</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"error"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"dense (old)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">sizes</span><span class="p">,</span> <span class="n">t_sparse</span><span class="p">,</span> <span class="s2">"o-"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"sparse (candidate)"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Gaussians"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"ms per training step (48 px)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"speedup at the largest size: </span><span class="si">%.0f</span><span class="s2">x"</span> <span class="o">%</span> <span class="p">(</span><span class="n">t_dense</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="n">t_sparse</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+<span class="k">if</span> <span class="n">DEVICE</span> <span class="o">==</span> <span class="s2">"cpu"</span><span class="p">:</span>                                     <span class="c1"># on a GPU, dense arithmetic is cheap at these sizes</span>
+    <span class="k">assert</span> <span class="n">t_dense</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">t_sparse</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>speedup at the largest size: 2x
+</pre></div>
+</div>
+<img alt="../_images/8c2fb3d9d73fe9c869594c6d4a4849772bf349bb32af4f5d9cfb8c7e7c0d4298.png" src="../_images/8c2fb3d9d73fe9c869594c6d4a4849772bf349bb32af4f5d9cfb8c7e7c0d4298.png" />
+</div>
+</div>
+<p>The dense cost grows with Gaussians times pixels. The sparse cost follows the number of (Gaussian, pixel)
+pairs that matter, and that number hardly grows here: a denser avatar has smaller Gaussians, each covering
+fewer pixels. The gap widens with size, and at the sizes of the other lessons the dense compositor would
+not fit the time budget at all. (This is a statement about a CPU. A GPU does dense arithmetic so cheaply
+that at these small sizes the two can be close; the dense memory cost still grows with Gaussians times
+pixels.) The runs below use a very small avatar, so that the <em>old</em> code is cheap
+enough to repeat; there the two paths are close in speed.</p>
+<p>Is the candidate Tier A? No. It adds the same terms, but the transmittance
+<span class="math notranslate nohighlight">\(\prod_{j&lt;i}(1 - \alpha_j)\)</span> becomes a running sum of logarithms, and the pixel sums run over a different
+list. On the same parameters the two images differ at rounding level:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tiny</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">offsets</span><span class="o">=</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">),</span> <span class="n">density</span><span class="o">=</span><span class="mf">150.0</span><span class="p">)</span>         <span class="c1"># the avatar for all runs of this section</span>
+<span class="n">make</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">seed</span><span class="p">:</span> <span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">(</span><span class="o">**</span><span class="n">tiny</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="n">cu</span><span class="o">.</span><span class="n">make_video</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ToyActor</span><span class="p">(</span><span class="n">density</span><span class="o">=</span><span class="mf">1500.0</span><span class="p">),</span> <span class="n">poses</span><span class="p">,</span> <span class="n">trans</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="n">train</span><span class="p">,</span> <span class="n">test</span> <span class="o">=</span> <span class="n">frames</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">)),</span> <span class="n">frames</span><span class="o">.</span><span class="n">subset</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">dense</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">av</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="s2">"dense"</span><span class="p">)</span>
+<span class="n">sparse</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">av</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="s2">"sparse"</span><span class="p">)</span>
+<span class="n">first</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">first_step_difference</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"largest pixel difference, dense vs sparse, same parameters: </span><span class="si">{</span><span class="n">first</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">first</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>largest pixel difference, dense vs sparse, same parameters: 3.6e-07
+</pre></div>
+</div>
+</div>
+</div>
+<section id="what-training-does-with-the-last-bit">
+<h3>What training does with the last bit<a class="headerlink" href="#what-training-does-with-the-last-bit" title="Link to this heading">#</a></h3>
+<p>A difference of that size is invisible in one image. Training is another matter. Each step feeds the
+parameters back into the renderer, and the renderer contains hard decisions: a contribution below 1/255 is
+dropped, and Gaussians are sorted by depth. A parameter that differs in its last bit can fall on the other
+side of such a decision. From that step on the two runs take different paths.</p>
+<p>To see this without any new code path, run the <strong>old</strong> code several times from start textures that differ
+by one unit in the last place (<code class="docutils literal notranslate"><span class="pre">speed.nudge_ulp</span></code>), and record the largest texture difference along the way.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ITERS</span><span class="p">,</span> <span class="n">N_REPLICATES</span> <span class="o">=</span> <span class="mi">250</span><span class="p">,</span> <span class="mi">3</span>
+<span class="n">fit_kw</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">iters</span><span class="o">=</span><span class="n">ITERS</span><span class="p">,</span> <span class="n">batch</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># the old code against itself, nothing changed at all (a short run is enough for this question)</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">iters</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"old code, same start, run twice on </span><span class="si">{</span><span class="n">DEVICE</span><span class="si">}</span><span class="s2">: bit-identical ="</span><span class="p">,</span> <span class="n">speed</span><span class="o">.</span><span class="n">bit_identical</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"texture"</span><span class="p">],</span> <span class="n">b</span><span class="p">[</span><span class="s2">"texture"</span><span class="p">]))</span>
+
+<span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="n">ref</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)}</span>
+<span class="n">replicates</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="p">[</span><span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">nudge</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_REPLICATES</span><span class="p">)]}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">N_REPLICATES</span><span class="si">}</span><span class="s2"> dense fits of </span><span class="si">{</span><span class="n">ITERS</span><span class="si">}</span><span class="s2"> steps: </span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">replicates</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"steps"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">drift</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.4</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"old code vs. old code, start nudged by 1 ulp"</span> <span class="k">if</span> <span class="n">k</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"training step"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"largest texture difference"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">)</span>
+<span class="n">final</span> <span class="o">=</span> <span class="p">[</span><span class="n">speed</span><span class="o">.</span><span class="n">max_abs_diff</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"texture"</span><span class="p">],</span> <span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"texture"</span><span class="p">])</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicates</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"texture difference after training:"</span><span class="p">,</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1e</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">final</span><span class="p">))</span>
+<span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">final</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">speed</span><span class="o">.</span><span class="n">drift</span><span class="p">(</span><span class="n">replicates</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="s2">"the last-bit difference should have grown"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>old code, same start, run twice on cuda: bit-identical = True
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4 dense fits of 250 steps: 7 s
+texture difference after training: 1.2e+00, 1.2e+00, 1.2e+00
+</pre></div>
+</div>
+<img alt="../_images/b76cd8070fa748e2e1524b39a17b6bcebc79f95babae328ee1d223eda538c671.png" src="../_images/b76cd8070fa748e2e1524b39a17b6bcebc79f95babae328ee1d223eda538c671.png" />
+</div>
+</div>
+<p>Read a curve from the left. Two runs start a last bit apart, and for a while the difference creeps up
+slowly. Then, at some step, it jumps by orders of magnitude: a hard decision has gone the other way. From
+there the runs are on different paths, and the difference ends at a size that is plainly visible in the
+texture values. The step of the jump differs from replicate to replicate, and a replicate can get through a
+short training without one. Two runs of <em>the same code</em> on <em>the same data</em> end with different textures.</p>
+<p>This is the noise floor of the old code. On a CPU with a fixed thread count the dense fit reproduces itself
+exactly when nothing at all is changed (the first line printed above; on a GPU it may not). That is a
+property of one configuration. It does not survive a change of thread count, machine or library version.
+The honest description of the old code is the whole family of runs that differ in their last bits.</p>
+<p>It follows that a Tier B candidate <strong>cannot</strong> be asked to match the old run. The old code does not match
+itself. What can be asked is that the candidate lands inside the same cloud.</p>
+</section>
+<section id="register-the-rule-then-run">
+<h3>Register the rule, then run<a class="headerlink" href="#register-the-rule-then-run" title="Link to this heading">#</a></h3>
+<p>Which numbers, how far apart, on how many seeds? Decide before looking, or the rule will bend to the
+result (<a class="reference internal" href="../part8_evaluation/08b_rules_and_blind_camera.html"><span class="std std-doc">Lesson 8b</span></a>). The rule for this lesson:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">RULE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"columns"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">COLUMNS</span><span class="p">),</span>          <span class="c1"># held-out PSNR, foreground PSNR, silhouette IoU, final loss</span>
+    <span class="s2">"seeds"</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="s2">"old_code_replicates_per_seed"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>       <span class="c1"># dense fits from start textures nudged by 1 ulp</span>
+    <span class="s2">"band"</span><span class="p">:</span> <span class="s2">"per column, the largest |replicate - reference| over all replicates of both seeds"</span><span class="p">,</span>
+    <span class="s2">"slack"</span><span class="p">:</span> <span class="mf">3.0</span><span class="p">,</span>                            <span class="c1"># a column is 'outside' beyond slack x band (few replicates)</span>
+    <span class="s2">"first_step_tol"</span><span class="p">:</span> <span class="mf">1e-4</span><span class="p">,</span>                  <span class="c1"># same parameters must give the same image to rounding level</span>
+    <span class="s2">"verdict"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"changes the maths: first-step difference above the tolerance"</span><span class="p">,</span>
+                <span class="s2">"shift: some column outside the band on every seed"</span><span class="p">,</span>
+                <span class="s2">"inside noise: otherwise"</span><span class="p">],</span>
+    <span class="s2">"on_shift"</span><span class="p">:</span> <span class="s2">"the candidate is not adopted"</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"rule registered, sha256"</span><span class="p">,</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">sha256</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">RULE</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">()[:</span><span class="mi">16</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>rule registered, sha256 51f7babc41299975
+</pre></div>
+</div>
+</div>
+</div>
+<p>The slack needs a word. A band measured from six replicates underestimates the true spread, because a
+seventh run is the largest so far one time in seven, and the differences are heavy-tailed: a replicate
+either had a decision flip or it did not. The factor of three is registered here, before the runs, as the
+price of a small sample. Two things the toy rule leaves out, which the real rule had: a test
+on the sign of the differences across columns, which needs more seeds and columns than we can afford, and a
+check of the whole validation curve.</p>
+<p>Now the remaining runs: the old code’s reference and replicates on the second seed, then the candidate on
+both seeds. (The seed-0 replicates above are old-code runs; no candidate result existed when the rule was
+written.)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">N_REPLICATES</span> <span class="o">==</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"old_code_replicates_per_seed"</span><span class="p">]</span>
+<span class="n">ref</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span>
+<span class="n">replicates</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">nudge</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N_REPLICATES</span><span class="p">)]</span>
+<span class="n">band</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">noise_band</span><span class="p">([(</span><span class="n">r</span><span class="p">,</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicates</span><span class="p">[</span><span class="n">s</span><span class="p">]])</span>
+<span class="n">candidate</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">sparse</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]}</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">time</span><span class="o">.</span><span class="n">perf_counter</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">t0</span><span class="si">:</span><span class="s2">.0f</span><span class="si">}</span><span class="s2"> s;  dense fit </span><span class="si">{</span><span class="n">ref</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s, sparse fit </span><span class="si">{</span><span class="n">candidate</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2"> s"</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">judge</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">first_step</span><span class="p">):</span>
+    <span class="n">inside</span> <span class="o">=</span> <span class="p">[</span><span class="n">speed</span><span class="o">.</span><span class="n">inside_noise</span><span class="p">(</span><span class="n">runs</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">band</span><span class="p">,</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"slack"</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">speed</span><span class="o">.</span><span class="n">decision</span><span class="p">(</span><span class="n">inside</span><span class="p">,</span> <span class="n">first_step</span><span class="p">,</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"first_step_tol"</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="si">{</span><span class="s1">'column'</span><span class="si">:</span><span class="s2">9s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'band'</span><span class="si">:</span><span class="s2">&gt;9s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'seed spread'</span><span class="si">:</span><span class="s2">&gt;12s</span><span class="si">}</span><span class="s2">   candidate - old (seed 0, seed 1)"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">speed</span><span class="o">.</span><span class="n">COLUMNS</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">candidate</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">c</span><span class="si">:</span><span class="s2">9s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">band</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="si">:</span><span class="s2">9.2e</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">c</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">ref</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">c</span><span class="p">])</span><span class="si">:</span><span class="s2">12.2e</span><span class="si">}</span><span class="s2">   </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">+.2e</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">+.2e</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="n">verdict_sparse</span> <span class="o">=</span> <span class="n">judge</span><span class="p">(</span><span class="n">candidate</span><span class="p">,</span> <span class="n">first</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">sparse compositor:"</span><span class="p">,</span> <span class="n">verdict_sparse</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">verdict_sparse</span><span class="p">[</span><span class="s2">"verdict"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"inside noise"</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>11 s;  dense fit 1.6 s, sparse fit 2.2 s
+
+column         band  seed spread   candidate - old (seed 0, seed 1)
+psnr       9.35e-02     1.66e-01   -3.59e-02  -5.28e-02
+psnr_fg    7.25e-02     2.70e-01   -4.72e-02  -6.22e-02
+iou        1.80e-03     2.12e-03   -1.29e-03  -5.19e-04
+loss       7.05e-05     7.09e-04   +1.84e-05  +2.50e-04
+
+sparse compositor: {'verdict': 'inside noise', 'first_step': 3.5762786865234375e-07, 'outside_per_seed': [0, 1], 'outside_on_every_seed': []}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]:</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">replicates</span><span class="p">[</span><span class="n">s</span><span class="p">]):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s2">"steps"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">drift</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">]),</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">lw</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+                <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"old vs. old (1 ulp nudge)"</span> <span class="k">if</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s2">"steps"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">drift</span><span class="p">(</span><span class="n">candidate</span><span class="p">[</span><span class="n">s</span><span class="p">],</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">]),</span> <span class="mf">1e-9</span><span class="p">),</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span>
+            <span class="n">lw</span><span class="o">=</span><span class="mf">2.2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"sparse vs. old"</span> <span class="k">if</span> <span class="n">s</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_yscale</span><span class="p">(</span><span class="s2">"log"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"training step"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"largest texture difference"</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">"lower right"</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">((</span><span class="s2">"psnr"</span><span class="p">,</span> <span class="s2">"psnr_fg"</span><span class="p">)):</span>
+    <span class="n">null</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">replicates</span><span class="p">[</span><span class="n">s</span><span class="p">]]</span>
+    <span class="n">cand</span> <span class="o">=</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">candidate</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span> <span class="o">-</span> <span class="mf">0.12</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">null</span><span class="p">),</span> <span class="n">null</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"truth"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"old vs. old"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.12</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">cand</span><span class="p">),</span> <span class="n">cand</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"gaussian"</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"sparse vs. old"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">RULE</span><span class="p">[</span><span class="s2">"slack"</span><span class="p">]</span> <span class="o">*</span> <span class="n">band</span><span class="p">[</span><span class="n">c</span><span class="p">],</span> <span class="n">i</span> <span class="o">-</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">i</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">plotting</span><span class="o">.</span><span class="n">INK</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span>
+              <span class="n">label</span><span class="o">=</span><span class="s2">"slack x band"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">([</span><span class="n">i</span> <span class="o">+</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="nb">abs</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">c</span><span class="p">])],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"D"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">cu</span><span class="o">.</span><span class="n">COLORS</span><span class="p">[</span><span class="s2">"skeleton"</span><span class="p">],</span>
+               <span class="n">label</span><span class="o">=</span><span class="s2">"seed 0 vs. seed 1"</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_xticklabels</span><span class="p">([</span><span class="s2">"held-out PSNR"</span><span class="p">,</span> <span class="s2">"foreground PSNR"</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"|difference| (dB)"</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/88b2af39c8b205580e08e52d824dd01d7a89fd5e76f8b806ba945f7dcea99786.png" src="../_images/88b2af39c8b205580e08e52d824dd01d7a89fd5e76f8b806ba945f7dcea99786.png" />
+</div>
+</div>
+<p>Left: the candidate’s texture drifts away from the old run along the same kind of curve as the old code
+drifts from itself, and ends at the same level. Right: on the scores, the candidate’s differences sit among
+the old code’s own, below the registered line. The verdict of the rule is <strong>inside noise</strong>, and the sparse
+compositor is adopted. Under this rule the adoption says: <em>we cannot tell this change from rerunning the old
+code</em>. It does not say that the numbers are equal.</p>
+<p>The yellow diamonds give a sense of scale: the difference between two seeds of the old code. Compare it with
+the band in the table above. Last-bit noise, once training has amplified it, is not negligible next to seed
+noise. An effect smaller than this band cannot be claimed from one run, whatever the code path.</p>
+</section>
+</section>
+<section id="rejected-shortcuts-that-change-the-mathematics">
+<h2>5. Rejected: shortcuts that change the mathematics<a class="headerlink" href="#rejected-shortcuts-that-change-the-mathematics" title="Link to this heading">#</a></h2>
+<p>Two more candidates, both faster or smaller than the sparse compositor.</p>
+<ul class="simple">
+<li><p><strong>Tight boxes.</strong> The sparse compositor’s box reaches 3.33 standard deviations, which is where a fully
+opaque Gaussian falls to 1/255. Cutting the box at 1 standard deviation removes most pairs. It also
+removes real light.</p></li>
+<li><p><strong>4-bit colours.</strong> Storing each Gaussian’s colour in 4 bits per channel instead of 32 is a stand-in for
+the reduced-precision shortcuts (16-bit floats and the like) that are standard in inference.</p></li>
+</ul>
+<p>The rule already contains the test that settles both, and it needs no training: render the same parameters
+with the old and the new path. First as pictures, with the texture trained in Section 4.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">tight</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">av</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="s2">"sparse"</span><span class="p">,</span> <span class="n">extent</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">coarse</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">av</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">Renderer</span><span class="p">(</span><span class="n">av</span><span class="p">,</span> <span class="s2">"sparse"</span><span class="p">,</span> <span class="n">quant_bits</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">rejected</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"tight boxes (extent 1.0)"</span><span class="p">:</span> <span class="n">tight</span><span class="p">,</span> <span class="s2">"4-bit colours"</span><span class="p">:</span> <span class="n">coarse</span><span class="p">}</span>
+
+<span class="c1"># one trained texture, rendered by every path</span>
+<span class="n">trained</span> <span class="o">=</span> <span class="n">make</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">torch</span><span class="o">.</span><span class="n">no_grad</span><span class="p">():</span>
+    <span class="n">trained</span><span class="o">.</span><span class="n">texture</span><span class="o">.</span><span class="n">copy_</span><span class="p">(</span><span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">"texture"</span><span class="p">])</span>
+    <span class="n">view</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">wrap</span><span class="p">:</span> <span class="n">wrap</span><span class="p">(</span><span class="n">trained</span><span class="p">)</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">test</span><span class="o">.</span><span class="n">cams</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test</span><span class="o">.</span><span class="n">poses</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">test</span><span class="o">.</span><span class="n">trans</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">old_image</span> <span class="o">=</span> <span class="n">view</span><span class="p">(</span><span class="n">dense</span><span class="p">)</span>
+    <span class="n">diffs</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="p">(</span><span class="n">view</span><span class="p">(</span><span class="n">wrap</span><span class="p">)</span> <span class="o">-</span> <span class="n">old_image</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">amax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">wrap</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"sparse compositor"</span><span class="p">,</span> <span class="n">sparse</span><span class="p">)]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">rejected</span><span class="o">.</span><span class="n">items</span><span class="p">())}</span>
+<span class="n">cu</span><span class="o">.</span><span class="n">show_images</span><span class="p">([</span><span class="n">old_image</span><span class="p">]</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">diffs</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span>
+               <span class="p">[</span><span class="s2">"old code (dense)"</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"|</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2"> - old|</span><span class="se">\n</span><span class="s2">max </span><span class="si">{</span><span class="nb">float</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">:</span><span class="s2">.0e</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">diffs</span><span class="o">.</span><span class="n">items</span><span class="p">()],</span> <span class="n">size</span><span class="o">=</span><span class="mf">2.3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mf">0.03</span><span class="p">);</span>
+<span class="k">assert</span> <span class="nb">float</span><span class="p">(</span><span class="n">diffs</span><span class="p">[</span><span class="s2">"sparse compositor"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-4</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">diffs</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="n">rejected</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8854fca0fb0410998bb84bef6ab8ab8c885ef7ffb093d7a8a584450d95ca5b9c.png" src="../_images/8854fca0fb0410998bb84bef6ab8ab8c885ef7ffb093d7a8a584450d95ca5b9c.png" />
+</div>
+</div>
+<p>All three difference maps use the same colour scale. The sparse compositor’s map is black: its differences
+are far below the scale. The tight boxes change the picture at scattered pixels, where a Gaussian’s outer
+part used to reach; the 4-bit colours change it wherever it has content. The same test on untrained parameters is the first line of the rule:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">rows</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"sparse compositor"</span><span class="p">:</span> <span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">candidate</span><span class="p">,</span> <span class="n">verdict_sparse</span><span class="p">)}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">wrap</span> <span class="ow">in</span> <span class="n">rejected</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">first_step_difference</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">wrap</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">frames</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="n">runs</span> <span class="o">=</span> <span class="p">{</span><span class="n">s</span><span class="p">:</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">wrap</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]}</span>
+    <span class="n">rows</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">judge</span><span class="p">(</span><span class="n">runs</span><span class="p">,</span> <span class="n">f</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="s1">'candidate'</span><span class="si">:</span><span class="s2">26s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'first step'</span><span class="si">:</span><span class="s2">&gt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'fit (s)'</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'d PSNR s0'</span><span class="si">:</span><span class="s2">&gt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'d PSNR s1'</span><span class="si">:</span><span class="s2">&gt;10s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="s1">'outside'</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">  verdict"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">runs</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="ow">in</span> <span class="n">rows</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">[</span><span class="n">runs</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s2">"psnr"</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="n">s</span><span class="p">][</span><span class="s2">"psnr"</span><span class="p">]</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"seeds"</span><span class="p">]]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">:</span><span class="s2">26s</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">f</span><span class="si">:</span><span class="s2">10.1e</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">runs</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">'seconds'</span><span class="p">]</span><span class="si">:</span><span class="s2">8.1f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s2">+10.3f</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">d</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s2">+10.3f</span><span class="si">}</span><span class="s2"> "</span>
+          <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="s1">'outside_per_seed'</span><span class="p">])</span><span class="si">:</span><span class="s2">&gt;8s</span><span class="si">}</span><span class="s2">  </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="s1">'verdict'</span><span class="p">]</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">rejected</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">rows</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="o">*</span> <span class="n">first</span> <span class="ow">and</span> <span class="n">rows</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">][</span><span class="s2">"verdict"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"changes the maths"</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="se">\n</span><span class="s2">for scale: slack x band on PSNR = </span><span class="si">{</span><span class="n">RULE</span><span class="p">[</span><span class="s1">'slack'</span><span class="p">]</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">band</span><span class="p">[</span><span class="s1">'psnr'</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2"> dB"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>candidate                  first step  fit (s)  d PSNR s0  d PSNR s1  outside  verdict
+sparse compositor             3.6e-07      2.3     -0.036     -0.053   [0, 1]  inside noise
+tight boxes (extent 1.0)      3.3e-03      2.3     -0.104     -0.037   [0, 1]  changes the maths
+4-bit colours                 1.1e-02      2.3     -0.311     -0.195   [3, 2]  changes the maths
+
+for scale: slack x band on PSNR = 0.281 dB
+</pre></div>
+</div>
+</div>
+</div>
+<p>Both are rejected on the first line of the rule: on the same parameters they produce a different image, by
+thousands of times the rounding level. No training run is needed for that verdict, and no training run can
+overturn it.</p>
+<p>Now look at the trained columns anyway, because they hold the uncomfortable part of this lesson. Depending
+on the run, a rejected candidate’s held-out PSNR may sit <em>inside</em> the band on one or both seeds. The band is
+wide, since training amplifies last-bit noise, and a moderate change of the mathematics can hide in it. So
+the logic runs one way only:</p>
+<ul class="simple">
+<li><p>outside the band: the change has moved the results;</p></li>
+<li><p>inside the band: the change was <strong>not detected</strong>, which is weaker than “harmless”.</p></li>
+</ul>
+<p>That is why the tier of a change is decided by what it computes, and the band is only the second test. A
+Tier B candidate must be a reordering by construction, must show a first-step difference at rounding level,
+<em>and</em> must land inside the band. A candidate that drops light or bits is a different renderer. If it were
+adopted, the model would learn to compensate for it during training, and every later comparison with older
+results would carry that change inside it.</p>
+</section>
+<section id="in-the-real-pipeline">
+<h2>In the real pipeline<a class="headerlink" href="#in-the-real-pipeline" title="Link to this heading">#</a></h2>
+<p>The hi-fi pipeline was optimised under this rule in a staged study: profile, plan, implement behind flags,
+benchmark old against new on the same GPU type, verify independently, then adopt. The full record is
+<span class="private-repo" title="in the project's private repository">docs/speed.md</span>, summarised in the
+<span class="private-repo" title="in the project's private repository">README, “Performance”</span>.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>This lesson</p></th>
+<th class="head"><p>Real pipeline</p></th>
+<th class="head"><p>What is different there</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">speed.profile_step</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">torch.profiler</span></code>, CUDA events, per-stage wall clocks</p></td>
+<td><p>Seven areas were profiled, from the training step to data preparation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CachedAvatar</span></code>, <code class="docutils literal notranslate"><span class="pre">check=True</span></code></p></td>
+<td><p>flags in <span class="private-repo" title="in the project's private repository"><code class="docutils literal notranslate"><span class="pre">gsmfit/speedv2.py</span></code></span>, each with a <code class="docutils literal notranslate"><span class="pre">check</span></code> mode</p></td>
+<td><p>Every change sits behind an environment flag, is on by default only after its proof, and is switched off with <code class="docutils literal notranslate"><span class="pre">=0</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p>old code against itself</p></td>
+<td><p>the “noise floor” section of the record</p></td>
+<td><p>The old code is not bit-identical to itself there either: the rasterizer’s backward pass accumulates with atomics, as our sparse backward does with threads.</p></td>
+</tr>
+<tr class="row-odd"><td><p>dense to sparse, the registered rule</p></td>
+<td><p>the Tier B set: a faster rasterizer backward, a fused SSIM, one texture lookup per iteration</p></td>
+<td><p>The rule for the two confirmation seeds was registered before their results existed. It had three clauses: columns outside the old same-seed spread, a sign test over 18 held-out columns, and the validation curve.</p></td>
+</tr>
+<tr class="row-even"><td><p>tight boxes, 4-bit colours</p></td>
+<td><p>Tier C candidates and the “not adopted” list</p></td>
+<td><p>Reduced-precision inference (fp16, bf16, TF32) of the tracking models was tested against each model’s own frame-to-frame jitter. Every candidate failed, and none was adopted.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Published outcomes, all from that record:</p>
+<ul class="simple">
+<li><p><strong>Tier A is bit-identical and was adopted everywhere it was proven.</strong> The proofs are identical
+iteration-0 loss bits, check modes on live state and byte-identical output files. The largest single
+training gain was a Tier A rewrite of a periodic check in the crop loss of
+<a class="reference internal" href="../part6_hifi/06a_crops_and_parts.html"><span class="std std-doc">Lesson 6a</span></a>.</p></li>
+<li><p><strong>Tier B returned “inside noise” under the registered rule</strong> and is the default only for the recipe shape
+it was proven on. Other recipes keep Tier A automatically: for them the band was never measured, or one of
+the changes is not a pure reordering.
+With both tiers, training and the whole fit-and-score chain ran about three times faster than before on
+the same GPU type.</p></li>
+<li><p><strong>One of five Tier B runs left the band.</strong> The record traces it to a single yes/no decision in the recipe
+that sat exactly on its threshold: rounding noise flipped it, and the two runs separated from that step. A
+replicate of that seed did not repeat it. The record’s own conclusion is the one you saw in Section 4:
+hard decisions amplify last-bit noise, and a noise band built from runs that never had such a flip
+understates how far two runs can drift.</p></li>
+<li><p><strong>Limits stated there:</strong> one run per seed for most rows, a band that exists for one recipe shape only, and
+timings on shared hardware for the workstation rows.</p></li>
+</ul>
+<p>The toy differs in three ways. Its “old code” is a compositor nobody would train with at real sizes. Its
+noise band comes from six small replicates, where the real one came from repeated full training runs. And
+its rule has one clause on the trained scores where the real rule had three.</p>
+</section>
+<section id="summary">
+<h2>Summary<a class="headerlink" href="#summary" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The rule: faster is allowed, different is not, and “different” is measured against the old code’s own
+run-to-run noise.</p></li>
+<li><p>Profile before optimising. The profile bounds what any change can gain.</p></li>
+<li><p>Tier A means the same arithmetic in the same order. Prove it with <code class="docutils literal notranslate"><span class="pre">torch.equal</span></code>, with a check mode on live
+state, and only after the old code has been compared with itself.</p></li>
+<li><p>Floating-point sums depend on their order. Training amplifies a last-bit difference through its hard
+decisions until two runs of the same code differ visibly.</p></li>
+<li><p>Tier B means a reordering. It is decided by a rule written before the runs: rounding-level difference at
+the first step, and trained results inside the old code’s band.</p></li>
+<li><p>“Inside the band” means “not detected”. A change that drops work or precision is rejected for what it
+computes, even if its scores hide in the band.</p></li>
+</ul>
+</section>
+<section id="exercises">
+<h2>Exercises<a class="headerlink" href="#exercises" title="Link to this heading">#</a></h2>
+<ol class="arabic simple">
+<li><p>Run the old-code-against-itself cell of Section 3 with <code class="docutils literal notranslate"><span class="pre">torch.set_num_threads(1)</span></code>. How many distinct
+gradients do you get? Restore the thread count afterwards.</p></li>
+<li><p>Measure a second source of noise for the old code: run the dense fit with one thread and with four, same
+seed, no nudge. Is the difference of the held-out PSNR inside the band of Section 4?</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">speed.CachedAvatar</span></code> keys its skinning cache on the bytes of the pose. Why would it be wrong to cache the
+<em>Gaussians</em> (means, covariances, colours) per pose instead? Which flag of the real pipeline has the same
+trap?</p></li>
+</ol>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 1</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">threads</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">get_num_threads</span><span class="p">()</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">runs</span> <span class="o">=</span> <span class="p">[</span><span class="n">gradient</span><span class="p">(</span><span class="n">cu</span><span class="o">.</span><span class="n">ShellAvatar</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">20</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">({</span><span class="n">cu</span><span class="o">.</span><span class="n">to_np</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">tobytes</span><span class="p">()</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">runs</span><span class="p">}))</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="n">threads</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>One, on a CPU. With a single thread the contributions arrive in one fixed order. The non-reproducibility of
+Section 3 comes from thread scheduling, not from randomness in the algorithm.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 2</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">one</span> <span class="o">=</span> <span class="n">speed</span><span class="o">.</span><span class="n">run_fit</span><span class="p">(</span><span class="n">make</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">test</span><span class="p">,</span> <span class="n">dense</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="o">**</span><span class="n">fit_kw</span><span class="p">)</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">set_num_threads</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">({</span><span class="n">c</span><span class="p">:</span> <span class="nb">abs</span><span class="p">(</span><span class="n">one</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">-</span> <span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">c</span><span class="p">])</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">speed</span><span class="o">.</span><span class="n">COLUMNS</span><span class="p">},</span> <span class="n">band</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">speed</span><span class="o">.</span><span class="n">inside_noise</span><span class="p">(</span><span class="n">one</span><span class="p">,</span> <span class="n">ref</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">band</span><span class="p">,</span> <span class="n">RULE</span><span class="p">[</span><span class="s2">"slack"</span><span class="p">]))</span>
+</pre></div>
+</div>
+<p>The thread count changes the order of the sums inside matrix products, so the run differs from the
+reference in its last bits and then drifts like a nudged run. Its scores usually fall inside the band,
+occasionally not: it is one more draw from the same cloud, and it could have been used as a replicate.</p>
+</div>
+<div class="dropdown admonition">
+<p class="admonition-title">Solution 3</p>
+<p>The means and covariances depend on the texture through the size channels, and the colours and opacities
+are texture values. The texture changes at every step, so Gaussians cached per pose would be stale after one
+optimiser step: the fit would render old parameters and the gradient would not reach the new ones. The
+skinning maps depend on the pose and the weights only. The real pipeline’s “texture lookup once per
+iteration” flag has this trap in another form: it is valid only while nothing else reads the texture
+differently within the iteration, and the record notes that it is not equivalent with view-dependent colour
+and is guarded off there.</p>
+</div>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Floating-point arithmetic and why sums depend on their order: <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id55" title="David Goldberg. What every computer scientist should know about floating-point arithmetic. ACM Computing Surveys, 23(1):5–48, 1991.">Goldberg, 1991</a>]</span>.</p></li>
+<li><p>The compositor being reordered: <span class="bibtex-citation" id="id3">[<a class="reference internal" href="../appendix/references.html#id30" title="Bernhard Kerbl, Georgios Kopanas, Thomas Leimkühler, and George Drettakis. 3D Gaussian splatting for real-time radiance field rendering. ACM Transactions on Graphics, 2023.">Kerbl <em>et al.</em>, 2023</a>]</span>. The optimiser that carries the differences
+forward: <span class="bibtex-citation" id="id4">[<a class="reference internal" href="../appendix/references.html#id48" title="Diederik P. Kingma and Jimmy Ba. Adam: a method for stochastic optimization. International Conference on Learning Representations (ICLR), 2015.">Kingma and Ba, 2015</a>]</span>.</p></li>
+<li><p>Registering a decision rule before the data: <span class="bibtex-citation" id="id5">[<a class="reference internal" href="../appendix/references.html#id49" title="Brian A. Nosek, Charles R. Ebersole, Alexander C. DeHaven, and David T. Mellor. The preregistration revolution. Proceedings of the National Academy of Sciences, 115(11):2600–2606, 2018.">Nosek <em>et al.</em>, 2018</a>]</span>.</p></li>
+<li><p>Project records: <span class="private-repo" title="in the project's private repository">docs/speed.md</span> and the
+<span class="private-repo" title="in the project's private repository">README, “Performance”</span>.</p></li>
+</ul>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./part9_speed"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../part8_evaluation/08b_rules_and_blind_camera.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Who decides whether it worked? Pre-registered rules and the blind camera</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../appendix/notation.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Notation and conventions</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item"><div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-rule-and-three-tiers">1. The rule, and three tiers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#profile-first">2. Profile first</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tier-a-caching-proven-bit-identical">3. Tier A: caching, proven bit-identical</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#first-test-the-old-code-against-itself">First test the old code against itself</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-proof-that-survives">A proof that survives</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tier-b-the-same-sum-in-another-order">4. Tier B: the same sum in another order</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-training-does-with-the-last-bit">What training does with the last bit</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#register-the-rule-then-run">Register the rule, then run</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rejected-shortcuts-that-change-the-mathematics">5. Rejected: shortcuts that change the mathematics</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#in-the-real-pipeline">In the real pipeline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary">Summary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#exercises">Exercises</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By The Avatar project
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
