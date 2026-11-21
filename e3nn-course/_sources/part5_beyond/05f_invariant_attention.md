@@ -286,6 +286,38 @@ bias_and_attention(bias[0, 0, 0].numpy(), weights[0][0, 0].numpy(),
 
 ### 3.1 The symmetry checks
 
+**Why the checks should pass.** Everything rests on one identity. For any rotation or reflection $g$, a
+$3\times3$ matrix with $g^{\mathsf T}g = I$, and any two vectors,
+
+$$
+(g\mathbf a)\cdot(g\mathbf b) = \mathbf a^{\mathsf T}g^{\mathsf T}g\,\mathbf b = \mathbf a\cdot\mathbf b .
+$$
+
+The components of both vectors change, their dot product does not, and a length is the square root of a dot
+product. Every entry of the token features $I_j$ and of the pair features $P_{jk}$ is a length or a dot product
+of vectors that turn together, or a scalar that never changes. So the tokens are invariant, and with them the
+queries and keys, the bias, the score and the weight:
+
+$$
+s_{jk} = \frac{\mathbf Q_j\cdot\mathbf K_k}{\sqrt d} + b_{jk}(P_{jk}), \qquad w_{jk} = \operatorname{softmax}_k(s_{jk}),
+$$
+
+(layer and head indices dropped), and after the blocks the coefficients $(\alpha_j, \beta_j)$. Vectors enter only
+in the last line, $\mathbf u = \sum_j\alpha_j\,\mathbf x_{fj} + \beta_j\,\mathbf e_j$, which therefore becomes
+$g\,\mathbf u$. Relabelling the neighbours permutes the rows and columns of every table together, so each
+neighbour keeps its own $(\alpha_j, \beta_j)$, and a sum does not care about order.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T5_geometry_bias_invariance/T5_geometry_bias_invariance.png" aria-label="Two unit arrows whose components are multiplied and summed, then turned together while the sum stays fixed; a pair of neighbours gets five numbers and a small network turns them into one bias; an eight by eight score table plus a bias map becomes weights; two weight maps side by side while the neighbours rotate, the left one still and the right one changing; a prediction arrow that turns with the input; rows that move when neighbours are relabelled." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T5_geometry_bias_invariance/T5_geometry_bias_invariance.webm" type="video/webm">
+<source src="../_static/media/T5_geometry_bias_invariance/T5_geometry_bias_invariance.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T5_geometry_bias_invariance/T5_geometry_bias_invariance.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T5_geometry_bias_invariance/T5_geometry_bias_invariance.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation T5, geometry bias and invariance.** A dot product $\hat{\mathbf x}_{fj}\cdot\mathbf e_k$ is written out with its three components and summed; both arrows are turned by $g$, every component changes and the sum does not. A pair of neighbours $(j, k)$ then gets its five invariants $P_{jk}$, one distance and four dot products, and a small MLP maps them to one number, the bias $b_{jk}$. For the eight neighbours of one query point the table of $\mathbf Q_j\cdot\mathbf K_k/\sqrt d$ (layer 1, head 1) receives the bias map, and a softmax along each row gives the weights $w_{jk}$. Notice the comparison that follows. The neighbours turn through a full circle and are then mirrored. The left weight map, model B with invariant pair features, does not move, and its measured change is rounding error. The right map is the same model fed the raw components of the separation (shortcut 1 of Section 2), and it changes with the viewing direction. The coefficients $(\alpha_j, \beta_j)$ stay frozen during a further turn while the prediction $\mathbf u$ turns with the input, and relabelling the neighbours moves the rows of the table but not the sum. The model is this lesson's untrained `MiniB`, so the clip is about symmetry, not accuracy. Particles are drawn as centre markers in a projection. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 Each claim from Section 1 gets its own check, with reflections included:
 
 ```{code-cell} ipython3

@@ -245,6 +245,46 @@ $$
 which a direct solve settles. This is how the toy generated `snap.slip` in the first place, so the two must
 agree to round-off, while the base state remains far from both.
 
+**Where the equation comes from, and why not simply substitute.** Row $i$ of the condition says that particle
+$i$'s state is its base state minus the flow the *other* particles induce around it:
+
+$$
+\mathbf q_i = \mathbf q_i^{\text{base}} - \sum_{j\ne i} A_{ij}\,\mathbf q_j ,
+$$
+
+where the $3\times3$ block $A_{ij}$ is the surface average over sphere $i$ of the flow that a unit state on
+particle $j$ produces. Take two equal spheres in line along the settling axis, with base speed 1, and let $t$ be
+the axis-axis entry of $A_{12}$. Then $q_1 = 1 - t\,q_2$ and $q_2 = 1 - t\,q_1$: each unknown sits inside the
+other's equation. By symmetry $q_1 = q_2 = q$, so $q = 1 - t\,q$ and
+
+$$
+q = \frac{1}{1+t} = 1 - t + t^2 - t^3 + \dots
+$$
+
+The series is what repeated substitution produces, one more term per pass, and it converges because $0 < t < 1$.
+For $N$ particles the same substitution, started from $\mathbf q^{\text{base}}$, gives the partial sums
+
+$$
+\mathbf q_k = \sum_{n=0}^{k}(-A)^n\,\mathbf q^{\text{base}},
+$$
+
+which converge to $(I+A)^{-1}\mathbf q^{\text{base}}$ only if the powers of $A$ shrink, that is, if every eigenvalue
+of $A$ has $\lvert\lambda\rvert < 1$. The direct solve has no such condition. Section 4 measures the eigenvalues
+of the default toy.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.png" aria-label="Two spheres with dashed yellow base states and teal disturbance flow; each state is built as base minus the other's flow, forming a loop; hops on a number line close in on one over one plus t; then twelve spheres and a block matrix, with terms that shrink, and ninety-six spheres, with terms that grow." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.webm" type="video/webm">
+<source src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation R1, the self-consistency equation.** Two spheres first. Each starts from its base state (dashed yellow); the upper sphere drags fluid past the lower one (teal), and the surface average $W_2$ of that flow is subtracted, $q_2 = q_2^{\text{base}} - W_2$. The same holds with the roles swapped, so the unknown is on both sides. On a number line the partial sums of $1 - t + t^2 - \dots$ hop back and forth across $1/(1+t)$, each hop $t$ times shorter. Then 12 spheres: row $i$ sums its neighbours' flow, the rows stack into $\mathbf q = \mathbf q^{\text{base}} - A\,\mathbf q$, and the right-hand side is named $T(\mathbf q)$. Substituting from the base state adds one power of $A$ per pass; for these 12 spheres the terms $(-A)^n\mathbf q^{\text{base}}$ shrink and the error falls. Notice the last comparison: for the default toy with 96 crowded spheres the same terms **grow**, because the largest $\lvert\lambda\rvert$ of $A$ exceeds one. The equation is still fine, and the direct solve below settles it; it is plain substitution that fails, which is where Section 4 starts. The two-sphere diagrams are scalar (speeds along the settling axis); the larger stages are projections. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
+Now the direct solve, in code:
+
 ```{code-cell} ipython3
 q_star = np.linalg.solve(np.eye(3 * snap.n) + A, q_base.ravel()).reshape(-1, 3)
 print(report("direct solve vs snap.slip", np.abs(q_star - s_true).max(), 1e-12))
@@ -455,6 +495,9 @@ Your browser cannot play this video. <a href="../_static/media/S4_fixed_point/S4
 <iframe src="../_static/media/S4_fixed_point/interactive.html" loading="lazy" title="damped Picard iteration, step by step (toy)" style="display:block;width:100%;height:620px;border:0;border-radius:14px;background:#0f1419;margin-top:0.6em"></iframe>
 </details>
 
+Animation R2 in [Lesson 03b, Section 1](03b_picard_anderson.md) plots the factor $1-\alpha\mu$ for every mode of
+this toy and shows how a smaller $\alpha$ brings all of them inside the band between $-1$ and $1$.
+
 ## 5. Anderson acceleration
 
 Picard uses only the latest iterate. **Anderson acceleration** {cite}`walker2011anderson` keeps the last $m$
@@ -495,6 +538,9 @@ Picard with $\alpha = 1/8$, and Anderson with $\beta = 1/2$ beats Picard with $\
 can beat Anderson at $1/8$, but that compares a well-tuned damping with a cautious one, not the two methods. For
 a linear map it behaves like the Krylov method GMRES. Each evaluation of $T$ is one pass of the surrogate over
 every particle surface, so the evaluation count is the cost that matters.
+
+Animation R3 in [Lesson 03b, Section 2](03b_picard_anderson.md) derives $\boldsymbol\gamma$ for memory $m = 1$ as
+a picture: the point on the line through the last two iterates where the defect is smallest.
 
 ## 6. Residuals and stopping rules
 
@@ -563,6 +609,9 @@ for alpha in (1.0, 0.125):
     res, why = guarded(fp.picard, T_exact, q_base, alpha=alpha, tol=1e-10, max_iter=600)
     print(f"alpha = {alpha:<6}: " + (f"converged in {res.n_iter} updates" if res else f"stopped: {why}"))
 ```
+
+Animation R4 in [Lesson 03c, Section 1](03c_residuals_stopping.md) separates the two questions that the residual
+and the error answer: has the iteration converged, and is the state right.
 
 ## 7. The same problem with a learned map
 

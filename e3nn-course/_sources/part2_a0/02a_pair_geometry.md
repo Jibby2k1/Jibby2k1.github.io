@@ -355,6 +355,34 @@ A0 respects the symmetry by construction. For each neighbour $j$ it computes:
    mixes the channels into one vector: $\;\mathbf m_j = C^{-1/2}\sum_u w_u\, y_u\,\mathbf v_u.$
 4. **Sum.** The prediction is $\;\mathbf u(\mathbf x_f) = \sum_{j=1}^{M} \mathbf m_j$ (in the chosen frame).
 
+**Why the message turns with the input.** Steps 1 to 3 combine only two kinds of object. The numbers $y_u$ are
+built from invariants, so a rotation or reflection $R$ of the input does not change them. Each $\mathbf v_u$ is a
+combination of $\mathbf x_{fj}$ and $\mathbf e_j$ whose coefficients depend only on lengths and on the angle between
+the two (a linear mix, then a rescaling by a function of a length), so it turns with them. The product and the
+head keep that structure, and the message collapses to two invariant numbers times the two input vectors:
+
+$$
+\mathbf m_j \;=\; C^{-1/2}\sum_{u=1}^{C} w_u\,y_u\,\mathbf v_u \;=\; a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j,
+\qquad
+a_j,\ b_j \ \text{functions of}\ \ r_j = \lvert\mathbf x_{fj}\rvert,\ \ \lvert\mathbf q_j\rvert,\ \
+\cos\theta_j = \hat{\mathbf x}_{fj}\cdot\mathbf e_j,\ \ \rho,\ \ \phi_j .
+$$
+
+Turn the input by $R$ and the five invariants keep their values, so $a_j$ and $b_j$ do too, and the message becomes
+$a_j R\mathbf x_{fj} + b_j R\mathbf e_j = R\,\mathbf m_j$. Section 5 checks the plane numerically and
+[Lesson 02c](02c_span_property.md) proves it layer by layer.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N1_pair_to_message/N1_pair_to_message.png" aria-label="One particle and one query point with a blue offset arrow and a yellow state arrow; three numbers are read off; two rows of channels, bars and small arrows, are multiplied and chained tip to tail into a pink message arrow; then the picture is turned, tilted and mirrored while the numbers stay fixed." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N1_pair_to_message/N1_pair_to_message.webm" type="video/webm">
+<source src="../_static/media/N1_pair_to_message/N1_pair_to_message.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N1_pair_to_message/N1_pair_to_message.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N1_pair_to_message/N1_pair_to_message.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation N1, from one pair to one message.** One neighbour $j$ and one query point: the offset $\mathbf x_{fj}$ (blue) and the state $\mathbf q_j = \lvert\mathbf q_j\rvert\,\mathbf e_j$ (yellow). Three invariant numbers are read off, $r_j$, $\lvert\mathbf q_j\rvert$ and $\cos\theta_j$. The scalar branch turns the scalars into $C = 64$ numbers $y_u \ge 0$, and the vector branch turns the two vectors into 64 arrows $\mathbf v_u$ with $\lvert\mathbf v_u\rvert < 1$. Four channels are drawn, those with the largest $\lvert w_u\rvert\,y_u\,\lvert\mathbf v_u\rvert$; their scaled arrows and the sum of the other 60 chain tip to tail and close on the message $\mathbf m_j = C^{-1/2}\sum_u w_u y_u \mathbf v_u$ (pink), next to the exact Stokes velocity for the same pair (dashed teal). A parallelogram then reads off $a_j$ and $b_j$ in $\mathbf m_j = a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j$. Notice the last part: the input is turned in the plane, tilted out of it and mirrored. Every arrow turns, and the printed numbers change only by rounding error. The network in the clip is a `MiniA0(64, 3)` trained on the Stokes flow of a single sphere, not on the 96-sphere toy of this lesson; the clip writes $R$ for the rotation or reflection, as Animation S1 does. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 [Lesson 02b](02b_two_branches.md) builds each layer by hand and shows what goes wrong with a vector bias or a
 ReLU on vector components. Here we use `course_utils.models.MiniA0` and look at its intermediate outputs:
 
@@ -515,6 +543,9 @@ particles also settle roughly downward, so their flow is correlated with what th
 a model can absorb that correlated part into its near-neighbour messages. The part of the far field that is not
 correlated with the $M$ neighbours stays out of reach. The simplest such correction, multiplying the truncated
 sum by one constant $c(M)$ fitted by least squares on the same query points, already lowers the error; we plot it as a dashed line.
+
+Animation N4 in [Lesson 02c, Section 6.2](02c_span_property.md) draws this truncation as arrows added tip to
+tail, and shows why the dropped far terms do not cancel.
 
 The toy's disturbance of one sphere is the Stokes solution multiplied by a screening factor
 $\exp(-(r-a)/L)$, with $a$ the radius and $L$ the **screening length**. The factor is a toy stand-in for the

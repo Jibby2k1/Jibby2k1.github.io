@@ -1,0 +1,43 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:03.547
+Two spheres, one number. The white ring is the truth.
+
+00:00:04.900 --> 00:00:08.145
+Damped updates overshoot the truth and stop on the green ring.
+
+00:00:09.600 --> 00:00:12.264
+Too strong a coupling moves the model's fixed point.
+
+00:00:13.700 --> 00:00:16.318
+Ninety-six spheres, projected onto a plane.
+
+00:00:16.700 --> 00:00:19.925
+The gap to the truth shrinks, then grows as the trail curls.
+
+00:00:22.300 --> 00:00:23.957
+We can only measure the residual.
+
+00:00:24.900 --> 00:00:27.866
+It asks how far one more model update would move the state.
+
+00:00:30.600 --> 00:00:32.957
+The true error turns around at update seven.
+
+00:00:34.300 --> 00:00:36.450
+At the best update the residual is large.
+
+00:00:37.900 --> 00:00:41.942
+After sixty updates the residual is tiny, yet the error is larger.
+
+00:00:43.400 --> 00:00:45.699
+Pick the update count on a held-out snapshot.
+
+00:00:46.700 --> 00:00:50.794
+Its choice, twelve updates, beats the converged error on our first snapshot.
+
+00:00:51.900 --> 00:00:53.697
+In practice the truth is unknown.
+
+00:00:54.800 --> 00:00:59.038
+The model's fixed point is not the truth. Stop where held-out error is lowest.

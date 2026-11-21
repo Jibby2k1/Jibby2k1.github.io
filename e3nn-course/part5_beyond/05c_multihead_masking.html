@@ -529,6 +529,27 @@ in Lesson 05b, including in the scale <span class="math notranslate nohighlight"
 <li><p><strong>Concatenate</strong> the heads back to width <span class="math notranslate nohighlight">\(D\)</span> and mix them with one more matrix:
 <span class="math notranslate nohighlight">\(\operatorname{MHA}(\mathbf h) = \big[\mathbf A^{(1)}\,|\,\cdots\,|\,\mathbf A^{(H)}\big]\,W_O^\top\)</span>.</p></li>
 </ol>
+<p><strong>The smallest case, <span class="math notranslate nohighlight">\(H = 2\)</span> and <span class="math notranslate nohighlight">\(d_h = 1\)</span>.</strong> With one column per head, every query, key and value is a single
+number and every score is a single product, so the four steps can be drawn. For one token that looks at tokens
+<span class="math notranslate nohighlight">\(k\)</span> with values <span class="math notranslate nohighlight">\(v_k\)</span>, head <span class="math notranslate nohighlight">\(h\)</span> has its own scores <span class="math notranslate nohighlight">\(s^{(h)}_k\)</span> and takes its own weighted average of the <em>same</em>
+values:</p>
+<div class="math notranslate nohighlight">
+\[
+w^{(h)}_k = \frac{e^{s^{(h)}_k}}{\sum_{k'} e^{s^{(h)}_{k'}}}, \qquad
+A^{(h)} = \sum_k w^{(h)}_k\,v_k, \qquad
+\operatorname{MHA} = \big[\,A^{(1)}\,|\,A^{(2)}\,\big]\,W_O^\top .
+\]</div>
+<p>Two heads with different scores give two different summaries of one neighbourhood, and <span class="math notranslate nohighlight">\(W_O\)</span> decides how they
+are combined. A single softmax row can only produce one.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T3_multihead/T3_multihead.png" aria-label="A query point and twelve neighbours drawn twice; in one copy the neighbours are weighted by nearness, with rings of equal score, in the other by direction, with a cone; each copy takes its own weighted average; the two results are placed side by side and mixed by a matrix; then neighbours beyond a cutoff circle are masked and their weight bars drop to zero." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T3_multihead/T3_multihead.webm" type="video/webm">
+<source src="../_static/media/T3_multihead/T3_multihead.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T3_multihead/T3_multihead.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T3_multihead/T3_multihead.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation T3, multi-head attention and masks.</strong> One query point with its 12 nearest neighbours as tokens <span class="math notranslate nohighlight">\(k\)</span>. One attention row is one weighted average, drawn as edges whose brightness is the weight. The neighbourhood is then duplicated for two heads that are <strong>set by hand</strong>, not trained, and the clip says so: head 1 scores by nearness, <span class="math notranslate nohighlight">\(s^{(1)}_k = -r_k/\ell\)</span>, and head 2 by direction, <span class="math notranslate nohighlight">\(s^{(2)}_k = \kappa\,c_k\)</span>, highest for neighbours straight ahead along the settling direction. Each head takes its own softmax and its own average of the same values <span class="math notranslate nohighlight">\(v_k = \lvert\mathbf q_k\rvert\)</span>, which gives two different numbers. They are laid side by side and mixed by an output matrix, here into their mean and their difference: <span class="math notranslate nohighlight">\(\operatorname{MHA} = [A^{(1)}\,|\,A^{(2)}]\,W_O^\top\)</span>. The last part masks the tokens beyond a cutoff distance <span class="math notranslate nohighlight">\(r_c\)</span>: their score becomes <span class="math notranslate nohighlight">\(-\infty\)</span>, their weight is exactly zero, and the remaining weights still sum to one; the same mask is applied to both heads. Notice that each head renormalises on its own after the mask. Section 5.2 proves that the zero is exact, and Section 4 shows heads that were trained. Each neighbour is drawn at its true distance and its true angle to the settling direction. The direction score uses the lab settling direction, as this lesson’s task does, so head 2 is not rotation-invariant; Lesson 05f builds the invariant version. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
 <p>Nothing new is learned per head. <span class="math notranslate nohighlight">\(W_Q\)</span>, <span class="math notranslate nohighlight">\(W_K\)</span>, <span class="math notranslate nohighlight">\(W_V\)</span> and <span class="math notranslate nohighlight">\(W_O\)</span> are the same four <span class="math notranslate nohighlight">\(D\times D\)</span> matrices that a
 single head of width <span class="math notranslate nohighlight">\(D\)</span> uses. The only change is that the scores are computed blockwise, so there are <span class="math notranslate nohighlight">\(H\)</span>
 softmax rows per token instead of one. In code, the split is a <code class="docutils literal notranslate"><span class="pre">reshape</span></code> and the concatenation is its inverse.</p>
@@ -1319,6 +1340,8 @@ to the denominator. The real keys renormalise among themselves, as if the padded
 <span class="math notranslate nohighlight">\(\mathbf a_j = \sum_k w_{jk}\mathbf V_k\)</span> contains the padded values only as <span class="math notranslate nohighlight">\(0\cdot\mathbf V_k\)</span>, which is exactly
 zero for any finite <span class="math notranslate nohighlight">\(\mathbf V_k\)</span>. These are not approximations, so we can check them with <code class="docutils literal notranslate"><span class="pre">==</span></code>, not with a
 tolerance.</p>
+<p>Animation T3 in Section 2 shows this on two heads: the masked tokens drop to weight zero and each head
+renormalises over the tokens that remain.</p>
 <p>For a padding mask, <span class="math notranslate nohighlight">\(m_{jk}\)</span> depends only on the key <span class="math notranslate nohighlight">\(k\)</span>: every row and every head uses the same mask. That is why
 <code class="docutils literal notranslate"><span class="pre">QueryTokenNet</span></code> passes a mask of shape <code class="docutils literal notranslate"><span class="pre">(B,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1</span> <span class="pre">+</span> <span class="pre">N)</span></code>, which broadcasts over heads and rows.</p>
 <p><strong>Claim 1: padded slots get weight exactly zero.</strong></p>

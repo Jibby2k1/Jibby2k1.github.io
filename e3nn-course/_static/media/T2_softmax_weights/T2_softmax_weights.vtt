@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:01.684
+Start with three scores.
+
+00:00:02.500 --> 00:00:03.905
+Exponentiate each one.
+
+00:00:04.300 --> 00:00:05.957
+Add them up: the denominator.
+
+00:00:06.700 --> 00:00:09.389
+Divide each by the sum: half, quarter, quarter.
+
+00:00:10.600 --> 00:00:13.718
+Real scores can be negative; their exponentials cannot.
+
+00:00:14.400 --> 00:00:16.105
+Divide by the sum: weights.
+
+00:00:16.600 --> 00:00:18.351
+All positive, and totalling one.
+
+00:00:19.000 --> 00:00:20.345
+Raise score three by one.
+
+00:00:21.400 --> 00:00:25.009
+Its weight grows; every other shrinks, because the total stays one.
+
+00:00:25.700 --> 00:00:29.144
+Divide each score by a temperature, tau. Hot levels the weights.
+
+00:00:30.400 --> 00:00:33.531
+Cold sharpens them: token five takes most of the weight.
+
+00:00:34.500 --> 00:00:37.935
+Without root d, sixty-four dimensions mean tau of one eighth.
+
+00:00:39.000 --> 00:00:41.365
+The output is the values' weighted average.
+
+00:00:42.100 --> 00:00:43.899
+Hot, it sits near the plain mean.
+
+00:00:45.000 --> 00:00:47.625
+Cold, it reaches value five, still inside.
+
+00:00:48.800 --> 00:00:52.124
+A plain sum counts everyone equally: eight times the mean.
+
+00:00:52.800 --> 00:00:54.295
+It lands outside the values.
+
+00:00:55.300 --> 00:01:00.711
+Softmax weights compete for a total of one, and the output is a weighted average of the values.

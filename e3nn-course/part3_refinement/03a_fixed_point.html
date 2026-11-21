@@ -704,6 +704,39 @@ condition becomes the linear system</p>
 \]</div>
 <p>which a direct solve settles. This is how the toy generated <code class="docutils literal notranslate"><span class="pre">snap.slip</span></code> in the first place, so the two must
 agree to round-off, while the base state remains far from both.</p>
+<p><strong>Where the equation comes from, and why not simply substitute.</strong> Row <span class="math notranslate nohighlight">\(i\)</span> of the condition says that particle
+<span class="math notranslate nohighlight">\(i\)</span>’s state is its base state minus the flow the <em>other</em> particles induce around it:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf q_i = \mathbf q_i^{\text{base}} - \sum_{j\ne i} A_{ij}\,\mathbf q_j ,
+\]</div>
+<p>where the <span class="math notranslate nohighlight">\(3\times3\)</span> block <span class="math notranslate nohighlight">\(A_{ij}\)</span> is the surface average over sphere <span class="math notranslate nohighlight">\(i\)</span> of the flow that a unit state on
+particle <span class="math notranslate nohighlight">\(j\)</span> produces. Take two equal spheres in line along the settling axis, with base speed 1, and let <span class="math notranslate nohighlight">\(t\)</span> be
+the axis-axis entry of <span class="math notranslate nohighlight">\(A_{12}\)</span>. Then <span class="math notranslate nohighlight">\(q_1 = 1 - t\,q_2\)</span> and <span class="math notranslate nohighlight">\(q_2 = 1 - t\,q_1\)</span>: each unknown sits inside the
+other’s equation. By symmetry <span class="math notranslate nohighlight">\(q_1 = q_2 = q\)</span>, so <span class="math notranslate nohighlight">\(q = 1 - t\,q\)</span> and</p>
+<div class="math notranslate nohighlight">
+\[
+q = \frac{1}{1+t} = 1 - t + t^2 - t^3 + \dots
+\]</div>
+<p>The series is what repeated substitution produces, one more term per pass, and it converges because <span class="math notranslate nohighlight">\(0 &lt; t &lt; 1\)</span>.
+For <span class="math notranslate nohighlight">\(N\)</span> particles the same substitution, started from <span class="math notranslate nohighlight">\(\mathbf q^{\text{base}}\)</span>, gives the partial sums</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf q_k = \sum_{n=0}^{k}(-A)^n\,\mathbf q^{\text{base}},
+\]</div>
+<p>which converge to <span class="math notranslate nohighlight">\((I+A)^{-1}\mathbf q^{\text{base}}\)</span> only if the powers of <span class="math notranslate nohighlight">\(A\)</span> shrink, that is, if every eigenvalue
+of <span class="math notranslate nohighlight">\(A\)</span> has <span class="math notranslate nohighlight">\(\lvert\lambda\rvert &lt; 1\)</span>. The direct solve has no such condition. Section 4 measures the eigenvalues
+of the default toy.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.png" aria-label="Two spheres with dashed yellow base states and teal disturbance flow; each state is built as base minus the other's flow, forming a loop; hops on a number line close in on one over one plus t; then twelve spheres and a block matrix, with terms that shrink, and ninety-six spheres, with terms that grow." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.webm" type="video/webm">
+<source src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/R1_self_consistency_equation/R1_self_consistency_equation.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation R1, the self-consistency equation.</strong> Two spheres first. Each starts from its base state (dashed yellow); the upper sphere drags fluid past the lower one (teal), and the surface average <span class="math notranslate nohighlight">\(W_2\)</span> of that flow is subtracted, <span class="math notranslate nohighlight">\(q_2 = q_2^{\text{base}} - W_2\)</span>. The same holds with the roles swapped, so the unknown is on both sides. On a number line the partial sums of <span class="math notranslate nohighlight">\(1 - t + t^2 - \dots\)</span> hop back and forth across <span class="math notranslate nohighlight">\(1/(1+t)\)</span>, each hop <span class="math notranslate nohighlight">\(t\)</span> times shorter. Then 12 spheres: row <span class="math notranslate nohighlight">\(i\)</span> sums its neighbours’ flow, the rows stack into <span class="math notranslate nohighlight">\(\mathbf q = \mathbf q^{\text{base}} - A\,\mathbf q\)</span>, and the right-hand side is named <span class="math notranslate nohighlight">\(T(\mathbf q)\)</span>. Substituting from the base state adds one power of <span class="math notranslate nohighlight">\(A\)</span> per pass; for these 12 spheres the terms <span class="math notranslate nohighlight">\((-A)^n\mathbf q^{\text{base}}\)</span> shrink and the error falls. Notice the last comparison: for the default toy with 96 crowded spheres the same terms <strong>grow</strong>, because the largest <span class="math notranslate nohighlight">\(\lvert\lambda\rvert\)</span> of <span class="math notranslate nohighlight">\(A\)</span> exceeds one. The equation is still fine, and the direct solve below settles it; it is plain substitution that fails, which is where Section 4 starts. The two-sphere diagrams are scalar (speeds along the settling axis); the larger stages are projections. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
+<p>Now the direct solve, in code:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">q_star</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">snap</span><span class="o">.</span><span class="n">n</span><span class="p">)</span> <span class="o">+</span> <span class="n">A</span><span class="p">,</span> <span class="n">q_base</span><span class="o">.</span><span class="n">ravel</span><span class="p">())</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
@@ -1013,6 +1046,8 @@ Your browser cannot play this video. <a href="../_static/media/S4_fixed_point/S4
 <summary>Interactive 3D version: damped Picard iteration, step by step (toy)</summary>
 <iframe src="../_static/media/S4_fixed_point/interactive.html" loading="lazy" title="damped Picard iteration, step by step (toy)" style="display:block;width:100%;height:620px;border:0;border-radius:14px;background:#0f1419;margin-top:0.6em"></iframe>
 </details>
+<p>Animation R2 in <a class="reference internal" href="03b_picard_anderson.html"><span class="std std-doc">Lesson 03b, Section 1</span></a> plots the factor <span class="math notranslate nohighlight">\(1-\alpha\mu\)</span> for every mode of
+this toy and shows how a smaller <span class="math notranslate nohighlight">\(\alpha\)</span> brings all of them inside the band between <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>.</p>
 </section>
 </section>
 <section id="anderson-acceleration">
@@ -1073,6 +1108,8 @@ Picard with <span class="math notranslate nohighlight">\(\alpha = 1/8\)</span>, 
 can beat Anderson at <span class="math notranslate nohighlight">\(1/8\)</span>, but that compares a well-tuned damping with a cautious one, not the two methods. For
 a linear map it behaves like the Krylov method GMRES. Each evaluation of <span class="math notranslate nohighlight">\(T\)</span> is one pass of the surrogate over
 every particle surface, so the evaluation count is the cost that matters.</p>
+<p>Animation R3 in <a class="reference internal" href="03b_picard_anderson.html"><span class="std std-doc">Lesson 03b, Section 2</span></a> derives <span class="math notranslate nohighlight">\(\boldsymbol\gamma\)</span> for memory <span class="math notranslate nohighlight">\(m = 1\)</span> as
+a picture: the point on the line through the last two iterates where the defect is smallest.</p>
 </section>
 <section id="residuals-and-stopping-rules">
 <h2>6. Residuals and stopping rules<a class="headerlink" href="#residuals-and-stopping-rules" title="Link to this heading">#</a></h2>
@@ -1159,6 +1196,8 @@ alpha = 0.125 : converged in 279 updates
 </div>
 </div>
 </div>
+<p>Animation R4 in <a class="reference internal" href="03c_residuals_stopping.html"><span class="std std-doc">Lesson 03c, Section 1</span></a> separates the two questions that the residual
+and the error answer: has the iteration converged, and is the state right.</p>
 </section>
 <section id="the-same-problem-with-a-learned-map">
 <h2>7. The same problem with a learned map<a class="headerlink" href="#the-same-problem-with-a-learned-map" title="Link to this heading">#</a></h2>

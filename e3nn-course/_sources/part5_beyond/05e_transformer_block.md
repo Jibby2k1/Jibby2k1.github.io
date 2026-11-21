@@ -91,6 +91,36 @@ correction back onto it. The two sublayers do different jobs. Attention moves in
 it is the only place where neighbour $j$ learns anything about neighbour $k$. The FFN does computation
 *within* each token, turning what was gathered into new features.
 
+**Unrolling the stream.** Because every sublayer adds, the output of a stack is the input plus a list of
+updates. For two blocks, with $\Delta_1,\dots,\Delta_4$ the outputs of the four sublayers in order,
+
+$$
+H_{\text{out}} = H + \Delta_1 + \Delta_2 + \Delta_3 + \Delta_4 ,
+$$
+
+so the input is still inside the output as one of the summands. The same holds for derivatives. Number the
+sublayers $l = 1,\dots,n$ and let $J_l$ be the Jacobian of sublayer $l$'s update with respect to the stream it
+reads. Each sublayer maps the stream to itself plus an update, so by the chain rule
+
+$$
+\frac{\partial H_{\text{out}}}{\partial H} = (I + J_n)\cdots(I + J_2)(I + J_1) .
+$$
+
+Multiplied out, the product contains the term $I$: a path from input to output that passes through no sublayer
+at all. Without the skips the product is $J_n\cdots J_1$ and every path runs through every sublayer.
+Section 4 shows what that does to the tokens.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T4_residual_block/T4_residual_block.png" aria-label="Six columns of bars, one enlarged; it travels along a horizontal lane while copies are read off, normalised, passed through an attention box and a feed-forward box, and the updates are added back cell by cell; then two blocks written as a sum of columns; then six blocks with and without skip connections, where the tokens collapse to one point without them." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T4_residual_block/T4_residual_block.webm" type="video/webm">
+<source src="../_static/media/T4_residual_block/T4_residual_block.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T4_residual_block/T4_residual_block.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T4_residual_block/T4_residual_block.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation T4, the residual stream through one block.** Six neighbours of one query point give six tokens, each a column of eight numbers; one column $\mathbf h_j$ is enlarged and followed along a lane, the residual stream. LayerNorm reads a **copy** of the column: subtract the mean, divide by the spread. Attention is where the six tokens exchange information; the weights of token $j$ produce an update that is added to the stream cell by cell, $H' = H + \operatorname{MHSA}(\operatorname{LN}(H);\,b)$. After a second LayerNorm the feed-forward network handles each token alone with the same weights, and its update is added too, $H'' = H' + \operatorname{FFN}(\operatorname{LN}(H'))$. Two blocks in a row are then written as the sum above, input plus four updates, with the outline of the input still visible inside the output. Notice the last experiment: six freshly initialised blocks with and without skip connections. Without them the spread between tokens falls with depth until the tokens sit on one point (Section 4.1 of this lesson); with them it shrinks only a little and the tokens stay apart, and the $I$ in $\prod_l(I + J_l)$ is the reason. (The clip takes the product over blocks, with $J_l$ collecting both sublayers of block $l$; the form is the same.) The numbers come from the course's `MiniB` at width 8 with two heads and untrained, seeded weights, so the clip shows the mechanics of a block, not what a trained one computes. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 The older **post-norm** block from the original transformer paper {cite}`vaswani2017attention` puts the
 LayerNorm *after* the addition instead:
 

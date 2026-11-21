@@ -1,0 +1,46 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:01.866
+One point, eight neighbours.
+
+00:00:02.500 --> 00:00:05.913
+Six numbers describe neighbour j, like distance and angle.
+
+00:00:06.500 --> 00:00:08.289
+Standardised, they form the token.
+
+00:00:08.800 --> 00:00:11.269
+Every neighbour gets one: token h sub k.
+
+00:00:12.500 --> 00:00:16.820
+The query is a matrix times the token: multiply along a row, then add.
+
+00:00:18.500 --> 00:00:20.661
+Row two gives the query's second number.
+
+00:00:22.100 --> 00:00:23.690
+Two numbers draw the query arrow.
+
+00:00:24.700 --> 00:00:27.103
+A second matrix turns every token into a key.
+
+00:00:28.700 --> 00:00:31.053
+A third makes values, kept for the next step.
+
+00:00:32.700 --> 00:00:35.561
+The score is query dot key, divided by root d.
+
+00:00:37.300 --> 00:00:39.367
+It measures the key's shadow along the query.
+
+00:00:40.800 --> 00:00:43.976
+All eight keys cast shadows, and each becomes a signed score.
+
+00:00:45.800 --> 00:00:48.042
+Key six points away: a negative score.
+
+00:00:49.000 --> 00:00:51.502
+These rank the neighbours, but they are not weights yet.
+
+00:00:53.200 --> 00:00:56.938
+A query asks, keys answer, and the dot product scores the match.

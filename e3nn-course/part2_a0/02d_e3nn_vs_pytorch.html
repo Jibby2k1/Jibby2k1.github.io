@@ -426,6 +426,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#success-same-weights-same-function">4.2 Success: same weights, same function</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-plain-version-stores-vectors-as-3-rows-c">4.3 Why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-timing-on-this-machine">4.4 A quick timing on this machine</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-training-changes">4.5 What training changes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-do-you-actually-need-a-tensor-product">5. When do you actually need a tensor product?</a><ul class="nav section-nav flex-column">
@@ -1128,6 +1129,38 @@ are not research results.</p>
 </div>
 <p>Part VI returns to speed, including profiling and GPU kernels.</p>
 </section>
+<section id="what-training-changes">
+<h3>4.5 What training changes<a class="headerlink" href="#what-training-changes" title="Link to this heading">#</a></h3>
+<p>Sections 4.1 to 4.4 compared two implementations at <strong>fixed</strong> weights. Training is what moves the weights, and
+nothing in it depends on which implementation computes the forward pass. Collect all weights in one vector
+<span class="math notranslate nohighlight">\(\theta\)</span>. For a batch of <span class="math notranslate nohighlight">\(B\)</span> query points with targets <span class="math notranslate nohighlight">\(\mathbf u_n\)</span>, the loss is the mean squared error over the
+<span class="math notranslate nohighlight">\(3B\)</span> components, and one gradient step moves <span class="math notranslate nohighlight">\(\theta\)</span> against the slope:</p>
+<div class="math notranslate nohighlight">
+\[
+L(\theta) = \frac{1}{3B}\sum_{n=1}^{B}\big\lvert\mathbf u_\theta(\mathbf x_n) - \mathbf u_n\big\rvert^2,
+\qquad
+\theta \leftarrow \theta - \eta\,\nabla_\theta L .
+\]</div>
+<p>With one parameter the whole rule fits on a line. For the model <span class="math notranslate nohighlight">\(u = \theta x\)</span> and <span class="math notranslate nohighlight">\(B\)</span> data points <span class="math notranslate nohighlight">\((x_n, u_n)\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+L(\theta) = \frac1B\sum_n(\theta x_n - u_n)^2, \qquad
+\frac{dL}{d\theta} = \frac2B\sum_n x_n\,(\theta x_n - u_n),
+\]</div>
+<p>a parabola and its slope. A network repeats this with one slope per weight; the vector of slopes is the gradient.
+The course trainer (<code class="docutils literal notranslate"><span class="pre">course_utils.training.train</span></code>) uses Adam, which takes the same kind of step with a separate
+rescaling for each parameter. Symmetry is untouched by any of this. The checks of this lesson hold for every value
+of <span class="math notranslate nohighlight">\(\theta\)</span>, so training changes <em>which</em> equivariant function the network is, never <em>whether</em> it is one.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N5_training_dynamics/N5_training_dynamics.png" aria-label="A teal line through four data points with orange gaps and a loss parabola; a few gradient steps slide down the parabola and the line fits; then, for a network, a yellow coefficient curve bends toward the exact curve epoch by epoch while a loss curve falls and a pink message arrow swings onto its dashed teal target." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N5_training_dynamics/N5_training_dynamics.webm" type="video/webm">
+<source src="../_static/media/N5_training_dynamics/N5_training_dynamics.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N5_training_dynamics/N5_training_dynamics.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N5_training_dynamics/N5_training_dynamics.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation N5, what training changes.</strong> First the one-parameter case above, exactly: four data points, the line <span class="math notranslate nohighlight">\(u = \theta x\)</span> (teal), the gaps (orange) and the parabola <span class="math notranslate nohighlight">\(L(\theta)\)</span>. The slope <span class="math notranslate nohighlight">\(dL/d\theta\)</span> is evaluated with the numbers on screen and six plain gradient steps <span class="math notranslate nohighlight">\(\theta \leftarrow \theta - \eta\,dL/d\theta\)</span> slide to the minimum. Then the network: a <code class="docutils literal notranslate"><span class="pre">MiniA0(64,</span> <span class="pre">3)</span></code> trained with Adam on the exact Stokes flow of one sphere. At checkpoints from before training to epoch 25 the clip shows the coefficient curve <span class="math notranslate nohighlight">\(b_j(r)\)</span> read off the message <span class="math notranslate nohighlight">\(\mathbf m_j = a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j\)</span> (yellow, at <span class="math notranslate nohighlight">\(\theta_j = 90^\circ\)</span>) bending toward the exact curve, the training loss <span class="math notranslate nohighlight">\(L\)</span> on a log axis, and the message at one fixed query point (pink) swinging onto its target (dashed teal). Notice the surface check at the end: the exact value is <span class="math notranslate nohighlight">\(b_j(a) = \lvert\mathbf q_j\rvert = 1\)</span>, the network reaches about 0.92 after 25 epochs, and the other coefficient <span class="math notranslate nohighlight">\(a_j\)</span> is rougher near the surface. Small steps reshape the kernel of Animation N2 (<a class="reference internal" href="02b_two_branches.html"><span class="std std-doc">Lesson 02b, Section 5.3</span></a>); they do not make it exact. In this clip <span class="math notranslate nohighlight">\(\theta\)</span> without an index is the weight vector and <span class="math notranslate nohighlight">\(\theta_j\)</span> is the pair angle. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
+</section>
 </section>
 <section id="when-do-you-actually-need-a-tensor-product">
 <h2>5. When do you actually need a tensor product?<a class="headerlink" href="#when-do-you-actually-need-a-tensor-product" title="Link to this heading">#</a></h2>
@@ -1455,6 +1488,7 @@ given in Section 5.2.</p>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#success-same-weights-same-function">4.2 Success: same weights, same function</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-plain-version-stores-vectors-as-3-rows-c">4.3 Why the plain version stores vectors as <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">rows,</span> <span class="pre">C)</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-quick-timing-on-this-machine">4.4 A quick timing on this machine</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-training-changes">4.5 What training changes</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#when-do-you-actually-need-a-tensor-product">5. When do you actually need a tensor product?</a><ul class="nav section-nav flex-column">

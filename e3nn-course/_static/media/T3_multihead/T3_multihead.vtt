@@ -1,0 +1,25 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:04.853
+One attention head gives every neighbour a weight, then takes one weighted average.
+
+00:00:06.900 --> 00:00:11.643
+Now two heads, set by hand. Head one scores by distance: nearer scores higher.
+
+00:00:13.400 --> 00:00:16.835
+Head two scores by direction: highest for neighbours straight ahead.
+
+00:00:18.500 --> 00:00:23.736
+Each head takes its own softmax, then averages the same values: two different answers.
+
+00:00:25.500 --> 00:00:31.498
+Lay the two averages side by side, then mix them with an output matrix: here, mean and difference.
+
+00:00:33.800 --> 00:00:42.307
+Mask tokens beyond the cutoff: score minus infinity. The exponential gives exactly zero weight, and the rest still sum to one.
+
+00:00:43.900 --> 00:00:47.436
+Every head gets the same mask; head two renormalizes too.
+
+00:00:48.800 --> 00:00:55.421
+Multi-head attention: several weighted averages, concatenated and mixed. A mask removes tokens exactly.

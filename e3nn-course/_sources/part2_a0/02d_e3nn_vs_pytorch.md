@@ -512,6 +512,42 @@ plt.show()
 
 Part VI returns to speed, including profiling and GPU kernels.
 
+### 4.5 What training changes
+
+Sections 4.1 to 4.4 compared two implementations at **fixed** weights. Training is what moves the weights, and
+nothing in it depends on which implementation computes the forward pass. Collect all weights in one vector
+$\theta$. For a batch of $B$ query points with targets $\mathbf u_n$, the loss is the mean squared error over the
+$3B$ components, and one gradient step moves $\theta$ against the slope:
+
+$$
+L(\theta) = \frac{1}{3B}\sum_{n=1}^{B}\big\lvert\mathbf u_\theta(\mathbf x_n) - \mathbf u_n\big\rvert^2,
+\qquad
+\theta \leftarrow \theta - \eta\,\nabla_\theta L .
+$$
+
+With one parameter the whole rule fits on a line. For the model $u = \theta x$ and $B$ data points $(x_n, u_n)$,
+
+$$
+L(\theta) = \frac1B\sum_n(\theta x_n - u_n)^2, \qquad
+\frac{dL}{d\theta} = \frac2B\sum_n x_n\,(\theta x_n - u_n),
+$$
+
+a parabola and its slope. A network repeats this with one slope per weight; the vector of slopes is the gradient.
+The course trainer (`course_utils.training.train`) uses Adam, which takes the same kind of step with a separate
+rescaling for each parameter. Symmetry is untouched by any of this. The checks of this lesson hold for every value
+of $\theta$, so training changes *which* equivariant function the network is, never *whether* it is one.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N5_training_dynamics/N5_training_dynamics.png" aria-label="A teal line through four data points with orange gaps and a loss parabola; a few gradient steps slide down the parabola and the line fits; then, for a network, a yellow coefficient curve bends toward the exact curve epoch by epoch while a loss curve falls and a pink message arrow swings onto its dashed teal target." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N5_training_dynamics/N5_training_dynamics.webm" type="video/webm">
+<source src="../_static/media/N5_training_dynamics/N5_training_dynamics.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N5_training_dynamics/N5_training_dynamics.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N5_training_dynamics/N5_training_dynamics.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation N5, what training changes.** First the one-parameter case above, exactly: four data points, the line $u = \theta x$ (teal), the gaps (orange) and the parabola $L(\theta)$. The slope $dL/d\theta$ is evaluated with the numbers on screen and six plain gradient steps $\theta \leftarrow \theta - \eta\,dL/d\theta$ slide to the minimum. Then the network: a `MiniA0(64, 3)` trained with Adam on the exact Stokes flow of one sphere. At checkpoints from before training to epoch 25 the clip shows the coefficient curve $b_j(r)$ read off the message $\mathbf m_j = a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j$ (yellow, at $\theta_j = 90^\circ$) bending toward the exact curve, the training loss $L$ on a log axis, and the message at one fixed query point (pink) swinging onto its target (dashed teal). Notice the surface check at the end: the exact value is $b_j(a) = \lvert\mathbf q_j\rvert = 1$, the network reaches about 0.92 after 25 epochs, and the other coefficient $a_j$ is rougher near the surface. Small steps reshape the kernel of Animation N2 ([Lesson 02b, Section 5.3](02b_two_branches.md)); they do not make it exact. In this clip $\theta$ without an index is the weight vector and $\theta_j$ is the pair angle. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 ## 5. When do you actually need a tensor product?
 
 Everything in A0's vector branch is **linear in the vectors**, apart from the norm activation, which only rescales

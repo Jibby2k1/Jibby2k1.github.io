@@ -1,0 +1,40 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:04.088
+Blue, the offset to a query point. Yellow, the particle's state.
+
+00:00:05.100 --> 00:00:08.769
+Take the offset's length. Split the state: size and direction.
+
+00:00:09.600 --> 00:00:12.081
+Their angle gives a cosine: here, one half.
+
+00:00:13.300 --> 00:00:18.194
+No rotation changes these. The scalar branch makes sixty-four positive numbers.
+
+00:00:18.300 --> 00:00:20.901
+The vector branch makes sixty-four small arrows.
+
+00:00:22.000 --> 00:00:24.742
+Each number, times a learned weight, scales its arrow.
+
+00:00:26.100 --> 00:00:28.286
+Added tip to tail, they make the message.
+
+00:00:29.700 --> 00:00:31.611
+It nearly matches exact Stokes flow.
+
+00:00:32.600 --> 00:00:37.256
+The message lies in the inputs' plane, so two coefficients, A and B, rebuild it.
+
+00:00:39.400 --> 00:00:41.668
+Turn the inputs, and the message turns too.
+
+00:00:43.200 --> 00:00:46.291
+Green check: the numbers changed only by rounding error.
+
+00:00:47.500 --> 00:00:51.076
+A tilt or a mirror does the same: numbers stay, arrows turn.
+
+00:00:53.200 --> 00:01:00.003
+The message is invariant numbers times the input vectors: A, times the offset, plus B, times the direction.

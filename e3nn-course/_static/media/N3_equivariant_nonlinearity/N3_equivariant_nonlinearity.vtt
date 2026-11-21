@@ -1,0 +1,52 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.325
+A test for any vector operation.
+
+00:00:03.300 --> 00:00:06.331
+Rotate then apply, or apply then rotate: same answer.
+
+00:00:07.900 --> 00:00:10.875
+ReLU zeroes negatives. Rotated v has none.
+
+00:00:11.300 --> 00:00:14.330
+Apply first: one, zero. Then rotate: zero, one.
+
+00:00:14.800 --> 00:00:16.200
+The answers differ by one.
+
+00:00:17.200 --> 00:00:18.988
+Now try every rotation angle.
+
+00:00:19.500 --> 00:00:22.527
+Solid is clipped at the axes; the dashed one circles.
+
+00:00:23.800 --> 00:00:25.480
+So the gap depends on the axes.
+
+00:00:27.000 --> 00:00:28.789
+The fix: a norm activation.
+
+00:00:29.400 --> 00:00:31.071
+Tanh squashes only the length.
+
+00:00:32.000 --> 00:00:36.317
+Direction is kept, and rotation never changes length. Both routes agree.
+
+00:00:36.700 --> 00:00:38.229
+Green means the check passes.
+
+00:00:39.200 --> 00:00:42.122
+Scalars ignore rotation, so any function works.
+
+00:00:42.500 --> 00:00:46.664
+Vectors: mix linearly, multiply by a scalar, rescale by length.
+
+00:00:47.000 --> 00:00:50.658
+The message: scalar y sub u times vector v sub u, summed.
+
+00:00:52.200 --> 00:00:54.462
+f of R v equals R times f of v.
+
+00:00:56.400 --> 00:00:59.244
+Act on lengths and scalars, never on components.

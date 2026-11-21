@@ -457,6 +457,24 @@ w_{jk} = \operatorname{softmax}_k(s_{jk}) = \frac{e^{s_{jk}}}{\sum_{k'} e^{s_{jk
 \text{out}_j = \sum_k w_{jk}\,\mathbf V_k .
 $$
 
+Nothing in these formulas is more than multiply and add. Component $a$ of the query is row $a$ of $W_Q$ times the
+token, $Q_{j,a} = \sum_c (W_Q)_{ac}\,h_{j,c}$, and for $d = 2$ the score is two products and one division:
+
+$$
+s_{jk} = \frac{Q_{j,1}K_{k,1} + Q_{j,2}K_{k,2}}{\sqrt 2} .
+$$
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T1_tokens_qkv/T1_tokens_qkv.png" aria-label="A query point with eight neighbouring particles; six numbers for one neighbour become a column, the token; a matrix times the token gives a purple query arrow; every token gets a grey key arrow; the keys cast shadows on the query direction and become signed score bars." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T1_tokens_qkv/T1_tokens_qkv.webm" type="video/webm">
+<source src="../_static/media/T1_tokens_qkv/T1_tokens_qkv.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T1_tokens_qkv/T1_tokens_qkv.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T1_tokens_qkv/T1_tokens_qkv.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation T1, tokens, queries, keys and values.** One query point $\mathbf x_f$ and its eight nearest particles. The six invariant numbers of neighbour $j$ are standardised into the token $\mathbf h_j$ (the two features that are constant in the toy become zero), and every neighbour $k$ gets a token $\mathbf h_k$. The product $W_Q\mathbf h_j$ is written out row by row, six products and one sum per row, and its two results are drawn as the query arrow $\mathbf Q_j$ (purple) in a plane, because $d = 2$. A second matrix gives every token a key $\mathbf K_k$ (grey arrows) and a third gives every token a value $\mathbf V_k$, set aside for Animation T2. The score $s_{jk} = \mathbf Q_j\cdot\mathbf K_k/\sqrt d$ is computed with the numbers and then shown as geometry: the shadow of the key on the direction of the query, times $\lvert\mathbf Q_j\rvert$, over $\sqrt d$. Notice the key that points more than $90^\circ$ away from the query: its score is negative. Scores rank the neighbours, but they are not weights yet. The head is untrained, with seeded random matrices, like the head built in the cells below. Here $j$ is the token that looks and $k$ the token looked at, both neighbours of the same query point, and capital $\mathbf Q_j$ is the query, not the particle state $\mathbf q_j$. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 **The geometry of the score.** $\mathbf Q_j\cdot\mathbf K_k = |\mathbf Q_j|\,|\mathbf K_k|\cos\theta_{jk}$. A key
 that points along the query scores high, a perpendicular key scores zero, and an opposite key scores negative. You
 can read the score as the length of the shadow that $\mathbf K_k$ casts on the direction of $\mathbf Q_j$, times
@@ -714,6 +732,35 @@ while a few others give a large one. The typical step size of the optimiser then
 and on luck. With the scale, the whole distribution stays the same at every $d$, and no input is saturated. That
 is the property we want: changing the width of the model should not change how its attention behaves, or learns,
 at initialisation.
+
+**Sections 3, 4 and 6 in one picture.** Three facts about softmax carry most of this lesson, and each can be
+checked by hand. First, the recipe is exponentiate, add, divide: the scores $(\ln 2, 0, 0)$ give exponentials
+$(2, 1, 1)$, their sum 4, and the weights $(1/2, 1/4, 1/4)$. Second, the weights compete. Raise one score $s_k$
+by $\delta$ and leave the others alone. The denominator is multiplied by $1 + w_k(e^{\delta} - 1)$, so
+
+$$
+w_k \to w_k\,\frac{e^{\delta}}{1 + w_k\,(e^{\delta} - 1)},
+\qquad
+w_{k'} \to w_{k'}\,\frac{1}{1 + w_k\,(e^{\delta} - 1)} \quad (k' \ne k):
+$$
+
+one weight grows and every other weight shrinks by a common factor, because the total stays one. Third, the
+scale is a temperature. If the division by $\sqrt d$ is left out, the softmax sees
+$\mathbf Q_j\cdot\mathbf K_k = \sqrt d\,s_{jk} = s_{jk}/\tau$ with $\tau = 1/\sqrt d$; at $d = 64$ that is
+$\tau = 1/8$, a cold softmax. Whatever the temperature, the weights are positive and sum to one, so
+$\text{out}_j = \sum_k w_{jk}\mathbf V_k$ is a weighted average and cannot leave the convex hull of the values.
+A plain sum $\sum_k\mathbf V_k$ is $M$ times their mean, and it can.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T2_softmax_weights/T2_softmax_weights.png" aria-label="Three score bars are exponentiated, added and divided into weights one half, one quarter, one quarter; eight scores become purple weight bars that fill one unit strip; raising one score grows its weight and shrinks the others; a temperature slider levels and sharpens the weights; values as points in a plane with a shaded hull and a purple output dot that stays inside, while a plain sum leaves it." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T2_softmax_weights/T2_softmax_weights.webm" type="video/webm">
+<source src="../_static/media/T2_softmax_weights/T2_softmax_weights.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T2_softmax_weights/T2_softmax_weights.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T2_softmax_weights/T2_softmax_weights.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation T2, softmax, from scores to weights to an average.** The hand example first: scores $(\ln 2, 0, 0)$, exponentials $(2, 1, 1)$, sum 4, weights $(1/2, 1/4, 1/4)$, with the softmax equation written piece by piece as each step happens. The eight scores $s_{jk}$ of Animation T1 then go through the same steps: grey score bars, some of them negative, become purple weights $w_{jk} = e^{s_{jk}}/\sum_{k'}e^{s_{jk'}}$ that are all positive and fill one unit strip. Raising the score of token 3 by one makes its weight grow and every other weight shrink by the common factor above; both factors are printed. A temperature slider $\tau$ levels the weights toward $1/M$ when hot and hands most of the weight to one token when cold, and $\tau = 1/8$ is marked as what $d = 64$ without the $\sqrt d$ would do. In the last part the values $\mathbf V_k$ are points in a plane, with dot size showing the weight and their convex hull shaded. Notice where the output $\text{out}_j = \sum_k w_{jk}\mathbf V_k$ travels: near the plain mean when hot, to the best-scoring value when cold, never outside the hull. The plain sum, $M$ times the mean, lands outside. The head is the untrained $d = 2$ head of Section 5. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
 
 ## 7. Attention by hand, checked against PyTorch
 

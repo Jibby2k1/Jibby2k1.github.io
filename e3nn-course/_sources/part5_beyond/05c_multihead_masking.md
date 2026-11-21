@@ -108,6 +108,31 @@ four things:
 4. **Concatenate** the heads back to width $D$ and mix them with one more matrix:
    $\operatorname{MHA}(\mathbf h) = \big[\mathbf A^{(1)}\,|\,\cdots\,|\,\mathbf A^{(H)}\big]\,W_O^\top$.
 
+**The smallest case, $H = 2$ and $d_h = 1$.** With one column per head, every query, key and value is a single
+number and every score is a single product, so the four steps can be drawn. For one token that looks at tokens
+$k$ with values $v_k$, head $h$ has its own scores $s^{(h)}_k$ and takes its own weighted average of the *same*
+values:
+
+$$
+w^{(h)}_k = \frac{e^{s^{(h)}_k}}{\sum_{k'} e^{s^{(h)}_{k'}}}, \qquad
+A^{(h)} = \sum_k w^{(h)}_k\,v_k, \qquad
+\operatorname{MHA} = \big[\,A^{(1)}\,|\,A^{(2)}\,\big]\,W_O^\top .
+$$
+
+Two heads with different scores give two different summaries of one neighbourhood, and $W_O$ decides how they
+are combined. A single softmax row can only produce one.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/T3_multihead/T3_multihead.png" aria-label="A query point and twelve neighbours drawn twice; in one copy the neighbours are weighted by nearness, with rings of equal score, in the other by direction, with a cone; each copy takes its own weighted average; the two results are placed side by side and mixed by a matrix; then neighbours beyond a cutoff circle are masked and their weight bars drop to zero." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/T3_multihead/T3_multihead.webm" type="video/webm">
+<source src="../_static/media/T3_multihead/T3_multihead.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/T3_multihead/T3_multihead.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/T3_multihead/T3_multihead.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation T3, multi-head attention and masks.** One query point with its 12 nearest neighbours as tokens $k$. One attention row is one weighted average, drawn as edges whose brightness is the weight. The neighbourhood is then duplicated for two heads that are **set by hand**, not trained, and the clip says so: head 1 scores by nearness, $s^{(1)}_k = -r_k/\ell$, and head 2 by direction, $s^{(2)}_k = \kappa\,c_k$, highest for neighbours straight ahead along the settling direction. Each head takes its own softmax and its own average of the same values $v_k = \lvert\mathbf q_k\rvert$, which gives two different numbers. They are laid side by side and mixed by an output matrix, here into their mean and their difference: $\operatorname{MHA} = [A^{(1)}\,|\,A^{(2)}]\,W_O^\top$. The last part masks the tokens beyond a cutoff distance $r_c$: their score becomes $-\infty$, their weight is exactly zero, and the remaining weights still sum to one; the same mask is applied to both heads. Notice that each head renormalises on its own after the mask. Section 5.2 proves that the zero is exact, and Section 4 shows heads that were trained. Each neighbour is drawn at its true distance and its true angle to the settling direction. The direction score uses the lab settling direction, as this lesson's task does, so head 2 is not rotation-invariant; Lesson 05f builds the invariant version. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 Nothing new is learned per head. $W_Q$, $W_K$, $W_V$ and $W_O$ are the same four $D\times D$ matrices that a
 single head of width $D$ uses. The only change is that the scores are computed blockwise, so there are $H$
 softmax rows per token instead of one. In code, the split is a `reshape` and the concatenation is its inverse.
@@ -727,6 +752,9 @@ to the denominator. The real keys renormalise among themselves, as if the padded
 $\mathbf a_j = \sum_k w_{jk}\mathbf V_k$ contains the padded values only as $0\cdot\mathbf V_k$, which is exactly
 zero for any finite $\mathbf V_k$. These are not approximations, so we can check them with `==`, not with a
 tolerance.
+
+Animation T3 in Section 2 shows this on two heads: the masked tokens drop to weight zero and each head
+renormalises over the tokens that remain.
 
 For a padding mask, $m_{jk}$ depends only on the key $k$: every row and every head uses the same mask. That is why
 `QueryTokenNet` passes a mask of shape `(B, 1, 1, 1 + N)`, which broadcasts over heads and rows.

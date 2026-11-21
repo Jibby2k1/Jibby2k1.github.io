@@ -60,6 +60,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'part3_refinement/03c_residuals_stopping';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -411,6 +413,7 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What you will learn</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converged-is-not-the-same-as-correct">1. Converged is not the same as correct</a></li>
 </ul>
             </nav>
         </div>
@@ -426,8 +429,10 @@
 <h1>Residuals and stopping<a class="headerlink" href="#residuals-and-stopping" title="Link to this heading">#</a></h1>
 <div class="note admonition">
 <p class="admonition-title">Coming soon</p>
-<p>This lesson is <strong>coming soon</strong>.
-The learning goals and outline below are fixed; the notebook will follow the course template.</p>
+<p>The full notebook for this lesson is <strong>coming soon</strong>. The learning goals and outline below are fixed; the
+notebook will follow the course template. Section 1 is already here: a short derivation with an animation.
+Until the rest arrives, the residual convention and three stopping rules are in
+<a class="reference internal" href="03a_fixed_point.html"><span class="std std-doc">Lesson 03a</span></a>, Sections 6 and 7.</p>
 </div>
 <section id="what-you-will-learn">
 <h2>What you will learn<a class="headerlink" href="#what-you-will-learn" title="Link to this heading">#</a></h2>
@@ -440,6 +445,55 @@ The learning goals and outline below are fixed; the notebook will follow the cou
 <section id="outline">
 <h2>Outline<a class="headerlink" href="#outline" title="Link to this heading">#</a></h2>
 <p>Defines the course’s residual convention, plots residual, state error and field error together, and discusses stopping by tolerance or by a fixed number of updates when the model itself is imperfect.</p>
+</section>
+<section id="converged-is-not-the-same-as-correct">
+<h2>1. Converged is not the same as correct<a class="headerlink" href="#converged-is-not-the-same-as-correct" title="Link to this heading">#</a></h2>
+<p>Two different questions hide behind “is the refinement done?”.</p>
+<p><em>Has the iteration converged?</em> The residual answers this. It is computed with the map that is actually being
+iterated, here a model’s map <span class="math notranslate nohighlight">\(\hat T\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat R(\mathbf q) = \frac{\lVert\hat T(\mathbf q) - \mathbf q\rVert}{\lVert\mathbf q\rVert} .
+\]</div>
+<p>It asks how far one more undamped update would move the state, it needs no reference data, and it is zero
+exactly at the model’s fixed point <span class="math notranslate nohighlight">\(\hat{\mathbf q}^\star = \hat T(\hat{\mathbf q}^\star)\)</span>.</p>
+<p><em>Is the state right?</em> The error answers this,</p>
+<div class="math notranslate nohighlight">
+\[
+E_k = \frac{\lVert\mathbf q_k - \mathbf q^\star\rVert}{\lVert\mathbf q^\star\rVert},
+\]</div>
+<p>and it needs the true state <span class="math notranslate nohighlight">\(\mathbf q^\star\)</span>, which is known in the toy and unknown in practice.</p>
+<p>The two agree only if the model’s map has the true fixed point. Take linear maps to see by how much they can
+differ: the exact <span class="math notranslate nohighlight">\(T(\mathbf q) = \mathbf q^{\text{base}} - A\,\mathbf q\)</span> and an imperfect
+<span class="math notranslate nohighlight">\(\hat T(\mathbf q) = \mathbf q^{\text{base}} - \hat A\,\mathbf q\)</span>. Both fixed points satisfy a linear system with
+the same right-hand side, <span class="math notranslate nohighlight">\((I + \hat A)\,\hat{\mathbf q}^\star = \mathbf q^{\text{base}} = (I + A)\,\mathbf q^\star\)</span>.
+Subtract <span class="math notranslate nohighlight">\((I + \hat A)\,\mathbf q^\star\)</span> from both sides:</p>
+<div class="math notranslate nohighlight">
+\[
+\hat{\mathbf q}^\star - \mathbf q^\star = -\,(I + \hat A)^{-1}(\hat A - A)\,\mathbf q^\star .
+\]</div>
+<p>The offset is the model’s interaction error applied to the true state. No amount of iteration removes it,
+because the iteration is solving the model’s equation. For two equal spheres in line (Lesson 03a, Section 3, with
+coupling <span class="math notranslate nohighlight">\(t\)</span>) and a model whose coupling is 30 % too strong, the truth is <span class="math notranslate nohighlight">\(q^\star = 1/(1+t)\)</span> and the model’s
+fixed point is <span class="math notranslate nohighlight">\(\hat q^\star = 1/(1 + 1.3\,t)\)</span>, so <span class="math notranslate nohighlight">\(\hat q^\star &lt; q^\star &lt; q^{\text{base}} = 1\)</span>. The damped
+iterates start at 1, slide down, <strong>pass the truth</strong> and settle below it. Somewhere on the way the error was
+smaller than at the end. The best update count <span class="math notranslate nohighlight">\(k^\star = \arg\min_k E_k\)</span> is then an interior point, while
+<span class="math notranslate nohighlight">\(\hat R\)</span> keeps falling.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/R4_model_fixed_point_vs_truth/R4_model_fixed_point_vs_truth.png" aria-label="A dot hops along a number line past a white ring, the truth, and stops on a green ring, the model's fixed point; a trail of iterates in a plane approaches the white ring and then curls away to the green one; a dashed residual curve keeps falling while a solid error curve turns around; a held-out curve picks the number of updates." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/R4_model_fixed_point_vs_truth/R4_model_fixed_point_vs_truth.webm" type="video/webm">
+<source src="../_static/media/R4_model_fixed_point_vs_truth/R4_model_fixed_point_vs_truth.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/R4_model_fixed_point_vs_truth/R4_model_fixed_point_vs_truth.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/R4_model_fixed_point_vs_truth/R4_model_fixed_point_vs_truth.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation R4, the model’s fixed point is not the truth.</strong> The imperfect map is constructed, not trained: <span class="math notranslate nohighlight">\(\hat T(\mathbf q) = \mathbf q^{\text{base}} - 1.3\,A\,\mathbf q\)</span>, the exact toy map with its interaction made 30 % too strong, as a stated stand-in for a learned model. First the two-sphere case above with <span class="math notranslate nohighlight">\(\alpha = 1/2\)</span>: the iterate passes the truth (white ring) and stops on the model’s fixed point (green ring). Then the 96-sphere toy with <span class="math notranslate nohighlight">\(\alpha = 1/8\)</span> and 60 updates, its 288 state components projected onto the plane through <span class="math notranslate nohighlight">\(\mathbf q^{\text{base}}\)</span>, <span class="math notranslate nohighlight">\(\mathbf q^\star\)</span> and <span class="math notranslate nohighlight">\(\hat{\mathbf q}^\star\)</span>: the trail approaches the truth, then curls away toward the green ring. The plot draws the residual <span class="math notranslate nohighlight">\(\hat R\)</span> (dashed) and the error <span class="math notranslate nohighlight">\(E_k\)</span> (solid) against the update count on a log axis. The residual falls at every update; the error turns around at update 7. Notice the two readouts: at the best update the residual is still large, and after 60 updates the residual is tiny while the error is larger. The last part chooses the number of updates on a held-out snapshot, where the truth is available. Its choice, 12 updates, applied to the first snapshot gives a smaller error than running to convergence. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
+<p><strong>Takeaway.</strong> The residual measures convergence to the <em>model’s</em> fixed point,
+<span class="math notranslate nohighlight">\(\hat{\mathbf q}^\star = \hat T(\hat{\mathbf q}^\star) \ne \mathbf q^\star\)</span>, and says nothing about the distance
+from there to the truth. A lower residual is therefore not always a better state. When the model is imperfect,
+treat the number of updates as a setting and choose it where the error on held-out data is lowest. Lesson 03a,
+Section 7 meets the same gap with a trained mini-A0: both solvers converge to the model’s fixed point, which is
+closer to the exact slip than the base state but not equal to it.</p>
 </section>
 </section>
 
@@ -511,6 +565,7 @@ The learning goals and outline below are fixed; the notebook will follow the cou
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What you will learn</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#converged-is-not-the-same-as-correct">1. Converged is not the same as correct</a></li>
 </ul>
   </nav></div>
 

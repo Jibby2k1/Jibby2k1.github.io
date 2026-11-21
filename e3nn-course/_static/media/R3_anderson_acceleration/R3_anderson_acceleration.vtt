@@ -1,0 +1,25 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:05.694
+The defect, f, points from each guess to T of that guess. Picard follows it, and zigzags.
+
+00:00:07.800 --> 00:00:12.375
+The first two defects point nearly opposite ways. Each step overshoots the answer.
+
+00:00:14.000 --> 00:00:21.595
+So look along the line through the last two guesses. Somewhere on it the defect is smallest. Gamma marks that point, by least squares.
+
+00:00:25.000 --> 00:00:33.128
+Anderson moves to that point, q tilde, then steps along its defect. After four updates its error is far smaller than Picard's.
+
+00:00:34.900 --> 00:00:40.683
+With memory m, keep the last m differences of states and of defects, and fit one gamma for each.
+
+00:00:41.200 --> 00:00:46.642
+On the course toy, the residual R falls slowly with Picard: two hundred sixty-eight updates.
+
+00:00:47.800 --> 00:00:53.780
+With the same damping, memory one takes one hundred fifty-five, and memory three one hundred eleven.
+
+00:00:55.200 --> 00:01:00.477
+Gamma is a least squares fit. Remember past defects, and extrapolate to where they cancel.

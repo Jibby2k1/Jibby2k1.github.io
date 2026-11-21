@@ -1,0 +1,34 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:05.529
+A teal line misses four data points. Square each orange gap, then average: the loss.
+
+00:00:07.200 --> 00:00:10.006
+How does the loss change with theta? Its slope tells us.
+
+00:00:11.900 --> 00:00:14.807
+Step against the slope, scaled by a small rate, eta.
+
+00:00:16.200 --> 00:00:18.623
+Five more steps, and the line fits the points.
+
+00:00:20.400 --> 00:00:24.282
+Same rule for a network: the gradient holds one slope per parameter.
+
+00:00:25.800 --> 00:00:31.251
+Before training, on one sphere: the pink message is tiny and misses the dashed teal target.
+
+00:00:32.800 --> 00:00:36.622
+Epoch by epoch, the yellow curve, b sub j, bends toward exact.
+
+00:00:38.400 --> 00:00:41.631
+The loss falls, and the pink message swings onto its target.
+
+00:00:44.200 --> 00:00:47.768
+Surface check: exact, one. Learned, zero point nine two.
+
+00:00:48.600 --> 00:00:52.386
+A sub j, the other coefficient, trained too; rougher near the surface.
+
+00:00:54.300 --> 00:00:59.026
+Theta moves against the gradient, again and again: small steps reshape the kernel.

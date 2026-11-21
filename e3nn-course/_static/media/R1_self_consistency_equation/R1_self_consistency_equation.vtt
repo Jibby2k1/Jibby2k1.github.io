@@ -1,0 +1,52 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.125
+Each sphere starts from a base state.
+
+00:00:03.500 --> 00:00:05.694
+But sphere one drags fluid past sphere two.
+
+00:00:07.200 --> 00:00:09.505
+Subtract that flow, W, from the base.
+
+00:00:10.300 --> 00:00:11.947
+Sphere two does the same to one.
+
+00:00:13.300 --> 00:00:15.644
+So each state depends on the other: a loop.
+
+00:00:17.600 --> 00:00:19.490
+By symmetry, both states are equal.
+
+00:00:20.300 --> 00:00:23.123
+Keep substituting: each hop is t times shorter.
+
+00:00:24.600 --> 00:00:26.377
+The sum: one over one plus t.
+
+00:00:27.800 --> 00:00:30.288
+Twelve spheres: stack every state into q.
+
+00:00:31.000 --> 00:00:32.588
+Row i sums its neighbors' flow.
+
+00:00:34.400 --> 00:00:35.619
+Call the right side T.
+
+00:00:36.800 --> 00:00:39.435
+Start from the base state; apply T repeatedly.
+
+00:00:40.600 --> 00:00:43.761
+Each pass adds another power of A; here, the terms shrink.
+
+00:00:46.000 --> 00:00:48.650
+With ninety-six crowded spheres, the terms grow.
+
+00:00:49.800 --> 00:00:52.468
+The largest eigenvalue size of A exceeds one.
+
+00:00:53.900 --> 00:00:55.370
+One equation for all states.
+
+00:00:56.200 --> 00:00:59.525
+Substitution only converges with shrinking powers of A.

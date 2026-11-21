@@ -1,0 +1,43 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.321
+A network trained on one sphere's flow.
+
+00:00:03.700 --> 00:00:07.436
+Its pink message tracks the exact velocity, using two numbers.
+
+00:00:08.200 --> 00:00:11.980
+Stokes flow has two parts: along the state, then along the offset.
+
+00:00:13.300 --> 00:00:15.021
+Theta: the angle between them.
+
+00:00:15.300 --> 00:00:18.434
+Sorted: exact b sub j, and exact a sub j.
+
+00:00:19.000 --> 00:00:23.345
+On the surface, fluid moves with the sphere, so the message equals q sub j.
+
+00:00:24.500 --> 00:00:27.881
+Now every position at once: learned left, exact right.
+
+00:00:28.300 --> 00:00:30.425
+Start with b sub j, along the state.
+
+00:00:31.200 --> 00:00:35.258
+Then a sub j, along the offset. It changes sign across the equator.
+
+00:00:36.100 --> 00:00:37.919
+The error is largest on the axis.
+
+00:00:39.700 --> 00:00:42.887
+Inside the training range, it averages two and a half percent.
+
+00:00:44.000 --> 00:00:48.281
+Past six radii, it saw no data. Exact b sub j keeps decaying.
+
+00:00:48.800 --> 00:00:51.872
+The learned one falls too fast: thirty-one percent error.
+
+00:00:52.500 --> 00:00:56.030
+The network learned a kernel: two functions of distance and angle.

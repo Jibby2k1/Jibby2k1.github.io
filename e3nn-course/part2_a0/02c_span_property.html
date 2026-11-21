@@ -1504,6 +1504,33 @@ PASS  free per-query coefficients fit the target: max error 2.2e-15 (tol 1e-12)
 </div>
 <p>The geometry is not the limit, then. The limit is the information: A0’s <span class="math notranslate nohighlight">\(a_j\)</span> and <span class="math notranslate nohighlight">\(b_j\)</span> are functions of pair <span class="math notranslate nohighlight">\(j\)</span>
 alone, but the coefficients that solved the least-squares problem depend on the whole neighbourhood.</p>
+<p><strong>The sum is also long.</strong> In the toy, the exact disturbance at a query point is one term per particle, all <span class="math notranslate nohighlight">\(N\)</span>
+of them, each in its own plane:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf u(\mathbf x_f) - \mathbf U_b \;=\; \sum_{j=1}^{N}\mathbf m_j,
+\qquad
+\mathbf m_j = e^{-(r_j - a)/L}\,G(\mathbf x_{fj})\,\mathbf s_j ,
+\]</div>
+<p>with <span class="math notranslate nohighlight">\(r_j = \lvert\mathbf x_{fj}\rvert\)</span>, the screening length <span class="math notranslate nohighlight">\(L\)</span> and the exact slip <span class="math notranslate nohighlight">\(\mathbf s_j\)</span> as the state
+(the clip below writes it <span class="math notranslate nohighlight">\(\mathbf q_j\)</span>)
+(<a class="reference internal" href="02a_pair_geometry.html"><span class="std std-doc">Lesson 02a, Section 6</span></a>). A0 keeps the <span class="math notranslate nohighlight">\(M\)</span> nearest terms. Sort the particles by distance
+and write <span class="math notranslate nohighlight">\(\mathbf u_M = \sum_{j\le M}\mathbf m_j\)</span>; the part that is dropped is the tail</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf u_N - \mathbf u_M \;=\; \sum_{j &gt; M}\mathbf m_j .
+\]</div>
+<p>Each tail term is small, but the particles all settle in roughly the same direction, so the tail terms mostly
+point the same way and add up instead of cancelling.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.png" aria-label="A query point among particles; pink arrows, one per particle, are added tip to tail into a solid teal running sum next to a dashed teal full sum; an orange error curve falls slowly with the number of terms; many tiny far terms add up to a visible drift; the cut at eight, sixteen and thirty-two terms." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.webm" type="video/webm">
+<source src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation N4, the neighbour sum and the top-M cut.</strong> The flow at one query point of the 96-sphere toy as a sum of exact pair terms <span class="math notranslate nohighlight">\(\mathbf m_j\)</span> (pink), added tip to tail from the nearest particle outward. The solid teal arrow is the running sum <span class="math notranslate nohighlight">\(\mathbf u_M\)</span>, the dashed teal arrow the full sum <span class="math notranslate nohighlight">\(\mathbf u_N\)</span>, and the orange segment the gap between them. The orange curve is <span class="math notranslate nohighlight">\(\text{error}(M) = \big(\langle\lvert\mathbf u_M - \mathbf u_N\rvert^2\rangle / \langle\lvert\mathbf u_N\rvert^2\rangle\big)^{1/2}\)</span> over 200 query points: about 33 % at <span class="math notranslate nohighlight">\(M = 8\)</span>, 19 % at <span class="math notranslate nohighlight">\(M = 16\)</span> and 8 % at <span class="math notranslate nohighlight">\(M = 32\)</span> for this snapshot. Notice why it falls so slowly: beyond rank 16 every single term is tiny, but the 80 that are left mostly align and sum to a visible drift. The last beat shades the plane of <span class="math notranslate nohighlight">\(\mathbf x_{fj}\)</span> and <span class="math notranslate nohighlight">\(\mathbf e_j\)</span> for individual terms, the plane of Animation S2. These are the toy’s exact pair terms, not learned messages, so the clip shows the cost of the cut <span class="math notranslate nohighlight">\(\mathbf u \approx \sum_{j\in\text{top-}M}\mathbf m_j\)</span> alone. The picture is a projection onto a plane that contains <span class="math notranslate nohighlight">\(\mathbf u_N\)</span>. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
 </section>
 <section id="how-much-of-the-missing-part-do-other-neighbours-recover">
 <h3>6.3 How much of the missing part do other neighbours recover?<a class="headerlink" href="#how-much-of-the-missing-part-do-other-neighbours-recover" title="Link to this heading">#</a></h3>

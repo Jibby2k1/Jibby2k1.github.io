@@ -1,0 +1,37 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:04.069
+Take two unit arrows and multiply them component by component.
+
+00:00:04.900 --> 00:00:09.239
+Turn both arrows together: components change, their dot product does not.
+
+00:00:09.900 --> 00:00:14.157
+Describe a pair with five invariants: one distance, four dot products.
+
+00:00:15.050 --> 00:00:17.632
+A small network maps them to one bias number.
+
+00:00:19.050 --> 00:00:20.895
+Each score starts as query dot key.
+
+00:00:22.650 --> 00:00:23.991
+Add the geometry bias.
+
+00:00:24.550 --> 00:00:27.449
+Softmax turns each row into weights that sum to one.
+
+00:00:29.450 --> 00:00:35.983
+Now rotate all eight neighbours. With invariant inputs the weights hold still. With raw coordinates they change.
+
+00:00:37.050 --> 00:00:39.934
+After the mirror, the left change is only rounding error.
+
+00:00:41.550 --> 00:00:46.353
+Outputs alpha and beta are invariant too, so the prediction turns with its arrows.
+
+00:00:48.350 --> 00:00:51.737
+Relabel the neighbours: rows move, but a sum ignores order.
+
+00:00:53.850 --> 00:00:59.303
+Query dot key, plus a bias from pair geometry: invariant inputs give invariant weights.

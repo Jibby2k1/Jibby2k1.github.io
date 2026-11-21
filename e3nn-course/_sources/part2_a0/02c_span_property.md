@@ -900,6 +900,38 @@ check("free per-query coefficients fit the target", float((fit - Y_te).abs().max
 The geometry is not the limit, then. The limit is the information: A0's $a_j$ and $b_j$ are functions of pair $j$
 alone, but the coefficients that solved the least-squares problem depend on the whole neighbourhood.
 
+**The sum is also long.** In the toy, the exact disturbance at a query point is one term per particle, all $N$
+of them, each in its own plane:
+
+$$
+\mathbf u(\mathbf x_f) - \mathbf U_b \;=\; \sum_{j=1}^{N}\mathbf m_j,
+\qquad
+\mathbf m_j = e^{-(r_j - a)/L}\,G(\mathbf x_{fj})\,\mathbf s_j ,
+$$
+
+with $r_j = \lvert\mathbf x_{fj}\rvert$, the screening length $L$ and the exact slip $\mathbf s_j$ as the state
+(the clip below writes it $\mathbf q_j$)
+([Lesson 02a, Section 6](02a_pair_geometry.md)). A0 keeps the $M$ nearest terms. Sort the particles by distance
+and write $\mathbf u_M = \sum_{j\le M}\mathbf m_j$; the part that is dropped is the tail
+
+$$
+\mathbf u_N - \mathbf u_M \;=\; \sum_{j > M}\mathbf m_j .
+$$
+
+Each tail term is small, but the particles all settle in roughly the same direction, so the tail terms mostly
+point the same way and add up instead of cancelling.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.png" aria-label="A query point among particles; pink arrows, one per particle, are added tip to tail into a solid teal running sum next to a dashed teal full sum; an orange error curve falls slowly with the number of terms; many tiny far terms add up to a visible drift; the cut at eight, sixteen and thirty-two terms." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.webm" type="video/webm">
+<source src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N4_neighbour_sum_topM/N4_neighbour_sum_topM.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation N4, the neighbour sum and the top-M cut.** The flow at one query point of the 96-sphere toy as a sum of exact pair terms $\mathbf m_j$ (pink), added tip to tail from the nearest particle outward. The solid teal arrow is the running sum $\mathbf u_M$, the dashed teal arrow the full sum $\mathbf u_N$, and the orange segment the gap between them. The orange curve is $\text{error}(M) = \big(\langle\lvert\mathbf u_M - \mathbf u_N\rvert^2\rangle / \langle\lvert\mathbf u_N\rvert^2\rangle\big)^{1/2}$ over 200 query points: about 33 % at $M = 8$, 19 % at $M = 16$ and 8 % at $M = 32$ for this snapshot. Notice why it falls so slowly: beyond rank 16 every single term is tiny, but the 80 that are left mostly align and sum to a visible drift. The last beat shades the plane of $\mathbf x_{fj}$ and $\mathbf e_j$ for individual terms, the plane of Animation S2. These are the toy's exact pair terms, not learned messages, so the clip shows the cost of the cut $\mathbf u \approx \sum_{j\in\text{top-}M}\mathbf m_j$ alone. The picture is a projection onto a plane that contains $\mathbf u_N$. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
 ### 6.3 How much of the missing part do other neighbours recover?
 
 Other neighbours' messages *can* point along neighbour 1's normal. Do they actually make up for what neighbour 1

@@ -1,0 +1,40 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:02.229
+Six neighbours give six tokens.
+
+00:00:03.300 --> 00:00:05.463
+Each holds eight numbers: its notepad.
+
+00:00:06.900 --> 00:00:09.092
+Layer norm reads a copy of the notepad.
+
+00:00:10.400 --> 00:00:12.932
+Subtract the mean, then divide by the spread.
+
+00:00:14.100 --> 00:00:19.198
+Attention is where tokens exchange information. Token j's weights produce an update.
+
+00:00:19.600 --> 00:00:22.742
+Write by adding: h prime equals h plus the update.
+
+00:00:24.900 --> 00:00:29.838
+Normalise again. The feed-forward network then handles each token alone, same weights.
+
+00:00:31.300 --> 00:00:34.025
+Its update is added too: h double prime.
+
+00:00:36.400 --> 00:00:38.640
+Two blocks give the input plus four updates.
+
+00:00:40.100 --> 00:00:42.543
+White outlines: the input, still inside.
+
+00:00:43.400 --> 00:00:45.525
+Now six blocks, with and without skips.
+
+00:00:46.600 --> 00:00:50.904
+Without skips, tokens collapse to one point. In the product, I is the skip.
+
+00:00:53.200 --> 00:00:56.933
+Each sublayer reads the stream, adds a correction, and passes it on.

@@ -60,6 +60,8 @@
     <script async="async" src="../_static/sphinx-thebe.js?v=c100c467"></script>
     <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>window.MathJax = {"tex": {"macros": {"vec": ["\\mathbf{#1}", 1], "R": "\\mathbb{R}"}}, "options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'part3_refinement/03b_picard_anderson';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <link rel="index" title="Index" href="../genindex.html" />
@@ -411,6 +413,9 @@
                 <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What you will learn</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-damping-works-one-factor-per-mode">1. Why damping works: one factor per mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anderson-acceleration-use-the-last-defects">2. Anderson acceleration: use the last defects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
             </nav>
         </div>
@@ -426,8 +431,10 @@
 <h1>Picard, damping and Anderson acceleration<a class="headerlink" href="#picard-damping-and-anderson-acceleration" title="Link to this heading">#</a></h1>
 <div class="note admonition">
 <p class="admonition-title">Coming soon</p>
-<p>This lesson is <strong>coming soon</strong>.
-The learning goals and outline below are fixed; the notebook will follow the course template.</p>
+<p>The full notebook for this lesson is <strong>coming soon</strong>. The learning goals and outline below are fixed; the
+notebook will follow the course template. Sections 1 and 2 are already here: two short derivations, each with
+an animation. Until the rest arrives, the code for both solvers is in
+<a class="reference internal" href="03a_fixed_point.html"><span class="std std-doc">Lesson 03a</span></a>, Sections 4 and 5.</p>
 </div>
 <section id="what-you-will-learn">
 <h2>What you will learn<a class="headerlink" href="#what-you-will-learn" title="Link to this heading">#</a></h2>
@@ -440,6 +447,117 @@ The learning goals and outline below are fixed; the notebook will follow the cou
 <section id="outline">
 <h2>Outline<a class="headerlink" href="#outline" title="Link to this heading">#</a></h2>
 <p>Failure first: undamped substitution diverges on the toy. Damping is analysed through the spectrum of the linear map, then Anderson acceleration is derived as a small least-squares problem over recent residuals and compared with Picard on residual curves.</p>
+</section>
+<section id="why-damping-works-one-factor-per-mode">
+<h2>1. Why damping works: one factor per mode<a class="headerlink" href="#why-damping-works-one-factor-per-mode" title="Link to this heading">#</a></h2>
+<p>Refinement solves <span class="math notranslate nohighlight">\(\mathbf q = T(\mathbf q)\)</span> with <span class="math notranslate nohighlight">\(T(\mathbf q) = \mathbf q^{\text{base}} - W(\mathbf q)\)</span>. Damped
+Picard moves the state only a fraction <span class="math notranslate nohighlight">\(\alpha\)</span> of the way to its target:</p>
+<div class="math notranslate nohighlight">
+\[
+\mathbf q_{k+1} = (1-\alpha)\,\mathbf q_k + \alpha\,T(\mathbf q_k).
+\]</div>
+<p>For the toy’s exact map <span class="math notranslate nohighlight">\(W(\mathbf q) = A\mathbf q\)</span>, the error can be followed exactly. Let <span class="math notranslate nohighlight">\(\mathbf q^\star\)</span> be
+the fixed point and <span class="math notranslate nohighlight">\(\boldsymbol\varepsilon_k = \mathbf q_k - \mathbf q^\star\)</span> the error. (Lesson 03a wrote
+<span class="math notranslate nohighlight">\(\mathbf e\)</span> for it; from here on the course uses <span class="math notranslate nohighlight">\(\boldsymbol\varepsilon\)</span>, because <span class="math notranslate nohighlight">\(\mathbf e_j\)</span> is the state
+direction.) Since <span class="math notranslate nohighlight">\(T(\mathbf q_k) - T(\mathbf q^\star) = -A\,\boldsymbol\varepsilon_k\)</span> and
+<span class="math notranslate nohighlight">\(T(\mathbf q^\star) = \mathbf q^\star\)</span>,</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol\varepsilon_{k+1} = (1-\alpha)\,\boldsymbol\varepsilon_k - \alpha A\,\boldsymbol\varepsilon_k
+= \big(I - \alpha\,(I + A)\big)\,\boldsymbol\varepsilon_k .
+\]</div>
+<p>Expand the error in eigenvectors of <span class="math notranslate nohighlight">\(I + A\)</span>, with eigenvalues <span class="math notranslate nohighlight">\(\mu = 1 + \lambda\)</span> where <span class="math notranslate nohighlight">\(\lambda\)</span> is an
+eigenvalue of <span class="math notranslate nohighlight">\(A\)</span>. Each <strong>mode</strong> evolves on its own, and one update multiplies it by one number:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{factor}(\mu) = 1 - \alpha\,\mu .
+\]</div>
+<p>Plotted against <span class="math notranslate nohighlight">\(\mu\)</span>, the factor is a straight line through <span class="math notranslate nohighlight">\((0, 1)\)</span> with slope <span class="math notranslate nohighlight">\(-\alpha\)</span>. A mode shrinks when
+its factor lies between <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>. On the default toy the eigenvalues <span class="math notranslate nohighlight">\(\mu\)</span> are real and positive (the script
+that prepares the animation’s data asserts both), so the condition for every mode at once is</p>
+<div class="math notranslate nohighlight">
+\[
+-1 &lt; 1 - \alpha\,\mu &lt; 1 \ \ \text{for all } \mu
+\qquad\Longleftrightarrow\qquad
+0 &lt; \alpha &lt; \frac{2}{\mu_{\max}} ,
+\]</div>
+<p>and the error shrinks per update, asymptotically, by the worst factor
+<span class="math notranslate nohighlight">\(\rho(\alpha) = \max_\mu\lvert 1 - \alpha\mu\rvert\)</span>. (Lesson 03a, Section 4.1 calls this number the contraction
+factor <span class="math notranslate nohighlight">\(c(\alpha)\)</span> and gives the condition for complex <span class="math notranslate nohighlight">\(\mu\)</span>. The clip below writes <span class="math notranslate nohighlight">\(\rho(\alpha)\)</span>, the usual symbol
+for a spectral radius; it is not the density ratio <span class="math notranslate nohighlight">\(\rho\)</span> of the model inputs.) Two things follow. With <span class="math notranslate nohighlight">\(\alpha = 1\)</span> the factor is
+<span class="math notranslate nohighlight">\(-\lambda\)</span>: every mode with <span class="math notranslate nohighlight">\(\lvert\lambda\rvert &gt; 1\)</span> flips sign and grows, which is the divergence of plain
+substitution. With a very small <span class="math notranslate nohighlight">\(\alpha\)</span> every factor is inside the band, but the slowest mode has factor
+<span class="math notranslate nohighlight">\(1 - \alpha\mu_{\min}\)</span>, close to one, so convergence is safe and slow.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/R2_damping_eigenvalues/R2_damping_eigenvalues.png" aria-label="A state arrow slides part of the way to its target; one error mode is multiplied by one minus alpha mu for three values of alpha; a plot of that factor against mu, a straight line that pivots as alpha shrinks until every eigenvalue lies inside a band; error curves for the three alphas." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/R2_damping_eigenvalues/R2_damping_eigenvalues.webm" type="video/webm">
+<source src="../_static/media/R2_damping_eigenvalues/R2_damping_eigenvalues.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/R2_damping_eigenvalues/R2_damping_eigenvalues.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/R2_damping_eigenvalues/R2_damping_eigenvalues.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation R2, damping and eigenvalues.</strong> A recap of the damped update for one particle, then one error mode by hand: <span class="math notranslate nohighlight">\(\boldsymbol\varepsilon \leftarrow (1 - \alpha\mu)\,\boldsymbol\varepsilon\)</span> with <span class="math notranslate nohighlight">\(\mu = \mu_{\max}\)</span> of the 96-sphere toy and <span class="math notranslate nohighlight">\(\alpha = 1\)</span>, <span class="math notranslate nohighlight">\(1/2\)</span> and <span class="math notranslate nohighlight">\(1/8\)</span>. It flips and grows, shrinks fast, shrinks slowly. The main plot shows the factor <span class="math notranslate nohighlight">\(1 - \alpha\mu\)</span> against <span class="math notranslate nohighlight">\(\mu\)</span>, with one tick for every eigenvalue of <span class="math notranslate nohighlight">\(I + A\)</span> and the band <span class="math notranslate nohighlight">\(\lvert\text{factor}\rvert &lt; 1\)</span> shaded. At <span class="math notranslate nohighlight">\(\alpha = 1\)</span> seven modes lie outside the band. As <span class="math notranslate nohighlight">\(\alpha\)</span> decreases the line pivots about <span class="math notranslate nohighlight">\((0, 1)\)</span> toward flat, and the last mode enters the band at <span class="math notranslate nohighlight">\(\alpha = 2/\mu_{\max}\)</span>. The final panel runs the real iteration: <span class="math notranslate nohighlight">\(\lVert\boldsymbol\varepsilon_k\rVert/\lVert\mathbf q^\star\rVert\)</span> diverges for <span class="math notranslate nohighlight">\(\alpha = 1\)</span>, falls fast for <span class="math notranslate nohighlight">\(1/2\)</span> and crawls for <span class="math notranslate nohighlight">\(1/8\)</span>, and the measured late rates sit close to the predicted <span class="math notranslate nohighlight">\(\rho(\alpha)\)</span>. Notice the trade: a flatter line is safer for the fast modes and slower for the slow ones. For a learned map the eigenvalues are not known in advance, which is why the course keeps the cautious <span class="math notranslate nohighlight">\(\alpha = 1/8\)</span>. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
+<p><strong>Takeaway.</strong> Damping does not move the fixed point; it rescales every error mode by <span class="math notranslate nohighlight">\(1 - \alpha\mu\)</span>. The
+iteration converges exactly when all of those factors lie between <span class="math notranslate nohighlight">\(-1\)</span> and <span class="math notranslate nohighlight">\(1\)</span>, and its speed is set by the worst
+one. Choosing <span class="math notranslate nohighlight">\(\alpha\)</span> is a trade between the largest <span class="math notranslate nohighlight">\(\mu\)</span>, which limits how big <span class="math notranslate nohighlight">\(\alpha\)</span> may be, and the
+smallest, which wants it big.</p>
+</section>
+<section id="anderson-acceleration-use-the-last-defects">
+<h2>2. Anderson acceleration: use the last defects<a class="headerlink" href="#anderson-acceleration-use-the-last-defects" title="Link to this heading">#</a></h2>
+<p>Picard looks only at the current iterate. Its step follows the <strong>defect</strong>
+<span class="math notranslate nohighlight">\(\mathbf f_k = T(\mathbf q_k) - \mathbf q_k\)</span>, which is zero exactly at the fixed point:
+<span class="math notranslate nohighlight">\(\mathbf q_{k+1} = \mathbf q_k + \beta\,\mathbf f_k\)</span>, with the damping written <span class="math notranslate nohighlight">\(\beta\)</span> here. When successive
+defects point in nearly opposite directions, the iterates zigzag across the answer.</p>
+<p>Anderson acceleration <span class="bibtex-citation" id="id1">[<a class="reference internal" href="../appendix/references.html#id16" title="Homer F. Walker and Peng Ni. Anderson acceleration for fixed-point iterations. SIAM Journal on Numerical Analysis, 49(4):1715–1735, 2011.">Walker and Ni, 2011</a>]</span> uses the previous iterate too. With memory <span class="math notranslate nohighlight">\(m = 1\)</span>, look along
+the line through the last two iterates,</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathbf q}(\gamma) = \mathbf q_k - \gamma\,(\mathbf q_k - \mathbf q_{k-1}) .
+\]</div>
+<p>For a linear map the defect is an affine function of the state, so the defect at that point is the same
+combination of the two known defects (for a nonlinear map this is an approximation):</p>
+<div class="math notranslate nohighlight">
+\[
+\tilde{\mathbf f}(\gamma) = \mathbf f_k - \gamma\,\Delta\mathbf f, \qquad \Delta\mathbf f = \mathbf f_k - \mathbf f_{k-1} .
+\]</div>
+<p>Choose the <span class="math notranslate nohighlight">\(\gamma\)</span> that makes this defect as short as possible. Setting the derivative of
+<span class="math notranslate nohighlight">\(\lvert\mathbf f_k - \gamma\,\Delta\mathbf f\rvert^2\)</span> to zero gives one dot product over one squared length,</p>
+<div class="math notranslate nohighlight">
+\[
+\gamma = \frac{\mathbf f_k\cdot\Delta\mathbf f}{\lvert\Delta\mathbf f\rvert^2},
+\]</div>
+<p>and the update is a damped step from the mixed point along the mixed defect,
+<span class="math notranslate nohighlight">\(\mathbf q_{k+1} = \tilde{\mathbf q}(\gamma) + \beta\,\tilde{\mathbf f}(\gamma)\)</span>. With memory <span class="math notranslate nohighlight">\(m\)</span>, keep the last
+<span class="math notranslate nohighlight">\(m\)</span> differences of iterates and of defects as the columns of <span class="math notranslate nohighlight">\(\Delta Q\)</span> and <span class="math notranslate nohighlight">\(\Delta F\)</span> and fit one coefficient for
+each:</p>
+<div class="math notranslate nohighlight">
+\[
+\boldsymbol\gamma = \arg\min_{\boldsymbol\gamma}\big\lVert\mathbf f_k - \Delta F\,\boldsymbol\gamma\big\rVert,
+\qquad
+\mathbf q_{k+1} = \mathbf q_k + \beta\,\mathbf f_k - (\Delta Q + \beta\,\Delta F)\,\boldsymbol\gamma .
+\]</div>
+<p>This is the update of Lesson 03a, Section 5, and with <span class="math notranslate nohighlight">\(m = 0\)</span> it is damped Picard with <span class="math notranslate nohighlight">\(\alpha = \beta\)</span>. The
+least-squares problem has only <span class="math notranslate nohighlight">\(m\)</span> unknowns, so its cost is negligible next to one evaluation of <span class="math notranslate nohighlight">\(T\)</span>.</p>
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/R3_anderson_acceleration/R3_anderson_acceleration.png" aria-label="Iterates zigzag toward a dashed green ring in a plane, each step following an orange defect arrow; a point slides along the line through the last two iterates to where the defect is shortest; Anderson steps from that point and gets much closer; residual curves on the course toy for Picard and for Anderson with memory one and three." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/R3_anderson_acceleration/R3_anderson_acceleration.webm" type="video/webm">
+<source src="../_static/media/R3_anderson_acceleration/R3_anderson_acceleration.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/R3_anderson_acceleration/R3_anderson_acceleration.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/R3_anderson_acceleration/R3_anderson_acceleration.mp4">Download the MP4</a>.
+</video>
+</div>
+<p><strong>Animation R3, Anderson acceleration.</strong> The first part uses a constructed linear map with a two-component state, so that states and defects can be drawn in one plane; it runs with <span class="math notranslate nohighlight">\(\beta = 1\)</span>, so each defect arrow (orange) reaches from an iterate to the next one. Picard follows the defect and zigzags toward the fixed point <span class="math notranslate nohighlight">\(\mathbf q^\star\)</span> (dashed green ring): the first two defects point nearly opposite ways. A point then slides along the line through the last two iterates while a small plot shows the length of the interpolated defect; <span class="math notranslate nohighlight">\(\gamma\)</span> marks its minimum, the least-squares solution above. Anderson moves to that point <span class="math notranslate nohighlight">\(\tilde{\mathbf q}\)</span> and steps along its defect, and after four updates its error is far smaller than Picard’s. The last part is the 96-sphere course toy with the exact map, the same damping <span class="math notranslate nohighlight">\(\alpha = \beta = 1/8\)</span> for every solver and a tolerance of <span class="math notranslate nohighlight">\(10^{-10}\)</span> on the residual <span class="math notranslate nohighlight">\(R\)</span>: Picard needs 268 updates, Anderson 155 with <span class="math notranslate nohighlight">\(m = 1\)</span> and 111 with <span class="math notranslate nohighlight">\(m = 3\)</span>. Notice that the comparison is at equal damping. Anderson is not a bigger step; it is a better direction, built from defects that were already computed. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.</p>
+<p><strong>Takeaway.</strong> <span class="math notranslate nohighlight">\(\boldsymbol\gamma\)</span> is a least-squares fit: remember the last <span class="math notranslate nohighlight">\(m\)</span> defects and extrapolate to where
+they cancel. The fit is exact for a linear map and an approximation for a learned one, so the damping <span class="math notranslate nohighlight">\(\beta\)</span>
+stays. Each update still costs one evaluation of <span class="math notranslate nohighlight">\(T\)</span>, one pass of the surrogate over every particle surface, and
+that count is what Anderson reduces.</p>
+</section>
+<section id="references">
+<h2>References<a class="headerlink" href="#references" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>H. F. Walker and P. Ni, Anderson acceleration for fixed-point iterations <span class="bibtex-citation" id="id2">[<a class="reference internal" href="../appendix/references.html#id16" title="Homer F. Walker and Peng Ni. Anderson acceleration for fixed-point iterations. SIAM Journal on Numerical Analysis, 49(4):1715–1735, 2011.">Walker and Ni, 2011</a>]</span>.</p></li>
+<li><p><a class="reference internal" href="03a_fixed_point.html"><span class="std std-doc">Lesson 03a</span></a>, Sections 4 and 5: both solvers in code on the same toy.</p></li>
+</ul>
 </section>
 </section>
 
@@ -511,6 +629,9 @@ The learning goals and outline below are fixed; the notebook will follow the cou
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What you will learn</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#outline">Outline</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-damping-works-one-factor-per-mode">1. Why damping works: one factor per mode</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#anderson-acceleration-use-the-last-defects">2. Anderson acceleration: use the last defects</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#references">References</a></li>
 </ul>
   </nav></div>
 

@@ -1,0 +1,55 @@
+WEBVTT
+
+00:00:00.600 --> 00:00:03.674
+Damping moves the state only a fraction toward its target.
+
+00:00:05.000 --> 00:00:06.320
+Here alpha is one half.
+
+00:00:07.500 --> 00:00:11.200
+Each update multiplies an error mode by one minus alpha mu.
+
+00:00:12.200 --> 00:00:13.833
+Alpha one: flips and grows.
+
+00:00:14.700 --> 00:00:16.023
+One half shrinks fast.
+
+00:00:16.500 --> 00:00:17.799
+One eighth shrinks slowly.
+
+00:00:19.000 --> 00:00:21.510
+Now many modes: each tick is one mode's mu.
+
+00:00:22.900 --> 00:00:24.696
+This line gives each mode's factor.
+
+00:00:25.500 --> 00:00:27.570
+Outside the band, seven modes grow.
+
+00:00:28.600 --> 00:00:31.017
+A smaller alpha tilts the line toward flat.
+
+00:00:32.400 --> 00:00:35.541
+At two over mu max, the last mode reaches the edge.
+
+00:00:37.100 --> 00:00:39.185
+Smaller still, factors approach one.
+
+00:00:39.700 --> 00:00:41.638
+The worst factor, rho, sets the rate.
+
+00:00:42.800 --> 00:00:43.975
+Alpha one diverges.
+
+00:00:44.500 --> 00:00:46.307
+One half: the error falls fast.
+
+00:00:47.500 --> 00:00:50.295
+One eighth crawls. Measured rates sit close to rho.
+
+00:00:51.800 --> 00:00:54.290
+Learned maps hide mu, so alpha stays small.
+
+00:00:55.600 --> 00:00:59.996
+It converges when every one minus alpha mu lies between minus one and one.

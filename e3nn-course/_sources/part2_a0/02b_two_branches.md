@@ -395,7 +395,38 @@ $$
 $$
 
 It is equivariant because $\lvert g\mathbf h\rvert = \lvert\mathbf h\rvert$: the factor in front is an invariant
-number, and an invariant number times an equivariant vector is equivariant. Three properties matter for A0:
+number, and an invariant number times an equivariant vector is equivariant.
+
+**The test, by hand.** An operation $f$ may act on a vector feature only if $f(g\mathbf v) = g\,f(\mathbf v)$ for
+every rotation or reflection $g$: transform then apply must equal apply then transform. The component-wise ReLU of
+Section 3.1 fails with numbers you can check in your head. Take $\mathbf v = (1, -1)$ in the plane and a quarter
+turn, so $g\mathbf v = (1, 1)$. Then
+
+$$
+\operatorname{ReLU}(g\mathbf v) = (1, 1), \qquad g\,\operatorname{ReLU}(\mathbf v) = g\,(1, 0) = (0, 1),
+$$
+
+and the two answers are a distance 1 apart. The norm activation passes for every $g$ in one line. Write
+$\sigma(\mathbf h) = \tanh(\lvert\mathbf h\rvert + b_w)\,\mathbf h/\lvert\mathbf h\rvert$ (dropping the $\epsilon$
+guard) and use $\lvert g\mathbf h\rvert = \lvert\mathbf h\rvert$:
+
+$$
+\sigma(g\mathbf h) = \tanh(\lvert g\mathbf h\rvert + b_w)\,\frac{g\mathbf h}{\lvert g\mathbf h\rvert}
+= g\left[\tanh(\lvert\mathbf h\rvert + b_w)\,\frac{\mathbf h}{\lvert\mathbf h\rvert}\right] = g\,\sigma(\mathbf h).
+$$
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N3_equivariant_nonlinearity/N3_equivariant_nonlinearity.png" aria-label="A blue vector in the plane and a silver rotation arc; two routes, rotate then apply and apply then rotate, give a solid and a dashed pink arrow; for ReLU the two separate and an orange gap is plotted against the angle; for the norm activation they coincide and a green check appears." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N3_equivariant_nonlinearity/N3_equivariant_nonlinearity.webm" type="video/webm">
+<source src="../_static/media/N3_equivariant_nonlinearity/N3_equivariant_nonlinearity.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N3_equivariant_nonlinearity/N3_equivariant_nonlinearity.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N3_equivariant_nonlinearity/N3_equivariant_nonlinearity.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation N3, which nonlinearities may act on a vector.** The test $f(R\mathbf v) = R\,f(\mathbf v)$, drawn as two routes from the same input $\mathbf v$ (blue): rotate then apply (solid pink) and apply then rotate (dashed). First the component-wise ReLU with the numbers above, $\mathbf v = (1, -1)$ and a quarter turn: the two results differ, and the orange segment is the gap. Then the rotation angle sweeps a full turn. The solid tip sticks to the coordinate axes while the dashed tip runs on a circle, so the gap depends on where the axes are. The same sweep with the norm activation, run with $b_w = 0$, sends only the length through $\tanh$: the two routes coincide and the measured gap is at round-off. The last part lists what each kind of quantity may go through (scalars: any function; vectors: linear mixing without bias, multiplication by a scalar, rescaling by a function of the length) and shows that A0's message, a sum over channels of a scalar $y_u$ times a vector $\mathbf v_u$, uses one of each. The clip writes $R$ where this lesson writes $g$, and shows rotations in the plane; the checks in this lesson also include reflections. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
+
+Three properties of the norm activation matter for A0:
 
 1. **Bounded.** $\lvert\mathbf v_w\rvert = \lvert\tanh(\cdot)\rvert < 1$, however large the input. No channel can
    blow up, even for a neighbour far away.
@@ -906,6 +937,36 @@ plt.show()
 ```
 
 ### 5.3 Bounded channels, and what happens far away
+
+**What a message should be.** Before following the channels outward, it helps to know the target. For a single
+sphere it is the Stokes field of [Lesson 01b](../part1_problem/01b_superposition.md),
+$\mathbf u = G(\mathbf x_{fj})\,\mathbf q_j$. Sort its terms into a part along the state and a part along the
+offset, using $\hat{\mathbf x}_{fj}\cdot\mathbf q_j = \lvert\mathbf q_j\rvert\cos\theta_j$ and
+$\hat{\mathbf x}_{fj} = \mathbf x_{fj}/r$ with $r = \lvert\mathbf x_{fj}\rvert$:
+
+$$
+G(\mathbf x_{fj})\,\mathbf q_j = a_j\,\mathbf x_{fj} + b_j\,\mathbf e_j,
+\qquad
+b_j = \lvert\mathbf q_j\rvert\,\frac{3a}{4r}\Big(1 + \frac{a^2}{3r^2}\Big),
+\qquad
+a_j = \lvert\mathbf q_j\rvert\cos\theta_j\,\frac{3a}{4r^2}\Big(1 - \frac{a^2}{r^2}\Big).
+$$
+
+Here $a$ is the sphere radius, and the coefficients always carry their index, $a_j$ and $b_j$. On the surface,
+$r = a$, the formula gives $b_j = \lvert\mathbf q_j\rvert$ and $a_j = 0$, so the message is $\mathbf q_j$ itself:
+the fluid moves with the sphere. A trained A0 has to build these two functions of distance and angle out of gates
+and bounded arrows. That pair of functions is its learned **kernel**.
+
+<div class="course-anim" style="margin:1.2em 0 0.4em">
+<video controls playsinline preload="metadata" poster="../_static/media/N2_learned_kernel/N2_learned_kernel.png" aria-label="One sphere with a query point sweeping around it, a pink learned message and a dashed teal exact velocity; the Stokes formula is sorted into two coefficients; split maps compare learned and exact coefficients, then an error map, then a zoom out past the training range where the error grows." style="display:block;width:100%;border-radius:14px;background:#0f1419;box-shadow:0 4px 18px rgba(0,0,0,.25)">
+<source src="../_static/media/N2_learned_kernel/N2_learned_kernel.webm" type="video/webm">
+<source src="../_static/media/N2_learned_kernel/N2_learned_kernel.mp4" type="video/mp4">
+<track kind="captions" src="../_static/media/N2_learned_kernel/N2_learned_kernel.vtt" srclang="en" label="English">
+Your browser cannot play this video. <a href="../_static/media/N2_learned_kernel/N2_learned_kernel.mp4">Download the MP4</a>.
+</video>
+</div>
+
+**Animation N2, the learned kernel.** A `MiniA0(64, 3)` trained on the flow of **one** sphere (the unscreened Stokes formula, with $\lvert\mathbf q_j\rvert = 1$ and distances from $a$ to $6a$), not on the 96-sphere toy that the rest of this section uses, whose pair term also carries the screening factor. A query point sweeps around the sphere; the learned message (pink) tracks the exact velocity (dashed teal). The Stokes formula is sorted into the two coefficients above, and the surface check $r = a$ gives $\mathbf m_j = \mathbf q_j$. Maps over the plane of $\mathbf x_{fj}$ and $\mathbf e_j$ then show the learned coefficient on the left half and the exact one on the right half, first $b_j$, then $a_j$, which changes sign across the equator because of its factor $\cos\theta_j$. The error map and the two printed averages are measured from this network: about 2.5 % inside the training range and about 31 % beyond $6a$, where the learned $b_j$ falls too fast. Notice that the network did not learn a list of answers. It learned two functions of distance and angle, $\mathbf m_j = a_j(r, \theta)\,\mathbf x_{fj} + b_j(r, \theta)\,\mathbf e_j$, and outside the range it saw, nothing ties those functions to the truth. The rest of this section shows what the bounded channels do there. The clip is drawn on a dark stage in both page themes and has a voice-over with captions.
 
 The bound $\lvert\mathbf v_u\rvert < 1$ holds on the test set, and some channels use the sign flip of Section 3.3.
 To see the flips we recompute the last vector layer's tanh factor $\tanh(\lvert\mathbf h_w\rvert+b_w)$ by hand:

@@ -1,0 +1,34 @@
+WEBVTT
+
+00:00:00.500 --> 00:00:04.304
+The flow at this white point is a sum: one term from every particle.
+
+00:00:06.900 --> 00:00:10.735
+Start with the nearest particle. Its pink arrow is term m sub j.
+
+00:00:12.600 --> 00:00:16.854
+Add more, tip to tail. The terms shrink; solid teal is the running sum.
+
+00:00:18.800 --> 00:00:22.952
+Orange: the error of the first M terms, averaged over two hundred points.
+
+00:00:24.900 --> 00:00:27.607
+At sixteen terms, nineteen percent remains.
+
+00:00:28.300 --> 00:00:31.420
+Why so slow? Beyond rank sixteen, each term is tiny.
+
+00:00:33.700 --> 00:00:37.404
+But the eighty left over mostly align, and sum to a visible drift.
+
+00:00:39.600 --> 00:00:41.451
+A zero keeps only the M nearest.
+
+00:00:42.600 --> 00:00:47.749
+Eight terms: thirty-three percent error. Sixteen: nineteen. Thirty-two: eight percent.
+
+00:00:48.100 --> 00:00:51.091
+Each term lies in its own plane: offset and state.
+
+00:00:52.600 --> 00:00:58.531
+The flow is roughly the sum of the M nearest messages. Many small far terms add up to a drift.
